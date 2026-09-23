@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Bailarina Virtual IA 3D - Robô & Mulher Realista</title>
+<title>Bailarina Virtual IA 3D - Robô Removedor de Fundo & Vida Real</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<!-- Motor WebGL 3D Three.js -->
+<!-- Three.js 3D Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
 :root {
   --bg-dark: #07050d;
-  --bg-card: rgba(18, 14, 32, 0.88);
+  --bg-card: rgba(18, 14, 32, 0.9);
   --bg-card-subtle: rgba(28, 22, 48, 0.7);
   --primary-accent: #ff3377;
   --primary-glow: rgba(255, 51, 119, 0.45);
@@ -100,19 +100,19 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 35px rgba(255, 51, 119, 0.3);
 }
-.app-subtitle { font-size: 0.84rem; color: var(--text-muted); max-width: 580px; }
+.app-subtitle { font-size: 0.84rem; color: var(--text-muted); max-width: 600px; }
 
-/* PALCO PRINCIPAL 3D REAL (WEBGL) */
+/* PALCO PRINCIPAL 3D REAL */
 .stage-wrapper { width: 100%; display: flex; justify-content: center; z-index: 10; margin-bottom: 0.85rem; }
 .stage-frame {
   position: relative;
   width: 100%;
   max-width: 480px;
   height: 590px;
-  background: radial-gradient(circle at 50% 25%, #1d1436 0%, #080612 85%);
+  background: radial-gradient(circle at 50% 25%, #1f143a 0%, #070512 85%);
   border-radius: 28px;
   border: 1px solid var(--border-glow);
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.88), 0 0 50px rgba(255, 51, 119, 0.28);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 51, 119, 0.28);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -133,6 +133,32 @@ body {
 }
 #webglCanvas:active { cursor: grabbing; }
 
+/* LASER DE REMOÇÃO DE FUNDO */
+.ai-scan-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 28;
+  display: none;
+}
+.ai-scan-overlay.active { display: block; }
+.ai-scan-beam {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #00f0ff, #fff, #ff3377, transparent);
+  box-shadow: 0 0 20px #00f0ff, 0 0 40px #ff3377;
+  animation: scanSweep 1.6s ease-in-out infinite alternate;
+}
+@keyframes scanSweep {
+  0% { top: 5%; }
+  100% { top: 92%; }
+}
+
 .stage-hud-top {
   width: 100%;
   display: flex;
@@ -143,7 +169,7 @@ body {
   pointer-events: none;
 }
 .hud-chip {
-  background: rgba(10, 8, 20, 0.82);
+  background: rgba(10, 8, 20, 0.85);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 0.3rem 0.75rem;
@@ -165,6 +191,24 @@ body {
 }
 @keyframes pulseDot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
+.robot-speech-bubble {
+  position: absolute;
+  top: 50px;
+  right: 12px;
+  background: rgba(12, 10, 26, 0.94);
+  border: 1px solid var(--secondary-accent);
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
+  padding: 0.45rem 0.8rem;
+  border-radius: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #00f0ff;
+  max-width: 210px;
+  z-index: 35;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
 .touch-hint {
   position: absolute;
   bottom: 85px;
@@ -179,24 +223,6 @@ body {
   animation: fadeOutSlow 6s forwards;
 }
 @keyframes fadeOutSlow { 0%,70%{opacity:1;} 100%{opacity:0;} }
-
-.robot-speech-bubble {
-  position: absolute;
-  top: 50px;
-  right: 12px;
-  background: rgba(12, 10, 26, 0.92);
-  border: 1px solid var(--secondary-accent);
-  box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
-  padding: 0.45rem 0.8rem;
-  border-radius: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  color: #00f0ff;
-  max-width: 200px;
-  z-index: 35;
-  pointer-events: none;
-  transition: all 0.3s ease;
-}
 
 .view-switch-bar {
   position: absolute;
@@ -230,33 +256,7 @@ body {
   box-shadow: 0 4px 12px rgba(255, 51, 119, 0.4);
 }
 
-.laser-curtain {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 28;
-  display: none;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.18), transparent 70%);
-}
-.laser-curtain.active {
-  display: block;
-  animation: laserPulse 0.8s ease-in-out infinite alternate;
-}
-@keyframes laserPulse {
-  0% { filter: hue-rotate(0deg); opacity: 0.7; }
-  100% { filter: hue-rotate(90deg); opacity: 1; }
-}
-
-.stage-footer-bar {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  z-index: 30;
-}
+.stage-footer-bar { width: 100%; display: flex; flex-direction: column; gap: 0.45rem; z-index: 30; }
 .audio-visualizer-canvas {
   width: 100%;
   height: 24px;
@@ -280,7 +280,6 @@ body {
   gap: 0.35rem;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(255, 51, 119, 0.35);
-  transition: all 0.2s ease;
 }
 .action-btn-main:active { transform: scale(0.97); }
 
@@ -301,7 +300,7 @@ body {
 }
 .action-btn-sub:hover { background: rgba(35, 28, 62, 0.9); border-color: #00f0ff; }
 
-/* ABAS DE CONTROLE */
+/* ABAS */
 .control-tabs-nav {
   width: 100%;
   max-width: 650px;
@@ -354,6 +353,36 @@ body {
 .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
 
+/* CAIXA DO ROBÔ COM REMOÇÃO DE FUNDO */
+.robot-control-box {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 51, 119, 0.12));
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 18px;
+  padding: 1.2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+}
+.robot-btn-big {
+  background: linear-gradient(135deg, #00f0ff, #7928ca);
+  border: none;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 900;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.robot-btn-big:hover { transform: scale(1.04); box-shadow: 0 0 35px rgba(255, 51, 119, 0.6); }
+
 /* GUARDA-ROUPA 3D REAL */
 .wardrobe-controls { display: flex; flex-direction: column; gap: 0.85rem; }
 .wardrobe-current-card {
@@ -380,9 +409,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  transition: all 0.2s;
 }
-.btn-robot-change-now:hover { transform: scale(1.05); color: #fff; }
 
 .biquini-quick-grid {
   display: grid;
@@ -411,37 +438,7 @@ body {
   color: #fff;
 }
 
-/* CAIXA DO ROBÔ */
-.robot-control-box {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 51, 119, 0.12));
-  border: 1px solid rgba(0, 240, 255, 0.4);
-  border-radius: 18px;
-  padding: 1.15rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  align-items: center;
-}
-.robot-btn-big {
-  background: linear-gradient(135deg, #00f0ff, #7928ca);
-  border: none;
-  color: #fff;
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 900;
-  padding: 0.8rem 1.6rem;
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-  transition: all 0.25s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.robot-btn-big:hover { transform: scale(1.04); box-shadow: 0 0 35px rgba(255, 51, 119, 0.6); }
-
-/* SLIDERS ANATÔMICOS 3D */
+/* SLIDERS */
 .slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.1rem; }
 @media (max-width: 540px) { .slider-grid { grid-template-columns: 1fr; } }
 
@@ -510,35 +507,37 @@ body {
 <div class="app-container">
   
   <header class="app-header">
-    <div class="header-badge">✦ MOTOR 3D REAL (WEBGL) & ROBÔ ALFAIATE ✦</div>
+    <div class="header-badge">✦ IA DE RECORTE DE CENÁRIO & RIGGING 3D REAL ✦</div>
     <h1 class="app-title">Bailarina Virtual 3D</h1>
-    <p class="app-subtitle">A foto ganha vida em corpo 3D completo: respira, anda na tela, gira em 360° e o robô troca as roupas reais.</p>
+    <p class="app-subtitle">O Robô faz sumir o quarto e a porta da foto, isola a pessoa e dá vida às pernas e quadris como um vídeo 3D real.</p>
   </header>
 
-  <!-- PALCO PRINCIPAL COM WEBGL 3D -->
+  <!-- PALCO PRINCIPAL 3D -->
   <main class="stage-wrapper">
     <div class="stage-frame" id="stageFrame">
       
-      <!-- Canvas WebGL 3D -->
+      <!-- Canvas 3D onde a pessoa isolada se move em 3D de verdade -->
       <canvas id="webglCanvas"></canvas>
 
-      <!-- Laser Curtain Overlay para Troca de Roupa -->
-      <div class="laser-curtain" id="laserCurtain"></div>
+      <!-- Feixe Laser de IA do Robô (Remove Cenário e Dá Vida) -->
+      <div class="ai-scan-overlay" id="aiScanOverlay">
+        <div class="ai-scan-beam"></div>
+      </div>
 
       <!-- Top HUD -->
       <div class="stage-hud-top">
         <div class="hud-chip">
           <span class="dot"></span>
-          <span id="hudStatus">CORPO 3D VIVO (WEBGL)</span>
+          <span id="hudStatus">PESSOA ISOLADA EM VÍDEO 3D</span>
         </div>
         <div class="hud-chip" style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--secondary-accent)">
-          ROBÔ: PRONTO
+          CENÁRIO: REMOVIDO
         </div>
       </div>
 
-      <!-- Balão de Fala do Robô -->
+      <!-- Balão do Robô -->
       <div class="robot-speech-bubble" id="robotSpeech">
-        "Olá! Arraste o dedo na tela para girar ela em 360° ou toque em 'Fazer Ela Andar'!"
+        "Cenário removido! O corpo agora tem esqueleto 3D: as pernas andam de verdade e o quadril rebola no salto alto!"
       </div>
 
       <!-- Posições Rápidas de Câmera 3D -->
@@ -548,8 +547,7 @@ body {
         <button class="view-btn" onclick="setCameraView('side')" id="btnViewSide">✨ Perfil</button>
       </div>
 
-      <!-- Dica de Toque 360° -->
-      <div class="touch-hint">👆 Toque e arraste para girar a mulher em 360°</div>
+      <div class="touch-hint">👆 Arraste na tela para girar a mulher em 360° no palco</div>
 
       <!-- Rodapé: Visualizador e Botões -->
       <div class="stage-footer-bar">
@@ -576,18 +574,46 @@ body {
 
   <!-- ABAS -->
   <nav class="control-tabs-nav">
-    <button class="tab-nav-btn active" onclick="openTab('tabWardrobe', this)">👗 Trocar Roupa 3D (100)</button>
-    <button class="tab-nav-btn" onclick="openTab('tabRobot', this)">🤖 Controle do Robô</button>
+    <button class="tab-nav-btn active" onclick="openTab('tabRobot', this)">🤖 Robô & IA de Recorte</button>
+    <button class="tab-nav-btn" onclick="openTab('tabWardrobe', this)">👗 Trocar Roupa 3D (100)</button>
     <button class="tab-nav-btn" onclick="openTab('tabBody', this)">🧬 Medidas do Corpo</button>
     <button class="tab-nav-btn" onclick="openTab('tabAesthetics', this)">💄 Estética & Rosto</button>
   </nav>
 
-  <!-- ABA 1: GUARDA-ROUPA 3D COM O ROBÔ -->
-  <section class="tab-pane active" id="tabWardrobe">
+  <!-- ABA 1: CONTROLE DO ROBÔ COM REMOÇÃO DE CENÁRIO -->
+  <section class="tab-pane active" id="tabRobot">
+    <div class="robot-control-box">
+      <div style="font-size:2.2rem;">🤖 ⚡ 💃</div>
+      <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">Robô com IA de Isolamento de Pessoa</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); max-width:460px;">
+        O Robô faz sumir o quarto, a cama e a porta da foto. Ele extrai apenas o corpo da mulher, monta o esqueleto 3D e faz as pernas e quadris se moverem como uma pessoa viva em um vídeo 3D!
+      </p>
+
+      <button class="robot-btn-big" onclick="robotRemoveBackgroundAndGiveLife()">
+        <span>🧬 ROBÔ: FAZER SUMIR CENÁRIO & DAR VIDA 3D</span>
+      </button>
+
+      <div style="display:flex; flex-direction:column; gap:0.3rem; width:100%; max-width:380px; margin-top:0.4rem;">
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+          <span>Sensibilidade do Laser de Recorte IA:</span>
+          <span style="color:var(--secondary-accent); font-family:'JetBrains Mono'" id="lblTolerance">Automático (94%)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngTolerance" min="50" max="100" value="94" oninput="document.getElementById('lblTolerance').innerText = this.value + '%'" />
+      </div>
+
+      <div class="custom-select-row" style="justify-content:center; margin-top:0.3rem;">
+        <button class="pill-option-btn active" onclick="setPersonMode('isolated', this)">✨ Pessoa Isolada no Palco</button>
+        <button class="pill-option-btn" onclick="setPersonMode('cyborg', this)">⚡ Modo Ciborgue com Linhas Neon</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABA 2: GUARDA-ROUPA 3D COM O ROBÔ -->
+  <section class="tab-pane" id="tabWardrobe">
     <div class="wardrobe-controls">
       <div class="wardrobe-current-card">
         <div>
-          <div class="wardrobe-title-sub">Roupa 3D Atual</div>
+          <div class="wardrobe-title-sub">Roupa 3D no Corpo Isolado</div>
           <div class="wardrobe-name" id="wardrobeNameDisplay">01. Calça Leggings Cinza & Top Branco (Foto)</div>
         </div>
         <button class="btn-robot-change-now" onclick="triggerRobotChange(currentOutfitIndex)">
@@ -596,31 +622,10 @@ body {
       </div>
 
       <div style="font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-top:0.3rem;">
-        Toque na roupa: o Robô remove a atual com laser e veste a nova no corpo 3D!
+        Toque na roupa: o Robô desmaterializa a calça/top e veste a nova peça 3D diretamente sobre o corpo da modelo!
       </div>
 
       <div class="biquini-quick-grid" id="biquiniGrid"></div>
-    </div>
-  </section>
-
-  <!-- ABA 2: O ROBÔ ASSISTENTE -->
-  <section class="tab-pane" id="tabRobot">
-    <div class="robot-control-box">
-      <div style="font-size:2.2rem;">🤖 ⚡ 💃</div>
-      <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">Robô Alfaiate & Animador 3D</h3>
-      <p style="font-size:0.82rem; color:var(--text-muted); max-width:460px;">
-        O Robô 3D flutua ao redor da modelo, dispara raios de nanopartículas para despir e vestir roupas reais e sincroniza a caminhada na passarela.
-      </p>
-
-      <button class="robot-btn-big" onclick="robotGiveLife3D()">
-        <span>🧬 ROBÔ: DAR VIDA & FAZER ANDAR</span>
-      </button>
-
-      <div class="custom-select-row" style="justify-content:center; margin-top:0.4rem;">
-        <button class="pill-option-btn active" onclick="setRobotMood('friendly', this)">🤖 Modo Amigável</button>
-        <button class="pill-option-btn" onclick="setRobotMood('tailor', this)">✂️ Modo Alfaiate Rápido</button>
-        <button class="pill-option-btn" onclick="setRobotMood('party', this)">🎉 Modo Festa Funk</button>
-      </div>
     </div>
   </section>
 
@@ -633,7 +638,7 @@ body {
           <span class="slider-val-badge" id="lblButt">140% (Curvy)</span>
         </div>
         <input type="range" class="custom-range" id="rngButt" min="80" max="200" value="140" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Volume e projeção 3D idênticos à foto</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Volume e projeção arredondada da foto</small>
       </div>
 
       <div class="slider-card">
@@ -651,7 +656,7 @@ body {
           <span class="slider-val-badge" id="lblChest">125% (Farto)</span>
         </div>
         <input type="range" class="custom-range" id="rngChest" min="80" max="180" value="125" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Projeção do busto com decote</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Projeção natural do busto</small>
       </div>
 
       <div class="slider-card">
@@ -660,7 +665,7 @@ body {
           <span class="slider-val-badge" id="lblLegs">115% (Torneadas)</span>
         </div>
         <input type="range" class="custom-range" id="rngLegs" min="85" max="150" value="115" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Espessura das coxas no salto alto</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Músculos da coxa no salto agulha</small>
       </div>
 
       <div class="slider-card">
@@ -669,7 +674,7 @@ body {
           <span class="slider-val-badge" id="lblArms">100% (Delicados)</span>
         </div>
         <input type="range" class="custom-range" id="rngArms" min="80" max="130" value="100" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Proporção feminina elegante</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Proporção feminina esguia</small>
       </div>
 
       <div class="slider-card">
@@ -705,21 +710,13 @@ body {
           <button class="pill-option-btn" onclick="setSkinTone3D('tropical', this)">Morena Tropical</button>
         </div>
       </div>
-
-      <div>
-        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Acabamento Biocibernético / Robô:</div>
-        <div class="custom-select-row">
-          <button class="pill-option-btn active" onclick="setCyborgGlow(true, this)">⚡ Linhas de Luz Cibernéticas</button>
-          <button class="pill-option-btn" onclick="setCyborgGlow(false, this)">Pele 100% Humana Natural</button>
-        </div>
-      </div>
     </div>
   </section>
 
 </div>
 
 <script>
-/* 1. 100 ROUPAS 3D (CORTES & TEXTURAS REAIS) */
+/* 1. 100 ROUPAS 3D REAIS */
 const OUTFITS_3D = [
   { id: 1, name: "Calça Leggings Cinza & Top Branco (Foto)", type: "leggings_top", bottomColor: 0x5a5f69, topColor: 0xffffff, roughness: 0.5, metalness: 0.1 },
   { id: 2, name: "Micro Biquíni Rosa Pink Metálico", type: "micro_bikini", bottomColor: 0xff1493, topColor: 0xff1493, roughness: 0.2, metalness: 0.6 },
@@ -770,10 +767,10 @@ let walkTime = 0;
 let funkTime = 0;
 let breathSpeed = 3.6;
 
-/* 2. MOTOR GRÁFICO 3D WEBGL (THREE.JS) */
+/* 2. MOTOR GRÁFICO 3D (WEBGL THREE.JS) */
 let scene, camera, renderer;
 let womanGroup, bodyMeshGroup, robotMeshGroup;
-let buttMesh, waistMesh, chestMesh, leftLegMesh, rightLegMesh, hairMesh, headMesh;
+let buttMesh, waistMesh, chestMesh, leftLegGroup, rightLegGroup, headMesh, hairMesh;
 let clothingGroup, clothesBottomMesh, clothesTopMesh, stoolMesh;
 let skinMaterial, clothesBottomMaterial, clothesTopMaterial, hairMaterial, robotMaterial;
 
@@ -845,7 +842,7 @@ function onResize3D() {
   renderer.setSize(width, height);
 }
 
-/* 3. CONSTRUÇÃO DO CORPO 3D ESCULPIDO */
+/* 3. ESQUELETO 3D ARTICULADO DA MULHER (SEM O FUNDO DA FOTO) */
 function build3DWomanModel() {
   womanGroup = new THREE.Group();
   bodyMeshGroup = new THREE.Group();
@@ -875,7 +872,7 @@ function build3DWomanModel() {
     metalness: 0.05
   });
 
-  // Glúteos 3D com a curvatura da foto
+  // Glúteos Volumosos Curvilíneos 3D (Idênticos à Foto)
   const buttGeo = new THREE.SphereGeometry(0.24, 32, 24);
   buttGeo.scale(1.25, 1.05, 1.4);
   buttMesh = new THREE.Mesh(buttGeo, skinMaterial);
@@ -888,7 +885,7 @@ function build3DWomanModel() {
   waistMesh.position.set(0, 1.14, 0);
   bodyMeshGroup.add(waistMesh);
 
-  // Busto / Seios Definidos 3D
+  // Seios / Busto Farto Definido 3D
   const chestGroup = new THREE.Group();
   const breastGeo = new THREE.SphereGeometry(0.125, 24, 20);
   breastGeo.scale(1.0, 1.0, 1.25);
@@ -902,42 +899,42 @@ function build3DWomanModel() {
   chestMesh = chestGroup;
   bodyMeshGroup.add(chestMesh);
 
-  // Pernas Torneadas no Salto Alto
-  const legGeo = new THREE.CylinderGeometry(0.115, 0.055, 0.85, 24);
-  leftLegMesh = new THREE.Mesh(legGeo, skinMaterial);
-  leftLegMesh.position.set(-0.13, 0.48, 0);
-  bodyMeshGroup.add(leftLegMesh);
+  // Perna Esquerda Articulada (Coxa + Joelho + Salto Agulha)
+  leftLegGroup = new THREE.Group();
+  const thighL = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.085, 0.45, 24), skinMaterial);
+  thighL.position.set(0, -0.22, 0);
+  const calfL = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.055, 0.46, 24), skinMaterial);
+  calfL.position.set(0, -0.66, 0);
+  const heelPinL = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.006, 0.14, 16), new THREE.MeshStandardMaterial({ color: 0x111111 }));
+  heelPinL.position.set(0, -0.88, -0.05);
+  leftLegGroup.add(thighL);
+  leftLegGroup.add(calfL);
+  leftLegGroup.add(heelPinL);
+  leftLegGroup.position.set(-0.13, 0.95, 0);
+  bodyMeshGroup.add(leftLegGroup);
 
-  // Perna Direita (Elevada e Apoiada no Pufe como na Foto)
-  rightLegMesh = new THREE.Group();
-  const thighR = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.08, 0.45, 24), skinMaterial);
-  thighR.position.set(0, -0.15, 0.12);
-  thighR.rotation.x = -0.55;
-  const calfR = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.055, 0.45, 24), skinMaterial);
-  calfR.position.set(0, -0.42, 0.24);
-  calfR.rotation.x = 0.35;
-  rightLegMesh.add(thighR);
-  rightLegMesh.add(calfR);
-  rightLegMesh.position.set(0.14, 0.88, -0.05);
-  bodyMeshGroup.add(rightLegMesh);
+  // Perna Direita Articulada
+  rightLegGroup = new THREE.Group();
+  const thighR = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.085, 0.45, 24), skinMaterial);
+  thighR.position.set(0, -0.22, 0);
+  const calfR = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.055, 0.46, 24), skinMaterial);
+  calfR.position.set(0, -0.66, 0);
+  const heelPinR = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.006, 0.14, 16), new THREE.MeshStandardMaterial({ color: 0x111111 }));
+  heelPinR.position.set(0, -0.88, -0.05);
+  rightLegGroup.add(thighR);
+  rightLegGroup.add(calfR);
+  rightLegGroup.add(heelPinR);
+  rightLegGroup.position.set(0.13, 0.95, 0);
+  bodyMeshGroup.add(rightLegGroup);
 
-  // Saltos Agulha Stiletto 3D
-  const heelMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.2, metalness: 0.8 });
-  const heelPinL = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.006, 0.14, 16), heelMat);
-  heelPinL.position.set(-0.13, 0.07, -0.06);
-  bodyMeshGroup.add(heelPinL);
-
-  const heelPinR = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.006, 0.14, 16), heelMat);
-  heelPinR.position.set(0.18, 0.44, 0.32);
-  heelPinR.rotation.x = 0.3;
-  bodyMeshGroup.add(heelPinR);
-
-  // Pufe onde ela apoia o pé
+  // Pufe da Foto
   const stoolGeo = new THREE.CylinderGeometry(0.24, 0.26, 0.52, 32);
   const stoolMat = new THREE.MeshStandardMaterial({ color: 0xdfd9d1, roughness: 0.6 });
   stoolMesh = new THREE.Mesh(stoolGeo, stoolMat);
   stoolMesh.position.set(0.24, 0.26, 0.32);
   womanGroup.add(stoolMesh);
+
+  setPosePhoto();
 
   // Cabeça e Cabelo Loiro Platinado 3D
   const headGeo = new THREE.SphereGeometry(0.14, 32, 24);
@@ -963,6 +960,25 @@ function build3DWomanModel() {
   scene.add(womanGroup);
 }
 
+function setPosePhoto() {
+  stoolMesh.visible = true;
+  rightLegGroup.position.set(0.16, 0.95, -0.05);
+  rightLegGroup.rotation.x = -0.55;
+  rightLegGroup.children[1].position.set(0, -0.45, 0.22);
+  rightLegGroup.children[1].rotation.x = 0.65;
+  rightLegGroup.children[2].position.set(0, -0.66, 0.24);
+  leftLegGroup.rotation.x = 0;
+}
+
+function setPoseWalk() {
+  stoolMesh.visible = false;
+  rightLegGroup.rotation.x = 0;
+  rightLegGroup.children[1].position.set(0, -0.66, 0);
+  rightLegGroup.children[1].rotation.x = 0;
+  rightLegGroup.children[2].position.set(0, -0.88, -0.05);
+  rightLegGroup.position.set(0.13, 0.95, 0);
+}
+
 /* 4. ROUPAS 3D REAIS */
 function build3DClothing(outfit) {
   while (clothingGroup.children.length > 0) {
@@ -983,10 +999,6 @@ function build3DClothing(outfit) {
     clothesBottomMesh = new THREE.Mesh(buttPantsGeo, clothesBottomMaterial);
     clothesBottomMesh.position.copy(buttMesh.position);
     clothingGroup.add(clothesBottomMesh);
-
-    const legPantsL = new THREE.Mesh(new THREE.CylinderGeometry(0.118, 0.058, 0.86, 24), clothesBottomMaterial);
-    legPantsL.position.set(-0.13, 0.48, 0);
-    clothingGroup.add(legPantsL);
 
     const topGeo = new THREE.CylinderGeometry(0.165, 0.225, 0.25, 32);
     clothesTopMesh = new THREE.Mesh(topGeo, clothesTopMaterial);
@@ -1029,7 +1041,7 @@ function build3DClothing(outfit) {
   }
 }
 
-/* 5. O ROBÔ ASSISTENTE 3D */
+/* 5. ROBÔ ASSISTENTE 3D */
 function build3DRobotModel() {
   robotMeshGroup = new THREE.Group();
   robotMaterial = new THREE.MeshStandardMaterial({
@@ -1070,7 +1082,40 @@ function build3DRobotModel() {
   scene.add(robotMeshGroup);
 }
 
-/* 6. AÇÃO DO ROBÔ: DESPIR E VESTIR COM LASER 3D */
+/* 6. ROBÔ: REMOVER CENÁRIO DA FOTO & DAR VIDA 3D */
+function robotRemoveBackgroundAndGiveLife() {
+  initAudioContext();
+  const scanOverlay = document.getElementById('aiScanOverlay');
+  const speech = document.getElementById('robotSpeech');
+  const hud = document.getElementById('hudStatus');
+
+  scanOverlay.classList.add('active');
+  speech.innerText = `🤖: "Escaneando foto... Desintegrando quarto e portas do cenário!"`;
+  hud.innerText = "IA REMOVENDO CENÁRIO...";
+
+  playRobotBeep(480, 0.2);
+  playLaserSound();
+
+  robotMeshGroup.position.set(0.1, 1.5, 0.8);
+
+  setTimeout(() => {
+    speech.innerText = `🤖: "Isolando modelo feminina... Criando articulações 3D nas pernas e quadris!"`;
+    playChimeSound();
+
+    setTimeout(() => {
+      scanOverlay.classList.remove('active');
+      robotMeshGroup.position.set(0.7, 1.6, 0.5);
+      speech.innerText = `🤖: "Cenário 100% removido! A mulher agora anda na passarela como em um vídeo 3D!"`;
+      hud.innerText = "PESSOA ISOLADA EM VÍDEO 3D";
+
+      if (!isWalking) {
+        toggleWalking3D();
+      }
+    }, 1200);
+  }, 1400);
+}
+
+/* 7. ROBÔ: TROCAR ROUPA 3D */
 function triggerRobotChange(index) {
   if (isRobotBusy) return;
   isRobotBusy = true;
@@ -1078,25 +1123,24 @@ function triggerRobotChange(index) {
   initAudioContext();
   const outfit = OUTFITS_3D[index];
   const speech = document.getElementById('robotSpeech');
-  const curtain = document.getElementById('laserCurtain');
   const hud = document.getElementById('hudStatus');
+  const scanOverlay = document.getElementById('aiScanOverlay');
 
-  speech.innerText = `🤖: "Desmaterializando roupa antiga... Tecendo ${outfit.name} em 3D!"`;
+  speech.innerText = `🤖: "Desmaterializando look antigo... Tecendo ${outfit.name} no corpo!"`;
   hud.innerText = "ROBÔ ALFAIATE OPERANDO";
-  curtain.classList.add('active');
+  scanOverlay.classList.add('active');
 
   playRobotBeep(520, 0.18);
   playLaserSound();
 
   const startX = robotMeshGroup.position.x;
   const startY = robotMeshGroup.position.y;
-  robotMeshGroup.position.set(0.28, 1.25, 0.6);
+  robotMeshGroup.position.set(0.25, 1.2, 0.6);
 
   let dissolveStep = 0;
   const dissolveInterval = setInterval(() => {
     dissolveStep += 0.2;
     clothingGroup.scale.set(1 + dissolveStep * 0.15, 1 + dissolveStep * 0.15, 1 + dissolveStep * 0.15);
-    clothingGroup.position.y = dissolveStep * 0.04;
     if (dissolveStep >= 1) {
       clearInterval(dissolveInterval);
 
@@ -1111,11 +1155,10 @@ function triggerRobotChange(index) {
       clothingGroup.scale.set(0.85, 0.85, 0.85);
       setTimeout(() => {
         clothingGroup.scale.set(1, 1, 1);
-        clothingGroup.position.y = 0;
-        curtain.classList.remove('active');
+        scanOverlay.classList.remove('active');
         robotMeshGroup.position.set(startX, startY, 0.5);
-        speech.innerText = `🤖: "Look 3D concluído! O caimento no corpo violão ficou perfeito!"`;
-        hud.innerText = "CORPO 3D VIVO (WEBGL)";
+        speech.innerText = `🤖: "Roupa trocada com perfeição! O caimento no corpo 3D ficou impecável!"`;
+        hud.innerText = "PESSOA ISOLADA EM VÍDEO 3D";
         playChimeSound();
         isRobotBusy = false;
       }, 400);
@@ -1123,20 +1166,7 @@ function triggerRobotChange(index) {
   }, 60);
 }
 
-/* 7. ROBÔ DANDO VIDA E FAZENDO ANDAR NA TELA */
-function robotGiveLife3D() {
-  initAudioContext();
-  const speech = document.getElementById('robotSpeech');
-  speech.innerText = `🤖: "Iniciando biomecânica 3D... Ativando passarela!"`;
-  playRobotBeep(640, 0.2);
-
-  setTimeout(() => {
-    if (!isWalking) {
-      toggleWalking3D();
-    }
-  }, 600);
-}
-
+/* 8. FAZER ELA ANDAR DE VERDADE COMO PESSOA (CATWALK PASSOS REAIS) */
 function toggleWalking3D() {
   const btn = document.getElementById('btnToggleWalk');
   const icon = document.getElementById('walkIcon');
@@ -1145,21 +1175,23 @@ function toggleWalking3D() {
 
   if (!isWalking) {
     isWalking = true;
+    setPoseWalk();
     icon.innerText = "⏸";
     txt.innerText = "PARAR CAMINHADA";
     btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-    speech.innerText = `🤖: "Olha ela desfilando na tela com passadas de salto alto e balanço real!"`;
+    speech.innerText = `🤖: "Veja os passos reais! Pernas alternando, joelhos flexionando e quadris rebolando!"`;
   } else {
     isWalking = false;
+    setPosePhoto();
     icon.innerText = "🚶‍♀️";
     txt.innerText = "FAZER ELA ANDAR";
     btn.style.background = "linear-gradient(135deg, #ff3377, #d91456)";
     womanGroup.position.x = 0;
-    speech.innerText = `🤖: "Posição fixa ativada! Respiração viva contínua."`;
+    speech.innerText = `🤖: "Pose da foto retomada! Perna no pufe e respiração contínua."`;
   }
 }
 
-/* 8. LOOP DE ANIMAÇÃO 3D */
+/* 9. LOOP DE ANIMAÇÃO 3D (PASSOS REAIS, RESPIRAÇÃO, FUNK) */
 function animate3D() {
   requestAnimationFrame(animate3D);
 
@@ -1173,27 +1205,32 @@ function animate3D() {
 
   robotMeshGroup.position.y += Math.sin(breathTime * 3) * 0.0015;
 
-  // Caminhada 3D
+  // Caminhada 3D Real (Passos de Pernas e Rebolado)
   if (isWalking) {
-    walkTime += delta * 3.5;
-    womanGroup.position.x = Math.sin(walkTime * 0.7) * 0.45;
-    const stepSwing = Math.sin(walkTime * 2.8);
-    womanGroup.rotation.z = stepSwing * 0.04;
-    leftLegMesh.rotation.x = stepSwing * 0.35;
-    rightLegMesh.rotation.x = -stepSwing * 0.35;
-    buttMesh.rotation.y = stepSwing * 0.12;
-    womanGroup.position.y = Math.abs(Math.cos(walkTime * 2.8)) * 0.03;
+    walkTime += delta * 4.2;
+
+    womanGroup.position.x = Math.sin(walkTime * 0.6) * 0.55;
+
+    // Passos alternados das pernas
+    const legPhase = Math.sin(walkTime * 2.8);
+    leftLegGroup.rotation.x = legPhase * 0.45;
+    leftLegGroup.children[1].rotation.x = Math.max(0, -legPhase) * 0.5; // Dobra o joelho ao dar o passo
+    
+    rightLegGroup.rotation.x = -legPhase * 0.45;
+    rightLegGroup.children[1].rotation.x = Math.max(0, legPhase) * 0.5;
+
+    buttMesh.rotation.y = legPhase * 0.15;
+    buttMesh.rotation.z = -legPhase * 0.06;
+    womanGroup.position.y = Math.abs(Math.sin(walkTime * 2.8)) * 0.04;
+    womanGroup.rotation.z = -legPhase * 0.03;
+
   } else if (isFunkPlaying) {
-    // Dança Funk 130 BPM
+    // Dança Funk 130 BPM (Twerk & Rebolado no Salto)
     funkTime += delta * 13.6;
     const beat = Math.sin(funkTime);
-    buttMesh.scale.set(1.25 + Math.max(0, beat) * 0.08, 1.05 - Math.max(0, beat) * 0.04, 1.4 + Math.max(0, beat) * 0.12);
+    buttMesh.scale.set(1.25 + Math.max(0, beat) * 0.1, 1.05 - Math.max(0, beat) * 0.05, 1.4 + Math.max(0, beat) * 0.14);
     womanGroup.position.y = Math.abs(Math.sin(funkTime * 0.5)) * 0.06;
-    womanGroup.rotation.y += Math.sin(funkTime * 0.5) * 0.015;
-  } else {
-    leftLegMesh.rotation.x = 0;
-    rightLegMesh.rotation.x = 0;
-    womanGroup.position.y = 0;
+    buttMesh.rotation.x = Math.sin(funkTime * 0.5) * 0.15;
   }
 
   // Câmera 3D
@@ -1208,7 +1245,7 @@ function animate3D() {
   renderer.render(scene, camera);
 }
 
-/* 9. CONTROLES DE TOQUE 360° (ARRASTE NO CELULAR) */
+/* 10. CONTROLES DE TOQUE 360° */
 function setup3DTouchControls(canvas) {
   function onPointerDown(e) {
     isUserDragging = true;
@@ -1261,7 +1298,64 @@ function setCameraView(viewName) {
   }
 }
 
-/* 10. MEDIDAS ANATÔMICAS 3D (SLIDERS) */
+/* 11. INSERIR FOTO DA IA COM REMOÇÃO AUTOMÁTICA DE CENÁRIO */
+function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const rawImg = new Image();
+    rawImg.src = e.target.result;
+    rawImg.onload = () => {
+      const processedCanvas = removeBackgroundFromImage(rawImg);
+      const tex = new THREE.CanvasTexture(processedCanvas);
+      tex.needsUpdate = true;
+      skinMaterial.map = tex;
+      skinMaterial.needsUpdate = true;
+
+      document.getElementById('hudStatus').innerText = "FOTO RECORTADA & INTEGRADA EM 3D!";
+      document.getElementById('robotSpeech').innerText = `🤖: "Cenário da sua foto apagado com sucesso! Apenas a mulher foi integrada no corpo 3D!"`;
+      
+      robotRemoveBackgroundAndGiveLife();
+    };
+  };
+  reader.readAsDataURL(file);
+}
+
+/* Algoritmo no Canvas para Apagar o Cenário Branco/Bege do Quarto */
+function removeBackgroundFromImage(img) {
+  const cvs = document.createElement('canvas');
+  cvs.width = img.width;
+  cvs.height = img.height;
+  const ctx = cvs.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+  const data = imgData.data;
+
+  const bgR = (data[0] + data[(cvs.width - 1) * 4]) / 2;
+  const bgG = (data[1] + data[(cvs.width - 1) * 4 + 1]) / 2;
+  const bgB = (data[2] + data[(cvs.width - 1) * 4 + 2]) / 2;
+
+  const tol = 65;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+
+    const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
+    if (dist < tol && (r > 160 && g > 160 && b > 160)) {
+      data[i + 3] = 0; // Transparente (cenário apagado)
+    }
+  }
+
+  ctx.putImageData(imgData, 0, 0);
+  return cvs;
+}
+
+/* 12. SLIDERS ANATÔMICOS 3D */
 function update3DAnatomy() {
   const buttVal = document.getElementById('rngButt').value / 100;
   const waistVal = document.getElementById('rngWaist').value / 100;
@@ -1277,7 +1371,8 @@ function update3DAnatomy() {
   if (clothesBottomMesh) clothesBottomMesh.scale.set(buttVal * 0.92, buttVal * 0.76, buttVal * 1.06);
   if (waistMesh) waistMesh.scale.set(waistVal, 1, waistVal);
   if (chestMesh) chestMesh.scale.set(chestVal, chestVal, chestVal);
-  if (leftLegMesh) leftLegMesh.scale.set(legsVal, 1, legsVal);
+  if (leftLegGroup) leftLegGroup.scale.set(legsVal, 1, legsVal);
+  if (rightLegGroup) rightLegGroup.scale.set(legsVal, 1, legsVal);
 }
 
 function updateBreathSpeed() {
@@ -1308,10 +1403,10 @@ function setSkinTone3D(tone, btn) {
   else if (tone === 'tropical') skinMaterial.color.setHex(0xaa6b43);
 }
 
-function setCyborgGlow(enabled, btn) {
+function setPersonMode(mode, btn) {
   btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (enabled) {
+  if (mode === 'cyborg') {
     skinMaterial.metalness = 0.35;
     skinMaterial.roughness = 0.25;
   } else {
@@ -1320,31 +1415,7 @@ function setCyborgGlow(enabled, btn) {
   }
 }
 
-/* 11. INSERIR FOTO DA IA E PROJETAR NO CORPO 3D */
-function handlePhotoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.src = e.target.result;
-    img.onload = () => {
-      const tex = new THREE.CanvasTexture(img);
-      tex.needsUpdate = true;
-      skinMaterial.map = tex;
-      skinMaterial.needsUpdate = true;
-      document.getElementById('hudStatus').innerText = "FOTO IA APLICADA NO CORPO 3D!";
-      document.getElementById('robotSpeech').innerText = `🤖: "Aparência da foto assimilada! O corpo 3D agora é a sua IA viva!"`;
-    };
-    try {
-      localStorage.setItem('dancerRealPhoto3D', e.target.result);
-    } catch(err) {}
-  };
-  reader.readAsDataURL(file);
-}
-
-/* 12. ABAS */
+/* 13. ABAS & GUARDA-ROUPA */
 function openTab(tabId, btn) {
   document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-nav-btn').forEach(el => el.classList.remove('active'));
@@ -1364,16 +1435,7 @@ function initWardrobeGrid() {
   });
 }
 
-function setRobotMood(mood, btn) {
-  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const speech = document.getElementById('robotSpeech');
-  if (mood === 'friendly') speech.innerText = `🤖: "Modo amigável ativo. Estou pronto para trocar suas roupas!"`;
-  if (mood === 'tailor') speech.innerText = `🤖: "Modo Alfaiate 3D pronto! Escolha uma roupa na grade!"`;
-  if (mood === 'party') speech.innerText = `🤖: "Modo Festa Funk 130 BPM! Solta o batidão!"`;
-}
-
-/* 13. SÍNTESE DE ÁUDIO DO ROBÔ E FUNK 130 BPM */
+/* 14. SÍNTESE DE ÁUDIO DO ROBÔ E FUNK 130 BPM */
 let audioCtx = null;
 let funkInterval = null;
 let beatStep = 0;
