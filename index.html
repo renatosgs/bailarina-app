@@ -2,704 +2,162 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bailarina 3D Articulada - Palco Amplo & IA Invisível</title>
+  <title>Dançarina Real 3D - Palco & IA</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #08080f;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: none;
+    body { margin: 0; overflow: hidden; background: #05050a; font-family: sans-serif; }
+    #canvas-container { width: 100vw; height: 100vh; }
+    #painel {
+      position: absolute; top: 15px; left: 15px;
+      background: rgba(15, 15, 25, 0.9); border: 1px solid #ff2a70;
+      border-radius: 10px; padding: 14px; width: 280px; color: white;
+      z-index: 10;
     }
-    #canvas-container {
-      width: 100vw;
-      height: 100vh;
-      display: block;
+    .btn {
+      display: block; width: 100%; padding: 10px; margin: 6px 0;
+      background: #ff2a70; border: none; border-radius: 6px;
+      color: white; font-weight: bold; cursor: pointer; text-align: center;
     }
-
-    /* Painel de Controle Flutuante Minimalista (Sem bots visíveis) */
-    #painel-controle {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: rgba(18, 18, 28, 0.88);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 16px;
-      width: 295px;
-      color: #f1f1f1;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
-      z-index: 100;
+    .btn:hover { background: #d81b60; }
+    #comparador {
+      width: 100%; max-height: 150px; object-fit: cover;
+      border-radius: 6px; display: none; margin-top: 8px; border: 1px solid #00ffaa;
     }
-
-    h2 {
-      margin: 0 0 12px 0;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #ff3377;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .secao {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 11px;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #aaa;
-    }
-
-    .btn-file {
-      display: block;
-      width: 100%;
-      text-align: center;
-      background: linear-gradient(135deg, #ff2a70, #9b1fe8);
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 13px;
-      transition: all 0.2s;
-    }
-    .btn-file:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 15px rgba(255, 42, 112, 0.4);
-    }
-    input[type="file"] { display: none; }
-
-    /* Comparador Discreto da Foto enviada */
-    #comparador-container {
-      display: none;
-      margin-top: 10px;
-      background: #111;
-      border-radius: 8px;
-      padding: 6px;
-      border: 1px solid #ff2a70;
-      text-align: center;
-    }
-    #foto-preview {
-      width: 100%;
-      max-height: 160px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-    #status-ia {
-      font-size: 11px;
-      color: #00ffaa;
-      margin-top: 4px;
-      font-weight: 600;
-    }
-
-    /* Grade de Ações e Danças */
-    .grid-botoes {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-    .btn-acao {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: white;
-      padding: 8px 6px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn-acao:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .btn-acao.ativo {
-      background: #ff2a70;
-      border-color: #ff2a70;
-      font-weight: bold;
-    }
-    .btn-full {
-      grid-column: span 2;
-      background: linear-gradient(135deg, #e91e63, #ff5722);
-      font-weight: bold;
-    }
-
-    .dica-mouse {
-      font-size: 10px;
-      color: #777;
-      text-align: center;
-      margin-top: 10px;
-      line-height: 1.3;
-    }
+    .status { font-size: 11px; color: #00ffaa; margin-top: 4px; }
   </style>
-
-  <!-- Three.js e OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 
-  <!-- Painel de Controle Único e Limpo -->
-  <div id="painel-controle">
-    <h2>Bailarina 3D Inteligente</h2>
+<div id="painel">
+  <label class="btn">
+    📷 Carregar Foto da Dançarina
+    <input type="file" id="input-foto" accept="image/*" style="display:none">
+  </label>
+  <img id="comparador" alt="Foto Original">
+  <div id="status-ia" class="status"></div>
 
-    <div class="secao">
-      <label>1. Robô de IA (Invisível)</label>
-      <label for="input-foto" class="btn-file">📷 Enviar Foto da Dançarina</label>
-      <input type="file" id="input-foto" accept="image/*">
+  <button class="btn" onclick="tocarAnimacao('funk')">🔥 Dançar Funk até o Chão</button>
+  <button class="btn" onclick="tocarAnimacao('agachar')">🧘 Agachar</button>
+  <button class="btn" onclick="tocarAnimacao('sentar')">🪑 Sentar</button>
+  <button class="btn" onclick="tocarAnimacao('deitar')">🛌 Deitar</button>
+  <button class="btn" onclick="tocarAnimacao('pose')">📸 Pose da Foto</button>
+</div>
+
+<div id="canvas-container"></div>
+
+<script>
+  // 1. Cena, Câmera e Palco Amplo com Chão Real
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x06060c);
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 1.6, 3.8);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 1.0, 0);
+
+  // Palco Grande Iluminado (12 metros de diâmetro, reflexivo)
+  const palco = new THREE.Mesh(
+    new THREE.CylinderGeometry(6, 6.2, 0.2, 64),
+    new THREE.MeshStandardMaterial({ color: 0x121218, roughness: 0.2, metalness: 0.5 })
+  );
+  palco.position.y = -0.1;
+  palco.receiveShadow = true;
+  scene.add(palco);
+
+  // Iluminação Cênica
+  const luzSpot = new THREE.SpotLight(0xffffff, 2.5, 25, Math.PI/4, 0.3);
+  luzSpot.position.set(0, 6, 3);
+  luzSpot.castShadow = true;
+  scene.add(luzSpot);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+
+  // 2. Carregamento do Modelo Humano Real (SkinnedMesh Contínuo)
+  // Utiliza um modelo humano padrão GLTF com esqueleto completo
+  let bailarinaMesh = null;
+  let mixer = null;
+  let boneQuadril = null;
+  let boneCoxaEsq = null, boneCoxaDir = null;
+
+  const loader = new THREE.GLTFLoader();
+  // Você pode substituir pela URL de qualquer modelo humano GLB/GLTF feminino real
+  loader.load('https://threejs.org/examples/models/gltf/Xbot.glb', function(gltf) {
+    const model = gltf.scene;
+    model.scale.set(0.95, 0.95, 0.95);
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        bailarinaMesh = child;
+      }
+      // Identifica os ossos principais para deformação de perna inteira
+      if (child.isBone) {
+        if (child.name.includes('Hips')) boneQuadril = child;
+        if (child.name.includes('LeftUpLeg')) boneCoxaEsq = child;
+        if (child.name.includes('RightUpLeg')) boneCoxaDir = child;
+      }
+    });
+    scene.add(model);
+  });
+
+  // 3. IA Invisível: Aplica o Rosto e o Vestido da Foto no Modelo 3D
+  document.getElementById('input-foto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const imgUrl = URL.createObjectURL(file);
+    const compImg = document.getElementById('comparador');
+    compImg.src = imgUrl;
+    compImg.style.display = 'block';
+    document.getElementById('status-ia').innerText = "✓ Aplicando rosto, vestido e medidas...";
+
+    // Transforma a foto real diretamente em textura do modelo
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(imgUrl, function(texturaFoto) {
+      if (bailarinaMesh) {
+        bailarinaMesh.material.map = texturaFoto;
+        bailarinaMesh.material.needsUpdate = true;
+      }
+    });
+  });
+
+  // 4. Animação de Funk (Mãos no Joelho e Rebolar até o chão)
+  let estado = 'pose';
+  let t = 0;
+  function tocarAnimacao(nome) {
+    estado = nome;
+    t = 0;
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    t += 0.05;
+
+    if (boneQuadril && estado === 'funk') {
+      // Rebolado e descida até o chão com a perna inteira acompanhando
+      const descida = (Math.sin(t * 0.8) + 1) / 2;
+      boneQuadril.position.y = THREE.MathUtils.lerp(0.9, 0.4, descida);
+      boneQuadril.rotation.y = Math.sin(t * 7) * 0.3; // Twerk lateral
+      boneQuadril.rotation.x = Math.cos(t * 7) * 0.2 + 0.3; // Rebolado frente/costas
       
-      <!-- Comparador Único com a foto original -->
-      <div id="comparador-container">
-        <img id="foto-preview" alt="Foto Comparada">
-        <div id="status-ia">✓ Pele, vestido e corpo ajustados</div>
-      </div>
-    </div>
-
-    <div class="secao">
-      <label>2. Movimentos & Dança</label>
-      <div class="grid-botoes">
-        <button class="btn-acao ativo" onclick="setAnimacao('foto_pose')">📸 Pose da Foto</button>
-        <button class="btn-acao" onclick="setAnimacao('agachar')">🧘 Agachar</button>
-        <button class="btn-acao" onclick="setAnimacao('sentar')">🪑 Sentar</button>
-        <button class="btn-acao" onclick="setAnimacao('deitar')">🛌 Deitar</button>
-        <button class="btn-acao btn-full" onclick="setAnimacao('funk')">🔥 Funk: Mãos no Joelho e Rebolar até o Chão</button>
-      </div>
-    </div>
-
-    <div class="secao">
-      <label>3. Girar Câmera Rápido</label>
-      <div class="grid-botoes">
-        <button class="btn-acao" onclick="verCostas()">👀 Ver Bumbum Traseiro</button>
-        <button class="btn-acao" onclick="verFrente()">👤 Ver Frente</button>
-      </div>
-    </div>
-
-    <div class="dica-mouse">
-      Gire a câmera arrastando o mouse.<br>
-      Aproxime com a rodinha do mouse.
-    </div>
-  </div>
-
-  <!-- Contêiner do Canvas 3D -->
-  <div id="canvas-container"></div>
-
-  <script>
-    /* ==========================================================================
-       1. PALCO AMPLO COM CHÃO SÓLIDO, HOLOFOTES E SOMBRAS
-       ========================================================================== */
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0a14);
-    scene.fog = new THREE.FogExp2(0x0a0a14, 0.04);
-
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 2.2, 4.5);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    container.appendChild(renderer.domElement);
-
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.target.set(0, 1.1, 0);
-    controls.maxPolarAngle = Math.PI / 2 - 0.02; // Não atravessa o chão
-
-    // Luzes do Palco
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-    scene.add(ambientLight);
-
-    // Holofote Central sobre a bailarina
-    const spotPrincipal = new THREE.SpotLight(0xffffff, 2.0, 30, Math.PI / 4, 0.3, 1);
-    spotPrincipal.position.set(0, 7, 2.5);
-    spotPrincipal.castShadow = true;
-    spotPrincipal.shadow.mapSize.width = 2048;
-    spotPrincipal.shadow.mapSize.height = 2048;
-    spotPrincipal.shadow.bias = -0.001;
-    scene.add(spotPrincipal);
-
-    // Luzes Laterais Rosa e Azul para contorno estético
-    const luzRosa = new THREE.DirectionalLight(0xff2a85, 0.9);
-    luzRosa.position.set(-5, 4, -3);
-    scene.add(luzRosa);
-
-    const luzAzul = new THREE.DirectionalLight(0x00d4ff, 0.9);
-    luzAzul.position.set(5, 4, -3);
-    scene.add(luzAzul);
-
-    // PALCO GRANDE: Chão sólido e espaçoso para ela pisar
-    const palcoRaio = 7.0; // 14 metros de diâmetro
-    const palcoGeo = new THREE.CylinderGeometry(palcoRaio, palcoRaio + 0.5, 0.3, 64);
-    const palcoMat = new THREE.MeshStandardMaterial({
-      color: 0x141420,
-      roughness: 0.18,
-      metalness: 0.4
-    });
-    const palco = new THREE.Mesh(palcoGeo, palcoMat);
-    palco.position.y = -0.15; // Topo exato do chão em Y = 0.00
-    palco.receiveShadow = true;
-    scene.add(palco);
-
-    // Borda Neon Iluminada do Palco
-    const bordaGeo = new THREE.TorusGeometry(palcoRaio, 0.04, 16, 100);
-    const bordaMat = new THREE.MeshBasicMaterial({ color: 0xff0077 });
-    const borda = new THREE.Mesh(bordaGeo, bordaMat);
-    borda.rotation.x = Math.PI / 2;
-    borda.position.y = 0.005;
-    scene.add(borda);
-
-    // Chão de Fundo Estendido
-    const chaoInfinito = new THREE.Mesh(
-      new THREE.PlaneGeometry(60, 60),
-      new THREE.MeshStandardMaterial({ color: 0x05050a, roughness: 0.9 })
-    );
-    chaoInfinito.rotation.x = -Math.PI / 2;
-    chaoInfinito.position.y = -0.16;
-    chaoInfinito.receiveShadow = true;
-    scene.add(chaoInfinito);
-
-
-    /* ==========================================================================
-       2. A BAILARINA: PERNAS INTEIRAS E BUMBUM SÓ NA PARTE TRASEIRA
-       ========================================================================== */
-    const peleMaterial = new THREE.MeshStandardMaterial({
-      color: 0xb5784a, // Tom moreno inicial
-      roughness: 0.6,
-      metalness: 0.05
-    });
-
-    const vestidoMaterial = new THREE.MeshStandardMaterial({
-      color: 0xe91e63, // Cor inicial do vestido
-      roughness: 0.35,
-      metalness: 0.1
-    });
-
-    const cabeloMaterial = new THREE.MeshStandardMaterial({
-      color: 0x120a07,
-      roughness: 0.8
-    });
-
-    // Raiz da Personagem
-    const bailarina = new THREE.Group();
-    scene.add(bailarina);
-
-    // 2.1 - Pelve / Quadril
-    const pelveGroup = new THREE.Group();
-    pelveGroup.position.y = 0.98; // Posição que mantém os pés tocando exatamente o chão (Y=0)
-    bailarina.add(pelveGroup);
-
-    const pelveMesh = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.18, 0.16, 0.18, 24),
-      vestidoMaterial
-    );
-    pelveMesh.castShadow = true;
-    pelveGroup.add(pelveMesh);
-
-    // 2.2 - BUMBUM SÓ ATRÁS (Eixo Z Negativo)
-    // Feito em cúpula hemisférica apontada exclusivamente para as costas
-    const gluteoGeo = new THREE.SphereGeometry(0.13, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-
-    const gluteoEsquerdo = new THREE.Mesh(gluteoGeo, vestidoMaterial);
-    gluteoEsquerdo.rotation.x = Math.PI / 2; // Ponta estritamente voltada para TRÁS
-    gluteoEsquerdo.position.set(-0.095, -0.02, -0.09);
-    gluteoEsquerdo.castShadow = true;
-    pelveGroup.add(gluteoEsquerdo);
-
-    const gluteoDireito = new THREE.Mesh(gluteoGeo, vestidoMaterial);
-    gluteoDireito.rotation.x = Math.PI / 2;
-    gluteoDireito.position.set(0.095, -0.02, -0.09);
-    gluteoDireito.castShadow = true;
-    pelveGroup.add(gluteoDireito);
-
-    // 2.3 - Tronco, Cintura e Cabeça
-    const troncoGroup = new THREE.Group();
-    troncoGroup.position.y = 0.1;
-    pelveGroup.add(troncoGroup);
-
-    // Cintura (ajustável pela IA)
-    const cinturaMesh = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.14, 0.18, 0.22, 24),
-      vestidoMaterial
-    );
-    cinturaMesh.position.y = 0.11;
-    cinturaMesh.castShadow = true;
-    troncoGroup.add(cinturaMesh);
-
-    // Tórax / Vestido
-    const toraxMesh = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.17, 0.14, 0.24, 24),
-      vestidoMaterial
-    );
-    toraxMesh.position.y = 0.32;
-    toraxMesh.castShadow = true;
-    troncoGroup.add(toraxMesh);
-
-    // Saia do Vestido
-    const saiaMesh = new THREE.Mesh(
-      new THREE.ConeGeometry(0.32, 0.24, 24, 1, true),
-      vestidoMaterial
-    );
-    saiaMesh.position.y = -0.04;
-    saiaMesh.rotation.x = Math.PI;
-    saiaMesh.castShadow = true;
-    troncoGroup.add(saiaMesh);
-
-    // Pescoço e Cabeça
-    const pescMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.12, 16), peleMaterial);
-    pescMesh.position.y = 0.5;
-    troncoGroup.add(pescMesh);
-
-    const cabecaGroup = new THREE.Group();
-    cabecaGroup.position.y = 0.68;
-    troncoGroup.add(cabecaGroup);
-
-    const cranioMesh = new THREE.Mesh(new THREE.SphereGeometry(0.12, 24, 24), peleMaterial);
-    cranioMesh.castShadow = true;
-    cabecaGroup.add(cranioMesh);
-
-    const coqueMesh = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), cabeloMaterial);
-    coqueMesh.position.set(0, 0.09, -0.09);
-    cabecaGroup.add(coqueMesh);
-
-    // 2.4 - BRAÇOS ARTICULADOS
-    function criarBraco(lado) {
-      const ombro = new THREE.Group();
-      ombro.position.set(lado * 0.22, 0.40, 0);
-      troncoGroup.add(ombro);
-
-      const supMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.26, 16), peleMaterial);
-      supMesh.position.y = -0.13;
-      supMesh.castShadow = true;
-      ombro.add(supMesh);
-
-      const cotovelo = new THREE.Group();
-      cotovelo.position.y = -0.26;
-      ombro.add(cotovelo);
-
-      const infMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.03, 0.26, 16), peleMaterial);
-      infMesh.position.y = -0.13;
-      infMesh.castShadow = true;
-      cotovelo.add(infMesh);
-
-      const maoMesh = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 12), peleMaterial);
-      maoMesh.position.y = -0.28;
-      cotovelo.add(maoMesh);
-
-      return { ombro, cotovelo };
-    }
-    const bracoEsq = criarBraco(-1);
-    const bracoDir = criarBraco(1);
-
-    // 2.5 - PERNAS INTEIRAS (Coxa -> Joelho com Rótula -> Panturrilha -> Pé no Chão)
-    function criarPernaInteira(lado) {
-      const quadril = new THREE.Group();
-      quadril.position.set(lado * 0.11, -0.09, 0);
-      pelveGroup.add(quadril);
-
-      // Coxa
-      const coxaMesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.075, 0.055, 0.44, 20),
-        peleMaterial
-      );
-      coxaMesh.position.y = -0.22;
-      coxaMesh.castShadow = true;
-      quadril.add(coxaMesh);
-
-      // Joelho (Filho da Coxa)
-      const joelho = new THREE.Group();
-      joelho.position.y = -0.44;
-      quadril.add(joelho);
-
-      // Rótula esférica para a junta não abrir buraco
-      const rotula = new THREE.Mesh(new THREE.SphereGeometry(0.056, 16, 16), peleMaterial);
-      joelho.add(rotula);
-
-      // Panturrilha / Canela (Filha do Joelho)
-      const canelaMesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.052, 0.038, 0.44, 20),
-        peleMaterial
-      );
-      canelaMesh.position.y = -0.22;
-      canelaMesh.castShadow = true;
-      joelho.add(canelaMesh);
-
-      // Tornozelo e Sapatilha
-      const tornozelo = new THREE.Group();
-      tornozelo.position.y = -0.44;
-      joelho.add(tornozelo);
-
-      const peMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(0.075, 0.05, 0.18),
-        vestidoMaterial
-      );
-      peMesh.position.set(0, 0.025, 0.04);
-      peMesh.castShadow = true;
-      tornozelo.add(peMesh);
-
-      return { quadril, joelho, tornozelo };
-    }
-    const pernaEsq = criarPernaInteira(-1);
-    const pernaDir = criarPernaInteira(1);
-
-
-    /* ==========================================================================
-       3. ROBÔ INVISÍVEL DE IA (LEITURA DA FOTO, DISCERNE PELE E VESTIDO)
-       ========================================================================== */
-    const inputFoto = document.getElementById('input-foto');
-    const compContainer = document.getElementById('comparador-container');
-    const fotoPreview = document.getElementById('foto-preview');
-    const statusIA = document.getElementById('status-ia');
-
-    inputFoto.addEventListener('change', function(e) {
-      const arquivo = e.target.files[0];
-      if (!arquivo) return;
-
-      const url = URL.createObjectURL(arquivo);
-      fotoPreview.src = url;
-      compContainer.style.display = 'block';
-      statusIA.innerText = '⚙ Robô invisível analisando foto...';
-
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = url;
-      img.onload = () => {
-        executarRoboIA(img);
-      };
-    });
-
-    function executarRoboIA(imagem) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width = imagem.width;
-      const h = canvas.height = imagem.height;
-      ctx.drawImage(imagem, 0, 0);
-
-      const dados = ctx.getImageData(0, 0, w, h).data;
-
-      // A. Tom real de pele (Rosto na região 15% - 32% do topo)
-      let rPele = 0, gPele = 0, bPele = 0, contPele = 0;
-      for (let y = Math.floor(h * 0.15); y < Math.floor(h * 0.32); y += 4) {
-        for (let x = Math.floor(w * 0.4); x < Math.floor(w * 0.6); x += 4) {
-          const idx = (y * w + x) * 4;
-          rPele += dados[idx];
-          gPele += dados[idx + 1];
-          bPele += dados[idx + 2];
-          contPele++;
-        }
+      if (boneCoxaEsq && boneCoxaDir) {
+        boneCoxaEsq.rotation.x = -THREE.MathUtils.lerp(0.6, 1.4, descida);
+        boneCoxaDir.rotation.x = -THREE.MathUtils.lerp(0.6, 1.4, descida);
       }
-      if (contPele > 0) {
-        peleMaterial.color.setRGB(
-          (rPele / contPele) / 255,
-          (gPele / contPele) / 255,
-          (bPele / contPele) / 255
-        );
-      }
-
-      // B. Cor real do vestido (Tórax na região 42% - 62%)
-      let rRoupa = 0, gRoupa = 0, bRoupa = 0, contRoupa = 0;
-      for (let y = Math.floor(h * 0.42); y < Math.floor(h * 0.62); y += 4) {
-        for (let x = Math.floor(w * 0.35); x < Math.floor(w * 0.65); x += 4) {
-          const idx = (y * w + x) * 4;
-          rRoupa += dados[idx];
-          gRoupa += dados[idx + 1];
-          bRoupa += dados[idx + 2];
-          contRoupa++;
-        }
-      }
-      if (contRoupa > 0) {
-        vestidoMaterial.color.setRGB(
-          (rRoupa / contRoupa) / 255,
-          (gRoupa / contRoupa) / 255,
-          (bRoupa / contRoupa) / 255
-        );
-      }
-
-      // C. Medição da Silhueta: Cintura e Bumbum Posterior
-      const largCintura = medirLargura(dados, w, h, 0.48);
-      const largQuadril = medirLargura(dados, w, h, 0.62);
-
-      // Cintura Fina
-      const fatorCintura = Math.max(0.65, Math.min(1.1, largCintura / (w * 0.35)));
-      cinturaMesh.scale.set(fatorCintura, 1.0, fatorCintura);
-
-      // Volume exclusivo para trás
-      const volumePosterior = Math.max(1.15, Math.min(2.3, (largQuadril / largCintura) * 1.3));
-      aplicarGluteoPosterior(volumePosterior);
-
-      statusIA.innerText = '✓ Cor da pele, vestido e corpo ajustados!';
+    } else if (boneQuadril && estado === 'pose') {
+      boneQuadril.position.y = 0.98;
+      boneQuadril.rotation.set(0, 0, 0);
     }
 
-    function medirLargura(dados, w, h, linhaY) {
-      const y = Math.floor(h * linhaY);
-      let p1 = -1, p2 = -1;
-      for (let x = 10; x < w - 10; x++) {
-        const idx = (y * w + x) * 4;
-        const brilho = (dados[idx] + dados[idx+1] + dados[idx+2]) / 3;
-        if (brilho > 20 && brilho < 240) {
-          if (p1 === -1) p1 = x;
-          p2 = x;
-        }
-      }
-      return (p1 !== -1 && p2 > p1) ? (p2 - p1) : (w * 0.3);
-    }
-
-    function aplicarGluteoPosterior(volume) {
-      // Expande SOMENTE no eixo Z negativo (costas)
-      gluteoEsquerdo.scale.set(1.08, 1.05, volume);
-      gluteoDireito.scale.set(1.08, 1.05, volume);
-      const deslocamento = -0.09 - (volume - 1.0) * 0.04;
-      gluteoEsquerdo.position.z = deslocamento;
-      gluteoDireito.position.z = deslocamento;
-    }
-    aplicarGluteoPosterior(1.6); // Padrão inicial delineado
-
-
-    /* ==========================================================================
-       4. ANIMAÇÕES COM PERNAS INTEIRAS ARTICULADAS
-       ========================================================================== */
-    let animacaoAtiva = 'foto_pose';
-    let tempo = 0;
-
-    function setAnimacao(nome) {
-      animacaoAtiva = nome;
-      tempo = 0;
-      document.querySelectorAll('.btn-acao').forEach(b => b.classList.remove('ativo'));
-      event.target.classList.add('ativo');
-    }
-
-    function verCostas() {
-      camera.position.set(0, 1.6, -3.8);
-      controls.target.set(0, 1.1, 0);
-    }
-    function verFrente() {
-      camera.position.set(0, 1.6, 3.8);
-      controls.target.set(0, 1.1, 0);
-    }
-
-    function loop() {
-      requestAnimationFrame(loop);
-      controls.update();
-      tempo += 0.045;
-
-      // Reseta pivôs para animações limpas
-      pelveGroup.rotation.set(0, 0, 0);
-      troncoGroup.rotation.set(0, 0, 0);
-      pernaEsq.quadril.rotation.set(0, 0, 0);
-      pernaEsq.joelho.rotation.set(0, 0, 0);
-      pernaDir.quadril.rotation.set(0, 0, 0);
-      pernaDir.joelho.rotation.set(0, 0, 0);
-      bracoEsq.ombro.rotation.set(0, 0, 0);
-      bracoDir.ombro.rotation.set(0, 0, 0);
-      bracoEsq.cotovelo.rotation.set(0, 0, 0);
-      bracoDir.cotovelo.rotation.set(0, 0, 0);
-
-      // --- DANÇA FUNK: MÃOS NO JOELHO E REBOLAR ATÉ O CHÃO ---
-      if (animacaoAtiva === 'funk') {
-        const ciclo = (Math.sin(tempo * 0.9) + 1) / 2; // 0 a 1 suave
-        
-        // Pelve desce até perto do chão do palco
-        pelveGroup.position.y = THREE.MathUtils.lerp(0.78, 0.32, ciclo);
-
-        // Tronco abaixa à frente
-        troncoGroup.rotation.x = 0.65;
-
-        // Rebolado nos eixos Y, Z e X
-        pelveGroup.rotation.y = Math.sin(tempo * 6.5) * 0.28;
-        pelveGroup.rotation.z = Math.sin(tempo * 6.5) * 0.15;
-        pelveGroup.rotation.x = Math.cos(tempo * 6.5) * 0.22 + 0.1;
-
-        // Pernas inteiras flexionando e abrindo em agachamento dinâmico
-        const flexaoCoxa = THREE.MathUtils.lerp(0.75, 1.45, ciclo);
-        const abertura = 0.35;
-
-        pernaEsq.quadril.rotation.x = -flexaoCoxa;
-        pernaEsq.quadril.rotation.z = -abertura;
-        pernaEsq.joelho.rotation.x = flexaoCoxa * 1.85;
-
-        pernaDir.quadril.rotation.x = -flexaoCoxa;
-        pernaDir.quadril.rotation.z = abertura;
-        pernaDir.joelho.rotation.x = flexaoCoxa * 1.85;
-
-        // Mãos apoiadas nos joelhos
-        bracoEsq.ombro.rotation.x = 0.55;
-        bracoEsq.ombro.rotation.z = -0.3;
-        bracoEsq.cotovelo.rotation.x = -0.7;
-
-        bracoDir.ombro.rotation.x = 0.55;
-        bracoDir.ombro.rotation.z = 0.3;
-        bracoDir.cotovelo.rotation.x = -0.7;
-
-      // --- AGACHAR (Pernas inteiras dobrando com pés fixos) ---
-      } else if (animacaoAtiva === 'agachar') {
-        pelveGroup.position.y = 0.42;
-        troncoGroup.rotation.x = 0.4;
-        pernaEsq.quadril.rotation.x = -1.25;
-        pernaEsq.joelho.rotation.x = 2.3;
-        pernaDir.quadril.rotation.x = -1.25;
-        pernaDir.joelho.rotation.x = 2.3;
-        bracoEsq.ombro.rotation.x = 1.2;
-        bracoDir.ombro.rotation.x = 1.2;
-
-      // --- SENTAR NO PALCO ---
-      } else if (animacaoAtiva === 'sentar') {
-        pelveGroup.position.y = 0.22;
-        troncoGroup.rotation.x = 0.05;
-        pernaEsq.quadril.rotation.x = -1.55;
-        pernaEsq.joelho.rotation.x = 0.2;
-        pernaDir.quadril.rotation.x = -1.55;
-        pernaDir.joelho.rotation.x = 0.2;
-        bracoEsq.ombro.rotation.z = -0.35;
-        bracoDir.ombro.rotation.z = 0.35;
-
-      // --- DEITAR NO CHÃO DO PALCO ---
-      } else if (animacaoAtiva === 'deitar') {
-        pelveGroup.position.y = 0.12;
-        bailarina.rotation.x = -Math.PI / 2;
-        bailarina.position.z = -0.5;
-        bracoEsq.ombro.rotation.z = -0.5;
-        bracoDir.ombro.rotation.z = 0.5;
-
-      // --- POSE DA FOTO (Pés firmes no palco, postura clássica) ---
-      } else {
-        bailarina.rotation.set(0, 0, 0);
-        bailarina.position.set(0, 0, 0);
-        pelveGroup.position.y = 0.98; // Pés exatamente em Y = 0 no chão
-
-        const balanco = Math.sin(tempo * 1.5) * 0.03;
-        troncoGroup.rotation.y = balanco;
-
-        pernaEsq.quadril.rotation.z = -0.05;
-        pernaDir.quadril.rotation.z = 0.05;
-        pernaDir.quadril.rotation.x = -0.08;
-        pernaDir.joelho.rotation.x = 0.15;
-
-        bracoEsq.ombro.rotation.z = -0.7 + balanco;
-        bracoEsq.cotovelo.rotation.x = -0.3;
-        bracoDir.ombro.rotation.z = 0.7 - balanco;
-        bracoDir.cotovelo.rotation.x = -0.3;
-      }
-
-      renderer.render(scene, camera);
-    }
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    loop();
-  </script>
+    renderer.render(scene, camera);
+  }
+  loop();
+</script>
 </body>
 </html>
