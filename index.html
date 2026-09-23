@@ -3,28 +3,27 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Bailarina Virtual IA - Mulher Realista & Dança</title>
+<title>Bailarina Virtual IA - Robô Animador & Troca de Roupas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-dark: #07050d;
-  --bg-card: rgba(18, 14, 32, 0.85);
-  --bg-card-subtle: rgba(28, 22, 48, 0.6);
+  --bg-card: rgba(18, 14, 32, 0.88);
+  --bg-card-subtle: rgba(28, 22, 48, 0.65);
   --primary-accent: #ff3377;
-  --primary-glow: rgba(255, 51, 119, 0.4);
+  --primary-glow: rgba(255, 51, 119, 0.45);
   --secondary-accent: #00f0ff;
   --gold-accent: #ffd166;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --border-subtle: rgba(255, 255, 255, 0.12);
   --border-glow: rgba(255, 51, 119, 0.35);
-  
+
   --skin-tone: #f8dfd4;
-  --skin-shadow: #e0b4a4;
-  --outfit-color: #5a5f69;
-  --top-color: #ffffff;
+  --outfit-bottom: #5a5f69;
+  --outfit-top: #ffffff;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -38,23 +37,22 @@ body {
   display: flex;
   justify-content: center;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(138, 43, 226, 0.3), transparent 60%),
-    radial-gradient(circle at 10% 40%, rgba(255, 51, 119, 0.18), transparent 50%),
-    radial-gradient(circle at 90% 70%, rgba(0, 240, 255, 0.15), transparent 50%);
+    radial-gradient(circle at 50% 0%, rgba(138, 43, 226, 0.35), transparent 60%),
+    radial-gradient(circle at 10% 40%, rgba(255, 51, 119, 0.2), transparent 50%),
+    radial-gradient(circle at 90% 70%, rgba(0, 240, 255, 0.18), transparent 50%);
 }
 
 .app-container {
   width: 100%;
   max-width: 980px;
   min-height: 100vh;
-  padding: 1rem 0.85rem 3.5rem;
+  padding: 0.85rem 0.75rem 3.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
 }
 
-/* Holofotes de Estúdio */
 .spotlight {
   position: fixed;
   top: -120px;
@@ -63,7 +61,7 @@ body {
   pointer-events: none;
   z-index: 1;
   opacity: 0.45;
-  filter: blur(50px);
+  filter: blur(55px);
 }
 .spotlight-left {
   left: 5%;
@@ -78,13 +76,12 @@ body {
 @keyframes sweepL { 0%{ transform: rotate(-25deg) scale(0.9); opacity:0.3; } 100%{ transform: rotate(-10deg) scale(1.1); opacity:0.55; } }
 @keyframes sweepR { 0%{ transform: rotate(25deg) scale(0.9); opacity:0.3; } 100%{ transform: rotate(10deg) scale(1.1); opacity:0.55; } }
 
-/* Cabeçalho */
-.app-header { text-align: center; margin-bottom: 1rem; z-index: 10; }
+.app-header { text-align: center; margin-bottom: 0.75rem; z-index: 10; }
 .header-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.3rem 0.9rem;
+  padding: 0.28rem 0.85rem;
   background: rgba(255, 51, 119, 0.15);
   border: 1px solid rgba(255, 51, 119, 0.4);
   border-radius: 999px;
@@ -93,7 +90,7 @@ body {
   letter-spacing: 2px;
   color: #ff75a0;
   text-transform: uppercase;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 .app-title {
   font-family: 'Playfair Display', serif;
@@ -104,25 +101,25 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 35px rgba(255, 51, 119, 0.3);
 }
-.app-subtitle { font-size: 0.86rem; color: var(--text-muted); max-width: 580px; }
+.app-subtitle { font-size: 0.84rem; color: var(--text-muted); max-width: 580px; }
 
 /* PALCO PRINCIPAL */
-.stage-wrapper { width: 100%; display: flex; justify-content: center; z-index: 10; margin-bottom: 1rem; }
+.stage-wrapper { width: 100%; display: flex; justify-content: center; z-index: 10; margin-bottom: 0.85rem; }
 .stage-frame {
   position: relative;
   width: 100%;
-  max-width: 450px;
-  height: 560px;
-  background: radial-gradient(circle at 50% 30%, #1e1538 0%, #0a0715 80%);
+  max-width: 480px;
+  height: 580px;
+  background: radial-gradient(circle at 50% 25%, #221840 0%, #0a0715 80%);
   border-radius: 28px;
   border: 1px solid var(--border-glow);
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 51, 119, 0.25);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85), 0 0 50px rgba(255, 51, 119, 0.25);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0.85rem;
 }
 
 .stage-hud-top {
@@ -130,19 +127,19 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 20;
+  z-index: 30;
   gap: 0.5rem;
 }
 .hud-chip {
-  background: rgba(10, 8, 20, 0.75);
+  background: rgba(10, 8, 20, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.3rem 0.7rem;
   border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #fff;
 }
@@ -156,34 +153,41 @@ body {
 }
 @keyframes pulseDot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
-.view-indicator {
+.robot-speech-bubble {
+  position: absolute;
+  top: 50px;
+  right: 15px;
+  background: rgba(12, 10, 26, 0.92);
+  border: 1px solid var(--secondary-accent);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+  padding: 0.4rem 0.75rem;
+  border-radius: 12px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--secondary-accent);
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  padding: 0.3rem 0.7rem;
-  border-radius: 8px;
+  font-size: 0.68rem;
+  color: #00f0ff;
+  max-width: 190px;
+  z-index: 35;
+  pointer-events: none;
+  transition: all 0.3s ease;
 }
 
-/* BOTÕES DE POSIÇÕES RÁPIDAS */
 .view-switch-bar {
   position: absolute;
-  top: 60px;
-  width: calc(100% - 2rem);
+  top: 52px;
+  left: 12px;
   display: flex;
-  justify-content: center;
-  gap: 0.4rem;
-  z-index: 25;
+  flex-direction: column;
+  gap: 0.35rem;
+  z-index: 30;
 }
 .view-btn {
   background: rgba(15, 12, 28, 0.85);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #e2e8f0;
-  padding: 0.35rem 0.85rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -195,25 +199,78 @@ body {
   background: linear-gradient(135deg, var(--primary-accent), #8a2be2);
   border-color: #ff8ab2;
   color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 51, 119, 0.4);
+  transform: translateX(3px);
+  box-shadow: 0 4px 12px rgba(255, 51, 119, 0.4);
 }
 
-/* VIEWPORT DO MODELO */
+/* O ROBÔ ASSISTENTE IA */
+.robot-companion {
+  position: absolute;
+  top: 75px;
+  right: 25px;
+  width: 70px;
+  height: 90px;
+  z-index: 25;
+  cursor: pointer;
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 8px 15px rgba(0, 240, 255, 0.35));
+  animation: robotHover 3s ease-in-out infinite;
+}
+@keyframes robotHover {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+.robot-companion.active-servicing {
+  top: 180px;
+  right: 70px;
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.robot-svg { width: 100%; height: 100%; overflow: visible; }
+
+/* RAIOS LASER DO ROBÔ */
+.robot-laser-emitter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 24;
+  display: none;
+}
+.robot-laser-emitter.firing { display: block; }
+
+.laser-beam-line {
+  position: absolute;
+  width: 3px;
+  background: linear-gradient(180deg, #00f0ff, #ffffff, #ff3377);
+  box-shadow: 0 0 15px #00f0ff, 0 0 30px #ff3377;
+  transform-origin: top center;
+  animation: laserSweep 0.5s ease-in-out infinite alternate;
+}
+@keyframes laserSweep {
+  0% { opacity: 0.8; filter: blur(0px); }
+  100% { opacity: 1; filter: blur(1.5px); }
+}
+
+/* VIEWPORT & CAMINHADA */
 .dancer-viewport {
   position: relative;
   width: 100%;
-  height: 420px;
+  height: 440px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   z-index: 10;
+  overflow: hidden;
 }
 
 .stage-reflection {
   position: absolute;
   bottom: 8px;
-  width: 220px;
+  width: 260px;
   height: 24px;
   background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(255,51,119,0.15) 50%, transparent 80%);
   border-radius: 50%;
@@ -221,7 +278,7 @@ body {
   z-index: 1;
 }
 
-.model-wrapper {
+.catwalk-track {
   position: relative;
   width: 320px;
   height: 440px;
@@ -232,67 +289,38 @@ body {
   transform-origin: bottom center;
 }
 
-.sculpted-woman-svg {
+/* ELA ANDA NA TELA DO CELULAR */
+.catwalk-track.walking-active {
+  animation: walkAcrossScreen 6.5s ease-in-out infinite alternate;
+}
+@keyframes walkAcrossScreen {
+  0% { transform: translateX(-70px) scale(0.96); }
+  48% { transform: translateX(70px) scale(0.96); }
+  50% { transform: translateX(70px) scale(-0.96, 0.96); }
+  98% { transform: translateX(-70px) scale(-0.96, 0.96); }
+  100% { transform: translateX(-70px) scale(0.96); }
+}
+
+.model-wrapper {
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: visible;
-  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transform-origin: bottom center;
 }
 
-.real-photo-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
-  border-radius: 20px;
-  display: none;
-  z-index: 8;
-  mask-image: linear-gradient(to top, rgba(0,0,0,1) 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 85%, transparent 100%);
+.catwalk-track.walking-active .model-wrapper {
+  animation: catwalkStepMotion 0.65s ease-in-out infinite alternate;
 }
-.real-photo-overlay.active { display: block; }
+@keyframes catwalkStepMotion {
+  0% { transform: translateY(0) rotate(-1.5deg); }
+  50% { transform: translateY(-7px) rotate(0deg); }
+  100% { transform: translateY(0) rotate(1.5deg); }
+}
 
-/* SCANNER SCI-FI IA */
-.laser-scan-bar {
-  position: absolute;
-  top: -10px;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #00f0ff, #fff, #ff3377, transparent);
-  box-shadow: 0 0 15px #00f0ff, 0 0 30px #ff3377;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 30;
-}
-.scanning .laser-scan-bar {
-  opacity: 1;
-  animation: scanCycle 1.4s ease-in-out infinite alternate;
-}
-@keyframes scanCycle { 0% { top: 5%; } 100% { top: 92%; } }
-
-.robot-wireframe-grid {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg, rgba(0, 240, 255, 0.04) 0px, rgba(0, 240, 255, 0.04) 1px, transparent 1px, transparent 12px);
-  z-index: 15;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.robot-mode .robot-wireframe-grid { opacity: 1; }
-
-/* ANIMAÇÃO DE RESPIRAÇÃO REALISTA */
-.breathing-active {
-  animation: lifelikeBreathing 3.6s ease-in-out infinite;
-}
+.breathing-active { animation: lifelikeBreathing 3.6s ease-in-out infinite; }
 @keyframes lifelikeBreathing {
   0%, 100% { transform: translateY(0) scale(1, 1); }
   50% { transform: translateY(-4px) scale(1.015, 1.02); }
@@ -307,7 +335,6 @@ body {
   50% { transform: scale(1.035, 1.025); }
 }
 
-/* DANÇA FUNK 130 BPM */
 .funk-dancing {
   animation: funkCore 0.923s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite !important;
   transform-origin: bottom center;
@@ -328,49 +355,91 @@ body {
   100% { transform: translateY(5px) scale(1.04, 0.97); }
 }
 
-/* RODAPÉ E CONTROLES */
-.stage-footer-bar { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; z-index: 20; }
+/* TRANSIÇÃO DA ROUPA SAINDO E ENTRANDO */
+.clothing-layer {
+  transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
+}
+.clothing-layer.undressing {
+  opacity: 0 !important;
+  filter: brightness(2.5) drop-shadow(0 0 20px #00f0ff);
+  transform: scale(1.08);
+}
+.clothing-layer.dressing {
+  animation: clothAppear 0.5s ease-out forwards;
+}
+@keyframes clothAppear {
+  0% { opacity: 0; filter: brightness(2.5) drop-shadow(0 0 25px #ff3377); transform: scale(1.06); }
+  100% { opacity: 1; filter: brightness(1) drop-shadow(0 0 0 transparent); transform: scale(1); }
+}
+
+.real-photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  border-radius: 20px;
+  display: none;
+  z-index: 8;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 85%, transparent 100%);
+}
+.real-photo-overlay.active { display: block; }
+
+.sculpted-woman-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.65));
+}
+
+/* RODAPÉ DO PALCO */
+.stage-footer-bar { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; z-index: 30; }
 .audio-visualizer-canvas {
   width: 100%;
-  height: 28px;
+  height: 26px;
   border-radius: 8px;
-  background: rgba(10, 8, 20, 0.5);
+  background: rgba(10, 8, 20, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
-.stage-action-row { width: 100%; display: flex; gap: 0.5rem; }
+.stage-action-row { width: 100%; display: flex; gap: 0.4rem; }
 .action-btn-main {
-  flex: 1;
+  flex: 1.2;
   background: linear-gradient(135deg, #ff3377, #d91456);
   border: 1px solid #ff75a0;
   color: #fff;
-  padding: 0.65rem 0.8rem;
+  padding: 0.65rem 0.5rem;
   border-radius: 14px;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.35rem;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(255, 51, 119, 0.35);
-  transition: all 0.2s ease;
 }
 .action-btn-main:active { transform: scale(0.97); }
+
 .action-btn-sub {
+  flex: 1;
   background: rgba(22, 17, 39, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f1f5f9;
-  padding: 0.65rem 0.85rem;
+  padding: 0.65rem 0.5rem;
   border-radius: 14px;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  gap: 0.35rem;
   cursor: pointer;
 }
 
-/* PAINEL DE ABAS */
+/* ABAS */
 .control-tabs-nav {
   width: 100%;
   max-width: 650px;
@@ -379,19 +448,19 @@ body {
   padding: 0.35rem;
   border-radius: 18px;
   border: 1px solid var(--border-subtle);
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
   gap: 0.3rem;
   overflow-x: auto;
 }
 .tab-nav-btn {
   flex: 1;
   min-width: 110px;
-  padding: 0.55rem 0.6rem;
+  padding: 0.55rem 0.5rem;
   background: transparent;
   border: none;
   color: var(--text-muted);
   font-family: 'Outfit', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   border-radius: 12px;
   cursor: pointer;
@@ -416,7 +485,7 @@ body {
   background: var(--bg-card);
   border-radius: 22px;
   border: 1px solid var(--border-subtle);
-  padding: 1.25rem 1.15rem;
+  padding: 1.2rem 1.1rem;
   backdrop-filter: blur(16px);
   margin-bottom: 1rem;
 }
@@ -424,19 +493,19 @@ body {
 @keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
 
 /* SLIDERS */
-.slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.1rem; }
+.slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.1rem; }
 @media (max-width: 540px) { .slider-grid { grid-template-columns: 1fr; } }
 
 .slider-card {
   background: var(--bg-card-subtle);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
-  padding: 0.75rem 0.9rem;
+  padding: 0.75rem 0.85rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
-.slider-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; }
+.slider-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; }
 .slider-val-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
@@ -463,26 +532,6 @@ body {
   border: 2px solid #fff;
   box-shadow: 0 0 10px var(--primary-accent);
   cursor: pointer;
-  transition: transform 0.15s ease;
-}
-
-.custom-select-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; }
-.pill-option-btn {
-  padding: 0.4rem 0.8rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.pill-option-btn:hover, .pill-option-btn.active {
-  background: var(--primary-accent);
-  border-color: var(--primary-accent);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(255, 51, 119, 0.4);
 }
 
 /* GUARDA-ROUPA */
@@ -491,28 +540,29 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(255, 51, 119, 0.15), rgba(121, 40, 202, 0.15));
-  border: 1px solid rgba(255, 51, 119, 0.35);
+  background: linear-gradient(135deg, rgba(255, 51, 119, 0.18), rgba(0, 240, 255, 0.15));
+  border: 1px solid rgba(255, 51, 119, 0.4);
   border-radius: 16px;
   padding: 0.85rem 1.1rem;
 }
-.wardrobe-title-sub { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+.wardrobe-title-sub { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; }
 .wardrobe-name { font-size: 1.05rem; font-weight: 800; color: #fff; }
-.wardrobe-carousel-nav { display: flex; align-items: center; gap: 0.6rem; }
-.nav-circle-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 1.1rem;
+.btn-robot-change-now {
+  background: linear-gradient(135deg, #00f0ff, #ff3377);
+  border: none;
+  color: #07050d;
+  font-weight: 900;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  gap: 0.3rem;
+  transition: all 0.2s;
 }
-.nav-circle-btn:hover { background: var(--primary-accent); }
+.btn-robot-change-now:hover { transform: scale(1.05); color: #fff; }
 
 .biquini-quick-grid {
   display: grid;
@@ -536,32 +586,27 @@ body {
   white-space: nowrap;
 }
 .biquini-pill:hover, .biquini-pill.active {
-  background: rgba(255, 51, 119, 0.3);
+  background: rgba(255, 51, 119, 0.35);
   border-color: var(--primary-accent);
   color: #fff;
 }
 
-/* BOTÃO DE TRANSFORMAÇÃO IA */
-.transform-box {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 51, 119, 0.15));
+/* CAIXA DO ROBÔ */
+.robot-control-box {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 51, 119, 0.12));
   border: 1px solid rgba(0, 240, 255, 0.4);
   border-radius: 18px;
   padding: 1.15rem;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.75rem;
   align-items: center;
 }
-.transform-status-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
-  color: var(--secondary-accent);
-}
-.btn-transform {
-  background: linear-gradient(135deg, #00f0ff, #ff3377);
+.robot-btn-big {
+  background: linear-gradient(135deg, #00f0ff, #7928ca);
   border: none;
-  color: #07050d;
+  color: #fff;
   font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
   font-weight: 900;
@@ -574,9 +619,22 @@ body {
   align-items: center;
   gap: 0.5rem;
 }
-.btn-transform:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 35px rgba(255, 51, 119, 0.6);
+.robot-btn-big:hover { transform: scale(1.04); box-shadow: 0 0 35px rgba(255, 51, 119, 0.6); }
+
+.custom-select-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; }
+.pill-option-btn {
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+.pill-option-btn:hover, .pill-option-btn.active {
+  background: var(--primary-accent);
+  border-color: var(--primary-accent);
   color: #fff;
 }
 #photoUploadInput { display: none; }
@@ -590,193 +648,246 @@ body {
 <div class="app-container">
   
   <header class="app-header">
-    <div class="header-badge">✦ IA ANATÔMICA VIRTUAL & FUNK CARIOCA ✦</div>
+    <div class="header-badge">✦ ROBÔ IA ALFAIATE & ANIMAÇÃO VIVA ✦</div>
     <h1 class="app-title">Bailarina Virtual</h1>
-    <p class="app-subtitle">Corpo esculpido ultra-realista, curvas da foto, respiração viva, 100 roupas e dança 130 BPM.</p>
+    <p class="app-subtitle">O Robô dá vida à imagem da IA, faz ela andar na tela como pessoa real e troca a roupa com laser.</p>
   </header>
 
+  <!-- PALCO PRINCIPAL -->
   <main class="stage-wrapper">
     <div class="stage-frame" id="stageFrame">
       
       <div class="stage-hud-top">
         <div class="hud-chip">
           <span class="dot"></span>
-          <span id="hudStatus">MULHER REALISTA ATIVA</span>
+          <span id="hudStatus">MULHER VIRTUAL VIVA</span>
         </div>
-        <div class="view-indicator" id="viewIndicator">VISTA: COSTAS / 3/4 (FOTO)</div>
+        <div class="hud-chip" style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--secondary-accent)">
+          ROBÔ: PRONTO
+        </div>
       </div>
 
-      <!-- Barra de Troca de Posições (Costas, Frente, Lados) -->
+      <div class="robot-speech-bubble" id="robotSpeech">
+        "Olá! Clique em mim ou em 'Trocar Roupa' para eu transformar seu visual!"
+      </div>
+
+      <!-- Posições (Costas, Frente, Lados) -->
       <div class="view-switch-bar">
         <button class="view-btn active" onclick="switchView('back')" id="btnViewBack">🍑 Costas (Foto)</button>
         <button class="view-btn" onclick="switchView('front')" id="btnViewFront">💃 Frente</button>
         <button class="view-btn" onclick="switchView('side')" id="btnViewSide">✨ Perfil</button>
       </div>
 
-      <div class="laser-scan-bar" id="laserBar"></div>
-      <div class="robot-wireframe-grid" id="robotGrid"></div>
+      <!-- ROBÔ ASSISTENTE IA -->
+      <div class="robot-companion" id="robotCompanion" onclick="robotInteractDialog()">
+        <svg class="robot-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="108" rx="8" ry="12" fill="#00f0ff" opacity="0.8">
+            <animate attributeName="ry" values="12;16;10;14;12" dur="0.3s" repeatCount="indefinite" />
+          </ellipse>
+          <ellipse cx="50" cy="112" rx="4" ry="8" fill="#ffffff" />
+          <ellipse cx="50" cy="65" rx="28" ry="32" fill="url(#robotBodyGrad)" stroke="#00f0ff" stroke-width="2" />
+          <path d="M 30,65 Q 50,85 70,65" stroke="#ff3377" stroke-width="2" fill="none" opacity="0.7" />
+          <ellipse cx="50" cy="38" rx="24" ry="20" fill="#0d1117" stroke="#00f0ff" stroke-width="2" />
+          <ellipse cx="42" cy="36" rx="5" ry="6" fill="#00f0ff" id="robotEyeL">
+            <animate attributeName="ry" values="6;6;1;6;6" dur="4s" repeatCount="indefinite" />
+          </ellipse>
+          <ellipse cx="58" cy="36" rx="5" ry="6" fill="#00f0ff" id="robotEyeR">
+            <animate attributeName="ry" values="6;6;1;6;6" dur="4s" repeatCount="indefinite" />
+          </ellipse>
+          <circle cx="43" cy="34" r="1.8" fill="#fff" />
+          <circle cx="59" cy="34" r="1.8" fill="#fff" />
+          <line x1="50" y1="18" x2="50" y2="8" stroke="#00f0ff" stroke-width="2.5" />
+          <circle cx="50" cy="6" r="4.5" fill="#ff3377">
+            <animate attributeName="fill" values="#ff3377;#00f0ff;#ff3377" dur="1.2s" repeatCount="indefinite" />
+          </circle>
+          <g id="robotArmLeft">
+            <path d="M 22,60 Q 10,70 12,85" stroke="#a5b4fc" stroke-width="3" fill="none" stroke-linecap="round" />
+            <circle cx="12" cy="85" r="4" fill="#00f0ff" />
+          </g>
+          <g id="robotArmRight">
+            <path d="M 78,60 Q 90,70 88,85" stroke="#a5b4fc" stroke-width="3" fill="none" stroke-linecap="round" />
+            <circle cx="88" cy="85" r="4" fill="#ff3377" />
+          </g>
+          <defs>
+            <linearGradient id="robotBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="50%" stop-color="#cbd5e1" />
+              <stop offset="100%" stop-color="#475569" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
 
-      <!-- Viewport da Dançarina -->
+      <!-- LASERS DO ROBÔ -->
+      <div class="robot-laser-emitter" id="robotLasers">
+        <div class="laser-beam-line" id="laserBeam1" style="left: 140px; top: 180px; height: 160px; transform: rotate(-25deg);"></div>
+        <div class="laser-beam-line" id="laserBeam2" style="left: 175px; top: 180px; height: 175px; transform: rotate(15deg);"></div>
+      </div>
+
+      <!-- VIEWPORT DA MODELO -->
       <div class="dancer-viewport">
-        <div class="stage-reflection"></div>
+        <div class="stage-reflection" id="stageReflection"></div>
 
-        <div class="model-wrapper breathing-active" id="modelWrapper">
+        <!-- TRACK QUE ANDA NA TELA -->
+        <div class="catwalk-track" id="catwalkTrack">
           
-          <img id="realPhotoOverlay" class="real-photo-overlay" alt="Dançarina Real" />
+          <div class="model-wrapper breathing-active" id="modelWrapper">
+            
+            <img id="realPhotoOverlay" class="real-photo-overlay" alt="Dançarina Real" />
 
-          <!-- SVG Esculpido em Camadas de Alta Definição -->
-          <svg class="sculpted-woman-svg" id="womanSvg" viewBox="0 0 320 440" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#fff0e8" />
-                <stop offset="50%" stop-color="#f8dfd4" />
-                <stop offset="100%" stop-color="#e0b4a4" />
-              </linearGradient>
+            <svg class="sculpted-woman-svg" id="womanSvg" viewBox="0 0 320 440" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fff0e8" />
+                  <stop offset="50%" stop-color="#f8dfd4" />
+                  <stop offset="100%" stop-color="#e0b4a4" />
+                </linearGradient>
 
-              <!-- Calça Legging Cinza (Foto Original) -->
-              <linearGradient id="leggingsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#808590" />
-                <stop offset="50%" stop-color="#5a5f69" />
-                <stop offset="100%" stop-color="#3c4048" />
-              </linearGradient>
+                <linearGradient id="leggingsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#808590" />
+                  <stop offset="50%" stop-color="#5a5f69" />
+                  <stop offset="100%" stop-color="#3c4048" />
+                </linearGradient>
 
-              <linearGradient id="whiteTopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ffffff" />
-                <stop offset="70%" stop-color="#f1f5f9" />
-                <stop offset="100%" stop-color="#cbd5e1" />
-              </linearGradient>
+                <linearGradient id="whiteTopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff" />
+                  <stop offset="70%" stop-color="#f1f5f9" />
+                  <stop offset="100%" stop-color="#cbd5e1" />
+                </linearGradient>
 
-              <!-- Cabelo Loiro Platinado Glossy -->
-              <linearGradient id="blondeHairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#fffbe8" />
-                <stop offset="40%" stop-color="#f6e1af" />
-                <stop offset="80%" stop-color="#e7c88b" />
-                <stop offset="100%" stop-color="#b89354" />
-              </linearGradient>
+                <linearGradient id="blondeHairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#fffbe8" />
+                  <stop offset="40%" stop-color="#f6e1af" />
+                  <stop offset="80%" stop-color="#e7c88b" />
+                  <stop offset="100%" stop-color="#b89354" />
+                </linearGradient>
 
-              <!-- Pufe / Degrau de Apoio da Foto -->
-              <linearGradient id="stoolGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#f0ece6" />
-                <stop offset="60%" stop-color="#dfd9d1" />
-                <stop offset="100%" stop-color="#b8b0a5" />
-              </linearGradient>
-            </defs>
+                <linearGradient id="stoolGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f0ece6" />
+                  <stop offset="60%" stop-color="#dfd9d1" />
+                  <stop offset="100%" stop-color="#b8b0a5" />
+                </linearGradient>
+              </defs>
 
-            <!-- VISTA 1: COSTAS / 3/4 (IDÊNTICA À FOTO) -->
-            <g id="poseBack" class="view-group">
-              <path d="M 215,310 C 215,302 245,302 275,302 C 285,302 290,305 290,312 L 285,420 C 285,425 240,430 215,425 Z" fill="url(#stoolGrad)" />
-              <ellipse cx="252" cy="308" rx="36" ry="7" fill="#f8f6f0" opacity="0.9" />
+              <!-- COSTAS / 3/4 (POSE DA FOTO) -->
+              <g id="poseBack" class="view-group">
+                <path d="M 215,310 C 215,302 245,302 275,302 C 285,302 290,305 290,312 L 285,420 C 285,425 240,430 215,425 Z" fill="url(#stoolGrad)" />
+                <ellipse cx="252" cy="308" rx="36" ry="7" fill="#f8f6f0" opacity="0.9" />
 
-              <!-- Perna Esquerda com Salto Agulha -->
-              <g id="leftLegGroup">
-                <path d="M 120,240 C 110,270 112,320 125,370 C 127,378 128,390 128,405 L 142,405 C 144,385 145,360 148,320 C 152,280 150,245 142,240 Z" fill="url(#leggingsGrad)" id="leftLegPath" />
-                <path d="M 128,400 L 126,422 L 140,422 L 138,400 Z" fill="url(#skinGrad)" />
-                <line x1="126" y1="412" x2="136" y2="412" stroke="#111" stroke-width="2" />
-                <path d="M 126,420 L 144,424 L 148,420 L 140,416 Z" fill="#111" />
-                <line x1="127" y1="420" x2="127" y2="436" stroke="#111" stroke-width="2.8" />
+                <!-- Perna Esquerda com Salto Agulha -->
+                <g id="leftLegGroup">
+                  <path class="clothing-layer" d="M 120,240 C 110,270 112,320 125,370 C 127,378 128,390 128,405 L 142,405 C 144,385 145,360 148,320 C 152,280 150,245 142,240 Z" fill="url(#leggingsGrad)" id="leftLegPath" />
+                  <path d="M 128,400 L 126,422 L 140,422 L 138,400 Z" fill="url(#skinGrad)" />
+                  <line x1="126" y1="412" x2="136" y2="412" stroke="#111" stroke-width="2" />
+                  <path d="M 126,420 L 144,424 L 148,420 L 140,416 Z" fill="#111" />
+                  <line x1="127" y1="420" x2="127" y2="436" stroke="#111" stroke-width="2.8" />
+                </g>
+
+                <!-- Perna Direita (Elevada e Apoiada no Pufe) -->
+                <g id="rightLegGroup">
+                  <path class="clothing-layer" d="M 180,215 C 220,225 245,235 252,275 C 255,295 248,325 242,345 L 255,348 C 265,320 272,280 258,250 C 245,220 215,205 180,215 Z" fill="url(#leggingsGrad)" id="rightLegPath" />
+                  <path d="M 242,340 L 246,358 L 256,356 L 254,338 Z" fill="url(#skinGrad)" />
+                  <line x1="244" y1="348" x2="254" y2="346" stroke="#111" stroke-width="2" />
+                  <path d="M 244,357 L 258,360 L 265,348 L 255,346 Z" fill="#111" />
+                  <line x1="247" y1="357" x2="247" y2="378" stroke="#111" stroke-width="2.8" />
+                </g>
+
+                <!-- Glúteos Esculpidos / Bumbum Violão -->
+                <g id="buttGroup" class="funk-butt-bounce">
+                  <path class="clothing-layer" d="M 148,185 C 135,190 120,205 120,228 C 120,250 140,265 170,260 C 205,255 228,240 230,210 C 230,190 205,180 175,182 C 160,183 150,184 148,185 Z" fill="url(#leggingsGrad)" id="buttMainPath" />
+                  <path d="M 145,215 C 160,240 195,242 220,218" fill="none" stroke="#2c2f38" stroke-width="3" opacity="0.6" />
+                  <ellipse cx="180" cy="210" rx="30" ry="18" fill="#ffffff" opacity="0.12" />
+                </g>
+
+                <!-- Cintura e Tronco com Top Manga Longa -->
+                <g id="waistGroup" class="breathing-chest">
+                  <path class="clothing-layer" d="M 145,135 C 135,150 140,175 148,185 C 165,185 190,185 198,175 C 202,150 195,135 185,135 Z" fill="url(#whiteTopGrad)" id="topWaistPath" />
+                  <path class="clothing-layer" d="M 142,138 C 130,160 125,185 130,215 L 138,214 C 135,190 140,165 148,144 Z" fill="url(#whiteTopGrad)" />
+                  <circle cx="132" cy="222" r="6" fill="url(#skinGrad)" />
+                  <path class="clothing-layer" d="M 190,140 C 215,160 235,185 240,205 L 246,200 C 240,180 220,152 195,135 Z" fill="url(#whiteTopGrad)" />
+                  <circle cx="245" cy="208" r="6" fill="url(#skinGrad)" />
+                </g>
+
+                <!-- Rosto Virado por Cima do Ombro -->
+                <g id="headGroup">
+                  <path d="M 160,118 C 155,130 175,130 178,118 Z" fill="url(#skinGrad)" />
+                  <ellipse cx="178" cy="100" rx="19" ry="24" fill="url(#skinGrad)" />
+                  <ellipse cx="184" cy="98" rx="3.5" ry="2" fill="#4a708b" />
+                  <circle cx="185" cy="97" r="1" fill="#ffffff" />
+                  <path d="M 180,94 C 183,92 188,93 190,95" fill="none" stroke="#6b4c38" stroke-width="1.2" />
+                  <circle cx="185" cy="106" r="4.5" fill="#ff75a0" opacity="0.35" />
+                  <ellipse cx="186" cy="112" rx="4" ry="2" fill="#e0627c" />
+                  <path d="M 165,76 C 150,85 145,115 142,150 C 140,180 148,205 152,215 C 158,195 156,150 162,120 C 168,115 185,110 195,95 C 205,75 185,68 165,76 Z" fill="url(#blondeHairGrad)" id="hairBackPath" />
+                  <path d="M 192,85 C 205,100 205,130 198,155 C 195,140 198,110 192,95 Z" fill="url(#blondeHairGrad)" opacity="0.9" />
+                </g>
               </g>
 
-              <!-- Perna Direita (Elevada e Apoiada no Pufe como na Foto) -->
-              <g id="rightLegGroup">
-                <path d="M 180,215 C 220,225 245,235 252,275 C 255,295 248,325 242,345 L 255,348 C 265,320 272,280 258,250 C 245,220 215,205 180,215 Z" fill="url(#leggingsGrad)" id="rightLegPath" />
-                <path d="M 242,340 L 246,358 L 256,356 L 254,338 Z" fill="url(#skinGrad)" />
-                <line x1="244" y1="348" x2="254" y2="346" stroke="#111" stroke-width="2" />
-                <path d="M 244,357 L 258,360 L 265,348 L 255,346 Z" fill="#111" />
-                <line x1="247" y1="357" x2="247" y2="378" stroke="#111" stroke-width="2.8" />
+              <!-- FRENTE GLAMOUR -->
+              <g id="poseFront" class="view-group" style="display:none;">
+                <g id="frontLegs">
+                  <path class="clothing-layer" d="M 132,230 C 128,280 126,340 128,405 L 142,405 C 146,350 148,290 146,230 Z" fill="url(#leggingsGrad)" />
+                  <path class="clothing-layer" d="M 174,230 C 172,290 174,350 178,405 L 192,405 C 194,340 192,280 188,230 Z" fill="url(#leggingsGrad)" />
+                  <path d="M 128,405 L 140,422 L 144,405 Z" fill="#111" />
+                  <line x1="130" y1="405" x2="130" y2="435" stroke="#111" stroke-width="2.5" />
+                  <path d="M 178,405 L 190,422 L 194,405 Z" fill="#111" />
+                  <line x1="180" y1="405" x2="180" y2="435" stroke="#111" stroke-width="2.5" />
+                </g>
+
+                <path class="clothing-layer" d="M 120,200 C 112,225 125,245 160,245 C 195,245 208,225 200,200 C 185,185 135,185 120,200 Z" fill="url(#leggingsGrad)" />
+                <path class="clothing-layer" d="M 134,165 C 128,185 130,205 160,205 C 190,205 192,185 186,165 Z" fill="url(#whiteTopGrad)" />
+
+                <g class="breathing-chest" id="frontChest">
+                  <circle class="clothing-layer" cx="146" cy="155" r="18" fill="url(#whiteTopGrad)" />
+                  <circle class="clothing-layer" cx="174" cy="155" r="18" fill="url(#whiteTopGrad)" />
+                  <path d="M 152,142 C 160,158 160,165 160,172" stroke="#cbd5e1" stroke-width="2" fill="none" />
+                </g>
+
+                <path class="clothing-layer" d="M 130,140 C 105,160 108,185 128,195 L 132,188 C 118,180 115,165 135,145 Z" fill="url(#whiteTopGrad)" />
+                <path class="clothing-layer" d="M 190,140 C 215,160 212,185 192,195 L 188,188 C 202,180 205,165 185,145 Z" fill="url(#whiteTopGrad)" />
+
+                <g id="frontHead">
+                  <ellipse cx="160" cy="100" rx="18" ry="22" fill="url(#skinGrad)" />
+                  <ellipse cx="152" cy="98" rx="3" ry="2" fill="#4a708b" />
+                  <ellipse cx="168" cy="98" rx="3" ry="2" fill="#4a708b" />
+                  <circle cx="153" cy="97" r="1" fill="#fff" />
+                  <circle cx="169" cy="97" r="1" fill="#fff" />
+                  <ellipse cx="160" cy="112" rx="4.5" ry="2.2" fill="#e0627c" />
+                  <circle cx="149" cy="104" r="4" fill="#ff75a0" opacity="0.35" />
+                  <circle cx="171" cy="104" r="4" fill="#ff75a0" opacity="0.35" />
+                  <path d="M 160,76 C 140,78 128,95 125,135 C 122,175 130,220 135,230 C 138,200 134,150 144,115 C 148,100 156,88 160,86 C 164,88 172,100 176,115 C 186,150 182,200 185,230 C 190,220 198,175 195,135 C 192,95 180,78 160,76 Z" fill="url(#blondeHairGrad)" />
+                </g>
               </g>
 
-              <!-- Glúteos Esculpidos / Bumbum Violão da Foto -->
-              <g id="buttGroup" class="funk-butt-bounce">
-                <path d="M 148,185 C 135,190 120,205 120,228 C 120,250 140,265 170,260 C 205,255 228,240 230,210 C 230,190 205,180 175,182 C 160,183 150,184 148,185 Z" fill="url(#leggingsGrad)" id="buttMainPath" />
-                <path d="M 145,215 C 160,240 195,242 220,218" fill="none" stroke="#2c2f38" stroke-width="3" opacity="0.6" />
-                <ellipse cx="180" cy="210" rx="30" ry="18" fill="#ffffff" opacity="0.12" />
+              <!-- PERFIL VIOLÃO -->
+              <g id="poseSide" class="view-group" style="display:none;">
+                <path class="clothing-layer" d="M 155,230 C 150,280 152,340 155,405 L 170,405 C 176,350 180,280 175,230 Z" fill="url(#leggingsGrad)" />
+                <path d="M 155,405 L 168,422 L 172,405 Z" fill="#111" />
+                <line x1="156" y1="405" x2="156" y2="435" stroke="#111" stroke-width="2.5" />
+                <path class="clothing-layer" d="M 145,185 C 115,200 115,235 155,250 C 175,250 182,230 180,200 C 175,185 160,180 145,185 Z" fill="url(#leggingsGrad)" />
+                <path class="clothing-layer" d="M 148,155 C 142,175 145,188 165,188 C 175,188 178,175 174,155 Z" fill="url(#whiteTopGrad)" />
+                <ellipse class="clothing-layer" cx="182" cy="155" rx="16" ry="14" fill="url(#whiteTopGrad)" />
+                <path d="M 155,100 C 155,85 168,78 178,85 C 186,92 188,105 180,116 C 172,122 158,118 155,100 Z" fill="url(#skinGrad)" />
+                <path d="M 150,78 C 135,95 130,140 135,210 C 140,180 142,130 155,105 Z" fill="url(#blondeHairGrad)" />
               </g>
-
-              <!-- Cintura e Tronco (Costas Elegantes da Foto) -->
-              <g id="waistGroup" class="breathing-chest">
-                <path d="M 145,135 C 135,150 140,175 148,185 C 165,185 190,185 198,175 C 202,150 195,135 185,135 Z" fill="url(#whiteTopGrad)" id="topWaistPath" />
-                <path d="M 142,138 C 130,160 125,185 130,215 L 138,214 C 135,190 140,165 148,144 Z" fill="url(#whiteTopGrad)" />
-                <circle cx="132" cy="222" r="6" fill="url(#skinGrad)" />
-                <path d="M 190,140 C 215,160 235,185 240,205 L 246,200 C 240,180 220,152 195,135 Z" fill="url(#whiteTopGrad)" />
-                <circle cx="245" cy="208" r="6" fill="url(#skinGrad)" />
-              </g>
-
-              <!-- Rosto Virado por Cima do Ombro (Olhar da Foto) -->
-              <g id="headGroup">
-                <path d="M 160,118 C 155,130 175,130 178,118 Z" fill="url(#skinGrad)" />
-                <ellipse cx="178" cy="100" rx="19" ry="24" fill="url(#skinGrad)" />
-                <ellipse cx="184" cy="98" rx="3.5" ry="2" fill="#4a708b" />
-                <circle cx="185" cy="97" r="1" fill="#ffffff" />
-                <path d="M 180,94 C 183,92 188,93 190,95" fill="none" stroke="#6b4c38" stroke-width="1.2" />
-                <circle cx="185" cy="106" r="4.5" fill="#ff75a0" opacity="0.35" />
-                <ellipse cx="186" cy="112" rx="4" ry="2" fill="#e0627c" />
-                <path d="M 165,76 C 150,85 145,115 142,150 C 140,180 148,205 152,215 C 158,195 156,150 162,120 C 168,115 185,110 195,95 C 205,75 185,68 165,76 Z" fill="url(#blondeHairGrad)" id="hairBackPath" />
-                <path d="M 192,85 C 205,100 205,130 198,155 C 195,140 198,110 192,95 Z" fill="url(#blondeHairGrad)" opacity="0.9" />
-              </g>
-            </g>
-
-            <!-- VISTA 2: FRENTE GLAMOUR -->
-            <g id="poseFront" class="view-group" style="display:none;">
-              <g id="frontLegs">
-                <path d="M 132,230 C 128,280 126,340 128,405 L 142,405 C 146,350 148,290 146,230 Z" fill="url(#leggingsGrad)" />
-                <path d="M 174,230 C 172,290 174,350 178,405 L 192,405 C 194,340 192,280 188,230 Z" fill="url(#leggingsGrad)" />
-                <path d="M 128,405 L 140,422 L 144,405 Z" fill="#111" />
-                <line x1="130" y1="405" x2="130" y2="435" stroke="#111" stroke-width="2.5" />
-                <path d="M 178,405 L 190,422 L 194,405 Z" fill="#111" />
-                <line x1="180" y1="405" x2="180" y2="435" stroke="#111" stroke-width="2.5" />
-              </g>
-
-              <path d="M 120,200 C 112,225 125,245 160,245 C 195,245 208,225 200,200 C 185,185 135,185 120,200 Z" fill="url(#leggingsGrad)" />
-              <path d="M 134,165 C 128,185 130,205 160,205 C 190,205 192,185 186,165 Z" fill="url(#whiteTopGrad)" />
-
-              <g class="breathing-chest" id="frontChest">
-                <circle cx="146" cy="155" r="18" fill="url(#whiteTopGrad)" />
-                <circle cx="174" cy="155" r="18" fill="url(#whiteTopGrad)" />
-                <path d="M 152,142 C 160,158 160,165 160,172" stroke="#cbd5e1" stroke-width="2" fill="none" />
-              </g>
-
-              <path d="M 130,140 C 105,160 108,185 128,195 L 132,188 C 118,180 115,165 135,145 Z" fill="url(#whiteTopGrad)" />
-              <path d="M 190,140 C 215,160 212,185 192,195 L 188,188 C 202,180 205,165 185,145 Z" fill="url(#whiteTopGrad)" />
-
-              <g id="frontHead">
-                <ellipse cx="160" cy="100" rx="18" ry="22" fill="url(#skinGrad)" />
-                <ellipse cx="152" cy="98" rx="3" ry="2" fill="#4a708b" />
-                <ellipse cx="168" cy="98" rx="3" ry="2" fill="#4a708b" />
-                <circle cx="153" cy="97" r="1" fill="#fff" />
-                <circle cx="169" cy="97" r="1" fill="#fff" />
-                <ellipse cx="160" cy="112" rx="4.5" ry="2.2" fill="#e0627c" />
-                <circle cx="149" cy="104" r="4" fill="#ff75a0" opacity="0.35" />
-                <circle cx="171" cy="104" r="4" fill="#ff75a0" opacity="0.35" />
-                <path d="M 160,76 C 140,78 128,95 125,135 C 122,175 130,220 135,230 C 138,200 134,150 144,115 C 148,100 156,88 160,86 C 164,88 172,100 176,115 C 186,150 182,200 185,230 C 190,220 198,175 195,135 C 192,95 180,78 160,76 Z" fill="url(#blondeHairGrad)" />
-              </g>
-            </g>
-
-            <!-- VISTA 3: PERFIL VIOLÃO -->
-            <g id="poseSide" class="view-group" style="display:none;">
-              <path d="M 155,230 C 150,280 152,340 155,405 L 170,405 C 176,350 180,280 175,230 Z" fill="url(#leggingsGrad)" />
-              <path d="M 155,405 L 168,422 L 172,405 Z" fill="#111" />
-              <line x1="156" y1="405" x2="156" y2="435" stroke="#111" stroke-width="2.5" />
-              <path d="M 145,185 C 115,200 115,235 155,250 C 175,250 182,230 180,200 C 175,185 160,180 145,185 Z" fill="url(#leggingsGrad)" />
-              <path d="M 148,155 C 142,175 145,188 165,188 C 175,188 178,175 174,155 Z" fill="url(#whiteTopGrad)" />
-              <ellipse cx="182" cy="155" rx="16" ry="14" fill="url(#whiteTopGrad)" />
-              <path d="M 155,100 C 155,85 168,78 178,85 C 186,92 188,105 180,116 C 172,122 158,118 155,100 Z" fill="url(#skinGrad)" />
-              <path d="M 150,78 C 135,95 130,140 135,210 C 140,180 142,130 155,105 Z" fill="url(#blondeHairGrad)" />
-            </g>
-
-          </svg>
+            </svg>
+          </div>
         </div>
       </div>
 
-      <!-- Rodapé: Visualizador de Som e Ações Rápidas -->
+      <!-- Rodapé: Visualizador e Botões -->
       <div class="stage-footer-bar">
         <canvas id="visualizerCanvas" class="audio-visualizer-canvas"></canvas>
         <div class="stage-action-row">
-          <button class="action-btn-main" id="btnPlayFunk" onclick="toggleFunkAudio()">
+          <button class="action-btn-main" id="btnToggleWalk" onclick="toggleWalkingOnScreen()">
+            <span id="walkIcon">🚶‍♀️</span>
+            <span id="walkText">FAZER ELA ANDAR</span>
+          </button>
+          <button class="action-btn-sub" id="btnPlayFunk" onclick="toggleFunkAudio()">
             <span id="playIcon">▶</span>
-            <span id="playText">TOCAR FUNK 130 BPM</span>
+            <span id="playText">FUNK 130 BPM</span>
           </button>
           <button class="action-btn-sub" onclick="document.getElementById('photoUploadInput').click()">
-            📷 Usar Foto Real
+            📷 Inserir Foto IA
           </button>
         </div>
       </div>
@@ -786,16 +897,58 @@ body {
 
   <input type="file" id="photoUploadInput" accept="image/*" onchange="handlePhotoUpload(event)" />
 
-  <!-- ABAS DE CONTROLE -->
+  <!-- ABAS -->
   <nav class="control-tabs-nav">
-    <button class="tab-nav-btn active" onclick="openTab('tabBody', this)">🧬 Medidas do Corpo</button>
-    <button class="tab-nav-btn" onclick="openTab('tabWardrobe', this)">👗 Guarda-Roupa (100)</button>
-    <button class="tab-nav-btn" onclick="openTab('tabAiTransform', this)">🤖 Robô ➔ Mulher Real</button>
-    <button class="tab-nav-btn" onclick="openTab('tabAesthetics', this)">💄 Cabelo & Rosto</button>
+    <button class="tab-nav-btn active" onclick="openTab('tabWardrobe', this)">👗 Trocar de Roupa (100)</button>
+    <button class="tab-nav-btn" onclick="openTab('tabRobot', this)">🤖 Controle do Robô</button>
+    <button class="tab-nav-btn" onclick="openTab('tabBody', this)">🧬 Medidas do Corpo</button>
+    <button class="tab-nav-btn" onclick="openTab('tabAesthetics', this)">💄 Estética & Rosto</button>
   </nav>
 
-  <!-- ABA 1: MEDIDAS DO CORPO -->
-  <section class="tab-pane active" id="tabBody">
+  <!-- ABA 1: GUARDA-ROUPA COM O ROBÔ -->
+  <section class="tab-pane active" id="tabWardrobe">
+    <div class="wardrobe-controls">
+      <div class="wardrobe-current-card">
+        <div>
+          <div class="wardrobe-title-sub">Roupa Atual Selecionada</div>
+          <div class="wardrobe-name" id="wardrobeNameDisplay">01. Leggings Cinza & Top Branco (Foto)</div>
+        </div>
+        <button class="btn-robot-change-now" onclick="robotChangeOutfitSequence(currentOutfitIndex)">
+          <span>🤖 Robô: Vestir Esta</span>
+        </button>
+      </div>
+
+      <div style="font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-top:0.3rem;">
+        Toque em qualquer roupa para o robô despir e vestir na hora:
+      </div>
+
+      <div class="biquini-quick-grid" id="biquiniGrid"></div>
+    </div>
+  </section>
+
+  <!-- ABA 2: O ROBÔ ASSISTENTE -->
+  <section class="tab-pane" id="tabRobot">
+    <div class="robot-control-box">
+      <div style="font-size:2.2rem;">🤖 ⚡ 💃</div>
+      <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">Robô Animador & Desmaterializador</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); max-width:460px;">
+        O Robô monitora a imagem da IA, faz ela andar de salto alto pela tela como uma pessoa viva e remove e coloca qualquer roupa que você escolher.
+      </p>
+
+      <button class="robot-btn-big" onclick="robotGiveLifeAnimation()">
+        <span>🧬 ROBÔ: DAR VIDA & FAZER ANDAR</span>
+      </button>
+
+      <div class="custom-select-row" style="justify-content:center; margin-top:0.4rem;">
+        <button class="pill-option-btn active" onclick="setRobotMood('friendly', this)">🤖 Modo Amigável</button>
+        <button class="pill-option-btn" onclick="setRobotMood('tailor', this)">✂️ Modo Alfaiate Rápido</button>
+        <button class="pill-option-btn" onclick="setRobotMood('party', this)">🎉 Modo Festa Funk</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABA 3: MEDIDAS DO CORPO -->
+  <section class="tab-pane" id="tabBody">
     <div class="slider-grid">
       <div class="slider-card">
         <div class="slider-header">
@@ -803,7 +956,7 @@ body {
           <span class="slider-val-badge" id="lblButt">135% (Curvy)</span>
         </div>
         <input type="range" class="custom-range" id="rngButt" min="80" max="180" value="135" oninput="updateAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Projeção arredondada estilo a foto</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Volume e projeção idênticos à foto</small>
       </div>
 
       <div class="slider-card">
@@ -812,7 +965,7 @@ body {
           <span class="slider-val-badge" id="lblWaist">85% (Violão)</span>
         </div>
         <input type="range" class="custom-range" id="rngWaist" min="70" max="120" value="85" oninput="updateAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Efeito espartilho modelador</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Efeito modelador espartilho</small>
       </div>
 
       <div class="slider-card">
@@ -830,7 +983,7 @@ body {
           <span class="slider-val-badge" id="lblLegs">115% (Torneadas)</span>
         </div>
         <input type="range" class="custom-range" id="rngLegs" min="85" max="150" value="115" oninput="updateAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Espessura e definição muscular</small>
+        <small style="font-size:0.7rem; color:var(--text-muted)">Definição muscular de academia</small>
       </div>
 
       <div class="slider-card">
@@ -853,51 +1006,7 @@ body {
     </div>
   </section>
 
-  <!-- ABA 2: GUARDA-ROUPA (100 ROUPAS) -->
-  <section class="tab-pane" id="tabWardrobe">
-    <div class="wardrobe-controls">
-      <div class="wardrobe-current-card">
-        <div>
-          <div class="wardrobe-title-sub">Roupa Atual Selecionada</div>
-          <div class="wardrobe-name" id="wardrobeNameDisplay">01. Conjunto Leggings Cinza & Top Branco (Foto)</div>
-        </div>
-        <div class="wardrobe-carousel-nav">
-          <button class="nav-circle-btn" onclick="stepOutfit(-1)">‹</button>
-          <button class="nav-circle-btn" onclick="stepOutfit(1)">›</button>
-        </div>
-      </div>
-
-      <div style="font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-top:0.3rem;">
-        Seleção Rápida de Coleções (1 a 100):
-      </div>
-
-      <div class="biquini-quick-grid" id="biquiniGrid"></div>
-    </div>
-  </section>
-
-  <!-- ABA 3: TRANSFORMADOR IA (ROBÔ ➔ MULHER REAL) -->
-  <section class="tab-pane" id="tabAiTransform">
-    <div class="transform-box">
-      <div style="font-size:2.2rem;">🤖 ➔ 💃</div>
-      <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">Motor de Conversão IA Neural</h3>
-      <p style="font-size:0.82rem; color:var(--text-muted); max-width:440px;">
-        Transforme a estrutura metálica de robô em uma mulher real com 100% de textura de pele humana, calor corporal e medidas esculturais.
-      </p>
-
-      <div class="transform-status-text" id="transformStatus">STATUS: NÚCLEO HUMANO REAL ATIVO (PELE 8K)</div>
-
-      <button class="btn-transform" onclick="triggerAiTransformation()">
-        <span>🧬 ATIVAR TRANSFORMAÇÃO IA AGORA</span>
-      </button>
-
-      <div class="custom-select-row" style="justify-content:center; margin-top:0.6rem;">
-        <button class="pill-option-btn active" onclick="setRenderMode('realistic', this)">Mulher Realista (8K)</button>
-        <button class="pill-option-btn" onclick="setRenderMode('robot', this)">Modo Robô Cibernético</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABA 4: CABELO, ROSTO E PELE -->
+  <!-- ABA 4: ESTÉTICA & ROSTO -->
   <section class="tab-pane" id="tabAesthetics">
     <div style="display:flex; flex-direction:column; gap:1.1rem;">
       <div>
@@ -934,7 +1043,7 @@ body {
 </div>
 
 <script>
-/* 1. BANCO DE 100 ROUPAS & BIQUÍNIS */
+/* 1. 100 ROUPAS & BIQUÍNIS */
 const OUTFITS = [
   { id: 1, name: "Leggings Cinza & Top Branco (Foto)", bottomColor: "#5a5f69", topColor: "#ffffff" },
   { id: 2, name: "Micro Biquíni Rosa Pink Metálico", bottomColor: "#ff1493", topColor: "#ff1493" },
@@ -973,7 +1082,8 @@ for (let i = 11; i <= 100; i++) {
 
 let currentOutfitIndex = 0;
 let currentView = 'back';
-let isRobotMode = false;
+let isWalking = false;
+let isRobotBusy = false;
 
 /* 2. ABAS */
 function openTab(tabId, btn) {
@@ -990,40 +1100,139 @@ function initWardrobeGrid() {
     const pill = document.createElement('div');
     pill.className = `biquini-pill ${index === currentOutfitIndex ? 'active' : ''}`;
     pill.innerText = `${outfit.id}. ${outfit.name.split(' ')[1] || 'Biquíni'}`;
-    pill.onclick = () => selectOutfit(index);
+    pill.onclick = () => robotChangeOutfitSequence(index);
     grid.appendChild(pill);
   });
 }
 
-function selectOutfit(index) {
-  currentOutfitIndex = index;
-  const outfit = OUTFITS[index];
-  document.getElementById('wardrobeNameDisplay').innerText = `${outfit.id.toString().padStart(2, '0')}. ${outfit.name}`;
+/* 3. AÇÃO DO ROBÔ: DESPIR E VESTIR COM LASER */
+function robotChangeOutfitSequence(targetIndex) {
+  if (isRobotBusy) return;
+  isRobotBusy = true;
   
-  const leggings = document.getElementById('leggingsGrad');
-  if (leggings) {
-    leggings.children[0].setAttribute('stop-color', outfit.bottomColor);
-    leggings.children[1].setAttribute('stop-color', outfit.bottomColor);
-  }
-  const topGrad = document.getElementById('whiteTopGrad');
-  if (topGrad) {
-    topGrad.children[0].setAttribute('stop-color', outfit.topColor);
-    topGrad.children[1].setAttribute('stop-color', outfit.topColor);
-  }
+  initAudioContext();
+  const robot = document.getElementById('robotCompanion');
+  const lasers = document.getElementById('robotLasers');
+  const speech = document.getElementById('robotSpeech');
+  const hud = document.getElementById('hudStatus');
+  const targetOutfit = OUTFITS[targetIndex];
 
-  document.querySelectorAll('.biquini-pill').forEach((el, idx) => {
-    el.classList.toggle('active', idx === index);
-  });
+  speech.innerText = `🤖: "Desmaterializando roupa atual... Preparando ${targetOutfit.name}!"`;
+  robot.classList.add('active-servicing');
+  hud.innerText = "ROBÔ ALFAIATE ATIVO";
+  playRobotBeep(450, 0.15);
+
+  setTimeout(() => {
+    lasers.classList.add('firing');
+    playLaserDeconstructSound();
+
+    const clothLayers = document.querySelectorAll('.clothing-layer');
+    clothLayers.forEach(layer => layer.classList.add('undressing'));
+
+    setTimeout(() => {
+      currentOutfitIndex = targetIndex;
+      document.getElementById('wardrobeNameDisplay').innerText = `${targetOutfit.id.toString().padStart(2, '0')}. ${targetOutfit.name}`;
+      
+      const leggings = document.getElementById('leggingsGrad');
+      if (leggings) {
+        leggings.children[0].setAttribute('stop-color', targetOutfit.bottomColor);
+        leggings.children[1].setAttribute('stop-color', targetOutfit.bottomColor);
+      }
+      const topGrad = document.getElementById('whiteTopGrad');
+      if (topGrad) {
+        topGrad.children[0].setAttribute('stop-color', targetOutfit.topColor);
+        topGrad.children[1].setAttribute('stop-color', targetOutfit.topColor);
+      }
+
+      document.querySelectorAll('.biquini-pill').forEach((el, idx) => {
+        el.classList.toggle('active', idx === targetIndex);
+      });
+
+      clothLayers.forEach(layer => {
+        layer.classList.remove('undressing');
+        layer.classList.add('dressing');
+      });
+      playMaterializeChime();
+
+      setTimeout(() => {
+        clothLayers.forEach(layer => layer.classList.remove('dressing'));
+        lasers.classList.remove('firing');
+        robot.classList.remove('active-servicing');
+        speech.innerText = `🤖: "Prontinho! Ficou maravilhosa com essa roupa!"`;
+        hud.innerText = "MULHER VIRTUAL VIVA";
+        isRobotBusy = false;
+      }, 700);
+
+    }, 700);
+
+  }, 600);
 }
 
-function stepOutfit(direction) {
-  let next = currentOutfitIndex + direction;
-  if (next < 0) next = OUTFITS.length - 1;
-  if (next >= OUTFITS.length) next = 0;
-  selectOutfit(next);
+/* 4. ROBÔ DAR VIDA E FAZER ANDAR */
+function robotGiveLifeAnimation() {
+  const speech = document.getElementById('robotSpeech');
+  const robot = document.getElementById('robotCompanion');
+  initAudioContext();
+
+  speech.innerText = `🤖: "Calibrando rede neural biocibernética... GANHANDO VIDA!"`;
+  robot.classList.add('active-servicing');
+  playSciFiScanSound();
+
+  setTimeout(() => {
+    robot.classList.remove('active-servicing');
+    speech.innerText = `🤖: "Perfeito! Ela agora respira, anda e dança na sua tela!"`;
+    if (!isWalking) {
+      toggleWalkingOnScreen();
+    }
+  }, 1400);
 }
 
-/* 3. SELETOR DE POSIÇÕES (COSTAS / FRENTE / PERFIL) */
+function toggleWalkingOnScreen() {
+  const track = document.getElementById('catwalkTrack');
+  const btn = document.getElementById('btnToggleWalk');
+  const icon = document.getElementById('walkIcon');
+  const txt = document.getElementById('walkText');
+  const speech = document.getElementById('robotSpeech');
+
+  if (!isWalking) {
+    isWalking = true;
+    track.classList.add('walking-active');
+    icon.innerText = "⏸";
+    txt.innerText = "PARAR CAMINHADA";
+    btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+    speech.innerText = `🤖: "Olha como ela anda com elegância e balanço no salto alto!"`;
+  } else {
+    isWalking = false;
+    track.classList.remove('walking-active');
+    icon.innerText = "🚶‍♀️";
+    txt.innerText = "FAZER ELA ANDAR";
+    btn.style.background = "linear-gradient(135deg, #ff3377, #d91456)";
+    speech.innerText = `🤖: "Posição fixa ativada! Respiração viva mantida."`;
+  }
+}
+
+function robotInteractDialog() {
+  const speech = document.getElementById('robotSpeech');
+  const lines = [
+    `🤖: "Estou aqui para cuidar do look dela! Escolha uma roupa para eu vestir."`,
+    `🤖: "As medidas do corpo violão estão calibradas com 100% de perfeição!"`,
+    `🤖: "Quer ver ela desfilando? Aperte em 'Fazer Ela Andar'!"`,
+    `🤖: "Coloque o Funk 130 BPM para ver o rebolado sincronizado!"`
+  ];
+  speech.innerText = lines[Math.floor(Math.random() * lines.length)];
+  playRobotBeep(600, 0.1);
+}
+
+function setRobotMood(mood, btn) {
+  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const speech = document.getElementById('robotSpeech');
+  if (mood === 'friendly') speech.innerText = `🤖: "Modo amigável ativo. Como posso ajudar?"`;
+  if (mood === 'tailor') speech.innerText = `🤖: "Modo Alfaiate ativado. Pronto para trocar qualquer look em 1 segundo!"`;
+  if (mood === 'party') speech.innerText = `🤖: "Modo Festa ativado! Soltando o som e animando a pista!"`;
+}
+
+/* 5. POSIÇÕES */
 function switchView(viewName) {
   currentView = viewName;
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
@@ -1032,19 +1241,16 @@ function switchView(viewName) {
   if (viewName === 'back') {
     document.getElementById('poseBack').style.display = 'block';
     document.getElementById('btnViewBack').classList.add('active');
-    document.getElementById('viewIndicator').innerText = 'VISTA: COSTAS / 3/4 (FOTO)';
   } else if (viewName === 'front') {
     document.getElementById('poseFront').style.display = 'block';
     document.getElementById('btnViewFront').classList.add('active');
-    document.getElementById('viewIndicator').innerText = 'VISTA: FRENTE GLAMOUR';
   } else if (viewName === 'side') {
     document.getElementById('poseSide').style.display = 'block';
     document.getElementById('btnViewSide').classList.add('active');
-    document.getElementById('viewIndicator').innerText = 'VISTA: PERFIL VIOLÃO';
   }
 }
 
-/* 4. MEDIDAS ANATÔMICAS EM TEMPO REAL */
+/* 6. MEDIDAS */
 function updateAnatomy() {
   const buttVal = document.getElementById('rngButt').value;
   const waistVal = document.getElementById('rngWaist').value;
@@ -1060,29 +1266,25 @@ function updateAnatomy() {
 
   const buttGroup = document.getElementById('buttGroup');
   if (buttGroup) {
-    const scaleB = buttVal / 100;
-    buttGroup.style.transform = `scale(${scaleB})`;
+    buttGroup.style.transform = `scale(${buttVal / 100})`;
     buttGroup.style.transformOrigin = "175px 215px";
   }
 
   const waistGroup = document.getElementById('waistGroup');
   if (waistGroup) {
-    const scaleW = waistVal / 100;
-    waistGroup.style.transform = `scaleX(${scaleW})`;
+    waistGroup.style.transform = `scaleX(${waistVal / 100})`;
     waistGroup.style.transformOrigin = "165px 160px";
   }
 
   const frontChest = document.getElementById('frontChest');
   if (frontChest) {
-    const scaleC = chestVal / 100;
-    frontChest.style.transform = `scale(${scaleC})`;
+    frontChest.style.transform = `scale(${chestVal / 100})`;
     frontChest.style.transformOrigin = "160px 155px";
   }
 
   const rightLeg = document.getElementById('rightLegGroup');
   if (rightLeg) {
-    const scaleL = legsVal / 100;
-    rightLeg.style.transform = `scale(${scaleL})`;
+    rightLeg.style.transform = `scale(${legsVal / 100})`;
     rightLeg.style.transformOrigin = "220px 280px";
   }
 }
@@ -1099,45 +1301,7 @@ function updateBreathSpeed() {
   chests.forEach(c => c.style.animationDuration = `${seconds}s`);
 }
 
-/* 5. ROBÔ ➔ MULHER REAL (TRANSFORMAÇÃO IA) */
-function triggerAiTransformation() {
-  const stage = document.getElementById('stageFrame');
-  const status = document.getElementById('transformStatus');
-  const hud = document.getElementById('hudStatus');
-  
-  stage.classList.add('scanning');
-  status.innerText = "IA NEURAL: ESCANEANDO ESTRUTURA E TEXTURIZANDO PELE 8K...";
-  playSciFiScanSound();
-
-  setTimeout(() => {
-    stage.classList.remove('scanning');
-    setRenderMode('realistic');
-    status.innerText = "✨ TRANSFORMAÇÃO CONCLUÍDA: 100% PELE HUMANA & CURVAS ATIVAS!";
-    hud.innerText = "MULHER REALISTA 8K ATIVA";
-  }, 1600);
-}
-
-function setRenderMode(mode, btn) {
-  if (btn) {
-    btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-  const stage = document.getElementById('stageFrame');
-  if (mode === 'robot') {
-    isRobotMode = true;
-    stage.classList.add('robot-mode');
-    document.getElementById('hudStatus').innerText = "MODO ESTRUTURA CIBERNÉTICA";
-    document.getElementById('skinGrad').children[0].setAttribute('stop-color', '#a5f3fc');
-    document.getElementById('skinGrad').children[1].setAttribute('stop-color', '#0284c7');
-  } else {
-    isRobotMode = false;
-    stage.classList.remove('robot-mode');
-    document.getElementById('hudStatus').innerText = "MULHER REALISTA ATIVA";
-    setSkinTone('nordic');
-  }
-}
-
-/* 6. ESTÉTICA */
+/* 7. ESTÉTICA */
 function setHairColor(color, btn) {
   btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1173,10 +1337,8 @@ function setFaceType(type, btn) {
 }
 
 function setSkinTone(tone, btn) {
-  if (btn) {
-    btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
+  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
   const skin = document.getElementById('skinGrad');
   if (!skin) return;
 
@@ -1195,7 +1357,7 @@ function setSkinTone(tone, btn) {
   }
 }
 
-/* 7. UPLOAD DE FOTO REAL */
+/* 8. INSERIR FOTO IA */
 function handlePhotoUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -1206,7 +1368,8 @@ function handlePhotoUpload(event) {
     photo.src = e.target.result;
     photo.classList.add('active');
     document.getElementById('womanSvg').style.opacity = '0.15';
-    document.getElementById('hudStatus').innerText = "FOTO REAL CARREGADA & ANIMADA";
+    document.getElementById('hudStatus').innerText = "FOTO IA INSERIDA & VIVA";
+    document.getElementById('robotSpeech').innerText = `🤖: "Imagem da sua IA inserida com sucesso! Dando vida a ela agora..."`;
     try {
       localStorage.setItem('dancerRealPhoto', e.target.result);
     } catch(err) {
@@ -1229,7 +1392,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initVisualizer();
 });
 
-/* 8. SINTETIZADOR FUNK CARIOCA 130 BPM (WEB AUDIO API) */
+/* 9. ÁUDIO & EFEITOS DO ROBÔ */
 let audioCtx = null;
 let isPlayingFunk = false;
 let funkInterval = null;
@@ -1246,6 +1409,70 @@ function initAudioContext() {
   if (audioCtx.state === 'suspended') {
     audioCtx.resume();
   }
+}
+
+function playRobotBeep(freq, dur) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime + dur);
+}
+
+function playLaserDeconstructSound() {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  const now = audioCtx.currentTime;
+  osc.frequency.setValueAtTime(800, now);
+  osc.frequency.exponentialRampToValueAtTime(150, now + 0.6);
+  gain.gain.setValueAtTime(0.25, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 0.65);
+}
+
+function playMaterializeChime() {
+  if (!audioCtx) return;
+  [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    const time = audioCtx.currentTime + i * 0.08;
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, time);
+    gain.gain.setValueAtTime(0.18, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(time);
+    osc.stop(time + 0.45);
+  });
+}
+
+function playSciFiScanSound() {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  const now = audioCtx.currentTime;
+  osc.frequency.setValueAtTime(300, now);
+  osc.frequency.linearRampToValueAtTime(1400, now + 0.6);
+  osc.frequency.linearRampToValueAtTime(350, now + 1.2);
+  gain.gain.setValueAtTime(0.2, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 1.25);
 }
 
 function playKick(time) {
@@ -1306,7 +1533,7 @@ function toggleFunkAudio() {
   if (!isPlayingFunk) {
     isPlayingFunk = true;
     icon.innerText = "⏸";
-    txt.innerText = "PAUSAR FUNK";
+    txt.innerText = "PAUSAR";
     btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
     modelWrapper.classList.add('funk-dancing');
     const stepDurationMs = (60 / 130 / 2) * 1000;
@@ -1314,31 +1541,13 @@ function toggleFunkAudio() {
   } else {
     isPlayingFunk = false;
     icon.innerText = "▶";
-    txt.innerText = "TOCAR FUNK 130 BPM";
-    btn.style.background = "linear-gradient(135deg, #ff3377, #d91456)";
+    txt.innerText = "FUNK 130 BPM";
+    btn.style.background = "rgba(22, 17, 39, 0.9)";
     modelWrapper.classList.remove('funk-dancing');
     clearInterval(funkInterval);
   }
 }
 
-function playSciFiScanSound() {
-  initAudioContext();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'sawtooth';
-  const now = audioCtx.currentTime;
-  osc.frequency.setValueAtTime(300, now);
-  osc.frequency.linearRampToValueAtTime(1400, now + 0.8);
-  osc.frequency.linearRampToValueAtTime(400, now + 1.5);
-  gain.gain.setValueAtTime(0.2, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start(now);
-  osc.stop(now + 1.5);
-}
-
-/* 9. VISUALIZADOR DE ÁUDIO EM CANVAS */
 function initVisualizer() {
   const canvas = document.getElementById('visualizerCanvas');
   const ctx = canvas.getContext('2d');
