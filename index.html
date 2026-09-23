@@ -252,142 +252,244 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <div class="stage-shadow" id="stageShadow"></div>
 <div class="dancer-figure" id="dancerFigure">
 
+<!-- ================= BOT SVG INSPIRADO NA IA ================= -->
 <svg class="dancer-bot-svg dancer-media active" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot">
 <defs>
-<radialGradient id="botSkin" cx="50%" cy="30%">
-<stop offset="0%" stop-color="var(--skin-1)"/>
-<stop offset="100%" stop-color="var(--skin-2)"/>
-</radialGradient>
-<linearGradient id="botHairBack" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0%" stop-color="var(--hair-1)"/>
-<stop offset="55%" stop-color="var(--hair-2)"/>
-<stop offset="100%" stop-color="var(--hair-3)"/>
-</linearGradient>
-<linearGradient id="botHairFront" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0%" stop-color="var(--hair-1)"/>
-<stop offset="100%" stop-color="var(--hair-2)"/>
-</linearGradient>
-<linearGradient id="botTopGrad" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0%" stop-color="var(--outfit-1, #ff4d8d)"/>
-<stop offset="100%" stop-color="var(--outfit-2, #7928ca)"/>
-</linearGradient>
-<linearGradient id="botLeggingGrad" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0%" stop-color="var(--outfit-1, #ff4d8d)"/>
-<stop offset="100%" stop-color="var(--outfit-2, #7928ca)"/>
-</linearGradient>
+  <!-- Tom de pele com sombra suave e luz -->
+  <radialGradient id="botSkin" cx="50%" cy="35%" r="65%">
+    <stop offset="0%" stop-color="var(--skin-1, #fff2eb)"/>
+    <stop offset="65%" stop-color="var(--skin-2, #f4d0be)"/>
+    <stop offset="100%" stop-color="var(--skin-shadow, #e5b39e)"/>
+  </radialGradient>
+  
+  <linearGradient id="botLegSkin" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="var(--skin-2, #edd0be)"/>
+    <stop offset="35%" stop-color="var(--skin-1, #fff4ed)"/>
+    <stop offset="75%" stop-color="var(--skin-1, #fae3d5)"/>
+    <stop offset="100%" stop-color="var(--skin-shadow, #e3af99)"/>
+  </linearGradient>
+
+  <!-- Cabelo Platinado com reflexos e mechas -->
+  <linearGradient id="botHairBack" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="var(--hair-1, #fdf8e2)"/>
+    <stop offset="30%" stop-color="var(--hair-2, #f3e5b8)"/>
+    <stop offset="70%" stop-color="var(--hair-3, #d9c488)"/>
+    <stop offset="100%" stop-color="#ba9f5c"/>
+  </linearGradient>
+  
+  <linearGradient id="botHairFront" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="var(--hair-1, #fffdf2)"/>
+    <stop offset="45%" stop-color="var(--hair-2, #f5e9c0)"/>
+    <stop offset="85%" stop-color="var(--hair-3, #ddc88d)"/>
+    <stop offset="100%" stop-color="#ba9f5c"/>
+  </linearGradient>
+
+  <!-- Top cropped branco de manga longa com nó frontal -->
+  <linearGradient id="botTopGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="var(--outfit-1, #ffffff)"/>
+    <stop offset="50%" stop-color="var(--outfit-2, #f5eee4)"/>
+    <stop offset="100%" stop-color="#ded3c1"/>
+  </linearGradient>
+
+  <!-- Saia / Fenda fluida bege/creme acetinada -->
+  <linearGradient id="botSkirtGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#fdfbf7"/>
+    <stop offset="45%" stop-color="#f2ebe0"/>
+    <stop offset="100%" stop-color="#dbcebc"/>
+  </linearGradient>
+
+  <!-- Olhos azul-acinzentados expressivos -->
+  <radialGradient id="eyeIris" cx="45%" cy="40%" r="55%">
+    <stop offset="0%" stop-color="#cbe5f6"/>
+    <stop offset="40%" stop-color="#6ea2c7"/>
+    <stop offset="85%" stop-color="#3c6b8c"/>
+    <stop offset="100%" stop-color="#1e384c"/>
+  </radialGradient>
+
+  <!-- Lábios volumosos com gloss rosado -->
+  <linearGradient id="lipGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#f99aa8"/>
+    <stop offset="50%" stop-color="#df7082"/>
+    <stop offset="100%" stop-color="#b84d60"/>
+  </linearGradient>
+
+  <!-- Filtro de blush suave nas bochechas -->
+  <filter id="blushGlow" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="3.2"/>
+  </filter>
 </defs>
 
-<!-- CABELO TRASEIRO — ESTILO LONGO -->
+<!-- ================= CABELO DE FUNDO (LONGO / DIVIDIDO) ================= -->
 <g class="hair-style" data-style="longo">
-<path d="M 84 62 Q 73 14 125 10 Q 177 14 166 62 Q 179 122 175 208 Q 173 222 169 226 Q 163 190 161 145 Q 159 58 125 50 Q 91 58 89 145 Q 87 190 81 226 Q 77 222 75 208 Q 71 122 84 62 Z" fill="url(#botHairBack)"/>
+  <path d="M 80 50 Q 64 22 125 10 Q 186 22 170 50 Q 185 105 186 195 Q 186 230 176 250 Q 170 252 165 240 Q 166 180 162 135 Q 158 55 125 45 Q 92 55 88 135 Q 84 180 85 240 Q 80 252 74 250 Q 64 230 64 195 Q 65 105 80 50 Z" fill="url(#botHairBack)"/>
+  <path d="M 72 140 Q 70 200 78 245" stroke="#ba9f5c" stroke-width="1.2" fill="none" opacity="0.4"/>
+  <path d="M 178 140 Q 180 200 172 245" stroke="#ba9f5c" stroke-width="1.2" fill="none" opacity="0.4"/>
 </g>
-<!-- ONDULADO -->
 <g class="hair-style" data-style="ondulado" style="display:none">
-<path d="M 82 62 Q 70 14 125 8 Q 180 14 168 62 Q 186 130 174 220 Q 168 230 160 218 Q 172 160 158 130 Q 162 62 125 48 Q 88 62 92 130 Q 78 160 90 218 Q 82 230 76 220 Q 64 130 82 62 Z" fill="url(#botHairBack)"/>
+  <path d="M 78 50 Q 62 20 125 8 Q 188 20 172 50 Q 192 110 176 225 Q 170 242 162 230 Q 172 170 160 135 Q 162 55 125 46 Q 88 55 90 135 Q 78 170 88 230 Q 80 242 74 225 Q 58 110 78 50 Z" fill="url(#botHairBack)"/>
 </g>
-<!-- BOB -->
 <g class="hair-style" data-style="bob" style="display:none">
-<path d="M 86 62 Q 74 14 125 10 Q 176 14 164 62 Q 172 100 165 138 Q 158 118 158 90 Q 156 58 125 50 Q 94 58 92 90 Q 92 118 85 138 Q 78 100 86 62 Z" fill="url(#botHairBack)"/>
+  <path d="M 82 50 Q 66 18 125 10 Q 184 18 168 50 Q 178 95 170 142 Q 160 120 160 90 Q 156 55 125 46 Q 94 55 90 90 Q 90 120 80 142 Q 72 95 82 50 Z" fill="url(#botHairBack)"/>
 </g>
-<!-- COQUE / PONTA -->
 <g class="hair-style" data-style="coque" style="display:none">
-<ellipse cx="125" cy="22" rx="28" ry="18" fill="url(#botHairBack)"/>
-<path d="M 96 55 Q 92 20 125 18 Q 158 20 154 55 Q 150 40 125 38 Q 100 40 96 55 Z" fill="url(#botHairBack)"/>
+  <ellipse cx="125" cy="18" rx="26" ry="16" fill="url(#botHairBack)"/>
+  <path d="M 94 50 Q 90 16 125 14 Q 160 16 156 50 Q 150 36 125 34 Q 100 36 94 50 Z" fill="url(#botHairBack)"/>
 </g>
 
-<!-- BRAÇO ESQUERDO -->
+<!-- ================= BRAÇO ESQUERDO (Manga Longa) ================= -->
 <g class="bot-part bot-arm bot-arm-left">
-<rect x="66" y="128" width="18" height="94" rx="9" fill="url(#botTopGrad)"/>
-<circle cx="75" cy="224" r="9.5" fill="var(--skin-1)"/>
+  <path d="M 74 114 Q 60 145 56 185 L 68 188 Q 72 152 82 122 Z" fill="url(#botTopGrad)"/>
+  <path d="M 58 152 Q 65 155 72 150" stroke="#d5c8b5" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <rect x="54" y="184" width="16" height="5" rx="2.5" fill="#f8f4ec" stroke="#d8ccb8" stroke-width="0.8"/>
+  <path d="M 57 189 Q 54 205 60 215 Q 65 218 69 210 Q 72 198 70 189 Z" fill="var(--skin-1, #fff2eb)"/>
+  <path d="M 60 205 Q 62 216 66 215" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.7" fill="none"/>
 </g>
 
-<!-- PERNAS -->
+<!-- ================= PERNAS E QUADRIL (Coxas Volumosas) ================= -->
 <g class="bot-part bot-leg bot-leg-left">
-<rect x="100" y="205" width="23" height="120" rx="11" fill="url(#botLeggingGrad)"/>
-<path d="M 96 322 Q 94 336 112 338 Q 126 338 128 326 L 122 318 Z" fill="#1a1a1a"/>
-<path d="M 108 338 L 108 348 L 112 348 L 112 338 Z" fill="#1a1a1a"/>
-<ellipse cx="110" cy="349" rx="6" ry="1.6" fill="#0a0a0a"/>
-<path d="M 102 320 Q 112 318 122 320" stroke="#1a1a1a" stroke-width="1.4" fill="none"/>
+  <path d="M 92 196 Q 76 218 78 250 Q 82 278 96 295 L 108 295 Q 102 268 106 230 Q 108 208 108 196 Z" fill="url(#botLegSkin)"/>
+  <path d="M 94 292 Q 90 315 94 336 L 105 336 Q 108 318 106 292 Z" fill="url(#botLegSkin)"/>
+  <ellipse cx="98" cy="294" rx="6" ry="3.5" fill="var(--skin-shadow, #e5b39e)" opacity="0.45"/>
+  <ellipse cx="99" cy="336" rx="4.5" ry="3" fill="var(--skin-1, #fff2eb)"/>
+  <!-- Salto fino preto -->
+  <path d="M 93 336 L 91 352 L 94 352 L 95 338 Z" fill="#181414"/>
+  <path d="M 92 336 Q 96 342 108 348 Q 112 349 110 345 Q 102 340 98 335 Z" fill="#7d4826"/>
+  <path d="M 95 336 Q 101 337 106 335" stroke="#111" stroke-width="1.8" fill="none"/>
+  <path d="M 103 344 Q 108 347 111 345" stroke="#111" stroke-width="1.6" fill="none"/>
 </g>
+
 <g class="bot-part bot-leg bot-leg-right">
-<rect x="127" y="205" width="23" height="120" rx="11" fill="url(#botLeggingGrad)"/>
-<path d="M 123 322 Q 121 336 139 338 Q 153 338 155 326 L 149 318 Z" fill="#1a1a1a"/>
-<path d="M 135 338 L 135 348 L 139 348 L 139 338 Z" fill="#1a1a1a"/>
-<ellipse cx="137" cy="349" rx="6" ry="1.6" fill="#0a0a0a"/>
-<path d="M 129 320 Q 139 318 149 320" stroke="#1a1a1a" stroke-width="1.4" fill="none"/>
+  <path d="M 124 196 Q 146 208 156 232 Q 166 258 154 286 Q 144 305 136 312 L 122 308 Q 134 285 134 252 Q 132 215 120 196 Z" fill="url(#botLegSkin)"/>
+  <path d="M 125 306 Q 136 322 142 338 L 132 342 Q 124 326 121 308 Z" fill="url(#botLegSkin)"/>
+  <ellipse cx="140" cy="245" rx="9" ry="24" fill="#ffffff" opacity="0.22" transform="rotate(18 140 245)"/>
+  <ellipse cx="138" cy="298" rx="7" ry="4" fill="var(--skin-shadow, #e5b39e)" opacity="0.4"/>
+  <!-- Tornozeleira dourada da imagem -->
+  <path d="M 134 338 Q 138 342 143 339" stroke="#eab308" stroke-width="1.6" fill="none"/>
+  <!-- Salto alto direito -->
+  <path d="M 132 342 L 131 354 L 133 354 L 135 343 Z" fill="#181414"/>
+  <path d="M 132 341 Q 138 347 148 350 L 149 347 Q 140 343 135 340 Z" fill="#7d4826"/>
+  <path d="M 133 340 Q 139 341 144 338" stroke="#111" stroke-width="1.8" fill="none"/>
+  <path d="M 142 347 Q 146 349 149 347" stroke="#111" stroke-width="1.6" fill="none"/>
 </g>
 
-<!-- TOP BRANCO / BIQUÍNI (GRADIENTE CORRIGIDO) -->
-<path d="M 92 124 Q 88 128 86 152 L 86 202 Q 110 212 125 211 Q 140 212 164 202 L 164 152 Q 162 128 158 124 Q 140 118 125 118 Q 110 118 92 124 Z" fill="url(#botTopGrad)"/>
-<path d="M 112 122 Q 125 132 138 122" stroke="#d8cebb" stroke-width="2" fill="none" stroke-linecap="round"/>
-<path d="M 88 197 Q 125 207 162 197" stroke="#d8cebb" stroke-width="1.2" fill="none" opacity=".55"/>
+<!-- ================= SAIA ACETINADA COM FENDA ================= -->
+<g class="bot-skirt">
+  <path d="M 98 188 Q 84 195 72 230 Q 64 275 62 332 Q 72 345 84 346 Q 88 310 94 260 Q 98 220 106 195 Z" fill="url(#botSkirtGrad)" opacity="0.95"/>
+  <path d="M 76 225 Q 70 280 72 342" stroke="#d5c7b3" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <path d="M 84 250 Q 82 305 84 345" stroke="#d5c7b3" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M 98 185 Q 125 192 152 185 L 152 192 Q 125 200 98 192 Z" fill="#f4ede1" stroke="#d8ccb8" stroke-width="0.8"/>
+</g>
 
-<!-- BRAÇO DIREITO -->
+<!-- ================= TRONCO / CINTURA / ABDÔMEN ================= -->
+<g class="bot-torso">
+  <path d="M 104 158 Q 100 172 98 188 Q 125 194 152 188 Q 150 172 146 158 Q 136 166 125 166 Q 114 166 104 158 Z" fill="url(#botSkin)"/>
+  <ellipse cx="125" cy="178" rx="1.5" ry="2.2" fill="var(--skin-shadow, #e5b39e)"/>
+  <path d="M 125 167 L 125 174" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.9" fill="none" opacity="0.5"/>
+</g>
+
+<!-- ================= TOP CROPPED COM NÓ FRONTAL ================= -->
+<g class="bot-top">
+  <path d="M 88 116 Q 82 138 88 158 Q 104 168 122 158 Q 118 135 116 120 Z" fill="url(#botTopGrad)"/>
+  <path d="M 162 116 Q 168 138 162 158 Q 146 168 128 158 Q 132 135 134 120 Z" fill="url(#botTopGrad)"/>
+  <path d="M 116 114 Q 125 132 125 152 Q 125 132 134 114 Z" fill="url(#botSkin)"/>
+  <path d="M 125 130 L 125 153" stroke="var(--skin-shadow, #e5b39e)" stroke-width="1.3" fill="none" opacity="0.7"/>
+  <path d="M 116 114 Q 122 135 124 154" stroke="#d5c8b5" stroke-width="1.4" fill="none"/>
+  <path d="M 134 114 Q 128 135 126 154" stroke="#d5c8b5" stroke-width="1.4" fill="none"/>
+  <!-- Nó frontal -->
+  <ellipse cx="125" cy="156" rx="5" ry="4" fill="#ffffff" stroke="#d5c8b5" stroke-width="1"/>
+  <path d="M 123 158 Q 120 168 122 172 Q 124 172 125 160 Z" fill="#faf6ef" stroke="#d8ccb8" stroke-width="0.7"/>
+  <path d="M 126 158 Q 129 169 131 172 Q 130 167 127 160 Z" fill="#f4ece0" stroke="#d8ccb8" stroke-width="0.7"/>
+</g>
+
+<!-- ================= BRAÇO DIREITO (Manga Longa) ================= -->
 <g class="bot-part bot-arm bot-arm-right">
-<rect x="164" y="128" width="18" height="94" rx="9" fill="url(#botTopGrad)"/>
-<circle cx="173" cy="224" r="9.5" fill="var(--skin-1)"/>
+  <path d="M 176 114 Q 190 145 194 185 L 182 188 Q 178 152 168 122 Z" fill="url(#botTopGrad)"/>
+  <path d="M 192 152 Q 185 155 178 150" stroke="#d5c8b5" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <rect x="180" y="184" width="16" height="5" rx="2.5" fill="#f8f4ec" stroke="#d8ccb8" stroke-width="0.8"/>
+  <path d="M 183 189 Q 186 205 180 215 Q 175 218 171 210 Q 168 198 170 189 Z" fill="var(--skin-1, #fff2eb)"/>
+  <path d="M 180 205 Q 178 216 174 215" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.7" fill="none"/>
 </g>
 
-<!-- PESCOÇO -->
-<rect x="117" y="94" width="16" height="28" rx="6" fill="var(--skin-1)"/>
+<!-- ================= PESCOÇO E COLO ================= -->
+<g class="bot-neck">
+  <path d="M 117 84 L 115 116 Q 125 120 135 116 L 133 84 Z" fill="url(#botSkin)"/>
+  <ellipse cx="125" cy="88" rx="9" ry="3.5" fill="var(--skin-shadow, #e5b39e)" opacity="0.5"/>
+  <path d="M 112 114 Q 120 117 124 122" stroke="var(--skin-shadow, #e5b39e)" stroke-width="1" fill="none" opacity="0.55"/>
+  <path d="M 138 114 Q 130 117 126 122" stroke="var(--skin-shadow, #e5b39e)" stroke-width="1" fill="none" opacity="0.55"/>
+</g>
 
-<!-- CABEÇA -->
-<ellipse cx="125" cy="68" rx="32" ry="37" fill="url(#botSkin)"/>
+<!-- ================= ROSTO E TRAÇOS FEMININOS ================= -->
+<g class="bot-head">
+  <!-- Formato suave do rosto -->
+  <path d="M 96 54 Q 93 30 125 24 Q 157 30 154 54 Q 154 75 142 88 Q 132 96 125 96 Q 118 96 108 88 Q 96 75 96 54 Z" fill="url(#botSkin)"/>
+  
+  <!-- Blush rosado nas bochechas e nariz -->
+  <ellipse cx="107" cy="74" rx="10" ry="6" fill="#f89ba9" opacity="0.55" filter="url(#blushGlow)"/>
+  <ellipse cx="143" cy="74" rx="10" ry="6" fill="#f89ba9" opacity="0.55" filter="url(#blushGlow)"/>
+  <ellipse cx="125" cy="73" rx="4.5" ry="3" fill="#f89ba9" opacity="0.4" filter="url(#blushGlow)"/>
 
-<!-- CABELO FRENTE — LONGO -->
+  <!-- Olho Esquerdo -->
+  <g class="bot-eye-left">
+    <path d="M 106 63 Q 113 58 120 63 Q 113 68 106 63 Z" fill="#ffffff"/>
+    <ellipse cx="113" cy="63" rx="3.8" ry="4.2" fill="url(#eyeIris)"/>
+    <circle cx="113" cy="63" r="1.8" fill="#141e26"/>
+    <circle cx="114.2" cy="61.5" r="1.1" fill="#ffffff"/>
+    <circle cx="111.8" cy="64.2" r="0.6" fill="#ffffff" opacity="0.8"/>
+    <path d="M 105 63 Q 112 57.5 121 62" stroke="#261a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M 105 63 L 103.5 61.8" stroke="#261a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Olho Direito -->
+  <g class="bot-eye-right">
+    <path d="M 130 63 Q 137 58 144 63 Q 137 68 130 63 Z" fill="#ffffff"/>
+    <ellipse cx="137" cy="63" rx="3.8" ry="4.2" fill="url(#eyeIris)"/>
+    <circle cx="137" cy="63" r="1.8" fill="#141e26"/>
+    <circle cx="138.2" cy="61.5" r="1.1" fill="#ffffff"/>
+    <circle cx="135.8" cy="64.2" r="0.6" fill="#ffffff" opacity="0.8"/>
+    <path d="M 129 62 Q 138 57.5 145 63" stroke="#261a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M 145 63 L 146.5 61.8" stroke="#261a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sobrancelhas naturais -->
+  <path d="M 104 56 Q 112 51.5 120 54" stroke="var(--hair-3, #c9b072)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M 130 54 Q 138 51.5 146 56" stroke="var(--hair-3, #c9b072)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+  <!-- Nariz fino -->
+  <path d="M 124 64 Q 125 72 123 74 Q 125 76 127 74 Q 125 72 126 64" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.9" fill="none"/>
+  <ellipse cx="125" cy="74" rx="2" ry="1.2" fill="#f89ba9" opacity="0.4"/>
+  <ellipse cx="122.5" cy="74.5" rx="0.7" ry="0.5" fill="#ba8070"/>
+  <ellipse cx="127.5" cy="74.5" rx="0.7" ry="0.5" fill="#ba8070"/>
+
+  <!-- Boca com gloss rosado -->
+  <g class="bot-lips">
+    <path d="M 117 83 Q 121 80.5 125 82 Q 129 80.5 133 83 Q 129 84 125 84.5 Q 121 84 117 83 Z" fill="url(#lipGrad)"/>
+    <path d="M 117.5 83.5 Q 125 84 132.5 83.5 Q 131 90 125 90.5 Q 119 90 117.5 83.5 Z" fill="url(#lipGrad)"/>
+    <path d="M 118 83.5 Q 125 84.5 132 83.5" stroke="#8c2a3e" stroke-width="0.8" fill="none"/>
+    <ellipse cx="125" cy="87.5" rx="3.5" ry="1.4" fill="#ffffff" opacity="0.6"/>
+  </g>
+</g>
+
+<!-- ================= CABELO FRONTAL / MECHAS NA FRENTE ================= -->
 <g class="hair-front" data-style="longo">
-<path d="M 86 60 Q 90 22 125 16 L 125 33 Q 109 38 101 54 Q 94 58 86 60 Z" fill="url(#botHairFront)"/>
-<path d="M 164 60 Q 160 22 125 16 L 125 33 Q 141 38 149 54 Q 156 58 164 60 Z" fill="url(#botHairFront)"/>
-<path d="M 94 58 Q 85 116 90 188 Q 103 100 Z" fill="url(#botHairFront)"/>
-<path d="M 156 58 Q 165 116 160 188 Q 149 148 147 100 Z" fill="url(#botHairFront)"/>
-<ellipse cx="108" cy="34" rx="9" ry="4" fill="#fff" opacity=".25" transform="rotate(-15 108 34)"/>
+  <path d="M 125 24 Q 102 24 94 45 Q 88 65 92 90 Q 94 115 88 150 Q 82 195 86 240 Q 92 240 94 210 Q 98 165 98 120 Q 98 75 106 50 Q 114 36 125 28 Z" fill="url(#botHairFront)"/>
+  <path d="M 125 24 Q 148 24 156 45 Q 162 65 158 90 Q 156 115 162 150 Q 168 195 164 240 Q 158 240 156 210 Q 152 165 152 120 Q 152 75 144 50 Q 136 36 125 28 Z" fill="url(#botHairFront)"/>
+  <path d="M 125 26 Q 106 38 98 70 Q 94 110 92 160 Q 90 200 90 235" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.5"/>
+  <path d="M 125 26 Q 144 38 152 70 Q 156 110 158 160 Q 160 200 160 235" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.5"/>
+  <path d="M 125 25 L 125 35" stroke="#ba9f5c" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <ellipse cx="112" cy="30" rx="10" ry="3.5" fill="#ffffff" opacity="0.35" transform="rotate(-12 112 30)"/>
+  <ellipse cx="138" cy="30" rx="10" ry="3.5" fill="#ffffff" opacity="0.35" transform="rotate(12 138 30)"/>
 </g>
-<!-- ONDULADO FRENTE -->
 <g class="hair-front" data-style="ondulado" style="display:none">
-<path d="M 84 60 Q 88 22 125 14 L 125 32 Q 108 38 100 56 Q 92 60 84 60 Z" fill="url(#botHairFront)"/>
-<path d="M 166 60 Q 162 22 125 14 L 125 32 Q 142 38 150 56 Q 158 60 166 60 Z" fill="url(#botHairFront)"/>
-<path d="M 92 58 Q 80 118 88 196 Q 100 150 104 100 Z" fill="url(#botHairFront)"/>
-<path d="M 158 58 Q 170 118 162 196 Q 150 150 146 100 Z" fill="url(#botHairFront)"/>
-<ellipse cx="108" cy="32" rx="10" ry="4" fill="#fff" opacity=".28" transform="rotate(-15 108 32)"/>
+  <path d="M 125 24 Q 98 24 90 48 Q 80 85 92 135 Q 82 175 90 235 Q 96 235 98 200 Q 94 150 102 115 Q 102 65 125 28 Z" fill="url(#botHairFront)"/>
+  <path d="M 125 24 Q 152 24 160 48 Q 170 85 158 135 Q 168 175 160 235 Q 154 235 152 200 Q 156 150 148 115 Q 148 65 125 28 Z" fill="url(#botHairFront)"/>
 </g>
-<!-- BOB FRENTE -->
 <g class="hair-front" data-style="bob" style="display:none">
-<path d="M 84 60 Q 88 20 125 14 L 125 30 Q 106 36 100 54 Q 92 58 84 60 Z" fill="url(#botHairFront)"/>
-<path d="M 166 60 Q 162 20 125 14 L 125 30 Q 144 36 150 54 Q 158 58 166 60 Z" fill="url(#botHairFront)"/>
-<path d="M 90 58 Q 84 96 90 128 Q 100 108 100 90 Z" fill="url(#botHairFront)"/>
-<path d="M 160 58 Q 166 96 160 128 Q 150 108 150 90 Z" fill="url(#botHairFront)"/>
+  <path d="M 125 24 Q 98 22 90 48 Q 84 80 92 120 Q 98 100 102 80 Q 104 55 125 28 Z" fill="url(#botHairFront)"/>
+  <path d="M 125 24 Q 152 22 160 48 Q 166 80 158 120 Q 152 100 148 80 Q 146 55 125 28 Z" fill="url(#botHairFront)"/>
 </g>
-<!-- COQUE FRENTE -->
 <g class="hair-front" data-style="coque" style="display:none">
-<path d="M 90 55 Q 94 20 125 18 Q 156 20 160 55 Q 152 38 138 42 Q 125 32 112 42 Q 98 38 90 55 Z" fill="url(#botHairFront)"/>
+  <path d="M 94 48 Q 98 22 125 20 Q 152 22 156 48 Q 148 35 136 38 Q 125 30 114 38 Q 102 35 94 48 Z" fill="url(#botHairFront)"/>
 </g>
-
-<!-- OLHOS -->
-<ellipse cx="112" cy="70" rx="5" ry="5.5" fill="#f7f2ea"/>
-<ellipse cx="138" cy="70" rx="5" ry="5.5" fill="#f7f2ea"/>
-<ellipse cx="112" cy="70.5" rx="4" ry="4.8" fill="var(--eye)"/>
-<ellipse cx="138" cy="70.5" rx="4" ry="4.8" fill="var(--eye)"/>
-<circle cx="112" cy="70.5" r="2" fill="#2c3c4a"/>
-<circle cx="138" cy="70.5" r="2" fill="#2c3c4a"/>
-<circle cx="113" cy="69" r="1.3" fill="#fff"/>
-<circle cx="139" cy="69" r="1.3" fill="#fff"/>
-<path d="M 106 67 Q 112 62 118 66" stroke="#5a4030" stroke-width="1.7" fill="none" stroke-linecap="round"/>
-<path d="M 132 66 Q 138 62 144 67" stroke="#5a4030" stroke-width="1.7" fill="none" stroke-linecap="round"/>
-
-<!-- SOBRANCELHAS -->
-<path d="M 105 60 Q 112 57 118 59" stroke="var(--hair-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-<path d="M 132 59 Q 138 57 145 60" stroke="var(--hair-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-
-<!-- NARIZ -->
-<path d="M 125 74 Q 122 82 124 83 Q 126 83 127 82" stroke="var(--skin-line)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-
-<!-- BOCA -->
-<path d="M 118 91 Q 125 88 132 91 Q 125 97 118 91 Z" fill="#d99aa5"/>
-<path d="M 119 91 Q 125 93 131 91" stroke="#b87a88" stroke-width=".7" fill="none"/>
-
-<!-- BLUSH -->
-<ellipse cx="104" cy="85" rx="6" ry="3" fill="#f2a0b0" opacity=".42"/>
-<ellipse cx="146" cy="85" rx="6" ry="3" fill="#f2a0b0" opacity=".42"/>
 </svg>
 
 <img alt="Bailarina" id="dancerImg" class="dancer-media" />
@@ -537,10 +639,10 @@ if(src)el.src=src;
 }
 
 /* =========================================================
-   40 PERSONAGENS — combinações de pele + cabelo + estilo + olho
+   40 PERSONAGENS (A primeira personagem [0] é a modelo da foto)
    ========================================================= */
 const SKINS=[
-{n:'Branca',c1:'#fce6d4',c2:'#eab896',line:'#d8a888'},
+{n:'Branca Porcelana',c1:'#fff2eb',c2:'#f4d0be',line:'#e5b39e'},
 {n:'Branca Rosada',c1:'#fbd8c4',c2:'#e8a890',line:'#d09070'},
 {n:'Média Clara',c1:'#f0c9a8',c2:'#d69f75',line:'#b88050'},
 {n:'Média',c1:'#e0b088',c2:'#c08858',line:'#a07040'},
@@ -549,7 +651,7 @@ const SKINS=[
 {n:'Negra Retinta',c1:'#5c3820',c2:'#3a2008',line:'#2a1500'}
 ];
 const HAIRS=[
-{n:'Platinado',c1:'#f7ecc4',c2:'#e3ce98',c3:'#b8a068'},
+{n:'Loiro Platinado',c1:'#fffdf2',c2:'#f5e9c0',c3:'#ddc88d'},
 {n:'Loiro Dourado',c1:'#f0d878',c2:'#d8b040',c3:'#a88828'},
 {n:'Loiro Escuro',c1:'#d8b878',c2:'#a88040',c3:'#705020'},
 {n:'Castanho Claro',c1:'#a87850',c2:'#805028',c3:'#503018'},
@@ -561,13 +663,13 @@ const HAIRS=[
 {n:'Azul Fantasia',c1:'#a0c8ff',c2:'#6090e0',c3:'#3058a8'}
 ];
 const HAIR_STYLES=[
-{id:'longo',n:'Longo Liso'},
+{id:'longo',n:'Longo Liso Central'},
 {id:'ondulado',n:'Longo Ondulado'},
 {id:'bob',n:'Bob Curto'},
 {id:'coque',n:'Coque'}
 ];
 const EYES=[
-{n:'Azul',c:'#5a90c8'},
+{n:'Azul Acinzentado',c:'#6ea2c7'},
 {n:'Verde',c:'#68a878'},
 {n:'Castanho',c:'#7a5838'},
 {n:'Mel',c:'#b88838'},
@@ -575,15 +677,13 @@ const EYES=[
 {n:'Violeta',c:'#9878c8'}
 ];
 
-/* 40 nomes brasileiros para as combinações */
 const NOMES_PERSONAGENS=[
-'Alice','Bianca','Carla','Duda','Eduarda','Fernanda','Gabriela','Helena','Isabela','Júlia',
+'Alana','Bianca','Carla','Duda','Eduarda','Fernanda','Gabriela','Helena','Isabela','Júlia',
 'Karen','Larissa','Marina','Nicole','Olívia','Paula','Queren','Rafaela','Sofia','Tainá',
 'Ursula','Valentina','Wanessa','Xênia','Yasmin','Zoe','Bruna','Camila','Daniela','Elisa',
 'Flávia','Giovana','Heloísa','Ingrid','Joana','Kelly','Letícia','Manuela','Natália','Priscila'
 ];
 
-/* Gera 40 personagens com combos variados */
 const CHARACTERS=[];
 (function generateChars(){
 for(let i=0;i<40;i++){
@@ -600,7 +700,7 @@ skin:si,hair:hi,hairStyle:HAIR_STYLES[st].id,eye:ei
 })();
 
 /* =========================================================
-   100 BIQUÍNIS — gerados programaticamente
+   100 BIQUÍNIS
    ========================================================= */
 const CATS=['Asa Delta','Cortininha','Fita & Bronze','Meia-Taça','Crochê & Boho','Faixa & Bandô','Cintura Alta','Fio Dental','Tomara que Caia','Hot Pants'];
 const PALETA=[
@@ -807,6 +907,7 @@ const ey=EYES[c.eye];
 dancerBot.style.setProperty('--skin-1',sk.c1);
 dancerBot.style.setProperty('--skin-2',sk.c2);
 dancerBot.style.setProperty('--skin-line',sk.line);
+dancerBot.style.setProperty('--skin-shadow',sk.line);
 dancerBot.style.setProperty('--hair-1',hr.c1);
 dancerBot.style.setProperty('--hair-2',hr.c2);
 dancerBot.style.setProperty('--hair-3',hr.c3);
@@ -871,7 +972,7 @@ dancerVideo.style.filter=o.filter;
 outfitOverlay.style.background=o.overlay;
 outfitOverlay.style.mixBlendMode=o.blend;
 
-/* Atualiza o biquíni do robô SVG dinamicamente com as cores da paleta */
+/* Atualiza o top do robô dinamicamente */
 dancerBot.style.setProperty('--outfit-1', o.spotlightLeft);
 dancerBot.style.setProperty('--outfit-2', o.spotlightRight);
 
@@ -1109,7 +1210,6 @@ musicPillsContainer.appendChild(p);
 });
 }
 
-/* Preview miniatura de personagem */
 function charPreviewHTML(c){
 const sk=SKINS[c.skin],hr=HAIRS[c.hair],ey=EYES[c.eye];
 return '<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">'+
@@ -1137,7 +1237,6 @@ charsGrid.appendChild(b);
 }
 
 function setupSwatches(){
-/* Pele */
 skinSwatches.innerHTML='';
 SKINS.forEach((s,i)=>{
 const el=document.createElement('div');
@@ -1151,7 +1250,6 @@ applyCharacter(currentCharIndex);
 skinSwatches.appendChild(el);
 });
 
-/* Cabelo */
 hairSwatches.innerHTML='';
 HAIRS.forEach((h,i)=>{
 const el=document.createElement('div');
@@ -1165,7 +1263,6 @@ applyCharacter(currentCharIndex);
 hairSwatches.appendChild(el);
 });
 
-/* Estilos */
 hairStyleBtns.innerHTML='';
 HAIR_STYLES.forEach(s=>{
 const b=document.createElement('button');
@@ -1180,7 +1277,6 @@ applyCharacter(currentCharIndex);
 hairStyleBtns.appendChild(b);
 });
 
-/* Olhos */
 eyeSwatches.innerHTML='';
 EYES.forEach((e,i)=>{
 const el=document.createElement('div');
