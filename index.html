@@ -3,1223 +3,1376 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Bailarina Virtual - 100 Biquínis & Funk Carioca</title>
+<title>Bailarina Virtual IA - Mulher Realista & Dança</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg-dark:#0a0714;
-  --bg-card:rgba(20,15,36,.85);
-  --primary-accent:#ff4d8d;
-  --text-main:#f8fafc;
-  --text-muted:#94a3b8;
-  --border-subtle:rgba(255,255,255,.14);
-  --dance-duration:.92s;
-  --spotlight-left:#ff1493;
-  --spotlight-right:#ff69b4;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{
-  font-family:'Outfit',sans-serif;
-  background:var(--bg-dark);
-  color:var(--text-main);
-  min-height:100vh;
-  overflow-x:hidden;
-  display:flex;
-  justify-content:center;
-  background-image:
-    radial-gradient(circle at 50% 0%,rgba(121,40,202,.35),transparent 65%),
-    radial-gradient(circle at 10% 40%,rgba(255,77,141,.2),transparent 55%),
-    radial-gradient(circle at 90% 60%,rgba(59,130,246,.2),transparent 55%);
-}
-.app-container{
-  width:100%;
-  max-width:540px;
-  min-height:100vh;
-  padding:1rem .85rem 3rem;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  position:relative;
+:root {
+  --bg-dark: #07050d;
+  --bg-card: rgba(18, 14, 32, 0.85);
+  --bg-card-subtle: rgba(28, 22, 48, 0.6);
+  --primary-accent: #ff3377;
+  --primary-glow: rgba(255, 51, 119, 0.4);
+  --secondary-accent: #00f0ff;
+  --gold-accent: #ffd166;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-glow: rgba(255, 51, 119, 0.35);
+  
+  --skin-tone: #f8dfd4;
+  --skin-shadow: #e0b4a4;
+  --outfit-color: #5a5f69;
+  --top-color: #ffffff;
 }
 
-/* Holofotes */
-.spotlight{
-  position:fixed;
-  top:-120px;
-  width:320px;
-  height:900px;
-  pointer-events:none;
-  z-index:1;
-  opacity:.45;
-  filter:blur(50px);
-  transition:all .8s ease;
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(138, 43, 226, 0.3), transparent 60%),
+    radial-gradient(circle at 10% 40%, rgba(255, 51, 119, 0.18), transparent 50%),
+    radial-gradient(circle at 90% 70%, rgba(0, 240, 255, 0.15), transparent 50%);
 }
-.spotlight-left{
-  left:0;
-  background:linear-gradient(180deg,var(--spotlight-left),transparent);
-  animation:sweepLeft 8s ease-in-out infinite alternate;
+
+.app-container {
+  width: 100%;
+  max-width: 980px;
+  min-height: 100vh;
+  padding: 1rem 0.85rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
-.spotlight-right{
-  right:0;
-  background:linear-gradient(180deg,var(--spotlight-right),transparent);
-  animation:sweepRight 7s ease-in-out infinite alternate;
+
+/* Holofotes de Estúdio */
+.spotlight {
+  position: fixed;
+  top: -120px;
+  width: 360px;
+  height: 900px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.45;
+  filter: blur(50px);
 }
-@keyframes sweepLeft{0%{transform:rotate(-25deg) scale(.95);opacity:.3}100%{transform:rotate(-10deg) scale(1.15);opacity:.55}}
-@keyframes sweepRight{0%{transform:rotate(25deg) scale(.95);opacity:.3}100%{transform:rotate(10deg) scale(1.15);opacity:.55}}
+.spotlight-left {
+  left: 5%;
+  background: linear-gradient(180deg, #ff3377, transparent);
+  animation: sweepL 7s ease-in-out infinite alternate;
+}
+.spotlight-right {
+  right: 5%;
+  background: linear-gradient(180deg, #7928ca, transparent);
+  animation: sweepR 8s ease-in-out infinite alternate;
+}
+@keyframes sweepL { 0%{ transform: rotate(-25deg) scale(0.9); opacity:0.3; } 100%{ transform: rotate(-10deg) scale(1.1); opacity:0.55; } }
+@keyframes sweepR { 0%{ transform: rotate(25deg) scale(0.9); opacity:0.3; } 100%{ transform: rotate(10deg) scale(1.1); opacity:0.55; } }
 
 /* Cabeçalho */
-.app-header{text-align:center;margin-bottom:1rem;z-index:5}
-.header-badge{
-  display:inline-block;
-  padding:.3rem .95rem;
-  background:rgba(255,77,141,.18);
-  border:1px solid rgba(255,77,141,.45);
-  border-radius:999px;
-  font-size:.72rem;
-  font-weight:800;
-  letter-spacing:2px;
-  color:#ff75a0;
-  margin-bottom:.35rem;
-  text-transform:uppercase;
+.app-header { text-align: center; margin-bottom: 1rem; z-index: 10; }
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.9rem;
+  background: rgba(255, 51, 119, 0.15);
+  border: 1px solid rgba(255, 51, 119, 0.4);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ff75a0;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
 }
-.app-title{
-  font-family:'Playfair Display',serif;
-  font-size:2.2rem;
-  font-weight:600;
-  background:linear-gradient(135deg,#fff 30%,#ff8ab2 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+.app-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ffffff 30%, #ff8ab2 80%, #ffd166 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 35px rgba(255, 51, 119, 0.3);
 }
-.app-subtitle{font-size:.85rem;color:var(--text-muted)}
+.app-subtitle { font-size: 0.86rem; color: var(--text-muted); max-width: 580px; }
 
-/* Palco / Stage */
-.stage-wrapper{width:100%;display:flex;justify-content:center;z-index:5;margin-bottom:1rem}
-.stage-frame{
-  position:relative;
-  width:100%;
-  height:540px;
-  background:radial-gradient(circle at 50% 30%,#1e1438,#0b0716 80%);
-  border-radius:28px;
-  border:1px solid var(--border-subtle);
-  box-shadow:0 25px 60px rgba(0,0,0,.85),0 0 45px rgba(255,77,141,.25);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:space-between;
-  padding:1rem .85rem 0;
-}
-
-/* HUD Top */
-.hud-top{width:100%;display:flex;justify-content:space-between;gap:.5rem;z-index:10}
-.hud-pill{
-  display:flex;
-  align-items:center;
-  gap:.45rem;
-  background:rgba(12,8,24,.8);
-  backdrop-filter:blur(14px);
-  padding:.45rem .75rem;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  flex:1;
-  min-width:0;
-}
-.hud-icon{font-size:1.25rem}
-.hud-info{display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.hud-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase;white-space:nowrap}
-.hud-value{font-size:.82rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* Navegação da Mídia */
-.stage-media-nav{
-  position:absolute;
-  top:78px;
-  width:calc(100% - 1.8rem);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:12;
-  pointer-events:none;
-}
-.media-nav-btn{
-  pointer-events:auto;
-  background:rgba(10,8,19,.75);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.2);
-  color:#fff;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  font-size:.95rem;
-  transition:all .2s;
-}
-.media-nav-btn:hover{background:var(--primary-accent);border-color:var(--primary-accent);transform:scale(1.1)}
-.media-nav-indicator{
-  background:rgba(10,8,19,.75);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.2);
-  padding:.25rem .75rem;
-  border-radius:999px;
-  font-size:.74rem;
-  font-weight:700;
-  color:#ff9cc3;
+/* PALCO PRINCIPAL */
+.stage-wrapper { width: 100%; display: flex; justify-content: center; z-index: 10; margin-bottom: 1rem; }
+.stage-frame {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  height: 560px;
+  background: radial-gradient(circle at 50% 30%, #1e1538 0%, #0a0715 80%);
+  border-radius: 28px;
+  border: 1px solid var(--border-glow);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 51, 119, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
 }
 
-/* Área da Dançarina Fotorrealista */
-.dancer-container{
-  position:relative;
-  width:100%;
-  height:400px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
-  z-index:4;
+.stage-hud-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  gap: 0.5rem;
 }
-.stage-shadow{
-  position:absolute;
-  bottom:10px;
-  width:210px;
-  height:28px;
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.9),transparent 70%);
-  border-radius:50%;
-  filter:blur(5px);
-  z-index:1;
+.hud-chip {
+  background: rgba(10, 8, 20, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.35rem 0.75rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
 }
-.dancer-figure{
-  position:relative;
-  width:260px;
-  height:385px;
-  border-radius:24px;
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:2;
-  transform-origin:bottom center;
-  box-shadow:0 15px 35px rgba(0,0,0,.65);
-  background:#140e28;
+.hud-chip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseDot 1.5s infinite;
+}
+@keyframes pulseDot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+.view-indicator {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--secondary-accent);
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
 }
 
-/* Imagem da Mulher Real IA */
-.dancer-photo{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-  border-radius:24px;
-  display:block;
-  transition:filter .4s ease;
+/* BOTÕES DE POSIÇÕES RÁPIDAS */
+.view-switch-bar {
+  position: absolute;
+  top: 60px;
+  width: calc(100% - 2rem);
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  z-index: 25;
+}
+.view-btn {
+  background: rgba(15, 12, 28, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.view-btn:hover, .view-btn.active {
+  background: linear-gradient(135deg, var(--primary-accent), #8a2be2);
+  border-color: #ff8ab2;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 51, 119, 0.4);
 }
 
-/* Camada Dinâmica do Guarda-Roupa / Biquíni sobre a Pele Real */
-.outfit-shader{
-  position:absolute;
-  inset:0;
-  border-radius:24px;
-  pointer-events:none;
-  transition:all .5s cubic-bezier(.4,0,.2,1);
-  mix-blend-mode:color;
-  opacity:.85;
-}
-.outfit-glow{
-  position:absolute;
-  inset:0;
-  border-radius:24px;
-  pointer-events:none;
-  transition:all .5s ease;
-  box-shadow:inset 0 0 35px rgba(255,77,141,.25);
+/* VIEWPORT DO MODELO */
+.dancer-viewport {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 10;
 }
 
-/* Prompt de Foto se não houver */
-.photo-prompt{
-  position:absolute;
-  inset:0;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:1.5rem;
-  text-align:center;
-  background:rgba(20,15,36,.92);
-  backdrop-filter:blur(10px);
-  z-index:15;
-  border-radius:24px;
-  gap:.75rem;
-}
-.photo-prompt.show{display:flex}
-.photo-prompt-btn{
-  background:linear-gradient(135deg,#ff4d8d,#7928ca);
-  color:#fff;
-  border:none;
-  padding:.75rem 1.25rem;
-  border-radius:14px;
-  font-weight:700;
-  font-size:.9rem;
-  cursor:pointer;
-  box-shadow:0 6px 20px rgba(255,77,141,.4);
+.stage-reflection {
+  position: absolute;
+  bottom: 8px;
+  width: 220px;
+  height: 24px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(255,51,119,0.15) 50%, transparent 80%);
+  border-radius: 50%;
+  filter: blur(5px);
+  z-index: 1;
 }
 
-/* Partículas */
-.sparkles-container{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.sparkle{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px #ff75a0;opacity:0;animation:floatSparkle 2s ease-in-out infinite}
-@keyframes floatSparkle{0%{transform:translateY(20px) scale(0);opacity:0}50%{opacity:.95}100%{transform:translateY(-45px) scale(1.3);opacity:0}}
-
-/* Piso & Equalizador */
-.stage-floor{
-  width:100%;
-  height:58px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.75));
-  border-top:1px solid rgba(255,255,255,.1);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:3;
-}
-.audio-visualizer{width:100%;height:45px}
-
-/* Animações de Dança no Ritmo do Funk */
-.dancing-funk{animation:danceFunk var(--dance-duration) cubic-bezier(.25,.1,.25,1) infinite}
-@keyframes danceFunk{
-  0%{transform:translateY(0) rotate(0) scale(1,1)}
-  15%{transform:translateY(14px) rotate(-5.5deg) scale(1.06,.94)}
-  30%{transform:translateY(-9px) rotate(3.5deg) scale(.97,1.03)}
-  48%{transform:translateY(26px) rotate(-3.5deg) scale(1.12,.88)}
-  62%{transform:translateY(18px) rotate(4.5deg) scale(1.05,.95)}
-  78%{transform:translateY(-15px) rotate(-2deg) scale(.96,1.04)}
-  100%{transform:translateY(0) rotate(0) scale(1,1)}
-}
-.dancing-ballet{animation:danceBallet var(--dance-duration) cubic-bezier(.45,.05,.55,.95) infinite alternate}
-@keyframes danceBallet{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-22px) rotate(-2.5deg)}100%{transform:translateY(-4px) rotate(2deg)}}
-
-.dancing-pop{animation:dancePop var(--dance-duration) cubic-bezier(.2,.8,.2,1) infinite}
-@keyframes dancePop{0%,100%{transform:translateY(0) scale(1,1)}25%{transform:translateY(-18px) rotate(-3.5deg) scale(.98,1.03)}50%{transform:translateY(0) scale(1.04,.96)}75%{transform:translateY(-22px) rotate(3.5deg) scale(.98,1.04)}}
-
-.dancing-hiphop{animation:danceHipHop var(--dance-duration) cubic-bezier(.3,0,.2,1) infinite}
-@keyframes danceHipHop{0%,100%{transform:translateY(0)}25%{transform:translateY(8px) rotate(-5deg) scale(1.05,.95)}50%{transform:translateY(-20px) rotate(4deg) scale(.96,1.04)}75%{transform:translateY(6px) rotate(-2deg)}}
-
-.dancing-latino{animation:danceLatino var(--dance-duration) ease-in-out infinite alternate}
-@keyframes danceLatino{0%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(6deg)}100%{transform:translateY(0) rotate(-6deg)}}
-
-.dancing-synthwave{animation:danceSynthwave var(--dance-duration) ease-in-out infinite}
-@keyframes danceSynthwave{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px) scale(1.03) rotate(2deg)}}
-
-.dancing-shadow{animation:shadowPulse var(--dance-duration) ease-in-out infinite alternate}
-@keyframes shadowPulse{0%{transform:scale(1);opacity:.85}50%{transform:scale(.72);opacity:.4}100%{transform:scale(1.12);opacity:.95}}
-
-/* Controles */
-.controls-section{width:100%;display:flex;flex-direction:column;gap:.9rem;z-index:10}
-.double-action-bar{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
-.btn-special{
-  border:1px solid rgba(255,255,255,.2);
-  color:#fff;
-  padding:.85rem .95rem;
-  border-radius:16px;
-  font-size:.9rem;
-  font-weight:700;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:.5rem;
-  transition:all .25s;
-  font-family:inherit;
-}
-.btn-special-wardrobe{
-  background:linear-gradient(135deg,rgba(255,77,141,.35),rgba(121,40,202,.45));
-  border-color:rgba(255,77,141,.55);
-}
-.btn-special-wardrobe:active,.btn-special-wardrobe:hover{border-color:#ff4d8d;transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,77,141,.5)}
-
-.btn-special-gallery{
-  background:linear-gradient(135deg,rgba(6,182,212,.35),rgba(59,130,246,.45));
-  border-color:rgba(6,182,212,.55);
-}
-.btn-special-gallery:active,.btn-special-gallery:hover{border-color:#06b6d4;transform:translateY(-2px);box-shadow:0 8px 25px rgba(6,182,212,.5)}
-
-.primary-actions{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:.65rem}
-.action-btn{
-  border:none;
-  cursor:pointer;
-  border-radius:18px;
-  padding:.85rem .65rem;
-  display:flex;
-  align-items:center;
-  gap:.65rem;
-  background:var(--bg-card);
-  backdrop-filter:blur(14px);
-  border:1px solid var(--border-subtle);
-  color:#fff;
-  transition:all .25s;
-  text-align:left;
-  font-family:inherit;
-}
-.action-btn:active,.action-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.35);box-shadow:0 8px 25px rgba(0,0,0,.5)}
-.btn-icon-wrapper{
-  width:42px;
-  height:42px;
-  min-width:42px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.09);
-  font-size:1.25rem;
-}
-.btn-title{font-weight:700;font-size:.88rem;white-space:nowrap}
-.btn-hint{font-size:.7rem;color:var(--text-muted);white-space:nowrap}
-.btn-play{
-  background:linear-gradient(135deg,#ff4d8d,#7928ca);
-  border:1px solid rgba(255,255,255,.3);
-  box-shadow:0 6px 22px rgba(255,77,141,.45);
-}
-.play-pulse{animation:pulseButton 2s infinite}
-@keyframes pulseButton{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-
-.quick-toolbar{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
-.tool-btn{
-  background:rgba(255,255,255,.07);
-  border:1px solid var(--border-subtle);
-  border-radius:12px;
-  padding:.45rem .85rem;
-  color:#fff;
-  font-size:.8rem;
-  font-weight:600;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:.35rem;
-  font-family:inherit;
-}
-.tool-btn:active,.tool-btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);transform:translateY(-1px)}
-.tool-upload{color:#ff9cc3;background:rgba(255,77,141,.15);border-color:rgba(255,77,141,.45)}
-.tool-upload input,.tool-audio input{display:none}
-.tool-audio{color:#93c5fd;background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.45)}
-
-.section-card{
-  background:var(--bg-card);
-  backdrop-filter:blur(14px);
-  border:1px solid var(--border-subtle);
-  border-radius:20px;
-  padding:1rem;
-  display:flex;
-  flex-direction:column;
-  gap:.75rem;
-}
-.card-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
-.music-pills{display:flex;flex-wrap:wrap;gap:.45rem}
-.music-pill{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  padding:.42rem .85rem;
-  border-radius:999px;
-  font-size:.8rem;
-  color:var(--text-main);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:.4rem;
-  font-family:inherit;
-}
-.music-pill.active{
-  background:linear-gradient(135deg,rgba(255,77,141,.38),rgba(121,40,202,.48));
-  border-color:var(--primary-accent);
-  box-shadow:0 0 14px rgba(255,77,141,.4);
-  font-weight:700;
+.model-wrapper {
+  position: relative;
+  width: 320px;
+  height: 440px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 5;
+  transform-origin: bottom center;
 }
 
-/* Modais */
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(5,3,12,.88);
-  backdrop-filter:blur(12px);
-  z-index:100;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  padding:1rem;
+.sculpted-woman-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.modal-overlay.open{display:flex}
-.modal-window{
-  width:100%;
-  max-width:500px;
-  max-height:85vh;
-  background:#140e28;
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:24px;
-  box-shadow:0 25px 60px rgba(0,0,0,.85),0 0 40px rgba(255,77,141,.3);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-.modal-header{
-  padding:1.15rem 1.35rem;
-  border-bottom:1px solid rgba(255,255,255,.1);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(255,255,255,.03);
-}
-.modal-title{font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
-.modal-close-btn{
-  background:rgba(255,255,255,.08);
-  border:none;
-  color:#fff;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  font-size:1.1rem;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.modal-close-btn:hover{background:#ff4d8d}
-.modal-body{padding:1.15rem 1.35rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem}
-.badge-count{
-  font-size:.75rem;
-  padding:.25rem .75rem;
-  border-radius:999px;
-  background:rgba(255,77,141,.15);
-  color:#ff9cc3;
-  font-weight:600;
-  border:1px solid rgba(255,77,141,.3);
-}
-.category-filters{display:flex;flex-wrap:wrap;gap:.4rem}
-.cat-filter-btn{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  color:var(--text-muted);
-  font-size:.76rem;
-  padding:.32rem .7rem;
-  border-radius:999px;
-  cursor:pointer;
-  font-family:inherit;
-}
-.cat-filter-btn.active,.cat-filter-btn:hover{background:var(--primary-accent);color:#fff;border-color:var(--primary-accent)}
-.search-box input{
-  width:100%;
-  background:rgba(10,8,19,.7);
-  border:1px solid var(--border-subtle);
-  border-radius:14px;
-  padding:.7rem 1rem;
-  color:#fff;
-  font-size:.85rem;
-  outline:none;
-  font-family:inherit;
-}
-.search-box input:focus{border-color:var(--primary-accent);box-shadow:0 0 15px rgba(255,77,141,.3)}
 
-/* Grids */
-.grid-scroll{display:grid;gap:.65rem;max-height:50vh;overflow-y:auto;padding-right:.3rem}
-.outfits-scroll-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
-.outfit-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:.65rem .75rem;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:.65rem;
-  text-align:left;
-  color:#fff;
-  font-family:inherit;
+.real-photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  border-radius: 20px;
+  display: none;
+  z-index: 8;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 85%, transparent 100%);
 }
-.outfit-card:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
-.outfit-card.active{background:linear-gradient(135deg,rgba(255,77,141,.35),rgba(121,40,202,.4));border-color:var(--primary-accent);box-shadow:0 0 14px rgba(255,77,141,.4)}
-.outfit-card-icon{font-size:1.35rem}
-.outfit-card-info{display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.outfit-card-name{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.outfit-card-cat{font-size:.66rem;color:var(--text-muted)}
+.real-photo-overlay.active { display: block; }
 
-/* Galeria */
-.gallery-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
-.gallery-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:16px;
-  overflow:hidden;
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
+/* SCANNER SCI-FI IA */
+.laser-scan-bar {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #00f0ff, #fff, #ff3377, transparent);
+  box-shadow: 0 0 15px #00f0ff, 0 0 30px #ff3377;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
 }
-.gallery-card:hover{transform:translateY(-3px);border-color:var(--primary-accent)}
-.gallery-card.active{border:2px solid var(--primary-accent);box-shadow:0 0 16px rgba(255,77,141,.5)}
-.gallery-thumb-wrapper{width:100%;height:140px;background:#0d0918;overflow:hidden;position:relative}
-.gallery-thumb-media{width:100%;height:100%;object-fit:cover}
-.gallery-info{padding:.5rem .65rem;display:flex;flex-direction:column;gap:.2rem;background:rgba(20,16,35,.7)}
-.gallery-title{font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gallery-tag{font-size:.68rem;color:#ff9cc3}
-.app-footer{margin-top:1.5rem;text-align:center;font-size:.75rem;color:var(--text-muted)}
+.scanning .laser-scan-bar {
+  opacity: 1;
+  animation: scanCycle 1.4s ease-in-out infinite alternate;
+}
+@keyframes scanCycle { 0% { top: 5%; } 100% { top: 92%; } }
+
+.robot-wireframe-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 240, 255, 0.04) 0px, rgba(0, 240, 255, 0.04) 1px, transparent 1px, transparent 12px);
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.robot-mode .robot-wireframe-grid { opacity: 1; }
+
+/* ANIMAÇÃO DE RESPIRAÇÃO REALISTA */
+.breathing-active {
+  animation: lifelikeBreathing 3.6s ease-in-out infinite;
+}
+@keyframes lifelikeBreathing {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-4px) scale(1.015, 1.02); }
+}
+
+.breathing-chest {
+  animation: chestExpansion 3.6s ease-in-out infinite;
+  transform-origin: 160px 170px;
+}
+@keyframes chestExpansion {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035, 1.025); }
+}
+
+/* DANÇA FUNK 130 BPM */
+.funk-dancing {
+  animation: funkCore 0.923s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite !important;
+  transform-origin: bottom center;
+}
+@keyframes funkCore {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(6px) rotate(-1.5deg) skewX(2deg); }
+  50% { transform: translateY(-3px) rotate(1.2deg) skewX(-2deg); }
+  75% { transform: translateY(8px) rotate(-1deg) skewX(1deg); }
+}
+
+.funk-butt-bounce {
+  transform-origin: 160px 240px;
+  animation: buttBounce 0.461s ease-in-out infinite alternate;
+}
+@keyframes buttBounce {
+  0% { transform: translateY(0) scale(1, 1); }
+  100% { transform: translateY(5px) scale(1.04, 0.97); }
+}
+
+/* RODAPÉ E CONTROLES */
+.stage-footer-bar { width: 100%; display: flex; flex-direction: column; gap: 0.5rem; z-index: 20; }
+.audio-visualizer-canvas {
+  width: 100%;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(10, 8, 20, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.stage-action-row { width: 100%; display: flex; gap: 0.5rem; }
+.action-btn-main {
+  flex: 1;
+  background: linear-gradient(135deg, #ff3377, #d91456);
+  border: 1px solid #ff75a0;
+  color: #fff;
+  padding: 0.65rem 0.8rem;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 51, 119, 0.35);
+  transition: all 0.2s ease;
+}
+.action-btn-main:active { transform: scale(0.97); }
+.action-btn-sub {
+  background: rgba(22, 17, 39, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  padding: 0.65rem 0.85rem;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+/* PAINEL DE ABAS */
+.control-tabs-nav {
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  background: rgba(18, 14, 32, 0.9);
+  padding: 0.35rem;
+  border-radius: 18px;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 1rem;
+  gap: 0.3rem;
+  overflow-x: auto;
+}
+.tab-nav-btn {
+  flex: 1;
+  min-width: 110px;
+  padding: 0.55rem 0.6rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.tab-nav-btn.active {
+  background: linear-gradient(135deg, rgba(255, 51, 119, 0.25), rgba(138, 43, 226, 0.25));
+  border: 1px solid var(--primary-accent);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 51, 119, 0.2);
+}
+
+.tab-pane {
+  display: none;
+  width: 100%;
+  max-width: 650px;
+  background: var(--bg-card);
+  border-radius: 22px;
+  border: 1px solid var(--border-subtle);
+  padding: 1.25rem 1.15rem;
+  backdrop-filter: blur(16px);
+  margin-bottom: 1rem;
+}
+.tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+/* SLIDERS */
+.slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.1rem; }
+@media (max-width: 540px) { .slider-grid { grid-template-columns: 1fr; } }
+
+.slider-card {
+  background: var(--bg-card-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.slider-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; }
+.slider-val-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--primary-accent);
+  background: rgba(255, 51, 119, 0.12);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+}
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+  cursor: pointer;
+}
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-accent);
+  border: 2px solid #fff;
+  box-shadow: 0 0 10px var(--primary-accent);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.custom-select-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; }
+.pill-option-btn {
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pill-option-btn:hover, .pill-option-btn.active {
+  background: var(--primary-accent);
+  border-color: var(--primary-accent);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255, 51, 119, 0.4);
+}
+
+/* GUARDA-ROUPA */
+.wardrobe-controls { display: flex; flex-direction: column; gap: 0.85rem; }
+.wardrobe-current-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(255, 51, 119, 0.15), rgba(121, 40, 202, 0.15));
+  border: 1px solid rgba(255, 51, 119, 0.35);
+  border-radius: 16px;
+  padding: 0.85rem 1.1rem;
+}
+.wardrobe-title-sub { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+.wardrobe-name { font-size: 1.05rem; font-weight: 800; color: #fff; }
+.wardrobe-carousel-nav { display: flex; align-items: center; gap: 0.6rem; }
+.nav-circle-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.nav-circle-btn:hover { background: var(--primary-accent); }
+
+.biquini-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+  gap: 0.5rem;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.biquini-pill {
+  padding: 0.45rem 0.3rem;
+  text-align: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.biquini-pill:hover, .biquini-pill.active {
+  background: rgba(255, 51, 119, 0.3);
+  border-color: var(--primary-accent);
+  color: #fff;
+}
+
+/* BOTÃO DE TRANSFORMAÇÃO IA */
+.transform-box {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(255, 51, 119, 0.15));
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 18px;
+  padding: 1.15rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: center;
+}
+.transform-status-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--secondary-accent);
+}
+.btn-transform {
+  background: linear-gradient(135deg, #00f0ff, #ff3377);
+  border: none;
+  color: #07050d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 900;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-transform:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 35px rgba(255, 51, 119, 0.6);
+  color: #fff;
+}
+#photoUploadInput { display: none; }
 </style>
 </head>
 <body>
+
+<div class="spotlight spotlight-left"></div>
+<div class="spotlight spotlight-right"></div>
+
 <div class="app-container">
-<div class="spotlight spotlight-left" id="spotLeft"></div>
-<div class="spotlight spotlight-right" id="spotRight"></div>
+  
+  <header class="app-header">
+    <div class="header-badge">✦ IA ANATÔMICA VIRTUAL & FUNK CARIOCA ✦</div>
+    <h1 class="app-title">Bailarina Virtual</h1>
+    <p class="app-subtitle">Corpo esculpido ultra-realista, curvas da foto, respiração viva, 100 roupas e dança 130 BPM.</p>
+  </header>
 
-<header class="app-header">
-<div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & FOTORREALISMO IA ★</div>
-<h1 class="app-title">Bailarina Virtual</h1>
-<p class="app-subtitle">Modelo IA Hiper-realista com Pele Humana, 100 Biquínis & Funk Carioca!</p>
-</header>
+  <main class="stage-wrapper">
+    <div class="stage-frame" id="stageFrame">
+      
+      <div class="stage-hud-top">
+        <div class="hud-chip">
+          <span class="dot"></span>
+          <span id="hudStatus">MULHER REALISTA ATIVA</span>
+        </div>
+        <div class="view-indicator" id="viewIndicator">VISTA: COSTAS / 3/4 (FOTO)</div>
+      </div>
 
-<main class="stage-wrapper">
-<div class="stage-frame" id="stageFrame">
-<div class="hud-top">
-<div class="hud-pill">
-<span class="hud-icon" id="hudMusicIcon">🔥</span>
-<div class="hud-info">
-<span class="hud-label">Estilo Musical</span>
-<span class="hud-value" id="currentMusicLabel">Funk Carioca (130 BPM)</span>
-</div>
-</div>
-<div class="hud-pill">
-<span class="hud-icon" id="hudOutfitIcon">👙</span>
-<div class="hud-info">
-<span class="hud-label">Asa Delta</span>
-<span class="hud-value" id="currentOutfitLabel">[1/100] Asa Delta Rosa Neon</span>
-</div>
-</div>
-</div>
+      <!-- Barra de Troca de Posições (Costas, Frente, Lados) -->
+      <div class="view-switch-bar">
+        <button class="view-btn active" onclick="switchView('back')" id="btnViewBack">🍑 Costas (Foto)</button>
+        <button class="view-btn" onclick="switchView('front')" id="btnViewFront">💃 Frente</button>
+        <button class="view-btn" onclick="switchView('side')" id="btnViewSide">✨ Perfil</button>
+      </div>
 
-<div class="stage-media-nav">
-<button class="media-nav-btn" id="btnPrevMedia">◀</button>
-<span class="media-nav-indicator" id="mediaIndicator">Mídia 1/5 • Foto Principal IA</span>
-<button class="media-nav-btn" id="btnNextMedia">▶</button>
-</div>
+      <div class="laser-scan-bar" id="laserBar"></div>
+      <div class="robot-wireframe-grid" id="robotGrid"></div>
 
-<div class="dancer-container">
-<div class="stage-shadow" id="stageShadow"></div>
-<div class="dancer-figure" id="dancerFigure">
+      <!-- Viewport da Dançarina -->
+      <div class="dancer-viewport">
+        <div class="stage-reflection"></div>
 
-<!-- FOTO 100% FOTORREALISTA COM TEXTURA DE PELE HUMANA REAL -->
-<img alt="Bailarina IA Real" id="dancerImg" class="dancer-photo" src="dancer.jpg" />
+        <div class="model-wrapper breathing-active" id="modelWrapper">
+          
+          <img id="realPhotoOverlay" class="real-photo-overlay" alt="Dançarina Real" />
 
-<!-- CAMADA DE COR/TEXTURA DO GUARDA-ROUPA SOBRE O CORPO REAL -->
-<div class="outfit-shader" id="outfitShader"></div>
-<div class="outfit-glow" id="outfitGlow"></div>
+          <!-- SVG Esculpido em Camadas de Alta Definição -->
+          <svg class="sculpted-woman-svg" id="womanSvg" viewBox="0 0 320 440" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fff0e8" />
+                <stop offset="50%" stop-color="#f8dfd4" />
+                <stop offset="100%" stop-color="#e0b4a4" />
+              </linearGradient>
 
-<!-- Prompt para upload se o arquivo dancer.jpg ainda não estiver no GitHub -->
-<div class="photo-prompt" id="photoPrompt">
-  <div style="font-size:2.5rem">📸</div>
-  <h3 style="font-size:1.1rem;font-weight:700">Carregar sua Mulher da IA</h3>
-  <p style="font-size:.8rem;color:var(--text-muted)">Escolha a foto da modelo da IA salva no seu celular para ficar no palco:</p>
-  <label for="dancerUploadDirect" class="photo-prompt-btn">Escolher Foto da Galeria</label>
-  <input type="file" id="dancerUploadDirect" accept="image/*" style="display:none" />
-</div>
+              <!-- Calça Legging Cinza (Foto Original) -->
+              <linearGradient id="leggingsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#808590" />
+                <stop offset="50%" stop-color="#5a5f69" />
+                <stop offset="100%" stop-color="#3c4048" />
+              </linearGradient>
 
-<div class="sparkles-container" id="sparkles"></div>
-</div>
-</div>
+              <linearGradient id="whiteTopGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="70%" stop-color="#f1f5f9" />
+                <stop offset="100%" stop-color="#cbd5e1" />
+              </linearGradient>
 
-<div class="stage-floor">
-<canvas id="visualizerCanvas" class="audio-visualizer"></canvas>
-</div>
-</div>
-</main>
+              <!-- Cabelo Loiro Platinado Glossy -->
+              <linearGradient id="blondeHairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fffbe8" />
+                <stop offset="40%" stop-color="#f6e1af" />
+                <stop offset="80%" stop-color="#e7c88b" />
+                <stop offset="100%" stop-color="#b89354" />
+              </linearGradient>
 
-<section class="controls-section">
-<div class="double-action-bar">
-<button class="btn-special btn-special-wardrobe" id="btnOpenWardrobe"><span>👙 Guarda-Roupa (100 Roupas & Biquínis)</span></button>
-<button class="btn-special btn-special-gallery" id="btnOpenGallery"><span>📸 Galeria de Fotos</span></button>
-</div>
+              <!-- Pufe / Degrau de Apoio da Foto -->
+              <linearGradient id="stoolGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f0ece6" />
+                <stop offset="60%" stop-color="#dfd9d1" />
+                <stop offset="100%" stop-color="#b8b0a5" />
+              </linearGradient>
+            </defs>
 
-<div class="primary-actions">
-<button class="action-btn" id="btnChangeOutfit">
-<div class="btn-icon-wrapper">👙</div>
-<div class="btn-text">
-<span class="btn-title">Mudar Biquíni</span>
-<span class="btn-hint" id="nextOutfitHint">Próximo: [2/100]</span>
-</div>
-</button>
-<button class="action-btn btn-play" id="btnPlayPause">
-<div class="btn-icon-wrapper play-pulse"><span id="playIcon">▶</span></div>
-<div class="btn-text">
-<span class="btn-title" id="playBtnTitle">Tocar Música & Dançar</span>
-<span class="btn-hint" id="playBtnHint">Batidão 130 BPM</span>
-</div>
-</button>
-<button class="action-btn" id="btnChangeMusic">
-<div class="btn-icon-wrapper">🎵</div>
-<div class="btn-text">
-<span class="btn-title">Mudar Música</span>
-<span class="btn-hint" id="nextMusicHint">Próximo: Balé Clássico</span>
-</div>
-</button>
-</div>
+            <!-- VISTA 1: COSTAS / 3/4 (IDÊNTICA À FOTO) -->
+            <g id="poseBack" class="view-group">
+              <path d="M 215,310 C 215,302 245,302 275,302 C 285,302 290,305 290,312 L 285,420 C 285,425 240,430 215,425 Z" fill="url(#stoolGrad)" />
+              <ellipse cx="252" cy="308" rx="36" ry="7" fill="#f8f6f0" opacity="0.9" />
 
-<div class="quick-toolbar">
-<label for="dancerUpload" class="tool-btn tool-upload"><span>📸 Trocar Foto da IA</span><input type="file" id="dancerUpload" accept="image/*" /></label>
-<button class="tool-btn" id="btnRandomOutfit"><span>🎲 Roupa Aleatória</span></button>
-<label for="audioUpload" class="tool-btn tool-audio"><span>🎧 Meu MP3</span><input type="file" id="audioUpload" accept="audio/*" /></label>
-</div>
+              <!-- Perna Esquerda com Salto Agulha -->
+              <g id="leftLegGroup">
+                <path d="M 120,240 C 110,270 112,320 125,370 C 127,378 128,390 128,405 L 142,405 C 144,385 145,360 148,320 C 152,280 150,245 142,240 Z" fill="url(#leggingsGrad)" id="leftLegPath" />
+                <path d="M 128,400 L 126,422 L 140,422 L 138,400 Z" fill="url(#skinGrad)" />
+                <line x1="126" y1="412" x2="136" y2="412" stroke="#111" stroke-width="2" />
+                <path d="M 126,420 L 144,424 L 148,420 L 140,416 Z" fill="#111" />
+                <line x1="127" y1="420" x2="127" y2="436" stroke="#111" stroke-width="2.8" />
+              </g>
 
-<div class="section-card">
-<h3 class="card-title">Estilos Musicais & Dança:</h3>
-<div class="music-pills" id="musicPills"></div>
-</div>
-</section>
+              <!-- Perna Direita (Elevada e Apoiada no Pufe como na Foto) -->
+              <g id="rightLegGroup">
+                <path d="M 180,215 C 220,225 245,235 252,275 C 255,295 248,325 242,345 L 255,348 C 265,320 272,280 258,250 C 245,220 215,205 180,215 Z" fill="url(#leggingsGrad)" id="rightLegPath" />
+                <path d="M 242,340 L 246,358 L 256,356 L 254,338 Z" fill="url(#skinGrad)" />
+                <line x1="244" y1="348" x2="254" y2="346" stroke="#111" stroke-width="2" />
+                <path d="M 244,357 L 258,360 L 265,348 L 255,346 Z" fill="#111" />
+                <line x1="247" y1="357" x2="247" y2="378" stroke="#111" stroke-width="2.8" />
+              </g>
 
-<!-- Modal Guarda-Roupa -->
-<div class="modal-overlay" id="wardrobeModal">
-<div class="modal-window">
-<div class="modal-header">
-<div class="modal-title"><span>👙 Guarda-Roupa Fotorrealista</span><span class="badge-count" id="wardrobeCount">100 opções</span></div>
-<button class="modal-close-btn" id="btnCloseWardrobe">&times;</button>
-</div>
-<div class="modal-body">
-<div class="category-filters" id="categoryFilters"></div>
-<div class="search-box"><input type="text" id="searchInput" placeholder="🔍 Buscar biquíni ou tecido..." /></div>
-<div class="grid-scroll outfits-scroll-grid" id="outfitsGrid"></div>
-</div>
-</div>
-</div>
+              <!-- Glúteos Esculpidos / Bumbum Violão da Foto -->
+              <g id="buttGroup" class="funk-butt-bounce">
+                <path d="M 148,185 C 135,190 120,205 120,228 C 120,250 140,265 170,260 C 205,255 228,240 230,210 C 230,190 205,180 175,182 C 160,183 150,184 148,185 Z" fill="url(#leggingsGrad)" id="buttMainPath" />
+                <path d="M 145,215 C 160,240 195,242 220,218" fill="none" stroke="#2c2f38" stroke-width="3" opacity="0.6" />
+                <ellipse cx="180" cy="210" rx="30" ry="18" fill="#ffffff" opacity="0.12" />
+              </g>
 
-<!-- Modal Galeria -->
-<div class="modal-overlay" id="galleryModal">
-<div class="modal-window">
-<div class="modal-header">
-<div class="modal-title"><span>📸 Galeria de Poses</span><span class="badge-count" id="galleryCount">Mídias</span></div>
-<button class="modal-close-btn" id="btnCloseGallery">&times;</button>
-</div>
-<div class="modal-body">
-<div class="grid-scroll gallery-grid" id="galleryGrid"></div>
-</div>
-</div>
-</div>
+              <!-- Cintura e Tronco (Costas Elegantes da Foto) -->
+              <g id="waistGroup" class="breathing-chest">
+                <path d="M 145,135 C 135,150 140,175 148,185 C 165,185 190,185 198,175 C 202,150 195,135 185,135 Z" fill="url(#whiteTopGrad)" id="topWaistPath" />
+                <path d="M 142,138 C 130,160 125,185 130,215 L 138,214 C 135,190 140,165 148,144 Z" fill="url(#whiteTopGrad)" />
+                <circle cx="132" cy="222" r="6" fill="url(#skinGrad)" />
+                <path d="M 190,140 C 215,160 235,185 240,205 L 246,200 C 240,180 220,152 195,135 Z" fill="url(#whiteTopGrad)" />
+                <circle cx="245" cy="208" r="6" fill="url(#skinGrad)" />
+              </g>
 
-<footer class="app-footer"><p>Bailarina Virtual • Modelo Fotorrealista com Textura Humana Real • renatosgs.github.io</p></footer>
-</div>
+              <!-- Rosto Virado por Cima do Ombro (Olhar da Foto) -->
+              <g id="headGroup">
+                <path d="M 160,118 C 155,130 175,130 178,118 Z" fill="url(#skinGrad)" />
+                <ellipse cx="178" cy="100" rx="19" ry="24" fill="url(#skinGrad)" />
+                <ellipse cx="184" cy="98" rx="3.5" ry="2" fill="#4a708b" />
+                <circle cx="185" cy="97" r="1" fill="#ffffff" />
+                <path d="M 180,94 C 183,92 188,93 190,95" fill="none" stroke="#6b4c38" stroke-width="1.2" />
+                <circle cx="185" cy="106" r="4.5" fill="#ff75a0" opacity="0.35" />
+                <ellipse cx="186" cy="112" rx="4" ry="2" fill="#e0627c" />
+                <path d="M 165,76 C 150,85 145,115 142,150 C 140,180 148,205 152,215 C 158,195 156,150 162,120 C 168,115 185,110 195,95 C 205,75 185,68 165,76 Z" fill="url(#blondeHairGrad)" id="hairBackPath" />
+                <path d="M 192,85 C 205,100 205,130 198,155 C 195,140 198,110 192,95 Z" fill="url(#blondeHairGrad)" opacity="0.9" />
+              </g>
+            </g>
 
-<audio id="customAudioPlayer"></audio>
+            <!-- VISTA 2: FRENTE GLAMOUR -->
+            <g id="poseFront" class="view-group" style="display:none;">
+              <g id="frontLegs">
+                <path d="M 132,230 C 128,280 126,340 128,405 L 142,405 C 146,350 148,290 146,230 Z" fill="url(#leggingsGrad)" />
+                <path d="M 174,230 C 172,290 174,350 178,405 L 192,405 C 194,340 192,280 188,230 Z" fill="url(#leggingsGrad)" />
+                <path d="M 128,405 L 140,422 L 144,405 Z" fill="#111" />
+                <line x1="130" y1="405" x2="130" y2="435" stroke="#111" stroke-width="2.5" />
+                <path d="M 178,405 L 190,422 L 194,405 Z" fill="#111" />
+                <line x1="180" y1="405" x2="180" y2="435" stroke="#111" stroke-width="2.5" />
+              </g>
+
+              <path d="M 120,200 C 112,225 125,245 160,245 C 195,245 208,225 200,200 C 185,185 135,185 120,200 Z" fill="url(#leggingsGrad)" />
+              <path d="M 134,165 C 128,185 130,205 160,205 C 190,205 192,185 186,165 Z" fill="url(#whiteTopGrad)" />
+
+              <g class="breathing-chest" id="frontChest">
+                <circle cx="146" cy="155" r="18" fill="url(#whiteTopGrad)" />
+                <circle cx="174" cy="155" r="18" fill="url(#whiteTopGrad)" />
+                <path d="M 152,142 C 160,158 160,165 160,172" stroke="#cbd5e1" stroke-width="2" fill="none" />
+              </g>
+
+              <path d="M 130,140 C 105,160 108,185 128,195 L 132,188 C 118,180 115,165 135,145 Z" fill="url(#whiteTopGrad)" />
+              <path d="M 190,140 C 215,160 212,185 192,195 L 188,188 C 202,180 205,165 185,145 Z" fill="url(#whiteTopGrad)" />
+
+              <g id="frontHead">
+                <ellipse cx="160" cy="100" rx="18" ry="22" fill="url(#skinGrad)" />
+                <ellipse cx="152" cy="98" rx="3" ry="2" fill="#4a708b" />
+                <ellipse cx="168" cy="98" rx="3" ry="2" fill="#4a708b" />
+                <circle cx="153" cy="97" r="1" fill="#fff" />
+                <circle cx="169" cy="97" r="1" fill="#fff" />
+                <ellipse cx="160" cy="112" rx="4.5" ry="2.2" fill="#e0627c" />
+                <circle cx="149" cy="104" r="4" fill="#ff75a0" opacity="0.35" />
+                <circle cx="171" cy="104" r="4" fill="#ff75a0" opacity="0.35" />
+                <path d="M 160,76 C 140,78 128,95 125,135 C 122,175 130,220 135,230 C 138,200 134,150 144,115 C 148,100 156,88 160,86 C 164,88 172,100 176,115 C 186,150 182,200 185,230 C 190,220 198,175 195,135 C 192,95 180,78 160,76 Z" fill="url(#blondeHairGrad)" />
+              </g>
+            </g>
+
+            <!-- VISTA 3: PERFIL VIOLÃO -->
+            <g id="poseSide" class="view-group" style="display:none;">
+              <path d="M 155,230 C 150,280 152,340 155,405 L 170,405 C 176,350 180,280 175,230 Z" fill="url(#leggingsGrad)" />
+              <path d="M 155,405 L 168,422 L 172,405 Z" fill="#111" />
+              <line x1="156" y1="405" x2="156" y2="435" stroke="#111" stroke-width="2.5" />
+              <path d="M 145,185 C 115,200 115,235 155,250 C 175,250 182,230 180,200 C 175,185 160,180 145,185 Z" fill="url(#leggingsGrad)" />
+              <path d="M 148,155 C 142,175 145,188 165,188 C 175,188 178,175 174,155 Z" fill="url(#whiteTopGrad)" />
+              <ellipse cx="182" cy="155" rx="16" ry="14" fill="url(#whiteTopGrad)" />
+              <path d="M 155,100 C 155,85 168,78 178,85 C 186,92 188,105 180,116 C 172,122 158,118 155,100 Z" fill="url(#skinGrad)" />
+              <path d="M 150,78 C 135,95 130,140 135,210 C 140,180 142,130 155,105 Z" fill="url(#blondeHairGrad)" />
+            </g>
+
+          </svg>
+        </div>
+      </div>
+
+      <!-- Rodapé: Visualizador de Som e Ações Rápidas -->
+      <div class="stage-footer-bar">
+        <canvas id="visualizerCanvas" class="audio-visualizer-canvas"></canvas>
+        <div class="stage-action-row">
+          <button class="action-btn-main" id="btnPlayFunk" onclick="toggleFunkAudio()">
+            <span id="playIcon">▶</span>
+            <span id="playText">TOCAR FUNK 130 BPM</span>
+          </button>
+          <button class="action-btn-sub" onclick="document.getElementById('photoUploadInput').click()">
+            📷 Usar Foto Real
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <input type="file" id="photoUploadInput" accept="image/*" onchange="handlePhotoUpload(event)" />
+
+  <!-- ABAS DE CONTROLE -->
+  <nav class="control-tabs-nav">
+    <button class="tab-nav-btn active" onclick="openTab('tabBody', this)">🧬 Medidas do Corpo</button>
+    <button class="tab-nav-btn" onclick="openTab('tabWardrobe', this)">👗 Guarda-Roupa (100)</button>
+    <button class="tab-nav-btn" onclick="openTab('tabAiTransform', this)">🤖 Robô ➔ Mulher Real</button>
+    <button class="tab-nav-btn" onclick="openTab('tabAesthetics', this)">💄 Cabelo & Rosto</button>
+  </nav>
+
+  <!-- ABA 1: MEDIDAS DO CORPO -->
+  <section class="tab-pane active" id="tabBody">
+    <div class="slider-grid">
+      <div class="slider-card">
+        <div class="slider-header">
+          <span>🍑 Bumbum / Glúteos</span>
+          <span class="slider-val-badge" id="lblButt">135% (Curvy)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngButt" min="80" max="180" value="135" oninput="updateAnatomy()" />
+        <small style="font-size:0.7rem; color:var(--text-muted)">Projeção arredondada estilo a foto</small>
+      </div>
+
+      <div class="slider-card">
+        <div class="slider-header">
+          <span>⏳ Cintura Fina</span>
+          <span class="slider-val-badge" id="lblWaist">85% (Violão)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngWaist" min="70" max="120" value="85" oninput="updateAnatomy()" />
+        <small style="font-size:0.7rem; color:var(--text-muted)">Efeito espartilho modelador</small>
+      </div>
+
+      <div class="slider-card">
+        <div class="slider-header">
+          <span>🍈 Seios / Busto</span>
+          <span class="slider-val-badge" id="lblChest">120% (Farto)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngChest" min="80" max="160" value="120" oninput="updateAnatomy()" />
+        <small style="font-size:0.7rem; color:var(--text-muted)">Volume e decote natural</small>
+      </div>
+
+      <div class="slider-card">
+        <div class="slider-header">
+          <span>🦵 Pernas & Coxas</span>
+          <span class="slider-val-badge" id="lblLegs">115% (Torneadas)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngLegs" min="85" max="150" value="115" oninput="updateAnatomy()" />
+        <small style="font-size:0.7rem; color:var(--text-muted)">Espessura e definição muscular</small>
+      </div>
+
+      <div class="slider-card">
+        <div class="slider-header">
+          <span>💪 Braços</span>
+          <span class="slider-val-badge" id="lblArms">100% (Delicados)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngArms" min="80" max="130" value="100" oninput="updateAnatomy()" />
+        <small style="font-size:0.7rem; color:var(--text-muted)">Proporção feminina esguia</small>
+      </div>
+
+      <div class="slider-card">
+        <div class="slider-header">
+          <span>🫁 Ritmo de Respiração</span>
+          <span class="slider-val-badge" id="lblBreath">3.6s (Natural)</span>
+        </div>
+        <input type="range" class="custom-range" id="rngBreath" min="20" max="60" value="36" oninput="updateBreathSpeed()" />
+        <small style="font-size:0.7rem; color:var(--text-muted)">Movimento vivo de tórax e cintura</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABA 2: GUARDA-ROUPA (100 ROUPAS) -->
+  <section class="tab-pane" id="tabWardrobe">
+    <div class="wardrobe-controls">
+      <div class="wardrobe-current-card">
+        <div>
+          <div class="wardrobe-title-sub">Roupa Atual Selecionada</div>
+          <div class="wardrobe-name" id="wardrobeNameDisplay">01. Conjunto Leggings Cinza & Top Branco (Foto)</div>
+        </div>
+        <div class="wardrobe-carousel-nav">
+          <button class="nav-circle-btn" onclick="stepOutfit(-1)">‹</button>
+          <button class="nav-circle-btn" onclick="stepOutfit(1)">›</button>
+        </div>
+      </div>
+
+      <div style="font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-top:0.3rem;">
+        Seleção Rápida de Coleções (1 a 100):
+      </div>
+
+      <div class="biquini-quick-grid" id="biquiniGrid"></div>
+    </div>
+  </section>
+
+  <!-- ABA 3: TRANSFORMADOR IA (ROBÔ ➔ MULHER REAL) -->
+  <section class="tab-pane" id="tabAiTransform">
+    <div class="transform-box">
+      <div style="font-size:2.2rem;">🤖 ➔ 💃</div>
+      <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">Motor de Conversão IA Neural</h3>
+      <p style="font-size:0.82rem; color:var(--text-muted); max-width:440px;">
+        Transforme a estrutura metálica de robô em uma mulher real com 100% de textura de pele humana, calor corporal e medidas esculturais.
+      </p>
+
+      <div class="transform-status-text" id="transformStatus">STATUS: NÚCLEO HUMANO REAL ATIVO (PELE 8K)</div>
+
+      <button class="btn-transform" onclick="triggerAiTransformation()">
+        <span>🧬 ATIVAR TRANSFORMAÇÃO IA AGORA</span>
+      </button>
+
+      <div class="custom-select-row" style="justify-content:center; margin-top:0.6rem;">
+        <button class="pill-option-btn active" onclick="setRenderMode('realistic', this)">Mulher Realista (8K)</button>
+        <button class="pill-option-btn" onclick="setRenderMode('robot', this)">Modo Robô Cibernético</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABA 4: CABELO, ROSTO E PELE -->
+  <section class="tab-pane" id="tabAesthetics">
+    <div style="display:flex; flex-direction:column; gap:1.1rem;">
+      <div>
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Tom e Estilo do Cabelo:</div>
+        <div class="custom-select-row">
+          <button class="pill-option-btn active" onclick="setHairColor('platinum', this)">👱‍♀️ Loiro Platinado (Foto)</button>
+          <button class="pill-option-btn" onclick="setHairColor('honey', this)">🍯 Loiro Mel Dourado</button>
+          <button class="pill-option-btn" onclick="setHairColor('brunette', this)">🍫 Morena Iluminada</button>
+          <button class="pill-option-btn" onclick="setHairColor('redhead', this)">🔥 Ruivo Acobreado</button>
+          <button class="pill-option-btn" onclick="setHairColor('black', this)">🖤 Preto Ébano</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Estilo do Rosto:</div>
+        <div class="custom-select-row">
+          <button class="pill-option-btn active" onclick="setFaceType('doll', this)">👼 Boneca Angelical (Foto)</button>
+          <button class="pill-option-btn" onclick="setFaceType('model', this)">💎 Modelo Runway</button>
+          <button class="pill-option-btn" onclick="setFaceType('glamour', this)">💋 Diva Glamour</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Tom de Pele Humana:</div>
+        <div class="custom-select-row">
+          <button class="pill-option-btn active" onclick="setSkinTone('nordic', this)">Pele Clara Nórdica (Foto)</button>
+          <button class="pill-option-btn" onclick="setSkinTone('golden', this)">Bronzeada Dourada</button>
+          <button class="pill-option-btn" onclick="setSkinTone('tropical', this)">Morena Tropical</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
 
 <script>
-/* Polyfill roundRect */
-if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prototype.roundRect){
-CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
-if(typeof r==='number')r=[r,r,r,r];else if(!Array.isArray(r))r=[0,0,0,0];
-const[tl,tr,br,bl]=r;
-this.beginPath();this.moveTo(x+tl,y);this.lineTo(x+w-tr,y);this.quadraticCurveTo(x+w,y+tr);
-this.lineTo(x+w,y+h-br);this.quadraticCurveTo(x+w,y+h,x+w-br,y+h);this.lineTo(x+bl,y+h);
-this.quadraticCurveTo(x,y+h,x,y+h-bl);this.lineTo(x,y+tl);this.quadraticCurveTo(x,y,x+tl,y);
-this.closePath();return this;};
+/* 1. BANCO DE 100 ROUPAS & BIQUÍNIS */
+const OUTFITS = [
+  { id: 1, name: "Leggings Cinza & Top Branco (Foto)", bottomColor: "#5a5f69", topColor: "#ffffff" },
+  { id: 2, name: "Micro Biquíni Rosa Pink Metálico", bottomColor: "#ff1493", topColor: "#ff1493" },
+  { id: 3, name: "Biquíni Dourado Cintilante", bottomColor: "#ffd700", topColor: "#ffd700" },
+  { id: 4, name: "Biquíni Preto Sensual com Tiras", bottomColor: "#111111", topColor: "#111111" },
+  { id: 5, name: "Biquíni Neon Glow Verde Limão", bottomColor: "#39ff14", topColor: "#39ff14" },
+  { id: 6, name: "Biquíni Vermelho Paixão", bottomColor: "#e60026", topColor: "#e60026" },
+  { id: 7, name: "Biquíni Prateado Holográfico", bottomColor: "#c0c0c0", topColor: "#ffffff" },
+  { id: 8, name: "Biquíni Azul Piscina Turquesa", bottomColor: "#00e5ff", topColor: "#00e5ff" },
+  { id: 9, name: "Biquíni Oncinha Safari Glam", bottomColor: "#c68642", topColor: "#8d5524" },
+  { id: 10, name: "Biquíni Roxo Synthwave", bottomColor: "#7928ca", topColor: "#ff0080" }
+];
+
+const PALETTES = [
+  ["#ff007f", "#ff75a0", "Rosa Chiclete"],
+  ["#00f0ff", "#7000ff", "Ciberpunk Glow"],
+  ["#ffaa00", "#ff3300", "Pôr do Sol Sunset"],
+  ["#10b981", "#047857", "Esmeralda Luxo"],
+  ["#6366f1", "#4338ca", "Índigo Profundo"],
+  ["#ec4899", "#be185d", "Magenta Radiante"],
+  ["#f59e0b", "#d97706", "Âmbar Cintilante"],
+  ["#14b8a6", "#0f766e", "Menta Pastel"],
+  ["#8b5cf6", "#6d28d9", "Ametista Real"],
+  ["#f43f5e", "#e11d48", "Rubi Sedutor"]
+];
+
+for (let i = 11; i <= 100; i++) {
+  const p = PALETTES[(i - 11) % PALETTES.length];
+  OUTFITS.push({
+    id: i,
+    name: `Biquíni #${i.toString().padStart(2, '0')} ${p[2]}`,
+    bottomColor: p[0],
+    topColor: p[1]
+  });
 }
 
-/* =========================================================
-   100 BIQUÍNIS & ROUPAS FOTORREALISTAS COM BLEND MODES
-   ========================================================= */
-const CATS=['Asa Delta','Macacão Renda','Cortininha','Fio Dental','Meia-Taça','Vinil & Látex','Fita & Bronze','Crochê','Cintura Alta','Hot Pants'];
-const PALETA=[
-{n:'Rosa Neon',a:'#ff1493',b:'#ff69b4'},
-{n:'Verde Limão',a:'#84cc16',b:'#10b981'},
-{n:'Laranja Cítrico',a:'#ea580c',b:'#f97316'},
-{n:'Azul Piscina',a:'#0284c7',b:'#38bdf8'},
-{n:'Roxo Elétrico',a:'#9333ea',b:'#c084fc'},
-{n:'Amarelo Sol',a:'#facc15',b:'#fde047'},
-{n:'Vermelho Fogo',a:'#dc2626',b:'#ef4444'},
-{n:'Dourado Ouro',a:'#f59e0b',b:'#fbbf24'},
-{n:'Prata Estelar',a:'#cbd5e1',b:'#94a3b8'},
-{n:'Preto Ônix',a:'#1e1e24',b:'#0a0a0f'}
-];
-const OUT_ICONS=['👙','💖','✨','🍷','👑','🪙','🌺','🌊','🦩','⚡','🌸','💎','🪩','🔥','🥥'];
-const OUTFITS=[];
-(function generateOutfits(){
-let id=1;
-const FABRICS=['Renda Jacquard','Cetim Seda','Vinil Brilhante','Lurex Glitter','Tule Transparente'];
-CATS.forEach((cat,ci)=>{
-PALETA.forEach((p,pi)=>{
-const fab=FABRICS[(ci+pi)%FABRICS.length];
-let blendMode='color';
-let overlayGrad=`linear-gradient(180deg, ${p.a}88 0%, ${p.b}66 50%, ${p.a}aa 100%)`;
-let opacity=0.82;
+let currentOutfitIndex = 0;
+let currentView = 'back';
+let isRobotMode = false;
 
-if(fab==='Vinil Brilhante'){ blendMode='hard-light'; overlayGrad=`linear-gradient(135deg, ${p.a}bb 0%, transparent 40%, ${p.b}cc 100%)`; opacity=0.75; }
-else if(fab==='Renda Jacquard'){ blendMode='color-burn'; overlayGrad=`radial-gradient(circle at 60% 40%, ${p.a}99 15%, ${p.b}88 85%)`; opacity=0.88; }
-else if(fab==='Lurex Glitter'){ blendMode='screen'; overlayGrad=`radial-gradient(circle, ${p.b}cc 10%, ${p.a}77 85%)`; opacity=0.78; }
-else if(fab==='Cetim Seda'){ blendMode='multiply'; overlayGrad=`linear-gradient(180deg, ${p.a}77 0%, ${p.b}55 60%, ${p.a}99 100%)`; opacity=0.8; }
+/* 2. ABAS */
+function openTab(tabId, btn) {
+  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+}
 
-OUTFITS.push({
-id:'bikini-'+id,
-name:id+'. '+cat+' '+p.n,
-category:cat,
-fabric:fab,
-icon:OUT_ICONS[(ci+pi)%OUT_ICONS.length],
-desc:cat+' • '+p.n+' ('+fab+')',
-spotlightLeft:p.a,
-spotlightRight:p.b,
-glowColor:p.a+'88',
-filter:`contrast(1.06) saturate(1.25) brightness(1.02)`,
-overlay:overlayGrad,
-blend:blendMode,
-opacity:opacity
-});
-id++;
-});
-});
-})();
+function initWardrobeGrid() {
+  const grid = document.getElementById('biquiniGrid');
+  grid.innerHTML = '';
+  OUTFITS.forEach((outfit, index) => {
+    const pill = document.createElement('div');
+    pill.className = `biquini-pill ${index === currentOutfitIndex ? 'active' : ''}`;
+    pill.innerText = `${outfit.id}. ${outfit.name.split(' ')[1] || 'Biquíni'}`;
+    pill.onclick = () => selectOutfit(index);
+    grid.appendChild(pill);
+  });
+}
 
-/* Galeria de Fotos Realistas */
-let GALLERY=[
-{id:'media-real',title:'Modelo IA (Costas & Curvas)',src:'dancer.jpg',tag:'Foto Principal IA'},
-{id:'media-costas',title:'Modelo IA 2 (Pose Sentada)',src:'dancer2.jpg',tag:'Pose Sentada'},
-{id:'media-3',title:'Verão Bronze',src:'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80',tag:'Verão'},
-{id:'media-4',title:'Balé Elegante',src:'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',tag:'Ballet'},
-{id:'media-5',title:'Glamour Studio',src:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',tag:'Glamour'}
-];
-
-/* Estilos Musicais & BPM */
-const MUSIC_STYLES=[
-{id:'funk',name:'Funk Carioca',sub:'Batidão 130 BPM & Tamborzão',icon:'🔥',bpm:130,danceClass:'dancing-funk',danceDuration:0.92},
-{id:'ballet',name:'Balé Clássico',sub:'Valsa & Harmonia',icon:'🎼',bpm:88,danceClass:'dancing-ballet',danceDuration:1.6},
-{id:'pop',name:'Pop & Dance Club',sub:'Batida 4x4 Eletrônica',icon:'🪩',bpm:124,danceClass:'dancing-pop',danceDuration:0.96},
-{id:'hiphop',name:'Hip-Hop Urban Beat',sub:'Groove & Bumbo Marcado',icon:'🎧',bpm:94,danceClass:'dancing-hiphop',danceDuration:1.25},
-{id:'latino',name:'Salsa & Ritmo Latino',sub:'Clave e Percussão',icon:'🎺',bpm:112,danceClass:'dancing-latino',danceDuration:1.05},
-{id:'synthwave',name:'Synthwave Anos 80',sub:'Arpejador Retrô & Synth Bass',icon:'🕹️',bpm:120,danceClass:'dancing-synthwave',danceDuration:1.0}
-];
-
-/* Estado */
-let currentOutfitIndex=0;
-let currentMusicIndex=0;
-let currentMediaIndex=0;
-let isPlaying=false;
-let customAudioLoaded=false;
-let activeCategory='Todos';
-let searchTerm='';
-
-/* DOM */
-const $=id=>document.getElementById(id);
-const dancerFigure=$('dancerFigure'),dancerImg=$('dancerImg'),outfitShader=$('outfitShader'),stageShadow=$('stageShadow');
-const currentMusicLabel=$('currentMusicLabel'),currentOutfitLabel=$('currentOutfitLabel'),currentOutfitCategory=$('currentOutfitCategory');
-const nextOutfitHint=$('nextOutfitHint'),nextMusicHint=$('nextMusicHint');
-const hudMusicIcon=$('hudMusicIcon'),hudOutfitIcon=$('hudOutfitIcon');
-const mediaIndicator=$('mediaIndicator');
-const btnPrevMedia=$('btnPrevMedia'),btnNextMedia=$('btnNextMedia');
-const btnChangeOutfit=$('btnChangeOutfit'),btnChangeMusic=$('btnChangeMusic'),btnRandomOutfit=$('btnRandomOutfit');
-const btnOpenWardrobe=$('btnOpenWardrobe'),btnCloseWardrobe=$('btnCloseWardrobe'),wardrobeModal=$('wardrobeModal');
-const btnOpenGallery=$('btnOpenGallery'),btnCloseGallery=$('btnCloseGallery'),galleryModal=$('galleryModal');
-const galleryGrid=$('galleryGrid'),galleryCount=$('galleryCount');
-const btnPlayPause=$('btnPlayPause'),playIcon=$('playIcon'),playBtnTitle=$('playBtnTitle'),playBtnHint=$('playBtnHint');
-const spotLeft=$('spotLeft'),spotRight=$('spotRight');
-const dancerUpload=$('dancerUpload'),dancerUploadDirect=$('dancerUploadDirect'),photoPrompt=$('photoPrompt'),audioUpload=$('audioUpload'),customAudioPlayer=$('customAudioPlayer');
-const musicPillsContainer=$('musicPills'),categoryFiltersContainer=$('categoryFilters');
-const outfitsGridContainer=$('outfitsGrid'),searchInput=$('searchInput'),wardrobeCount=$('wardrobeCount');
-const sparklesContainer=$('sparkles'),visualizerCanvas=$('visualizerCanvas'),canvasCtx=visualizerCanvas.getContext('2d');
-
-/* Tratamento de carregamento da foto */
-dancerImg.onerror=function(){
-  const saved=localStorage.getItem('dancerRealPhoto');
-  if(saved){
-    dancerImg.src=saved;
-    photoPrompt.classList.remove('show');
-  }else{
-    photoPrompt.classList.add('show');
+function selectOutfit(index) {
+  currentOutfitIndex = index;
+  const outfit = OUTFITS[index];
+  document.getElementById('wardrobeNameDisplay').innerText = `${outfit.id.toString().padStart(2, '0')}. ${outfit.name}`;
+  
+  const leggings = document.getElementById('leggingsGrad');
+  if (leggings) {
+    leggings.children[0].setAttribute('stop-color', outfit.bottomColor);
+    leggings.children[1].setAttribute('stop-color', outfit.bottomColor);
   }
-};
-dancerImg.onload=function(){
-  photoPrompt.classList.remove('show');
-};
+  const topGrad = document.getElementById('whiteTopGrad');
+  if (topGrad) {
+    topGrad.children[0].setAttribute('stop-color', outfit.topColor);
+    topGrad.children[1].setAttribute('stop-color', outfit.topColor);
+  }
 
-/* Áudio Web Audio API (Sintetizador Tamborzão Funk 130 BPM) */
-let audioCtx=null,masterGain=null,analyser=null,beatTimer=null,step=0,customAudioSourceNode=null;
-
-function initAudio(){
-if(audioCtx)return;
-const AC=window.AudioContext||window.webkitAudioContext;
-audioCtx=new AC();
-masterGain=audioCtx.createGain();
-masterGain.gain.setValueAtTime(0.4,audioCtx.currentTime);
-analyser=audioCtx.createAnalyser();
-analyser.fftSize=64;
-masterGain.connect(analyser);
-analyser.connect(audioCtx.destination);
+  document.querySelectorAll('.biquini-pill').forEach((el, idx) => {
+    el.classList.toggle('active', idx === index);
+  });
 }
 
-function connectCustomAudio(){
-if(customAudioSourceNode)return;
-initAudio();
-try{
-customAudioSourceNode=audioCtx.createMediaElementSource(customAudioPlayer);
-customAudioSourceNode.connect(masterGain);
-}catch(e){console.warn('MP3 não conectado ao analyser:',e);}
+function stepOutfit(direction) {
+  let next = currentOutfitIndex + direction;
+  if (next < 0) next = OUTFITS.length - 1;
+  if (next >= OUTFITS.length) next = 0;
+  selectOutfit(next);
 }
 
-function playFKick(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(160,t);o.frequency.exponentialRampToValueAtTime(32,t+0.28);g.gain.setValueAtTime(1,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3);}
-function playFSnare(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(450,t);o.frequency.exponentialRampToValueAtTime(120,t+0.12);g.gain.setValueAtTime(0.5,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.14);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.14);}
-function playFTom(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(240,t);o.frequency.exponentialRampToValueAtTime(110,t+0.15);g.gain.setValueAtTime(0.55,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.15);}
-function playFStab(f,t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0.18,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.12);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.12);}
-function playSyn(f,t,d,ty,v){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v||0.2,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+d);}
-function playKick(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(0.01,t+0.35);g.gain.setValueAtTime(0.9,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.35);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35);}
-function playSnare(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='triangle';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(50,t+0.15);g.gain.setValueAtTime(0.4,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.2);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2);}
-function playHiHat(t,a){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(8000,t);g.gain.setValueAtTime(a?0.2:0.09,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.05);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.06);}
+/* 3. SELETOR DE POSIÇÕES (COSTAS / FRENTE / PERFIL) */
+function switchView(viewName) {
+  currentView = viewName;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-group').forEach(g => g.style.display = 'none');
 
-function stepBeat(){
-if(!isPlaying||!audioCtx)return;
-const st=MUSIC_STYLES[currentMusicIndex];
-const t=audioCtx.currentTime,s=step%16;
-switch(st.id){
-case 'funk':
-if(s===0||s===8||s===12)playFKick(t);
-if(s===3||s===10||s===14)playFSnare(t);
-if(s===6)playFTom(t);
-if(s===0)playSyn(48,t,0.45,'sine',0.5);else if(s===8)playSyn(52,t,0.35,'sine',0.45);
-if(s===0)playFStab(587.33,t);else if(s===2)playFStab(659.25,t);
-break;
-case 'ballet':{
-const sc=[261.63,329.63,392,523.25,659.25];
-playSyn(sc[(s*2)%sc.length],t,0.5,'sine',0.24);
-if(s%3===0)playSyn(130.81,t,0.45,'triangle',0.32);
-break;}
-case 'pop':
-if(s%4===0)playKick(t);
-if(s%8===4)playSnare(t);
-if(s%2===1)playHiHat(t,true);
-{const b=[110,110,130.81,146.83,164.81,146.83,130.81,98];playSyn(b[s%8],t,0.2,'sawtooth',0.14);}
-break;
-case 'hiphop':
-if(s===0||s===6||s===10)playKick(t);
-if(s===4||s===12)playSnare(t);
-if(s%2===0)playHiHat(t,s%4===0);
-if(s===0||s===6)playSyn(55,t,0.6,'sine',0.42);
-break;
-case 'latino':
-if([0,3,6,10,12].indexOf(s)>=0)playSnare(t);
-if(s%4===0)playKick(t);
-playHiHat(t,s%3===0);
-{const sa=[329.63,392,523.25,440,392,329.63,293.66,329.63];playSyn(sa[s%8],t,0.22,'triangle',0.2);}
-break;
-case 'synthwave':
-if(s%4===0)playKick(t);
-if(s%8===4)playSnare(t);
-playHiHat(t,true);
-{const sy=[146.83,220,293.66,369.99,440,369.99,293.66,220];playSyn(sy[s%8],t,0.15,'sawtooth',0.16);}
-break;
-}
-step++;
+  if (viewName === 'back') {
+    document.getElementById('poseBack').style.display = 'block';
+    document.getElementById('btnViewBack').classList.add('active');
+    document.getElementById('viewIndicator').innerText = 'VISTA: COSTAS / 3/4 (FOTO)';
+  } else if (viewName === 'front') {
+    document.getElementById('poseFront').style.display = 'block';
+    document.getElementById('btnViewFront').classList.add('active');
+    document.getElementById('viewIndicator').innerText = 'VISTA: FRENTE GLAMOUR';
+  } else if (viewName === 'side') {
+    document.getElementById('poseSide').style.display = 'block';
+    document.getElementById('btnViewSide').classList.add('active');
+    document.getElementById('viewIndicator').innerText = 'VISTA: PERFIL VIOLÃO';
+  }
 }
 
-function startMusicLoop(){
-initAudio();
-if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
-if(customAudioLoaded){customAudioPlayer.play().catch(e=>console.warn(e));return;}
-if(beatTimer)clearInterval(beatTimer);
-const st=MUSIC_STYLES[currentMusicIndex];
-const ms=(60000/st.bpm)/4;
-beatTimer=setInterval(stepBeat,ms);
+/* 4. MEDIDAS ANATÔMICAS EM TEMPO REAL */
+function updateAnatomy() {
+  const buttVal = document.getElementById('rngButt').value;
+  const waistVal = document.getElementById('rngWaist').value;
+  const chestVal = document.getElementById('rngChest').value;
+  const legsVal = document.getElementById('rngLegs').value;
+  const armsVal = document.getElementById('rngArms').value;
+
+  document.getElementById('lblButt').innerText = `${buttVal}%`;
+  document.getElementById('lblWaist').innerText = `${waistVal}%`;
+  document.getElementById('lblChest').innerText = `${chestVal}%`;
+  document.getElementById('lblLegs').innerText = `${legsVal}%`;
+  document.getElementById('lblArms').innerText = `${armsVal}%`;
+
+  const buttGroup = document.getElementById('buttGroup');
+  if (buttGroup) {
+    const scaleB = buttVal / 100;
+    buttGroup.style.transform = `scale(${scaleB})`;
+    buttGroup.style.transformOrigin = "175px 215px";
+  }
+
+  const waistGroup = document.getElementById('waistGroup');
+  if (waistGroup) {
+    const scaleW = waistVal / 100;
+    waistGroup.style.transform = `scaleX(${scaleW})`;
+    waistGroup.style.transformOrigin = "165px 160px";
+  }
+
+  const frontChest = document.getElementById('frontChest');
+  if (frontChest) {
+    const scaleC = chestVal / 100;
+    frontChest.style.transform = `scale(${scaleC})`;
+    frontChest.style.transformOrigin = "160px 155px";
+  }
+
+  const rightLeg = document.getElementById('rightLegGroup');
+  if (rightLeg) {
+    const scaleL = legsVal / 100;
+    rightLeg.style.transform = `scale(${scaleL})`;
+    rightLeg.style.transformOrigin = "220px 280px";
+  }
 }
 
-function stopMusicLoop(){
-if(beatTimer){clearInterval(beatTimer);beatTimer=null;}
-if(customAudioLoaded)customAudioPlayer.pause();
+function updateBreathSpeed() {
+  const val = document.getElementById('rngBreath').value;
+  const seconds = (val / 10).toFixed(1);
+  document.getElementById('lblBreath').innerText = `${seconds}s`;
+  
+  const modelWrapper = document.getElementById('modelWrapper');
+  modelWrapper.style.animationDuration = `${seconds}s`;
+  
+  const chests = document.querySelectorAll('.breathing-chest');
+  chests.forEach(c => c.style.animationDuration = `${seconds}s`);
 }
 
-/* =========================================================
-   APLICAR FOTO REALISTA
-   ========================================================= */
-function applyMedia(index){
-currentMediaIndex=((index%GALLERY.length)+GALLERY.length)%GALLERY.length;
-const m=GALLERY[currentMediaIndex];
-mediaIndicator.textContent=`Mídia ${currentMediaIndex+1}/${GALLERY.length} • ${m.title}`;
+/* 5. ROBÔ ➔ MULHER REAL (TRANSFORMAÇÃO IA) */
+function triggerAiTransformation() {
+  const stage = document.getElementById('stageFrame');
+  const status = document.getElementById('transformStatus');
+  const hud = document.getElementById('hudStatus');
+  
+  stage.classList.add('scanning');
+  status.innerText = "IA NEURAL: ESCANEANDO ESTRUTURA E TEXTURIZANDO PELE 8K...";
+  playSciFiScanSound();
 
-dancerImg.src=m.src;
-document.querySelectorAll('.gallery-card').forEach(c=>{
-c.classList.toggle('active',c.dataset.mediaId===m.id);
-});
-createSparkles(12);
+  setTimeout(() => {
+    stage.classList.remove('scanning');
+    setRenderMode('realistic');
+    status.innerText = "✨ TRANSFORMAÇÃO CONCLUÍDA: 100% PELE HUMANA & CURVAS ATIVAS!";
+    hud.innerText = "MULHER REALISTA 8K ATIVA";
+  }, 1600);
 }
 
-/* =========================================================
-   APLICAR OUTFIT SOBRE A PELE HUMANA REAL
-   ========================================================= */
-function applyOutfit(index){
-currentOutfitIndex=((index%OUTFITS.length)+OUTFITS.length)%OUTFITS.length;
-const o=OUTFITS[currentOutfitIndex];
-
-/* Aplica filtros fotográficos e shaders de cor na roupa da modelo */
-dancerImg.style.filter=o.filter;
-outfitShader.style.background=o.overlay;
-outfitShader.style.mixBlendMode=o.blend;
-outfitShader.style.opacity=o.opacity;
-
-/* Holofotes dinâmicos sincronizados */
-document.documentElement.style.setProperty('--spotlight-left', o.spotlightLeft);
-document.documentElement.style.setProperty('--spotlight-right', o.spotlightRight);
-spotLeft.style.background=`linear-gradient(180deg,${o.spotlightLeft} 0%,transparent 100%)`;
-spotRight.style.background=`linear-gradient(180deg,${o.spotlightRight} 0%,transparent 100%)`;
-
-dancerFigure.style.boxShadow=`0 15px 45px rgba(0,0,0,0.85), 0 0 35px ${o.glowColor}`;
-
-/* HUD */
-hudOutfitIcon.textContent=o.icon;
-currentOutfitCategory.textContent=o.category;
-currentOutfitLabel.textContent=`[${currentOutfitIndex+1}/100] ${o.name}`;
-const nIdx=(currentOutfitIndex+1)%OUTFITS.length;
-nextOutfitHint.textContent=`Próximo: [${nIdx+1}/100] ${OUTFITS[nIdx].name}`;
-
-document.querySelectorAll('.outfit-card').forEach(c=>{
-c.classList.toggle('active',c.dataset.outfitId===o.id);
-});
-createSparkles(14);
+function setRenderMode(mode, btn) {
+  if (btn) {
+    btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const stage = document.getElementById('stageFrame');
+  if (mode === 'robot') {
+    isRobotMode = true;
+    stage.classList.add('robot-mode');
+    document.getElementById('hudStatus').innerText = "MODO ESTRUTURA CIBERNÉTICA";
+    document.getElementById('skinGrad').children[0].setAttribute('stop-color', '#a5f3fc');
+    document.getElementById('skinGrad').children[1].setAttribute('stop-color', '#0284c7');
+  } else {
+    isRobotMode = false;
+    stage.classList.remove('robot-mode');
+    document.getElementById('hudStatus').innerText = "MULHER REALISTA ATIVA";
+    setSkinTone('nordic');
+  }
 }
 
-function applyMusicStyle(index){
-currentMusicIndex=((index%MUSIC_STYLES.length)+MUSIC_STYLES.length)%MUSIC_STYLES.length;
-const st=MUSIC_STYLES[currentMusicIndex];
-document.documentElement.style.setProperty('--dance-duration',st.danceDuration+'s');
-MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
-
-if(isPlaying){
-dancerFigure.classList.add(st.danceClass);
-stageShadow.classList.add('dancing-shadow');
-startMusicLoop();
-}
-hudMusicIcon.textContent=st.icon;
-currentMusicLabel.textContent=`${st.name} (${st.bpm} BPM)`;
-nextMusicHint.textContent=`Próximo: ${MUSIC_STYLES[(currentMusicIndex+1)%MUSIC_STYLES.length].name}`;
-playBtnHint.textContent=`${st.sub} • ${st.bpm} BPM`;
-document.querySelectorAll('.music-pill').forEach((p,i)=>p.classList.toggle('active',i===currentMusicIndex));
-}
-
-function togglePlayPause(){
-isPlaying=!isPlaying;
-const st=MUSIC_STYLES[currentMusicIndex];
-if(isPlaying){
-playIcon.textContent='⏸';
-playBtnTitle.textContent='Pausar Dança';
-dancerFigure.classList.add(st.danceClass);
-stageShadow.classList.add('dancing-shadow');
-startMusicLoop();
-createSparkles(20);
-}else{
-playIcon.textContent='▶';
-playBtnTitle.textContent='Tocar Música & Dançar';
-MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
-stageShadow.classList.remove('dancing-shadow');
-stopMusicLoop();
-}
+/* 6. ESTÉTICA */
+function setHairColor(color, btn) {
+  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const hair = document.getElementById('blondeHairGrad');
+  if (!hair) return;
+  
+  if (color === 'platinum') {
+    hair.children[0].setAttribute('stop-color', '#fffbe8');
+    hair.children[1].setAttribute('stop-color', '#f6e1af');
+    hair.children[2].setAttribute('stop-color', '#e7c88b');
+  } else if (color === 'honey') {
+    hair.children[0].setAttribute('stop-color', '#ffe699');
+    hair.children[1].setAttribute('stop-color', '#d49b38');
+    hair.children[2].setAttribute('stop-color', '#8f5a13');
+  } else if (color === 'brunette') {
+    hair.children[0].setAttribute('stop-color', '#6e473b');
+    hair.children[1].setAttribute('stop-color', '#3d231d');
+    hair.children[2].setAttribute('stop-color', '#22130f');
+  } else if (color === 'redhead') {
+    hair.children[0].setAttribute('stop-color', '#ff8450');
+    hair.children[1].setAttribute('stop-color', '#d94111');
+    hair.children[2].setAttribute('stop-color', '#7c1d02');
+  } else if (color === 'black') {
+    hair.children[0].setAttribute('stop-color', '#333842');
+    hair.children[1].setAttribute('stop-color', '#181a1f');
+    hair.children[2].setAttribute('stop-color', '#090a0c');
+  }
 }
 
-function createSparkles(n){
-n=n||8;
-for(let i=0;i<n;i++){
-const s=document.createElement('div');
-s.className='sparkle';
-s.style.left=(Math.random()*85+5)+'%';
-s.style.bottom=(Math.random()*40+10)+'%';
-s.style.animationDelay=(Math.random()*0.8)+'s';
-s.style.animationDuration=(1.2+Math.random()*1.5)+'s';
-sparklesContainer.appendChild(s);
-setTimeout(()=>s.remove(),2800);
-}
+function setFaceType(type, btn) {
+  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
-function drawVisualizer(){
-requestAnimationFrame(drawVisualizer);
-const w=visualizerCanvas.width=visualizerCanvas.clientWidth;
-const h=visualizerCanvas.height=visualizerCanvas.clientHeight;
-canvasCtx.clearRect(0,0,w,h);
-if(!isPlaying){
-canvasCtx.strokeStyle='rgba(255,255,255,0.12)';
-canvasCtx.lineWidth=2;
-canvasCtx.beginPath();
-canvasCtx.moveTo(0,h/2);
-canvasCtx.lineTo(w,h/2);
-canvasCtx.stroke();
-return;
-}
-const n=36,bw=(w/n)*0.7;
-const o=OUTFITS[currentOutfitIndex];
-let vals=[];
-if(analyser){
-const bl=analyser.frequencyBinCount;
-const da=new Uint8Array(bl);
-analyser.getByteFrequencyData(da);
-for(let i=0;i<n;i++)vals.push(da[i%bl]||12);
-}else{
-for(let i=0;i<n;i++)vals.push(Math.sin(i*0.5+Date.now()*0.01)*80+100);
-}
-for(let i=0;i<n;i++){
-const bh=Math.max(4,(vals[i]/255)*h*0.85);
-const x=i*(w/n)+(w/n-bw)/2;
-const y=h-bh;
-const g=canvasCtx.createLinearGradient(0,h,0,0);
-g.addColorStop(0,o.spotlightLeft);
-g.addColorStop(1,o.spotlightRight);
-canvasCtx.fillStyle=g;
-canvasCtx.beginPath();
-if(canvasCtx.roundRect)canvasCtx.roundRect(x,y,bw,bh,[4,4,0,0]);
-else canvasCtx.rect(x,y,bw,bh);
-canvasCtx.fill();
-}
+function setSkinTone(tone, btn) {
+  if (btn) {
+    btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const skin = document.getElementById('skinGrad');
+  if (!skin) return;
+
+  if (tone === 'nordic') {
+    skin.children[0].setAttribute('stop-color', '#fff0e8');
+    skin.children[1].setAttribute('stop-color', '#f8dfd4');
+    skin.children[2].setAttribute('stop-color', '#e0b4a4');
+  } else if (tone === 'golden') {
+    skin.children[0].setAttribute('stop-color', '#fbe0c4');
+    skin.children[1].setAttribute('stop-color', '#e2a97b');
+    skin.children[2].setAttribute('stop-color', '#b37446');
+  } else if (tone === 'tropical') {
+    skin.children[0].setAttribute('stop-color', '#d49a70');
+    skin.children[1].setAttribute('stop-color', '#aa6b43');
+    skin.children[2].setAttribute('stop-color', '#7d4523');
+  }
 }
 
-function renderGallery(){
-galleryGrid.innerHTML='';
-galleryCount.textContent=GALLERY.length+' fotos registradas';
-GALLERY.forEach((m,ri)=>{
-const card=document.createElement('div');
-card.className='gallery-card'+(ri===currentMediaIndex?' active':'');
-card.dataset.mediaId=m.id;
-const wrap=document.createElement('div');
-wrap.className='gallery-thumb-wrapper';
-const img=document.createElement('img');
-img.className='gallery-thumb-media';
-img.src=m.src;
-img.alt=m.title;
-wrap.appendChild(img);
-const info=document.createElement('div');
-info.className='gallery-info';
-const ti=document.createElement('span');
-ti.className='gallery-title';ti.textContent=m.title;
-const tg=document.createElement('span');
-tg.className='gallery-tag';tg.textContent=m.tag;
-info.appendChild(ti);info.appendChild(tg);
-card.appendChild(wrap);card.appendChild(info);
-card.addEventListener('click',()=>{applyMedia(ri);closeAllModals();});
-galleryGrid.appendChild(card);
-});
-}
+/* 7. UPLOAD DE FOTO REAL */
+function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
 
-function renderOutfitsGrid(){
-outfitsGridContainer.innerHTML='';
-const filtered=OUTFITS.filter(o=>{
-const mc=(activeCategory==='Todos')||(o.category===activeCategory);
-const ms=!searchTerm||o.name.toLowerCase().indexOf(searchTerm)>=0||o.desc.toLowerCase().indexOf(searchTerm)>=0;
-return mc&&ms;
-});
-wardrobeCount.textContent=filtered.length+' roupas disponíveis';
-const curId=OUTFITS[currentOutfitIndex].id;
-filtered.forEach(o=>{
-const ri=OUTFITS.findIndex(x=>x.id===o.id);
-const c=document.createElement('button');
-c.type='button';
-c.className='outfit-card'+(o.id===curId?' active':'');
-c.dataset.outfitId=o.id;
-c.innerHTML='<span class="outfit-card-icon">'+o.icon+'</span><div class="outfit-card-info"><span class="outfit-card-name">'+o.name+'</span><span class="outfit-card-cat">'+o.desc+'</span></div>';
-c.addEventListener('click',()=>applyOutfit(ri));
-outfitsGridContainer.appendChild(c);
-});
-}
-
-function setupCategories(){
-const cats=['Todos'].concat(CATS);
-categoryFiltersContainer.innerHTML='';
-cats.forEach(cat=>{
-const b=document.createElement('button');
-b.className='cat-filter-btn'+(cat===activeCategory?' active':'');
-b.textContent=cat;
-b.addEventListener('click',()=>{
-activeCategory=cat;
-document.querySelectorAll('#categoryFilters .cat-filter-btn').forEach(x=>x.classList.remove('active'));
-b.classList.add('active');
-renderOutfitsGrid();
-});
-categoryFiltersContainer.appendChild(b);
-});
-}
-
-function setupMusicPills(){
-musicPillsContainer.innerHTML='';
-MUSIC_STYLES.forEach((s,i)=>{
-const p=document.createElement('button');
-p.className='music-pill'+(i===0?' active':'');
-p.innerHTML='<span>'+s.icon+'</span><span>'+s.name+'</span>';
-p.addEventListener('click',()=>applyMusicStyle(i));
-musicPillsContainer.appendChild(p);
-});
-}
-
-/* Upload e salvamento no LocalStorage */
-function handlePhotoFile(file){
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    const dataUrl=e.target.result;
-    try{ localStorage.setItem('dancerRealPhoto', dataUrl); }catch(err){}
-    dancerImg.src=dataUrl;
-    GALLERY[0].src=dataUrl;
-    photoPrompt.classList.remove('show');
-    renderGallery();
-    createSparkles(25);
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const photo = document.getElementById('realPhotoOverlay');
+    photo.src = e.target.result;
+    photo.classList.add('active');
+    document.getElementById('womanSvg').style.opacity = '0.15';
+    document.getElementById('hudStatus').innerText = "FOTO REAL CARREGADA & ANIMADA";
+    try {
+      localStorage.setItem('dancerRealPhoto', e.target.result);
+    } catch(err) {
+      console.warn("Foto muito grande para cache local.");
+    }
   };
   reader.readAsDataURL(file);
 }
 
-dancerUpload.addEventListener('change',e=>handlePhotoFile(e.target.files[0]));
-dancerUploadDirect.addEventListener('change',e=>handlePhotoFile(e.target.files[0]));
-
-audioUpload.addEventListener('change',e=>{
-const f=e.target.files[0];
-if(!f)return;
-const url=URL.createObjectURL(f);
-if(customAudioPlayer.dataset.prevUrl)URL.revokeObjectURL(customAudioPlayer.dataset.prevUrl);
-customAudioPlayer.dataset.prevUrl=url;
-customAudioPlayer.src=url;
-connectCustomAudio();
-customAudioLoaded=true;
-if(isPlaying){stopMusicLoop();startMusicLoop();}
-e.target.value='';
+window.addEventListener('DOMContentLoaded', () => {
+  initWardrobeGrid();
+  updateAnatomy();
+  const saved = localStorage.getItem('dancerRealPhoto');
+  if (saved) {
+    const photo = document.getElementById('realPhotoOverlay');
+    photo.src = saved;
+    photo.classList.add('active');
+    document.getElementById('womanSvg').style.opacity = '0.15';
+  }
+  initVisualizer();
 });
 
-customAudioPlayer.addEventListener('ended',()=>{
-if(isPlaying){
-isPlaying=false;
-playIcon.textContent='▶';
-playBtnTitle.textContent='Tocar Música & Dançar';
-MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
-stageShadow.classList.remove('dancing-shadow');
+/* 8. SINTETIZADOR FUNK CARIOCA 130 BPM (WEB AUDIO API) */
+let audioCtx = null;
+let isPlayingFunk = false;
+let funkInterval = null;
+let beatStep = 0;
+let analyser = null;
+
+function initAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
 }
-});
 
-function closeAllModals(){
-wardrobeModal.classList.remove('open');
-galleryModal.classList.remove('open');
+function playKick(time) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(140, time);
+  osc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
+  gain.gain.setValueAtTime(1.0, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.28);
+  osc.connect(gain);
+  gain.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  osc.start(time);
+  osc.stop(time + 0.3);
 }
 
-btnOpenWardrobe.addEventListener('click',()=>{closeAllModals();wardrobeModal.classList.add('open');renderOutfitsGrid();});
-btnOpenGallery.addEventListener('click',()=>{closeAllModals();galleryModal.classList.add('open');renderGallery();});
-btnCloseWardrobe.addEventListener('click',closeAllModals);
-btnCloseGallery.addEventListener('click',closeAllModals);
-
-window.addEventListener('click',e=>{
-if(e.target===wardrobeModal||e.target===galleryModal)closeAllModals();
-});
-window.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllModals();});
-
-btnPrevMedia.addEventListener('click',()=>applyMedia(currentMediaIndex-1));
-btnNextMedia.addEventListener('click',()=>applyMedia(currentMediaIndex+1));
-btnChangeOutfit.addEventListener('click',()=>applyOutfit(currentOutfitIndex+1));
-btnChangeMusic.addEventListener('click',()=>applyMusicStyle(currentMusicIndex+1));
-btnRandomOutfit.addEventListener('click',()=>{
-applyOutfit(Math.floor(Math.random()*OUTFITS.length));
-});
-btnPlayPause.addEventListener('click',togglePlayPause);
-searchInput.addEventListener('input',e=>{
-searchTerm=e.target.value.toLowerCase().trim();
-renderOutfitsGrid();
-});
-
-window.addEventListener('DOMContentLoaded',()=>{
-const saved=localStorage.getItem('dancerRealPhoto');
-if(saved){
-  dancerImg.src=saved;
-  GALLERY[0].src=saved;
-  photoPrompt.classList.remove('show');
+function playSnare(time) {
+  const bufferSize = audioCtx.sampleRate * 0.14;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = buffer;
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'highpass';
+  filter.frequency.value = 900;
+  const gain = audioCtx.createGain();
+  gain.gain.setValueAtTime(0.7, time);
+  gain.gain.exponentialRampToValueAtTime(0.01, time + 0.14);
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  noise.start(time);
 }
-setupCategories();
-setupMusicPills();
-renderOutfitsGrid();
-renderGallery();
-applyOutfit(0);
-applyMusicStyle(0);
-drawVisualizer();
-});
+
+function playTamborzaoFunk() {
+  const now = audioCtx.currentTime;
+  const s = beatStep % 8;
+  if (s === 0) playKick(now);
+  if (s === 2) playSnare(now);
+  if (s === 4) playKick(now);
+  if (s === 5) playKick(now);
+  if (s === 6) playSnare(now);
+  beatStep++;
+}
+
+function toggleFunkAudio() {
+  initAudioContext();
+  const btn = document.getElementById('btnPlayFunk');
+  const icon = document.getElementById('playIcon');
+  const txt = document.getElementById('playText');
+  const modelWrapper = document.getElementById('modelWrapper');
+
+  if (!isPlayingFunk) {
+    isPlayingFunk = true;
+    icon.innerText = "⏸";
+    txt.innerText = "PAUSAR FUNK";
+    btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+    modelWrapper.classList.add('funk-dancing');
+    const stepDurationMs = (60 / 130 / 2) * 1000;
+    funkInterval = setInterval(playTamborzaoFunk, stepDurationMs);
+  } else {
+    isPlayingFunk = false;
+    icon.innerText = "▶";
+    txt.innerText = "TOCAR FUNK 130 BPM";
+    btn.style.background = "linear-gradient(135deg, #ff3377, #d91456)";
+    modelWrapper.classList.remove('funk-dancing');
+    clearInterval(funkInterval);
+  }
+}
+
+function playSciFiScanSound() {
+  initAudioContext();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  const now = audioCtx.currentTime;
+  osc.frequency.setValueAtTime(300, now);
+  osc.frequency.linearRampToValueAtTime(1400, now + 0.8);
+  osc.frequency.linearRampToValueAtTime(400, now + 1.5);
+  gain.gain.setValueAtTime(0.2, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 1.5);
+}
+
+/* 9. VISUALIZADOR DE ÁUDIO EM CANVAS */
+function initVisualizer() {
+  const canvas = document.getElementById('visualizerCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  function renderFrame() {
+    requestAnimationFrame(renderFrame);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (analyser && isPlayingFunk) {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteFrequencyData(dataArray);
+
+      const barWidth = (canvas.width / bufferLength) * 1.8;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = (dataArray[i] / 255) * canvas.height;
+        const grad = ctx.createLinearGradient(0, canvas.height, 0, 0);
+        grad.addColorStop(0, '#ff3377');
+        grad.addColorStop(1, '#00f0ff');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+        x += barWidth;
+      }
+    } else {
+      ctx.fillStyle = 'rgba(255, 51, 119, 0.25)';
+      ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, 2);
+    }
+  }
+  renderFrame();
+}
 </script>
 </body>
 </html>
