@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silhueta Artística Avançada - Perspectiva e Movimento</title>
+    <title>Modelagem Geométrica Corporal Detalhada</title>
     <style>
         :root {
-            /* Tom de pele branca rosada com variações de sombra para profundidade */
-            --pele-base: #f7d6cd;
-            --pele-sombra: #e5b3a7;
-            --pele-luz: #fff0eb;
-            --cabelo: #3d2612; /* Castanho iluminado */
-            --boca: #d96868;
+            /* Paleta de Cores Corporais (Branca Rosada) */
+            --pele-base: #fcdbd1;
+            --pele-sombra: #e8b1a2;
+            --pele-luz: #fff2ed;
+            --cabelo: #29180b;
+            --boca: #e07b7b;
+            --olhos: #4a321a;
+            --unhas: #f5b0bd;
         }
 
         body {
@@ -19,252 +21,295 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #121214; /* Fundo escuro para destacar a iluminação da silhueta */
+            background-color: #16161a;
             margin: 0;
-            overflow: hidden;
+            padding: 40px 0;
         }
 
-        /* Palco principal da composição artística */
-        .composicao-artistica {
-            position: relative;
-            width: 600px;
-            height: 500px;
+        /* 1. ESTRUTURA E TAMANHOS GERAIS (Eixo Vertical) */
+        .silhueta-completa {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-        }
-
-        /* --------------------------------------------------
-           1. ANIMAÇÕES (Cabelos Balançando e Olhos Piscando)
-           -------------------------------------------------- */
-        @keyframes balancoCabelo {
-            0%, 100% { transform: rotate(0deg) skewX(0deg); }
-            50% { transform: rotate(3deg) skewX(2deg); }
-        }
-
-        @keyframes piscarOlho {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-
-        /* --------------------------------------------------
-           2. CABELO, CABEÇA E FACIAL (Plano de Fundo/Lateral)
-           -------------------------------------------------- */
-        .cabeça-e-cabelo {
-            position: absolute;
-            left: 80px;
-            top: 160px;
-            z-index: 3;
-        }
-
-        .cabelo-longo {
-            position: absolute;
-            width: 110px;
-            height: 240px;
-            background: linear-gradient(135deg, var(--cabelo), #1a0f06);
-            border-radius: 50% 40% 40% 30% / 40% 40% 60% 60%;
-            top: -20px;
-            left: -20px;
-            transform-origin: top center;
-            animation: balancoCabelo 4s ease-in-out infinite;
-            box-shadow: -5px 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .rosto {
             position: relative;
-            width: 55px;
-            height: 70px;
-            background: var(--pele-base);
-            border-radius: 45% 55% 50% 45% / 55% 60% 40% 45%;
-            box-shadow: inset -5px -5px 10px var(--pele-sombra);
+            width: 380px;
+            height: 920px; /* Altura proporcional total */
         }
 
-        .olhos-container {
+        /* 2. CABELO, CABEÇA E DETALHES FACIAIS */
+        .cabelo-movimento {
             position: absolute;
-            top: 25px;
-            left: 10px;
-            display: flex;
-            gap: 6px;
+            top: 0;
+            width: 130px;
+            height: 310px;
+            background: linear-gradient(135deg, var(--cabelo), #140b05);
+            border-radius: 50% 50% 30% 30% / 30% 30% 70% 70%;
+            z-index: 1;
+            transform-origin: top center;
+            animation: balanco 3s ease-in-out infinite alternate;
+        }
+
+        .cabeca-estrutura {
+            position: relative;
+            top: 20px;
+            width: 65px;   /* Largura exata da cabeça */
+            height: 85px;  /* Altura proporcional do rosto */
+            background: linear-gradient(to bottom, var(--pele-luz), var(--pele-base));
+            border-radius: 50% 50% 45% 45% / 45% 45% 55% 55%;
+            z-index: 3;
+            box-shadow: inset 0 -5px 10px var(--pele-sombra);
         }
 
         .olho {
-            width: 9px;
+            position: absolute;
+            top: 30px;
+            width: 12px;
             height: 6px;
             background: #ffffff;
             border-radius: 50%;
-            position: relative;
-            animation: piscarOlho 3.5s linear infinite;
-            transform-origin: center;
+            animation: piscar 4s linear infinite;
         }
-
+        .o-esq { left: 12px; }
+        .o-dir { right: 12px; }
         .olho::after {
             content: '';
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #4e3629;
+            width: 5px;
+            height: 5px;
+            background: var(--olhos);
             border-radius: 50%;
-            left: 2px;
-            top: 1px;
+            left: 3px;
         }
 
         .boca-carnuda {
             position: absolute;
-            bottom: 14px;
-            left: 12px;
-            width: 15px;
-            height: 8px;
+            bottom: 16px;
+            left: 20px;
+            width: 25px;   /* Boca volumosa */
+            height: 10px;
             background: var(--boca);
-            border-radius: 40% 40% 60% 60% / 30% 30% 70% 70%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 40% 40% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset 0 -2px 3px rgba(0,0,0,0.2);
         }
 
-        .orelha {
-            position: absolute;
-            right: -4px;
-            top: 24px;
-            width: 8px;
-            height: 14px;
-            background: var(--pele-sombra);
-            border-radius: 30% 70% 70% 30% / 40% 40% 60% 60%;
-        }
-
-        /* --------------------------------------------------
-           3. TRONCO, BRAÇOS E UMBIGO (Inclinação Frontal)
-           -------------------------------------------------- */
-        .tronco-horizontal {
-            position: absolute;
-            left: 130px;
-            top: 190px;
-            width: 180px;
-            height: 90px;
-            background: linear-gradient(to bottom, var(--pele-luz), var(--pele-base), var(--pele-sombra));
-            border-radius: 40% 30% 30% 40% / 50% 30% 40% 50%;
+        /* 3. TRONCO, ESPESSURAS E MEMBROS SUPERIORES */
+        .pescoco {
+            width: 18px;
+            height: 30px;
+            background: var(--pele-base);
+            margin-top: 15px;
             z-index: 2;
         }
 
-        /* Braços de apoio na base */
-        .braco-apoio {
-            position: absolute;
-            width: 24px;
-            height: 150px;
+        .ombros-busto {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            width: 140px;  /* Largura total dos ombros */
+            height: 95px;
             background: linear-gradient(to bottom, var(--pele-base), var(--pele-sombra));
-            border-radius: 12px;
-            top: 240px;
-            z-index: 1;
+            border-radius: 40% 40% 25% 25% / 20% 20% 80% 80%;
+            z-index: 3;
         }
-        .b-esquerdo { left: 140px; transform: rotate(5deg); }
-        .b-direito { left: 170px; transform: rotate(-2deg); opacity: 0.9; }
 
-        /* Umbigo posicionado na transição sutil do abdômen arqueado */
+        .braco {
+            position: absolute;
+            top: 10px;
+            width: 20px;   /* Grossura do braço */
+            height: 250px; /* Extensão até o quadril */
+            background: linear-gradient(to bottom, var(--pele-base), var(--pele-sombra));
+            border-radius: 10px;
+            z-index: 2;
+        }
+        .b-esq { left: -14px; transform: rotate(4deg); }
+        .b-dir { right: -14px; transform: rotate(-4deg); }
+
+        /* 4. CINTURA, ABDÔMEN E UMBIGO */
+        .cintura-escapular {
+            position: relative;
+            width: 78px;   /* Afunilamento da cintura (linha fina) */
+            height: 75px;
+            background: linear-gradient(to bottom, var(--pele-sombra), var(--pele-base));
+            z-index: 3;
+            margin-top: -5px;
+        }
+
         .umbigo {
             position: absolute;
-            left: 110px;
-            bottom: 22px;
+            left: 36px;
+            bottom: 15px;
             width: 6px;
             height: 8px;
             background: var(--pele-sombra);
             border-radius: 50%;
-            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4);
-            opacity: 0.8;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        /* --------------------------------------------------
-           4. PERSPECTIVA TRASEIRA (Bumbum Empinado e Coxas)
-           -------------------------------------------------- */
-        .quadril-bumbum-atraz {
-            position: absolute;
-            left: 270px;
-            top: 140px;
-            width: 220px;
-            height: 180px;
+        /* 5. QUADRIL E REGIÃO PÉLVICA ANATÔMICA */
+        .quadril-estrutura {
+            position: relative;
             display: flex;
-            z-index: 4; /* Fica à frente na perspectiva de quem olha de trás */
-        }
-
-        .gluteo {
-            width: 105px;
-            height: 155px;
-            background: linear-gradient(135deg, var(--pele-luz) 0%, var(--pele-base) 50%, var(--pele-sombra) 100%);
-            box-shadow: inset -4px -10px 25px rgba(229, 179, 167, 0.6), 
-                        5px 15px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .g-esquerdo {
-            border-radius: 70% 30% 40% 75% / 60% 45% 55% 70%;
-            transform: translateX(6px) rotate(-3deg);
-        }
-
-        .g-direito {
-            border-radius: 30% 70% 75% 40% / 45% 60% 70% 55%;
-            transform: translateX(-6px) rotate(3deg);
-        }
-
-        /* Coxas volumosas que projetam a pose anatômica */
-        .coxa-flexionada {
-            position: absolute;
-            width: 85px;
-            height: 160px;
+            justify-content: center;
+            width: 155px;  /* Proporção curvilínea alargada */
+            height: 120px;
             background: linear-gradient(to bottom, var(--pele-base), var(--pele-sombra));
-            border-radius: 40% 40% 30% 30% / 50% 50% 50% 50%;
-            top: 240px;
-            z-index: 2;
+            border-radius: 45% 45% 15% 15% / 30% 30% 70% 70%;
+            z-index: 3;
+            margin-top: -5px;
         }
-        .c-esquerda { left: 290px; transform: rotate(15deg); }
-        .c-direita { left: 370px; transform: rotate(-5deg); }
 
-        /* Pés e panturrilhas recuados na base */
-        .perna-inferior {
+        /* Divisão pélvica geométrica central */
+        .regiao-pelvica {
             position: absolute;
-            width: 35px;
-            height: 100px;
-            background: var(--pele-sombra);
-            top: 360px;
-            border-radius: 30% 30% 20% 20%;
+            bottom: 0;
+            width: 22px;
+            height: 45px;
+            background: linear-gradient(to bottom, var(--pele-base), var(--pele-sombra));
+            border-radius: 50% 50% 40% 40% / 80% 80% 20% 20%;
+            box-shadow: inset 1px 0 4px rgba(0,0,0,0.15), inset -1px 0 4px rgba(0,0,0,0.15);
         }
-        .p-esf { left: 325px; }
-        .p-dir { left: 385px; }
+
+        .fenda-central {
+            width: 2px;
+            height: 30px;
+            background: rgba(145, 91, 78, 0.4);
+            margin: 10px auto 0 auto;
+            border-radius: 50%;
+        }
+
+        /* 6. PERNAS (GROSSURAS DAS COXAS E PANTURRILHAS) */
+        .pernas-container {
+            display: flex;
+            justify-content: space-between;
+            width: 130px;
+            height: 420px; /* Comprimento total das pernas */
+            z-index: 2;
+            margin-top: -10px;
+        }
+
+        .perna-membro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 60px;
+            height: 100%;
+        }
+
+        /* Coxas grossas e torneadas */
+        .coxa {
+            width: 58px;   /* Espessura acentuada da coxa */
+            height: 220px; /* Comprimento da coxa */
+            background: linear-gradient(to bottom, var(--pele-sombra), var(--pele-base));
+            border-radius: 55% 45% 35% 35% / 25% 25% 75% 75%;
+        }
+
+        /* Panturrilhas afuniladas */
+        .panturrilha {
+            width: 38px;   /* Transição para uma espessura menor */
+            height: 200px;
+            background: linear-gradient(to bottom, var(--pele-base), var(--pele-sombra));
+            border-radius: 35% 35% 20% 20% / 15% 15% 85% 85%;
+            margin-top: -5px;
+        }
+
+        /* 7. EXTREMIDADES (PÉS E UNHAS) */
+        .pes-container {
+            display: flex;
+            justify-content: space-between;
+            width: 135px;
+            height: 25px;
+            z-index: 3;
+            margin-top: -2px;
+        }
+
+        .pe {
+            position: relative;
+            width: 48px;
+            height: 100%;
+            background: var(--pele-sombra);
+            border-radius: 10% 50% 30% 20% / 10% 70% 30% 30%;
+        }
+
+        /* Unhas detalhadas com coloração rosada suave */
+        .unhas-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 2px;
+            padding-right: 4px;
+            margin-top: 2px;
+        }
+
+        .unha {
+            width: 4px;
+            height: 5px;
+            background: var(--unhas);
+            border-radius: 2px 2px 0 0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+
+        /* 8. ANIMAÇÕES EM CSS */
+        @keyframes balanco {
+            0% { transform: rotate(-2deg); }
+            100% { transform: rotate(2deg); }
+        }
+
+        @keyframes piscar {
+            0%, 92%, 100% { transform: scaleY(1); }
+            96% { transform: scaleY(0.1); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="composicao-artistica" aria-label="Composição geométrica tridimensional de corpo feminino">
+    <div class="silhueta-completa" aria-label="Estrutura de modelagem anatômica por código">
         
-        <!-- Plano de Fundo/Apoio: Braços -->
-        <div class="braco-apoio b-esquerdo"></div>
-        <div class="braco-apoio b-direito"></div>
-
-        <!-- Cabeça, Cabelos e Expressão -->
-        <div class="cabeça-e-cabelo">
-            <div class="cabelo-longo"></div>
-            <div class="rosto">
-                <div class="orelha"></div>
-                <div class="olhos-container">
-                    <div class="olho"></div>
-                    <div class="olho"></div>
-                </div>
-                <div class="boca-carnuda"></div>
-            </div>
+        <!-- Segmento Superior -->
+        <div class="cabelo-movimento"></div>
+        <div class="cabeca-estrutura">
+            <div class="olho o-esq"></div>
+            <div class="olho o-dir"></div>
+            <div class="boca-carnuda"></div>
         </div>
+        <div class="pescoco"></div>
 
-        <!-- Centro: Tronco Alongado com Detalhe do Umbigo -->
-        <div class="tronco-horizontal">
+        <!-- Segmento do Tronco e Braços Laterais -->
+        <div class="ombros-busto">
+            <div class="braco b-esq"></div>
+            <div class="braco b-dir"></div>
+        </div>
+        <div class="cintura-escapular">
             <div class="umbigo"></div>
         </div>
 
-        <!-- Sustentação Traseira: Coxas e Pernas -->
-        <div class="coxa-flexionada c-esquerda"></div>
-        <div class="coxa-flexionada c-direita"></div>
-        <div class="perna-inferior p-esf"></div>
-        <div class="perna-inferior p-dir"></div>
-
-        <!-- Primeiro Plano / Destaque: Volume do Bumbum -->
-        <div class="quadril-bumbum-atraz">
-            <div class="gluteo g-esquerdo"></div>
-            <div class="gluteo g-direito"></div>
+        <!-- Segmento Pélvico e Divisão Central -->
+        <div class="quadril-estrutura">
+            <div class="regiao-pelvica">
+                <div class="fenda-central"></div>
+            </div>
         </div>
 
-    </div>
+        <!-- Membros Inferiores (Coxas e Panturrilhas) -->
+        <div class="pernas-container">
+            <div class="perna-membro">
+                <div class="coxa"></div>
+                <div class="panturrilha"></div>
+            </div>
+            <div class="perna-membro">
+                <div class="coxa"></div>
+                <div class="panturrilha"></div>
+            </div>
+        </div>
 
-</body>
-</html>
+        <!-- Base (Pés e Unhas Detalhadas) -->
+        <div class="pes-container">
+            <div class="pe">
+                <div class="unhas-container">
+                    <div class="unha"></div>
+                    <div class="unha"></div>
+                    <div class="unha"></div>
+                </div>
+            </div>
+            <div class="pe">
+                <div class="unhas-container">
+                    <div class="unha"></div>
+                    <div class="unha"></div>
