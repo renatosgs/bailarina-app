@@ -16,7 +16,7 @@
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --border-subtle: rgba(255, 255, 255, 0.12);
-      --dance-duration: 0.92s;
+      --dance-duration: 0.88s;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -134,7 +134,7 @@
     .dancer-figure {
       position: relative; width: 250px; height: 360px; border-radius: 20px;
       overflow: hidden; display: flex; justify-content: center; align-items: center;
-      z-index: 2; transform-origin: bottom center; transition: filter 0.5s ease;
+      z-index: 2; transform-origin: 50% 85%; transition: filter 0.5s ease;
     }
     .dancer-media {
       width: 100%; height: 100%; object-fit: cover; object-position: center top;
@@ -163,17 +163,98 @@
     }
     .audio-visualizer { width: 100%; height: 45px; }
 
-    .dancing-funk { animation: danceFunk var(--dance-duration) cubic-bezier(0.25, 0.1, 0.25, 1) infinite; }
+    /* ====== ANIMAÇÕES DE DANÇA E REBOLADO ====== */
+    /* 1. REBOLADO FUNK CARIOCA & QUADRADINHO */
+    .dancing-funk { animation: danceFunk var(--dance-duration) cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite; }
     @keyframes danceFunk {
-      0% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
-      15% { transform: translateY(12px) rotate(-6deg) scale(1.08, 0.92); }
-      30% { transform: translateY(-8px) rotate(4deg) scale(0.96, 1.04); }
-      48% { transform: translateY(28px) rotate(-4deg) scale(1.14, 0.86); }
-      62% { transform: translateY(20px) rotate(5deg) scale(1.06, 0.94); }
-      78% { transform: translateY(-16px) rotate(-2deg) scale(0.95, 1.05); }
-      90% { transform: translateY(6px) rotate(3deg) scale(1.04, 0.96); }
-      100% { transform: translateY(0px) rotate(0deg) scale(1, 1); }
+      0% {
+        transform: translate(0px, 0px) rotate(0deg) skewX(0deg) scale(1, 1);
+      }
+      12% {
+        /* Rebolada para a esquerda descendo o quadril */
+        transform: translate(-22px, 16px) rotate(-8deg) skewX(-7deg) scale(1.08, 0.92);
+      }
+      25% {
+        /* Quicadinha subindo */
+        transform: translate(-8px, -4px) rotate(-3deg) skewX(-3deg) scale(0.97, 1.03);
+      }
+      38% {
+        /* Agachada e empinada (vai até o chão) */
+        transform: translate(0px, 28px) rotate(0deg) skewX(0deg) scale(1.16, 0.84);
+      }
+      50% {
+        /* Rebolada para a direita descendo o quadril */
+        transform: translate(22px, 16px) rotate(8deg) skewX(7deg) scale(1.08, 0.92);
+      }
+      62% {
+        /* Quicada subindo na direita */
+        transform: translate(8px, -4px) rotate(3deg) skewX(3deg) scale(0.97, 1.03);
+      }
+      75% {
+        /* Quadradinho / rebolado circular com descida */
+        transform: translate(12px, 24px) rotate(6deg) skewX(5deg) scale(1.14, 0.86);
+      }
+      88% {
+        /* Transição rápida */
+        transform: translate(-6px, 10px) rotate(-4deg) skewX(-3deg) scale(1.04, 0.96);
+      }
+      100% {
+        transform: translate(0px, 0px) rotate(0deg) skewX(0deg) scale(1, 1);
+      }
     }
+
+    /* 2. TWERK PESADO & QUADRADINHO DE 8 */
+    .dancing-twerk { animation: danceTwerk var(--dance-duration) cubic-bezier(0.2, 0.8, 0.2, 1) infinite; }
+    @keyframes danceTwerk {
+      0% {
+        transform: translate(0px, 0px) rotate(0deg) skewX(0deg) scale(1, 1);
+      }
+      10% {
+        /* Rebolado lateral extremo na esquerda */
+        transform: translate(-28px, 22px) rotate(-11deg) skewX(-9deg) scale(1.15, 0.85);
+      }
+      20% {
+        transform: translate(-12px, 4px) rotate(-4deg) skewX(-3deg) scale(0.98, 1.02);
+      }
+      30% {
+        /* Quicada dupla na esquerda */
+        transform: translate(-30px, 26px) rotate(-12deg) skewX(-10deg) scale(1.18, 0.82);
+      }
+      40% {
+        /* Desce até embaixo empinando o quadril */
+        transform: translate(0px, 34px) rotate(0deg) skewX(0deg) scale(1.24, 0.76);
+      }
+      50% {
+        /* Rebolado lateral extremo na direita */
+        transform: translate(28px, 22px) rotate(11deg) skewX(9deg) scale(1.15, 0.85);
+      }
+      60% {
+        transform: translate(12px, 4px) rotate(4deg) skewX(3deg) scale(0.98, 1.02);
+      }
+      70% {
+        /* Quicada dupla na direita */
+        transform: translate(30px, 26px) rotate(12deg) skewX(10deg) scale(1.18, 0.82);
+      }
+      85% {
+        /* Batida de quadril central */
+        transform: translate(0px, 32px) rotate(0deg) skewX(0deg) scale(1.22, 0.78);
+      }
+      100% {
+        transform: translate(0px, 0px) rotate(0deg) skewX(0deg) scale(1, 1);
+      }
+    }
+
+    /* 3. REBOLADO LATINO (SALSA & BACHATA) */
+    .dancing-latino { animation: danceLatino var(--dance-duration) ease-in-out infinite; }
+    @keyframes danceLatino {
+      0% { transform: translate(0px, 0px) rotate(-6deg) skewX(-5deg); }
+      25% { transform: translate(-20px, 12px) rotate(-10deg) skewX(-7deg) scale(1.05, 0.95); }
+      50% { transform: translate(0px, -4px) rotate(0deg) skewX(0deg) scale(0.98, 1.02); }
+      75% { transform: translate(20px, 12px) rotate(10deg) skewX(7deg) scale(1.05, 0.95); }
+      100% { transform: translate(0px, 0px) rotate(-6deg) skewX(-5deg); }
+    }
+
+    /* 4. BALÉ CLÁSSICO */
     .dancing-ballet { animation: danceBallet var(--dance-duration) cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate; }
     @keyframes danceBallet {
       0% { transform: translateY(0px) rotate(0deg) scale(1); }
@@ -181,37 +262,40 @@
       70% { transform: translateY(-26px) rotate(3.5deg) scale(1.04); }
       100% { transform: translateY(-4px) rotate(-1deg) scale(1); }
     }
+
+    /* 5. POP DANCE CLUB */
     .dancing-pop { animation: dancePop var(--dance-duration) cubic-bezier(0.2, 0.8, 0.2, 1) infinite; }
     @keyframes dancePop {
-      0%, 100% { transform: translateY(0px) scale(1, 1); }
-      25% { transform: translateY(-18px) rotate(-4deg) scale(0.98, 1.03); }
-      50% { transform: translateY(0px) scale(1.03, 0.97); }
-      75% { transform: translateY(-22px) rotate(4deg) scale(0.98, 1.04); }
+      0%, 100% { transform: translate(0px, 0px) scale(1, 1); }
+      25% { transform: translate(-14px, -14px) rotate(-5deg) scale(0.98, 1.03); }
+      50% { transform: translate(0px, 14px) scale(1.06, 0.94); }
+      75% { transform: translate(14px, -18px) rotate(5deg) scale(0.98, 1.04); }
     }
+
+    /* 6. HIP-HOP URBAN */
     .dancing-hiphop { animation: danceHipHop var(--dance-duration) cubic-bezier(0.3, 0, 0.2, 1) infinite; }
     @keyframes danceHipHop {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      20% { transform: translateY(8px) rotate(-5deg) scale(1.05, 0.95); }
-      45% { transform: translateY(-20px) rotate(4deg) scale(0.96, 1.04); }
-      70% { transform: translateY(6px) rotate(-2deg); }
+      0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+      20% { transform: translate(-16px, 12px) rotate(-6deg) scale(1.08, 0.92); }
+      45% { transform: translate(10px, -16px) rotate(4deg) scale(0.96, 1.04); }
+      70% { transform: translate(-12px, 8px) rotate(-3deg); }
     }
-    .dancing-latino { animation: danceLatino var(--dance-duration) ease-in-out infinite alternate; }
-    @keyframes danceLatino {
-      0% { transform: translateY(0px) rotate(-6deg) skewX(-2deg); }
-      25% { transform: translateY(-12px) rotate(0deg) skewX(2deg); }
-      50% { transform: translateY(-4px) rotate(6deg) skewX(3deg); }
-      100% { transform: translateY(0px) rotate(-6deg) skewX(-2deg); }
-    }
+
+    /* 7. SYNTHWAVE 80S */
     .dancing-synthwave { animation: danceSynthwave var(--dance-duration) ease-in-out infinite; }
     @keyframes danceSynthwave {
       0%, 100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 12px rgba(0, 245, 255, 0.3)); }
       50% { transform: translateY(-18px) scale(1.03) rotate(2deg); filter: drop-shadow(0 0 25px rgba(255, 0, 128, 0.7)); }
     }
-    .dancing-shadow { animation: shadowPulse var(--dance-duration) ease-in-out infinite alternate; }
+
+    /* SOMBRA DO PALCO SINCRONIZADA */
+    .dancing-shadow { animation: shadowPulse var(--dance-duration) cubic-bezier(0.35, 0.05, 0.25, 1) infinite; }
     @keyframes shadowPulse {
-      0% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(0.72); opacity: 0.35; }
-      100% { transform: scale(1.1); opacity: 0.9; }
+      0%, 100% { transform: scale(1) translateX(0px); opacity: 0.8; }
+      15% { transform: scale(1.18, 0.82) translateX(-18px); opacity: 0.95; }
+      38% { transform: scale(1.26, 0.74) translateX(0px); opacity: 1; }
+      50% { transform: scale(1.18, 0.82) translateX(18px); opacity: 0.95; }
+      75% { transform: scale(1.22, 0.78) translateX(10px); opacity: 0.95; }
     }
 
     .controls-section {
@@ -350,6 +434,11 @@
       display: flex; align-items: center; gap: 0.35rem; transition: all 0.2s ease;
     }
     .tool-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-1px); }
+    .tool-rebolar {
+      color: #ff75a0; background: linear-gradient(135deg, rgba(255, 77, 141, 0.25), rgba(121, 40, 202, 0.3));
+      border-color: #ff4d8d; font-weight: 700;
+    }
+    .tool-rebolar:hover { background: linear-gradient(135deg, rgba(255, 77, 141, 0.45), rgba(121, 40, 202, 0.5)); border-color: #ff75a0; }
     .tool-upload { color: #ff9cc3; background: rgba(255, 77, 141, 0.12); border-color: rgba(255, 77, 141, 0.4); }
     .tool-upload input, .tool-audio input { display: none; }
     .tool-audio { color: #93c5fd; background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.4); }
@@ -489,9 +578,9 @@
     <div class="spotlight spotlight-right" id="spotRight"></div>
 
     <header class="app-header">
-      <div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & VÍDEOS ★</div>
+      <div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & FUNK REBOLADO ★</div>
       <h1 class="app-title">Bailarina Virtual</h1>
-      <p class="app-subtitle">Galeria completa de fotos e vídeos, 100 tipos de biquínis e Funk Carioca!</p>
+      <p class="app-subtitle">Galeria completa de fotos e vídeos, 100 tipos de biquínis, Funk Carioca & Twerk!</p>
     </header>
 
     <main class="stage-wrapper">
@@ -500,8 +589,8 @@
           <div class="hud-pill music-hud" id="hudMusicPill">
             <span class="hud-icon" id="hudMusicIcon">🔥</span>
             <div class="hud-info">
-              <span class="hud-label">Estilo Musical</span>
-              <span class="hud-value" id="currentMusicLabel">Funk Carioca (130 BPM)</span>
+              <span class="hud-label">Estilo de Dança</span>
+              <span class="hud-value" id="currentMusicLabel">Funk Rebolado (130 BPM)</span>
             </div>
           </div>
           <div class="hud-pill outfit-hud" id="hudOutfitPill">
@@ -595,7 +684,7 @@
             <span class="btn-emoji" id="playIcon">▶</span>
           </div>
           <div class="btn-text">
-            <span class="btn-title" id="playBtnTitle">Tocar Música & Dançar</span>
+            <span class="btn-title" id="playBtnTitle">Tocar Música & Rebolar</span>
             <span class="btn-hint" id="playBtnHint">Batidão 130 BPM • Funk Carioca</span>
           </div>
         </button>
@@ -605,13 +694,16 @@
             <span class="btn-emoji" id="musicBtnIcon">🎵</span>
           </div>
           <div class="btn-text">
-            <span class="btn-title">Mudar Música</span>
-            <span class="btn-hint" id="nextMusicHint">Próximo: Balé Clássico</span>
+            <span class="btn-title">Mudar Dança</span>
+            <span class="btn-hint" id="nextMusicHint">Próximo: Twerk Hardcore</span>
           </div>
         </button>
       </div>
 
       <div class="quick-toolbar">
+        <button class="tool-btn tool-rebolar" id="btnRebolarMaximo" title="Ativa imediatamente o Rebolado Twerk no Máximo">
+          <span>🍑 Rebolar ao Máximo!</span>
+        </button>
         <button class="tool-btn" id="btnRandomOutfit">
           <span>🎲 Biquíni Aleatório</span>
         </button>
@@ -629,7 +721,7 @@
       </div>
 
       <div class="section-card">
-        <h3 class="card-title">Estilos Musicais & Passos de Dança:</h3>
+        <h3 class="card-title">Estilos Musicais & Passos de Rebolado:</h3>
         <div class="music-pills" id="musicPills"></div>
       </div>
     </section>
@@ -814,13 +906,14 @@
       {"id":"media-8","title":"Vídeo 3 (Giro Balé)","type":"video","src":"video3.mp4","fallback":"https://assets.mixkit.co/videos/preview/mixkit-ballerina-doing-a-pirouette-on-stage-41014-large.mp4","tag":"Vídeo Dança"}
     ];
 
-    // 3. MÚSICAS
+    // 3. MÚSICAS & REBOLADO
     const MUSIC_STYLES = [
-      { id: 'funk', name: 'Funk Carioca', sub: 'Batidão 130 BPM', icon: '🔥', bpm: 130, danceClass: 'dancing-funk', danceDuration: 0.92 },
-      { id: 'ballet', name: 'Balé Clássico', sub: 'Valsa & Harmonia', icon: '🎼', bpm: 88, danceClass: 'dancing-ballet', danceDuration: 1.6 },
+      { id: 'funk', name: 'Funk Rebolado', sub: 'Batidão 130 BPM • Quadradinho', icon: '🔥', bpm: 130, danceClass: 'dancing-funk', danceDuration: 0.88 },
+      { id: 'twerk', name: 'Twerk Hardcore', sub: 'Descendo até o chão 135 BPM', icon: '🍑', bpm: 135, danceClass: 'dancing-twerk', danceDuration: 0.72 },
+      { id: 'latino', name: 'Salsa & Bachata', sub: 'Rebolado Latino envolvente', icon: '🎺', bpm: 112, danceClass: 'dancing-latino', danceDuration: 1.05 },
       { id: 'pop', name: 'Pop & Dance Club', sub: 'Batida 4x4', icon: '🪩', bpm: 124, danceClass: 'dancing-pop', danceDuration: 0.96 },
       { id: 'hiphop', name: 'Hip-Hop Urban', sub: 'Groove marcado', icon: '🎧', bpm: 94, danceClass: 'dancing-hiphop', danceDuration: 1.25 },
-      { id: 'latino', name: 'Salsa Latina', sub: 'Clave e percussão', icon: '🎺', bpm: 112, danceClass: 'dancing-latino', danceDuration: 1.05 },
+      { id: 'ballet', name: 'Balé Clássico', sub: 'Valsa & Harmonia', icon: '🎼', bpm: 88, danceClass: 'dancing-ballet', danceDuration: 1.6 },
       { id: 'synthwave', name: 'Synthwave 80s', sub: 'Arpejador retrô', icon: '🕹️', bpm: 120, danceClass: 'dancing-synthwave', danceDuration: 1.0 }
     ];
 
@@ -834,8 +927,8 @@
     let activeCategory = 'Todos';
     let activeGalleryTab = 'Todas';
     let searchTerm = '';
-    let outfitOn = true;   // <- NOVO: controla tirar/colocar biquíni
-    let currentFilter = ''; // para restaurar
+    let outfitOn = true;
+    let currentFilter = '';
 
     // DOM
     const dancerFigure = document.getElementById('dancerFigure');
@@ -857,6 +950,7 @@
     const btnChangeOutfit = document.getElementById('btnChangeOutfit');
     const btnChangeMusic = document.getElementById('btnChangeMusic');
     const btnRandomOutfit = document.getElementById('btnRandomOutfit');
+    const btnRebolarMaximo = document.getElementById('btnRebolarMaximo');
     const btnOpenWardrobe = document.getElementById('btnOpenWardrobe');
     const btnCloseWardrobe = document.getElementById('btnCloseWardrobe');
     const wardrobeModal = document.getElementById('wardrobeModal');
@@ -992,6 +1086,14 @@
           if (s === 0) playFunkStab(587.33, t);
           else if (s === 2) playFunkStab(659.25, t);
           break;
+        case 'twerk':
+          if (s === 0 || s === 4 || s === 8 || s === 12) playFunkKick(t);
+          if (s === 2 || s === 6 || s === 10 || s === 14) playFunkSnare(t);
+          if (s % 2 === 1) playHiHat(t, true);
+          if (s === 0 || s === 8) playFunkTom(t);
+          if (s === 0) playSynthNote(48, t, 0.35, 'sawtooth', 0.45);
+          else if (s === 8) playSynthNote(43, t, 0.3, 'sawtooth', 0.45);
+          break;
         case 'ballet': {
           const scale = [261.63, 329.63, 392.00, 523.25, 659.25];
           playSynthNote(scale[(s * 2) % scale.length], t, 0.5, 'sine', 0.25);
@@ -1044,7 +1146,7 @@
       if (customAudioLoaded) customAudioPlayer.pause();
     }
 
-    // 6. MÍDIA — CORRIGIDO (sem loop infinito)
+    // 6. MÍDIA
     function applyMedia(index) {
       currentMediaIndex = (index + GALLERY.length) % GALLERY.length;
       const media = GALLERY[currentMediaIndex];
@@ -1086,7 +1188,7 @@
       });
     }
 
-    // 7. OUTFIT — CORRIGIDO (usa data-id)
+    // 7. OUTFIT
     function applyOutfit(index) {
       currentOutfitIndex = (index + OUTFITS.length) % OUTFITS.length;
       const outfit = OUTFITS[currentOutfitIndex];
@@ -1144,7 +1246,7 @@
       applyOutfit(currentOutfitIndex);
     }
 
-    // 8. MÚSICA
+    // 8. MÚSICA & PASSOS DE REBOLADO
     function applyMusicStyle(index) {
       currentMusicIndex = (index + MUSIC_STYLES.length) % MUSIC_STYLES.length;
       const style = MUSIC_STYLES[currentMusicIndex];
@@ -1166,7 +1268,7 @@
       });
     }
 
-    // 9. PLAY
+    // 9. PLAY & DANÇA
     function togglePlayPause() {
       isPlaying = !isPlaying;
       const style = MUSIC_STYLES[currentMusicIndex];
@@ -1180,7 +1282,7 @@
         createSparkles(20);
       } else {
         playIcon.textContent = '▶';
-        playBtnTitle.textContent = 'Tocar Música & Dançar';
+        playBtnTitle.textContent = 'Tocar Música & Rebolar';
         MUSIC_STYLES.forEach(s => dancerFigure.classList.remove(s.danceClass));
         stageShadow.classList.remove('dancing-shadow');
         if (dancerVideo.classList.contains('active')) dancerVideo.pause();
@@ -1248,7 +1350,7 @@
       }
     }
 
-    // 12. GALERIA RENDER — CORRIGIDO (data-id + onerror sem loop)
+    // 12. GALERIA RENDER
     function renderGallery() {
       galleryGrid.innerHTML = '';
       const filtered = GALLERY.filter(m => {
@@ -1306,7 +1408,7 @@
       });
     }
 
-    // 13. OUTFITS RENDER — CORRIGIDO (data-id)
+    // 13. OUTFITS RENDER
     function renderOutfitsGrid() {
       outfitsGridContainer.innerHTML = '';
       const filtered = OUTFITS.filter(o => {
@@ -1449,7 +1551,7 @@
       if (e.target === wardrobeModal || e.target === galleryModal) closeAllModals();
     });
 
-    // 17. EVENTOS
+    // 17. EVENTOS & BOTÃO REBOLAR AO MÁXIMO
     btnPrevMedia.addEventListener('click', () => applyMedia(currentMediaIndex - 1));
     btnNextMedia.addEventListener('click', () => applyMedia(currentMediaIndex + 1));
     btnNextMediaToolbar.addEventListener('click', () => applyMedia(currentMediaIndex + 1));
@@ -1464,6 +1566,19 @@
       dancerFigure.classList.remove('no-outfit');
       applyOutfit(Math.floor(Math.random() * OUTFITS.length));
     });
+
+    // Botão dedicado para rebolar ao máximo
+    btnRebolarMaximo.addEventListener('click', () => {
+      const twerkIndex = MUSIC_STYLES.findIndex(s => s.id === 'twerk');
+      if (twerkIndex !== -1) {
+        applyMusicStyle(twerkIndex);
+      }
+      if (!isPlaying) {
+        togglePlayPause();
+      }
+      createSparkles(25);
+    });
+
     btnPlayPause.addEventListener('click', togglePlayPause);
     searchInput.addEventListener('input', (e) => {
       searchTerm = e.target.value.toLowerCase().trim();
