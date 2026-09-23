@@ -52,7 +52,6 @@
       position: relative;
     }
 
-    /* Spotlights de Palco */
     .spotlight {
       position: fixed;
       top: -100px;
@@ -90,7 +89,6 @@
       100% { transform: rotate(12deg) scale(1.15); opacity: 0.5; }
     }
 
-    /* Cabeçalho */
     .app-header {
       text-align: center;
       margin-bottom: 1.25rem;
@@ -126,7 +124,6 @@
       max-width: 580px;
     }
 
-    /* Palco Central */
     .stage-wrapper {
       width: 100%;
       display: flex;
@@ -178,7 +175,6 @@
     .hud-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; white-space: nowrap; }
     .hud-value { font-size: 0.8rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Barra Rápida de Navegação de Fotos/Vídeos no Palco */
     .stage-media-nav {
       position: absolute;
       top: 78px;
@@ -225,7 +221,6 @@
       pointer-events: auto;
     }
 
-    /* Área da Dançarina */
     .dancer-container {
       position: relative;
       width: 100%;
@@ -271,6 +266,190 @@
     }
 
     .dancer-media.active { display: block; }
+
+    /* =========================================================
+       BAILARINA BOT (SVG animada)
+       ========================================================= */
+    .dancer-bot-svg {
+      width: 100%;
+      height: 100%;
+      display: none;
+      overflow: visible;
+    }
+    .dancer-bot-svg.active { display: block; }
+
+    /* Cada parte tem como pivô o topo-centro do seu próprio bbox */
+    .dancer-bot-svg .bot-part {
+      transform-box: fill-box;
+      transform-origin: 50% 0%;
+      will-change: transform;
+    }
+
+    /* ---- FUNK (rebolado, braços soltos) ---- */
+    .dancing-funk .bot-arm-left  { animation: botFunkArmL var(--dance-duration) cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .dancing-funk .bot-arm-right { animation: botFunkArmR var(--dance-duration) cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .dancing-funk .bot-leg-left  { animation: botFunkLegL var(--dance-duration) cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .dancing-funk .bot-leg-right { animation: botFunkLegR var(--dance-duration) cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+    @keyframes botFunkArmL {
+      0%, 100% { transform: rotate(-15deg); }
+      50%      { transform: rotate(45deg); }
+    }
+    @keyframes botFunkArmR {
+      0%, 100% { transform: rotate(15deg); }
+      50%      { transform: rotate(-45deg); }
+    }
+    @keyframes botFunkLegL {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-10deg); }
+    }
+    @keyframes botFunkLegR {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(10deg); }
+    }
+
+    /* ---- BALLET (gracioso, braços sobem) ---- */
+    .dancing-ballet .bot-arm-left  { animation: botBalletArmL var(--dance-duration) ease-in-out infinite alternate; }
+    .dancing-ballet .bot-arm-right { animation: botBalletArmR var(--dance-duration) ease-in-out infinite alternate; }
+    .dancing-ballet .bot-leg-left  { animation: botBalletLegL var(--dance-duration) ease-in-out infinite alternate; }
+    .dancing-ballet .bot-leg-right { animation: botBalletLegR var(--dance-duration) ease-in-out infinite alternate; }
+
+    @keyframes botBalletArmL {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(55deg); }
+    }
+    @keyframes botBalletArmR {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(-55deg); }
+    }
+    @keyframes botBalletLegL {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(-4deg); }
+    }
+    @keyframes botBalletLegR {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(4deg); }
+    }
+
+    /* ---- POP (bombeando, enérgico) ---- */
+    .dancing-pop .bot-arm-left  { animation: botPopArmL var(--dance-duration) ease-in-out infinite; }
+    .dancing-pop .bot-arm-right { animation: botPopArmR var(--dance-duration) ease-in-out infinite; }
+    .dancing-pop .bot-leg-left  { animation: botPopLegL var(--dance-duration) ease-in-out infinite; }
+    .dancing-pop .bot-leg-right { animation: botPopLegR var(--dance-duration) ease-in-out infinite; }
+
+    @keyframes botPopArmL {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(60deg); }
+    }
+    @keyframes botPopArmR {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-60deg); }
+    }
+    @keyframes botPopLegL {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-6deg); }
+    }
+    @keyframes botPopLegR {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(6deg); }
+    }
+
+    /* ---- HIP-HOP (angular, um braço sobe de cada vez) ---- */
+    .dancing-hiphop .bot-arm-left  { animation: botHipArmL var(--dance-duration) cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+    .dancing-hiphop .bot-arm-right { animation: botHipArmR var(--dance-duration) cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+    .dancing-hiphop .bot-leg-left  { animation: botHipLegL var(--dance-duration) cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+    .dancing-hiphop .bot-leg-right { animation: botHipLegR var(--dance-duration) cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+
+    @keyframes botHipArmL {
+      0%, 100% { transform: rotate(-8deg); }
+      50%      { transform: rotate(55deg); }
+    }
+    @keyframes botHipArmR {
+      0%, 100% { transform: rotate(55deg); }
+      50%      { transform: rotate(-8deg); }
+    }
+    @keyframes botHipLegL {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-12deg); }
+    }
+    @keyframes botHipLegR {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(12deg); }
+    }
+
+    /* ---- LATINO (quadril e braços suaves) ---- */
+    .dancing-latino .bot-arm-left  { animation: botLatArmL var(--dance-duration) ease-in-out infinite alternate; }
+    .dancing-latino .bot-arm-right { animation: botLatArmR var(--dance-duration) ease-in-out infinite alternate; }
+    .dancing-latino .bot-leg-left  { animation: botLatLegL var(--dance-duration) ease-in-out infinite alternate; }
+    .dancing-latino .bot-leg-right { animation: botLatLegR var(--dance-duration) ease-in-out infinite alternate; }
+
+    @keyframes botLatArmL {
+      0%   { transform: rotate(-5deg); }
+      100% { transform: rotate(40deg); }
+    }
+    @keyframes botLatArmR {
+      0%   { transform: rotate(40deg); }
+      100% { transform: rotate(-5deg); }
+    }
+    @keyframes botLatLegL {
+      0%   { transform: rotate(-6deg); }
+      100% { transform: rotate(6deg); }
+    }
+    @keyframes botLatLegR {
+      0%   { transform: rotate(6deg); }
+      100% { transform: rotate(-6deg); }
+    }
+
+    /* ---- SYNTHWAVE (robótico, simétrico) ---- */
+    .dancing-synthwave .bot-arm-left  { animation: botSynArmL var(--dance-duration) steps(4, end) infinite; }
+    .dancing-synthwave .bot-arm-right { animation: botSynArmR var(--dance-duration) steps(4, end) infinite; }
+    .dancing-synthwave .bot-leg-left  { animation: botSynLegL var(--dance-duration) steps(4, end) infinite; }
+    .dancing-synthwave .bot-leg-right { animation: botSynLegR var(--dance-duration) steps(4, end) infinite; }
+
+    @keyframes botSynArmL {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(0deg); }
+      50%  { transform: rotate(50deg); }
+      75%  { transform: rotate(50deg); }
+      100% { transform: rotate(0deg); }
+    }
+    @keyframes botSynArmR {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(0deg); }
+      50%  { transform: rotate(-50deg); }
+      75%  { transform: rotate(-50deg); }
+      100% { transform: rotate(0deg); }
+    }
+    @keyframes botSynLegL {
+      0%   { transform: rotate(0deg); }
+      50%  { transform: rotate(-8deg); }
+      100% { transform: rotate(0deg); }
+    }
+    @keyframes botSynLegR {
+      0%   { transform: rotate(0deg); }
+      50%  { transform: rotate(8deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* Idle (parada) — leve balanço para não ficar dura */
+    .dancer-bot-svg.idle .bot-part {
+      animation: botIdle 3.5s ease-in-out infinite;
+    }
+    .dancer-bot-svg.idle .bot-arm-left  { animation: botIdleArmL 3.5s ease-in-out infinite; }
+    .dancer-bot-svg.idle .bot-arm-right { animation: botIdleArmR 3.5s ease-in-out infinite; }
+
+    @keyframes botIdle {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(0deg); }
+    }
+    @keyframes botIdleArmL {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(4deg); }
+    }
+    @keyframes botIdleArmR {
+      0%, 100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-4deg); }
+    }
 
     .outfit-overlay {
       position: absolute;
@@ -320,7 +499,7 @@
     .audio-visualizer { width: 100%; height: 45px; }
 
     /* =========================================
-       DANÇAS (FUNK, BALÉ, POP, ETC.)
+       DANÇAS DO FIGURE (transform na figura inteira)
        ========================================= */
 
     .dancing-funk {
@@ -542,6 +721,12 @@
       transform: translateY(-1px);
     }
 
+    .tool-bot {
+      color: #c4b5fd;
+      background: rgba(139, 92, 246, 0.12);
+      border-color: rgba(139, 92, 246, 0.45);
+    }
+
     .tool-upload {
       color: #ff9cc3;
       background: rgba(255, 77, 141, 0.12);
@@ -603,7 +788,7 @@
     }
 
     /* =========================================
-       MODAIS: GUARDA-ROUPA & GALERIA
+       MODAIS
        ========================================= */
 
     .modal-overlay {
@@ -776,7 +961,6 @@
     .outfit-card-name { font-size: 0.82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .outfit-card-cat { font-size: 0.68rem; color: var(--text-muted); }
 
-    /* Galeria de Fotos e Vídeos */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -824,6 +1008,16 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .gallery-thumb-bot {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 60%, #2a1750 0%, #0d0918 80%);
+      font-size: 3rem;
     }
 
     .gallery-badge-type {
@@ -885,7 +1079,7 @@
     <header class="app-header">
       <div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & VÍDEOS ★</div>
       <h1 class="app-title">Bailarina Virtual</h1>
-      <p class="app-subtitle">Galeria completa de fotos e vídeos, 100 tipos de biquínis e Funk Carioca!</p>
+      <p class="app-subtitle">Bot dançarina animada, galeria de fotos e vídeos, 100 biquínis e Funk Carioca!</p>
     </header>
 
     <main class="stage-wrapper">
@@ -909,16 +1103,131 @@
         </div>
 
         <div class="stage-media-nav">
-          <button class="media-nav-btn" id="btnPrevMedia" title="Foto/Vídeo Anterior">◀</button>
-          <span class="media-nav-indicator" id="mediaIndicator">Mídia 1/8 • Foto</span>
-          <button class="media-nav-btn" id="btnNextMedia" title="Próxima Foto/Vídeo">▶</button>
+          <button class="media-nav-btn" id="btnPrevMedia" title="Mídia Anterior">◀</button>
+          <span class="media-nav-indicator" id="mediaIndicator">Mídia 1/9 • Bot</span>
+          <button class="media-nav-btn" id="btnNextMedia" title="Próxima Mídia">▶</button>
         </div>
 
         <div class="dancer-container" id="dancerContainer">
           <div class="stage-shadow" id="stageShadow"></div>
 
           <div class="dancer-figure" id="dancerFigure">
-            <img alt="Bailarina Dançando" id="dancerImg" class="dancer-media active" />
+            <!-- === BAILARINA BOT (SVG animada) === -->
+            <svg class="dancer-bot-svg dancer-media" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot dançando">
+              <defs>
+                <radialGradient id="botSkin" cx="50%" cy="35%">
+                  <stop offset="0%" stop-color="#ffd9be"/>
+                  <stop offset="100%" stop-color="#e8a882"/>
+                </radialGradient>
+                <linearGradient id="botSkinLeg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f5c4a4"/>
+                  <stop offset="100%" stop-color="#e0a080"/>
+                </linearGradient>
+                <linearGradient id="botHair" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4a2c1a"/>
+                  <stop offset="100%" stop-color="#1a0e08"/>
+                </linearGradient>
+              </defs>
+
+              <!-- CABELO (atrás) -->
+              <path d="M 87 62 Q 78 20 125 15 Q 172 20 163 62 Q 175 115 158 158 Q 150 132 158 90 Q 150 42 125 42 Q 100 42 92 90 Q 100 132 92 158 Q 75 115 87 62 Z"
+                    fill="url(#botHair)"/>
+
+              <!-- BRAÇO ESQUERDO (atrás do corpo) -->
+              <g class="bot-part bot-arm bot-arm-left">
+                <rect x="68" y="125" width="18" height="95" rx="9" fill="url(#botSkinLeg)"/>
+                <circle cx="77" cy="222" r="11" fill="#f5c4a4"/>
+              </g>
+
+              <!-- PERNAS -->
+              <g class="bot-part bot-leg bot-leg-left">
+                <rect x="100" y="205" width="24" height="135" rx="12" fill="url(#botSkinLeg)"/>
+                <ellipse cx="112" cy="342" rx="15" ry="9" fill="#e0a080"/>
+              </g>
+              <g class="bot-part bot-leg bot-leg-right">
+                <rect x="126" y="205" width="24" height="135" rx="12" fill="url(#botSkinLeg)"/>
+                <ellipse cx="138" cy="342" rx="15" ry="9" fill="#e0a080"/>
+              </g>
+
+              <!-- TORSO -->
+              <path d="M 88 122
+                       C 82 148 96 158 100 178
+                       C 100 195 90 202 92 212
+                       Q 110 222 125 220
+                       Q 140 222 158 212
+                       C 160 202 150 195 150 178
+                       C 154 158 168 148 162 122 Z"
+                    fill="url(#botSkin)"/>
+
+              <!-- BIQUÍNI PARTE DE BAIXO -->
+              <path id="botBikiniBottom"
+                    d="M 92 208
+                       Q 110 220 125 218
+                       Q 140 220 158 208
+                       Q 152 232 140 236
+                       Q 125 244 110 236
+                       Q 98 232 92 208 Z"
+                    fill="#ff4d8d"/>
+
+              <!-- BIQUÍNI PARTE DE CIMA -->
+              <path id="botBikiniTop"
+                    d="M 90 138
+                       Q 100 152 115 150
+                       Q 122 142 125 142
+                       Q 128 142 135 150
+                       Q 150 152 160 138
+                       Q 155 118 125 118
+                       Q 95 118 90 138 Z"
+                    fill="#ff4d8d"/>
+              <!-- Alcinhas -->
+              <path d="M 100 132 Q 115 128 125 128" stroke="#ff4d8d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <path d="M 150 132 Q 135 128 125 128" stroke="#ff4d8d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+              <!-- BRAÇO DIREITO (na frente) -->
+              <g class="bot-part bot-arm bot-arm-right">
+                <rect x="164" y="125" width="18" height="95" rx="9" fill="url(#botSkinLeg)"/>
+                <circle cx="173" cy="222" r="11" fill="#f5c4a4"/>
+              </g>
+
+              <!-- PESCOÇO -->
+              <rect x="115" y="95" width="20" height="32" rx="6" fill="#f5c4a4"/>
+
+              <!-- CABEÇA -->
+              <ellipse cx="125" cy="65" rx="35" ry="42" fill="#f5c4a4"/>
+
+              <!-- CABELO (franja e mechas) -->
+              <path d="M 90 55 Q 92 22 125 18 Q 158 22 160 55 Q 152 38 138 42 Q 125 30 112 42 Q 98 38 90 55 Z" fill="url(#botHair)"/>
+              <path d="M 90 55 Q 82 85 88 118 Q 96 96 96 75 Z" fill="url(#botHair)"/>
+              <path d="M 160 55 Q 168 85 162 118 Q 154 96 154 75 Z" fill="url(#botHair)"/>
+
+              <!-- OLHOS -->
+              <ellipse cx="112" cy="63" rx="4.5" ry="5.5" fill="#1a0e08"/>
+              <ellipse cx="138" cy="63" rx="4.5" ry="5.5" fill="#1a0e08"/>
+              <circle cx="113.5" cy="61" r="1.6" fill="#fff"/>
+              <circle cx="139.5" cy="61" r="1.6" fill="#fff"/>
+
+              <!-- CÍLIOS -->
+              <path d="M 106 60 Q 112 54 118 59" stroke="#1a0e08" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <path d="M 132 59 Q 138 54 144 60" stroke="#1a0e08" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+              <!-- SOBRANCELHAS -->
+              <path d="M 105 51 Q 112 47 118 50" stroke="#2a1810" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <path d="M 132 50 Q 138 47 145 51" stroke="#2a1810" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+              <!-- NARIZ -->
+              <path d="M 125 68 Q 122 76 124 77 Q 126 77 127 76" stroke="#d09070" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+              <!-- BOCA SORRIDENTE -->
+              <path d="M 116 86 Q 125 94 134 86" stroke="#c9506a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <path d="M 118 87 Q 125 91 132 87" fill="#ff8aa8" opacity="0.6"/>
+
+              <!-- BLUSH -->
+              <ellipse cx="105" cy="80" rx="6" ry="3" fill="#ff8aa8" opacity="0.45"/>
+              <ellipse cx="145" cy="80" rx="6" ry="3" fill="#ff8aa8" opacity="0.45"/>
+            </svg>
+
+            <!-- MÍDIA (foto ou vídeo) -->
+            <img alt="Bailarina Dançando" id="dancerImg" class="dancer-media" />
             <video id="dancerVideo" class="dancer-media" loop playsinline muted></video>
             
             <div class="outfit-overlay" id="outfitOverlay"></div>
@@ -975,6 +1284,9 @@
       </div>
 
       <div class="quick-toolbar">
+        <button class="tool-btn tool-bot" id="btnShowBot">
+          <span>🤖 Mostrar Bailarina Bot</span>
+        </button>
         <button class="tool-btn" id="btnRandomOutfit">
           <span>🎲 Biquíni Aleatório</span>
         </button>
@@ -997,7 +1309,6 @@
       </div>
     </section>
 
-    <!-- Modal 1: Guarda-Roupa com 100 Biquínis -->
     <div class="modal-overlay" id="wardrobeModal">
       <div class="modal-window">
         <div class="modal-header">
@@ -1017,13 +1328,12 @@
       </div>
     </div>
 
-    <!-- Modal 2: Galeria de Fotos e Vídeos -->
     <div class="modal-overlay" id="galleryModal">
       <div class="modal-window">
         <div class="modal-header">
           <div class="modal-title">
             <span>📸 Galeria de Fotos & Vídeos da Dançarina</span>
-            <span class="badge-count" id="galleryCount">8 mídias</span>
+            <span class="badge-count" id="galleryCount">9 mídias</span>
           </div>
           <button class="modal-close-btn" id="btnCloseGallery">&times;</button>
         </div>
@@ -1035,7 +1345,7 @@
     </div>
 
     <footer class="app-footer">
-      <p>Bailarina Virtual • Suba suas fotos como <code>dancer.jpg</code>, <code>dancer2.jpg</code> e seus vídeos como <code>video1.mp4</code> no GitHub!</p>
+      <p>Bailarina Virtual • Bot dançarina inclusa 🤖 • Suba suas fotos como <code>dancer.jpg</code> e vídeos como <code>video1.mp4</code> no GitHub!</p>
     </footer>
   </div>
 
@@ -1044,7 +1354,6 @@
   <script>
     /* =========================================================
        POLYFILL: CanvasRenderingContext2D.roundRect
-       (necessário para navegadores antigos)
        ========================================================= */
     if (typeof CanvasRenderingContext2D !== 'undefined' &&
         !CanvasRenderingContext2D.prototype.roundRect) {
@@ -1069,7 +1378,6 @@
 
     /* =========================================================
        UTILITÁRIO SEGURO DE IMAGEM/VÍDEO
-       Evita loop infinito de onerror quando o fallback também falha.
        ========================================================= */
     function setMediaSrc(el, src, fallback) {
       el.onerror = null;
@@ -1195,8 +1503,9 @@
       {"id": "bikini-100", "name": "100. Hot Pants Prata Cyberpunk", "category": "Cintura Alta", "icon": "🪞", "desc": "Cintura alta metalizada prateada com brilho de espelho", "spotlightLeft": "#cbd5e1", "spotlightRight": "#64748b", "glowColor": "rgba(203, 213, 225, 0.55)", "filter": "contrast(1.35) brightness(1.12) saturate(0.6)", "overlay": "linear-gradient(45deg, rgba(255,255,255,0.4), transparent)", "blend": "overlay"}
     ];
 
-    // 2. DADOS DA GALERIA DE FOTOS E VÍDEOS
+    // 2. GALERIA — com a BOT como item #1 (padrão)
     let GALLERY = [
+      {"id": "bot-1", "title": "Bailarina Bot", "type": "bot", "src": "", "fallback": "", "tag": "Bot Dançarina"},
       {"id": "media-1", "title": "Foto Principal (Rosa)", "type": "image", "src": "dancer.jpg", "fallback": "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80", "tag": "Pose Original"},
       {"id": "media-2", "title": "Foto 2 (Pose Ballet)", "type": "image", "src": "dancer2.jpg", "fallback": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80", "tag": "Ballet Clássico"},
       {"id": "media-3", "title": "Foto 3 (Praia Sol)", "type": "image", "src": "dancer3.jpg", "fallback": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80", "tag": "Verão Biquíni"},
@@ -1207,10 +1516,10 @@
       {"id": "media-8", "title": "Vídeo 3 (Giro de Balé)", "type": "video", "src": "video3.mp4", "fallback": "https://assets.mixkit.co/videos/preview/mixkit-ballerina-doing-a-pirouette-on-stage-41014-large.mp4", "tag": "Vídeo Dança"}
     ];
 
-    // 3. ESTILOS DE MÚSICA & DANÇA (COM FUNK!)
+    // 3. ESTILOS DE MÚSICA & DANÇA
     const MUSIC_STYLES = [
-      { id: 'funk', name: 'Funk Carioca', sub: 'Batidão 130 BPM & Tamborzão', icon: '🔥', bpm: 130, danceClass: 'dancing-funk', danceDuration: 0.92 },
-      { id: 'ballet', name: 'Balé Clássico', sub: 'Valsa & Harmonia', icon: '🎼', bpm: 88, danceClass: 'dancing-ballet', danceDuration: 1.6 },
+      { id: 'funk', name: 'Funk Carioca', sub: 'Batidão 130 BPM & Tamborzão', icon: '🔥', bpm: 130, dancetxClass: 'dancing-funk', danceDuration: .state0.92 },
+      { id: 'ballet', name: 'Balé Clássico', sub: ' ===Valsa & Harmonia '', icon: '🎼', bpm:s 88, danceClass: 'dancing-baluspendedlet', danceDuration: 1.6 },
       { id: 'pop', name: 'Pop & Dance Club', sub: 'Batida 4x4 Eletrônica', icon: '🪩', bpm: 124, danceClass: 'dancing-pop', danceDuration: 0.96 },
       { id: 'hiphop', name: 'Hip-Hop Urban Beat', sub: 'Groove & Bumbo Marcado', icon: '🎧', bpm: 94, danceClass: 'dancing-hiphop', danceDuration: 1.25 },
       { id: 'latino', name: 'Salsa & Ritmo Latino', sub: 'Clave e Percussão', icon: '🎺', bpm: 112, danceClass: 'dancing-latino', danceDuration: 1.05 },
@@ -1226,10 +1535,11 @@
     let activeCategory = 'Todos';
     let activeGalleryTab = 'Todas';
     let searchTerm = '';
-    let uploadedObjectUrls = []; // para revogar depois
+    let uploadedObjectUrls = [];
 
     // Elementos DOM
     const dancerFigure = document.getElementById('dancerFigure');
+    const dancerBot = document.getElementById('dancerBot');
     const dancerImg = document.getElementById('dancerImg');
     const dancerVideo = document.getElementById('dancerVideo');
     const outfitOverlay = document.getElementById('outfitOverlay');
@@ -1245,6 +1555,7 @@
     const btnPrevMedia = document.getElementById('btnPrevMedia');
     const btnNextMedia = document.getElementById('btnNextMedia');
     const btnNextMediaToolbar = document.getElementById('btnNextMediaToolbar');
+    const btnShowBot = document.getElementById('btnShowBot');
     const btnChangeOutfit = document.getElementById('btnChangeOutfit');
     const btnChangeMusic = document.getElementById('btnChangeMusic');
     const btnRandomOutfit = document.getElementById('btnRandomOutfit');
@@ -1274,14 +1585,16 @@
     const sparklesContainer = document.getElementById('sparkles');
     const visualizerCanvas = document.getElementById('visualizerCanvas');
     const canvasCtx = visualizerCanvas.getContext('2d');
+    const botBikiniTop = document.getElementById('botBikiniTop');
+    const botBikiniBottom = document.getElementById('botBikiniBottom');
 
-    // 5. MOTOR DE ÁUDIO WEB AUDIO API
+    // 5. ÁUDIO
     let audioCtx = null;
     let masterGain = null;
     let analyser = null;
     let beatTimer = null;
     let step = 0;
-    let customAudioSourceNode = null; // para conectar MP3 ao analyser
+    let customAudioSourceNode = null;
 
     function initAudio() {
       if (audioCtx) return;
@@ -1298,16 +1611,13 @@
       analyser.connect(audioCtx.destination);
     }
 
-    // Conecta o <audio> do usuário ao analyser (só pode ser feito UMA vez por elemento)
     function connectCustomAudioToAnalyser() {
-      if (customAudioSourceNode) return; // já conectado
+      if (customAudioSourceNode) return;
       initAudio();
       try {
         customAudioSourceNode = audioCtx.createMediaElementSource(customAudioPlayer);
-        // O <audio> normal agora precisa rotear por: source -> masterGain -> analyser -> destination
         customAudioSourceNode.connect(masterGain);
       } catch (e) {
-        // Fallback: alguns navegadores reclamam se já foi criado
         console.warn('Não foi possível conectar MP3 ao analyser:', e);
       }
     }
@@ -1319,10 +1629,8 @@
       osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.35);
       gain.gain.setValueAtTime(0.9, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.35);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.35);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.35);
     }
 
     function playSnare(time) {
@@ -1333,10 +1641,8 @@
       osc.frequency.exponentialRampToValueAtTime(50, time + 0.15);
       gain.gain.setValueAtTime(0.4, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.2);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.2);
     }
 
     function playHiHat(time, accent = false) {
@@ -1346,10 +1652,8 @@
       osc.frequency.setValueAtTime(8000, time);
       gain.gain.setValueAtTime(accent ? 0.22 : 0.1, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.06);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.06);
     }
 
     function playFunkTamborzaoKick(time) {
@@ -1359,10 +1663,8 @@
       osc.frequency.exponentialRampToValueAtTime(32, time + 0.28);
       gain.gain.setValueAtTime(1.0, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.3);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.3);
     }
 
     function playFunkSnare(time) {
@@ -1373,10 +1675,8 @@
       osc.frequency.exponentialRampToValueAtTime(120, time + 0.12);
       gain.gain.setValueAtTime(0.5, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.14);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.14);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.14);
     }
 
     function playFunkTom(time) {
@@ -1386,10 +1686,8 @@
       osc.frequency.exponentialRampToValueAtTime(110, time + 0.15);
       gain.gain.setValueAtTime(0.6, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.15);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.15);
     }
 
     function playFunkStab(freq, time) {
@@ -1399,10 +1697,8 @@
       osc.frequency.setValueAtTime(freq, time);
       gain.gain.setValueAtTime(0.2, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.12);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + 0.12);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + 0.12);
     }
 
     function playSynthNote(freq, time, duration = 0.3, type = 'sine', vol = 0.2) {
@@ -1412,10 +1708,8 @@
       osc.frequency.setValueAtTime(freq, time);
       gain.gain.setValueAtTime(vol, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(time);
-      osc.stop(time + duration);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(time); osc.stop(time + duration);
     }
 
     function stepMusicBeat() {
@@ -1482,7 +1776,7 @@
         return;
       }
       initAudio();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (audioC') audioCtx.resume();
       if (beatTimer) clearInterval(beatTimer);
 
       const style = MUSIC_STYLES[currentMusicIndex];
@@ -1498,27 +1792,39 @@
       if (customAudioLoaded) customAudioPlayer.pause();
     }
 
-    // 6. APLICAÇÃO DE MÍDIA (FOTO OU VÍDEO NO PALCO)
+    // 6. APLICAÇÃO DE MÍDIA (BOT, FOTO OU VÍDEO)
     function applyMedia(index) {
       currentMediaIndex = ((index % GALLERY.length) + GALLERY.length) % GALLERY.length;
       const media = GALLERY[currentMediaIndex];
 
-      mediaIndicator.textContent = `Mídia ${currentMediaIndex + 1}/${GALLERY.length} • ${media.type === 'video' ? 'Vídeo' : 'Foto'}`;
+      const typeLabel = media.type === 'video' ? 'Vídeo' : media.type === 'bot' ? 'Bot' : 'Foto';
+      mediaIndicator.textContent = `Mídia ${currentMediaIndex + 1}/${GALLERY.length} • ${typeLabel}`;
 
-      if (media.type === 'video') {
-        dancerImg.classList.remove('active');
+      // Sempre esconde tudo primeiro
+      dancerBot.classList.remove('active');
+      dancerImg.classList.remove('active');
+      dancerVideo.classList.remove('active');
+      try { dancerVideo.pause(); } catch (e) {}
+      dancerVideo.removeAttribute('src');
+
+      if (media.type === 'bot') {
+        dancerBot.classList.add('active');
+        if (!isPlaying) {
+          // estado idle (parada, leve balanço)
+          dancerBot.classList.add('idle');
+        } else {
+          dancerBot.classList.remove('idle');
+        }
+      } else if (media.type === 'video') {
         setMediaSrc(dancerVideo, media.src, media.fallback);
         dancerVideo.classList.add('active');
         if (isPlaying) dancerVideo.play().catch(() => {});
       } else {
-        try { dancerVideo.pause(); } catch (e) {}
-        dancerVideo.removeAttribute('src');
-        dancerVideo.classList.remove('active');
         setMediaSrc(dancerImg, media.src, media.fallback);
         dancerImg.classList.add('active');
       }
 
-      // Marca o card correto pelo ID (não pelo índice, pois o filtro muda a lista)
+      // Atualiza o card ativo da galeria (por ID, não por índice)
       document.querySelectorAll('.gallery-card').forEach(card => {
         card.classList.toggle('active', card.dataset.mediaId === media.id);
       });
@@ -1526,19 +1832,31 @@
       createSparkles(12);
     }
 
-    // 7. TROCA DE BIQUÍNIS (100 MODELOS)
+    // 7. TROCA DE BIQUÍNIS
     function applyOutfit(index) {
       currentOutfitIndex = ((index % OUTFITS.length) + OUTFITS.length) % OUTFITS.length;
       const outfit = OUTFITS[currentOutfitIndex];
 
+      // Aplica filtro nas mídias (não no bot, pra não tingir a pele)
       dancerImg.style.filter = outfit.filter;
       dancerVideo.style.filter = outfit.filter;
+
       outfitOverlay.style.background = outfit.overlay;
       outfitOverlay.style.mixBlendMode = outfit.blend;
 
       spotLeft.style.background = `linear-gradient(180deg, ${outfit.spotlightLeft} 0%, transparent 100%)`;
       spotRight.style.background = `linear-gradient(180deg, ${outfit.spotlightRight} 0%, transparent 100%)`;
       dancerFigure.style.filter = `drop-shadow(0 10px 25px ${outfit.glowColor})`;
+
+      // Recolore o biquíni do bot!
+      if (botBikiniTop && botBikiniBottom) {
+        botBikiniTop.setAttribute('fill', outfit.spotlightLeft);
+        botBikiniBottom.setAttribute('fill', outfit.spotlightLeft);
+        // Alcinhas do topo também
+        document.querySelectorAll('#dancerBot path[stroke="#ff4d8d"]').forEach(p => {
+          p.setAttribute('stroke', outfit.spotlightLeft);
+        });
+      }
 
       hudOutfitIcon.textContent = outfit.icon;
       currentOutfitCategory.textContent = outfit.category;
@@ -1591,6 +1909,7 @@
         playBtnTitle.textContent = 'Pausar Dança';
         dancerFigure.classList.add(style.danceClass);
         stageShadow.classList.add('dancing-shadow');
+        dancerBot.classList.remove('idle');
         if (dancerVideo.classList.contains('active')) {
           dancerVideo.play().catch(() => {});
         }
@@ -1601,6 +1920,9 @@
         playBtnTitle.textContent = 'Tocar Música & Dançar';
         MUSIC_STYLES.forEach(s => dancerFigure.classList.remove(s.danceClass));
         stageShadow.classList.remove('dancing-shadow');
+        if (dancerBot.classList.contains('active')) {
+          dancerBot.classList.add('idle');
+        }
         if (dancerVideo.classList.contains('active')) {
           try { dancerVideo.pause(); } catch (e) {}
         }
@@ -1608,7 +1930,7 @@
       }
     }
 
-    // 10. BRILHO & PARTÍCULAS
+    // 10. BRILHO
     function createSparkles(amount = 8) {
       for (let i = 0; i < amount; i++) {
         const sparkle = document.createElement('div');
@@ -1622,7 +1944,7 @@
       }
     }
 
-    // 11. VISUALIZADOR DE ÁUDIO
+    // 11. VISUALIZADOR
     function drawVisualizer() {
       requestAnimationFrame(drawVisualizer);
       const width = visualizerCanvas.width = visualizerCanvas.clientWidth;
@@ -1673,7 +1995,7 @@
       }
     }
 
-    // 12. RENDERIZAÇÃO DA GALERIA DE FOTOS E VÍDEOS
+    // 12. GALERIA
     function renderGallery() {
       galleryGrid.innerHTML = '';
 
@@ -1681,6 +2003,7 @@
         if (activeGalleryTab === 'Todas') return true;
         if (activeGalleryTab === 'Fotos') return m.type === 'image';
         if (activeGalleryTab === 'Vídeos') return m.type === 'video';
+        if (activeGalleryTab === 'Bot') return m.type === 'bot';
         return true;
       });
 
@@ -1696,26 +2019,35 @@
         const wrapper = document.createElement('div');
         wrapper.className = 'gallery-thumb-wrapper';
 
-        let thumbEl;
-        if (media.type === 'video') {
-          thumbEl = document.createElement('video');
-          thumbEl.className = 'gallery-thumb-media';
-          thumbEl.muted = true;
-          thumbEl.loop = true;
-          thumbEl.playsInline = true;
-          thumbEl.addEventListener('mouseover', () => thumbEl.play().catch(() => {}));
-          thumbEl.addEventListener('mouseout', () => { try { thumbEl.pause(); } catch(e){} });
+        if (media.type === 'bot') {
+          const botThumb = document.createElement('div');
+          botThumb.className = 'gallery-thumb-bot';
+          botThumb.textContent = '🤖💃';
+          wrapper.appendChild(botThumb);
         } else {
-          thumbEl = document.createElement('img');
-          thumbEl.className = 'gallery-thumb-media';
-          thumbEl.alt = media.title;
+          let thumbEl;
+          if (media.type === 'video') {
+            thumbEl = document.createElement('video');
+            thumbEl.className = 'gallery-thumb-media';
+            thumbEl.muted = true;
+            thumbEl.loop = true;
+            thumbEl.playsInline = true;
+            thumbEl.addEventListener('mouseover', () => thumbEl.play().catch(() => {}));
+            thumbEl.addEventListener('mouseout', () => { try { thumbEl.pause(); } catch(e){} });
+          } else {
+            thumbEl = document.createElement('img');
+            thumbEl.className = 'gallery-thumb-media';
+            thumbEl.alt = media.title;
+          }
+          setMediaSrc(thumbEl, media.src, media.fallback);
+          wrapper.appendChild(thumbEl);
         }
-        setMediaSrc(thumbEl, media.src, media.fallback);
-        wrapper.appendChild(thumbEl);
 
         const badge = document.createElement('span');
         badge.className = 'gallery-badge-type';
-        badge.textContent = media.type === 'video' ? '🎬 Vídeo' : '📷 Foto';
+        badge.textContent = media.type === 'video' ? '🎬 Vídeo'
+                          : media.type === 'bot'   ? '🤖 Bot'
+                          : '📷 Foto';
         wrapper.appendChild(badge);
 
         const info = document.createElement('div');
@@ -1742,7 +2074,7 @@
     }
 
     function setupGalleryFilters() {
-      const tabs = ['Todas', 'Fotos', 'Vídeos'];
+      const tabs = ['Todas', 'Bot', 'Fotos', 'Vídeos'];
       galleryFiltersContainer.innerHTML = '';
       tabs.forEach(tab => {
         const btn = document.createElement('button');
@@ -1758,7 +2090,7 @@
       });
     }
 
-    // 13. CATÁLOGO DOS 100 BIQUÍNIS
+    // 13. GUARDA-ROUPA
     function renderOutfitsGrid() {
       outfitsGridContainer.innerHTML = '';
 
@@ -1820,7 +2152,7 @@
       });
     }
 
-    // 14. UPLOAD DE NOVAS FOTOS E VÍDEOS PARA A GALERIA
+    // 14. UPLOAD
     dancerUpload.addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
       if (!files.length) return;
@@ -1843,7 +2175,6 @@
       applyMedia(GALLERY.length - 1);
       renderGallery();
       createSparkles(18);
-      // limpa o input para permitir subir o mesmo arquivo de novo
       e.target.value = '';
     });
 
@@ -1853,14 +2184,12 @@
       const url = URL.createObjectURL(file);
       uploadedObjectUrls.push(url);
 
-      // Revoga URL anterior se houver
       if (customAudioPlayer.dataset.prevUrl) {
         URL.revokeObjectURL(customAudioPlayer.dataset.prevUrl);
       }
       customAudioPlayer.dataset.prevUrl = url;
       customAudioPlayer.src = url;
 
-      // Conecta ao analyser (uma única vez) para o visualizador reagir
       connectCustomAudioToAnalyser();
 
       customAudioLoaded = true;
@@ -1871,7 +2200,6 @@
       e.target.value = '';
     });
 
-    // Quando o MP3 termina, para a dança e reseta o botão
     customAudioPlayer.addEventListener('ended', () => {
       if (isPlaying) {
         isPlaying = false;
@@ -1879,6 +2207,9 @@
         playBtnTitle.textContent = 'Tocar Música & Dançar';
         MUSIC_STYLES.forEach(s => dancerFigure.classList.remove(s.danceClass));
         stageShadow.classList.remove('dancing-shadow');
+        if (dancerBot.classList.contains('active')) {
+          dancerBot.classList.add('idle');
+        }
       }
     });
 
@@ -1907,7 +2238,6 @@
       if (e.target === wardrobeModal || e.target === galleryModal) closeAllModals();
     });
 
-    // Fecha modais com ESC
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeAllModals();
     });
@@ -1915,6 +2245,12 @@
     btnPrevMedia.addEventListener('click', () => applyMedia(currentMediaIndex - 1));
     btnNextMedia.addEventListener('click', () => applyMedia(currentMediaIndex + 1));
     btnNextMediaToolbar.addEventListener('click', () => applyMedia(currentMediaIndex + 1));
+
+    // Botão "Mostrar Bailarina Bot"
+    btnShowBot.addEventListener('click', () => {
+      const botIdx = GALLERY.findIndex(m => m.type === 'bot');
+      if (botIdx >= 0) applyMedia(botIdx);
+    });
 
     btnChangeOutfit.addEventListener('click', () => applyOutfit(currentOutfitIndex + 1));
     btnChangeMusic.addEventListener('click', () => applyMusicStyle(currentMusicIndex + 1));
@@ -1930,7 +2266,6 @@
       renderOutfitsGrid();
     });
 
-    // Libera recursos ao sair
     window.addEventListener('beforeunload', () => {
       uploadedObjectUrls.forEach(url => URL.revokeObjectURL(url));
     });
@@ -1943,7 +2278,9 @@
       renderGallery();
       applyOutfit(0);
       applyMusicStyle(0);
-      applyMedia(0);
+      applyMedia(0); // começa com a Bot ativa
+      // estado inicial idle do bot
+      dancerBot.classList.add('idle');
       drawVisualizer();
     });
   </script>
