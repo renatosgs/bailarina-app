@@ -1,124 +1,120 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Bailarina Virtual IA 3D - Robô Removedor de Fundo & Vida Real</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<!-- Three.js 3D Engine -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bailarina Virtual 3D - Robô Invisível com IA & Chat de Posições</title>
+
+<!-- Three.js r128 via CDN seguro -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
 :root {
-  --bg-dark: #07050d;
-  --bg-card: rgba(18, 14, 32, 0.9);
-  --bg-card-subtle: rgba(28, 22, 48, 0.7);
-  --primary-accent: #ff3377;
-  --primary-glow: rgba(255, 51, 119, 0.45);
+  --bg-dark: #07070c;
+  --panel-bg: rgba(16, 14, 26, 0.94);
+  --primary-accent: #ff007f;
   --secondary-accent: #00f0ff;
-  --gold-accent: #ffd166;
+  --gold-accent: #f59e0b;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --border-subtle: rgba(255, 255, 255, 0.12);
-  --border-glow: rgba(255, 51, 119, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
-  font-family: 'Outfit', sans-serif;
-  background: var(--bg-dark);
+  background-color: var(--bg-dark);
   color: var(--text-main);
+  font-family: var(--font-family);
   min-height: 100vh;
   overflow-x: hidden;
-  display: flex;
-  justify-content: center;
-  background-image: 
-    radial-gradient(circle at 50% 0%, rgba(138, 43, 226, 0.35), transparent 60%),
-    radial-gradient(circle at 10% 40%, rgba(255, 51, 119, 0.2), transparent 50%),
-    radial-gradient(circle at 90% 70%, rgba(0, 240, 255, 0.18), transparent 50%);
-}
-
-.app-container {
-  width: 100%;
-  max-width: 980px;
-  min-height: 100vh;
-  padding: 0.8rem 0.7rem 3.5rem;
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
 }
 
 .spotlight {
   position: fixed;
-  top: -120px;
-  width: 360px;
-  height: 900px;
+  top: 0;
+  width: 50vw;
+  height: 50vh;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.4;
-  filter: blur(60px);
+  z-index: 0;
+  filter: blur(90px);
+  opacity: 0.18;
 }
-.spotlight-left {
-  left: 5%;
-  background: linear-gradient(180deg, #ff3377, transparent);
-  animation: sweepL 7s ease-in-out infinite alternate;
-}
-.spotlight-right {
-  right: 5%;
-  background: linear-gradient(180deg, #7928ca, transparent);
-  animation: sweepR 8s ease-in-out infinite alternate;
-}
-@keyframes sweepL { 0%{ transform: rotate(-25deg) scale(0.9); opacity:0.3; } 100%{ transform: rotate(-10deg) scale(1.1); opacity:0.55; } }
-@keyframes sweepR { 0%{ transform: rotate(25deg) scale(0.9); opacity:0.3; } 100%{ transform: rotate(10deg) scale(1.1); opacity:0.55; } }
+.spotlight-left { left: 0; background: radial-gradient(circle, var(--primary-accent), transparent 70%); }
+.spotlight-right { right: 0; background: radial-gradient(circle, var(--secondary-accent), transparent 70%); }
 
-.app-header { text-align: center; margin-bottom: 0.75rem; z-index: 10; }
+.app-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0.75rem;
+  gap: 0.8rem;
+}
+
+.app-header {
+  text-align: center;
+  padding: 0.4rem 0.5rem 0.2rem;
+}
 .header-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.28rem 0.85rem;
-  background: rgba(255, 51, 119, 0.15);
-  border: 1px solid rgba(255, 51, 119, 0.4);
+  padding: 0.2rem 0.65rem;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.35);
   border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: #ff75a0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--secondary-accent);
   text-transform: uppercase;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 .app-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.1rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #ffffff 30%, #ff8ab2 80%, #ffd166 100%);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 40%, var(--primary-accent) 80%, var(--secondary-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 35px rgba(255, 51, 119, 0.3);
 }
-.app-subtitle { font-size: 0.84rem; color: var(--text-muted); max-width: 600px; }
+.app-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
 
-/* PALCO PRINCIPAL 3D REAL */
-.stage-wrapper { width: 100%; display: flex; justify-content: center; z-index: 10; margin-bottom: 0.85rem; }
+.stage-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: radial-gradient(circle at center 35%, #181528 0%, #08070d 100%);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.7), inset 0 0 50px rgba(0, 240, 255, 0.05);
+}
+
 .stage-frame {
   position: relative;
   width: 100%;
-  max-width: 480px;
-  height: 590px;
-  background: radial-gradient(circle at 50% 25%, #1f143a 0%, #070512 85%);
-  border-radius: 28px;
-  border: 1px solid var(--border-glow);
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.9), 0 0 50px rgba(255, 51, 119, 0.28);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.85rem;
+  height: 520px;
+  touch-action: none;
+}
+@media (max-width: 600px) {
+  .stage-frame { height: 460px; }
 }
 
 #webglCanvas {
@@ -127,357 +123,563 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 5;
-  cursor: grab;
-  touch-action: none;
+  display: block;
 }
-#webglCanvas:active { cursor: grabbing; }
 
-/* LASER DE REMOÇÃO DE FUNDO */
-.ai-scan-overlay {
+.biometric-scanner-grid {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 28;
   display: none;
+  background: 
+    linear-gradient(rgba(0, 240, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.07) 1px, transparent 1px);
+  background-size: 25px 25px;
+  z-index: 15;
 }
-.ai-scan-overlay.active { display: block; }
-.ai-scan-beam {
+.biometric-scanner-grid.active { display: block; }
+
+.biometric-laser-beam {
   position: absolute;
   left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #00f0ff, #fff, #ff3377, transparent);
-  box-shadow: 0 0 20px #00f0ff, 0 0 40px #ff3377;
-  animation: scanSweep 1.6s ease-in-out infinite alternate;
+  right: 0;
+  height: 3px;
+  background: #00f0ff;
+  box-shadow: 0 0 15px #00f0ff, 0 0 35px #00f0ff;
+  top: 10%;
+  animation: scanLaser 1.5s ease-in-out infinite alternate;
 }
-@keyframes scanSweep {
-  0% { top: 5%; }
-  100% { top: 92%; }
+@keyframes scanLaser {
+  0% { top: 8%; opacity: 0.4; }
+  100% { top: 92%; opacity: 1; }
 }
 
-.stage-hud-top {
-  width: 100%;
+.biometric-telemetry-box {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(8, 7, 15, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  font-size: 0.68rem;
+  color: #00f0ff;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 30;
-  gap: 0.5rem;
-  pointer-events: none;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 25;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+.telemetry-row { display: flex; justify-content: space-between; gap: 0.6rem; }
+.telemetry-val { color: #fff; font-weight: 700; }
+
+.stage-hud-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 0.4rem;
+  z-index: 20;
 }
 .hud-chip {
-  background: rgba(10, 8, 20, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0.3rem 0.75rem;
-  border-radius: 12px;
+  background: rgba(10, 8, 20, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.74rem;
-  font-weight: 700;
+  gap: 0.35rem;
   color: #fff;
 }
 .hud-chip .dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 10px #10b981;
-  animation: pulseDot 1.5s infinite;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
 }
-@keyframes pulseDot { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
 .robot-speech-bubble {
   position: absolute;
-  top: 50px;
-  right: 12px;
-  background: rgba(12, 10, 26, 0.94);
-  border: 1px solid var(--secondary-accent);
-  box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
-  padding: 0.45rem 0.8rem;
-  border-radius: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  color: #00f0ff;
-  max-width: 210px;
-  z-index: 35;
-  pointer-events: none;
-  transition: all 0.3s ease;
+  bottom: 80px;
+  left: 14px;
+  right: 14px;
+  background: rgba(12, 10, 22, 0.92);
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  border-radius: 12px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  z-index: 20;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeInBubble 0.3s ease;
 }
-
-.touch-hint {
-  position: absolute;
-  bottom: 85px;
-  background: rgba(10, 8, 20, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  z-index: 25;
-  pointer-events: none;
-  animation: fadeOutSlow 6s forwards;
+@keyframes fadeInBubble {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-@keyframes fadeOutSlow { 0%,70%{opacity:1;} 100%{opacity:0;} }
 
 .view-switch-bar {
   position: absolute;
-  top: 52px;
+  top: 55px;
   left: 12px;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  z-index: 30;
+  z-index: 20;
 }
 .view-btn {
-  background: rgba(15, 12, 28, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-.view-btn:hover, .view-btn.active {
-  background: linear-gradient(135deg, var(--primary-accent), #8a2be2);
-  border-color: #ff8ab2;
-  color: #fff;
-  transform: translateX(3px);
-  box-shadow: 0 4px 12px rgba(255, 51, 119, 0.4);
-}
-
-.stage-footer-bar { width: 100%; display: flex; flex-direction: column; gap: 0.45rem; z-index: 30; }
-.audio-visualizer-canvas {
-  width: 100%;
-  height: 24px;
-  border-radius: 8px;
-  background: rgba(10, 8, 20, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.stage-action-row { width: 100%; display: flex; gap: 0.4rem; }
-.action-btn-main {
-  flex: 1.2;
-  background: linear-gradient(135deg, #ff3377, #d91456);
-  border: 1px solid #ff75a0;
-  color: #fff;
-  padding: 0.65rem 0.5rem;
-  border-radius: 14px;
-  font-weight: 800;
-  font-size: 0.78rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(255, 51, 119, 0.35);
-}
-.action-btn-main:active { transform: scale(0.97); }
-
-.action-btn-sub {
-  flex: 1;
-  background: rgba(22, 17, 39, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #f1f5f9;
-  padding: 0.65rem 0.5rem;
-  border-radius: 14px;
-  font-weight: 700;
-  font-size: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  cursor: pointer;
-}
-.action-btn-sub:hover { background: rgba(35, 28, 62, 0.9); border-color: #00f0ff; }
-
-/* ABAS */
-.control-tabs-nav {
-  width: 100%;
-  max-width: 650px;
-  display: flex;
-  background: rgba(18, 14, 32, 0.9);
-  padding: 0.35rem;
-  border-radius: 18px;
+  background: rgba(15, 12, 28, 0.8);
   border: 1px solid var(--border-subtle);
-  margin-bottom: 0.85rem;
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  text-align: left;
+}
+.view-btn.active, .view-btn:hover {
+  background: var(--primary-accent);
+  border-color: var(--primary-accent);
+  color: #fff;
+}
+
+.touch-hint {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.5);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.stage-footer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.6rem 0.8rem;
+  background: linear-gradient(to top, rgba(5, 4, 10, 0.95) 40%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  z-index: 20;
+}
+.audio-visualizer-canvas {
+  width: 80px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.4);
+}
+.stage-action-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.action-btn-main {
+  background: linear-gradient(135deg, var(--primary-accent), #d946ef);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
+}
+.action-btn-sub {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.control-tabs-nav {
+  display: flex;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 0.3rem;
   gap: 0.3rem;
   overflow-x: auto;
 }
 .tab-nav-btn {
   flex: 1;
-  min-width: 110px;
-  padding: 0.55rem 0.5rem;
+  min-width: 90px;
+  padding: 0.55rem 0.4rem;
   background: transparent;
   border: none;
+  border-radius: 10px;
   color: var(--text-muted);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  border-radius: 12px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  transition: all 0.25s ease;
   white-space: nowrap;
+  text-align: center;
 }
 .tab-nav-btn.active {
-  background: linear-gradient(135deg, rgba(255, 51, 119, 0.25), rgba(138, 43, 226, 0.25));
-  border: 1px solid var(--primary-accent);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(255, 51, 119, 0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .tab-pane {
   display: none;
-  width: 100%;
-  max-width: 650px;
-  background: var(--bg-card);
-  border-radius: 22px;
+  background: var(--panel-bg);
   border: 1px solid var(--border-subtle);
-  padding: 1.2rem 1.1rem;
-  backdrop-filter: blur(16px);
-  margin-bottom: 1rem;
-}
-.tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
-
-/* CAIXA DO ROBÔ COM REMOÇÃO DE FUNDO */
-.robot-control-box {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(255, 51, 119, 0.12));
-  border: 1px solid rgba(0, 240, 255, 0.4);
   border-radius: 18px;
-  padding: 1.2rem;
-  text-align: center;
+  padding: 1.1rem;
+}
+.tab-pane.active { display: block; }
+
+.robot-control-box {
+  background: rgba(0, 240, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 14px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  align-items: center;
+  text-align: center;
 }
 .robot-btn-big {
-  background: linear-gradient(135deg, #00f0ff, #7928ca);
+  background: linear-gradient(135deg, #00f0ff 0%, #ff007f 100%);
   border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1.4rem;
   color: #fff;
-  font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
   font-weight: 900;
-  padding: 0.85rem 1.6rem;
-  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   cursor: pointer;
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
-  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.3);
+}
+
+/* CYBER SCANNER */
+.photo-scanner-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+@media (max-width: 768px) {
+  .photo-scanner-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+.photo-scanner-box {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  aspect-ratio: 240 / 340;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #08070e;
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scanned-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.scanner-laser-beam-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #00f0ff;
+  box-shadow: 0 0 12px #00f0ff, 0 0 25px #00f0ff, 0 0 40px #ff007f;
+  top: 10%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.3s;
+}
+.scanner-laser-beam-line.active {
+  opacity: 1;
+  animation: scanPhotoLaser 1.5s ease-in-out infinite alternate;
+}
+@keyframes scanPhotoLaser {
+  0% { top: 5%; }
+  100% { top: 95%; }
+}
+.scan-target-pin {
+  position: absolute;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid #00f0ff;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #00f0ff;
+  pointer-events: none;
+  z-index: 12;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+}
+.pin-hair  { top: 10%; left: 8%; }
+.pin-chest { top: 26%; right: 8%; }
+.pin-waist { top: 38%; left: 8%; }
+.pin-butt  { top: 52%; right: 8%; }
+.pin-legs  { top: 76%; left: 8%; }
+.scanner-photo-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.82);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #00f0ff;
+  text-align: center;
+  z-index: 15;
+}
+.telemetry-results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.telemetry-subcard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+}
+.telemetry-subcard-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary-accent);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.color-chips-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+.color-chip-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
 }
-.robot-btn-big:hover { transform: scale(1.04); box-shadow: 0 0 35px rgba(255, 51, 119, 0.6); }
+.color-chip-preview {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+.color-chip-info {
+  display: flex;
+  flex-direction: column;
+}
+.color-chip-name {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+.color-chip-hex {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #f8fafc;
+  font-weight: 700;
+}
+.biometric-meter-item {
+  margin-bottom: 0.5rem;
+}
+.biometric-meter-item:last-child {
+  margin-bottom: 0;
+}
+.meter-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  margin-bottom: 0.25rem;
+}
+.meter-label {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+.meter-value-txt {
+  font-family: 'JetBrains Mono', monospace;
+  color: #00f0ff;
+  font-weight: 700;
+}
+.meter-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.meter-fill-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff007f, #00f0ff);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.robot-trigger-action-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 127, 0.2));
+  border: 1px solid #00f0ff;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+  transition: all 0.2s;
+}
+.robot-trigger-action-btn:hover {
+  background: linear-gradient(135deg, #00f0ff, #ff007f);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+}
 
-/* GUARDA-ROUPA 3D REAL */
-.wardrobe-controls { display: flex; flex-direction: column; gap: 0.85rem; }
+/* GUARDA ROUPA */
+.wardrobe-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 .wardrobe-current-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(255, 51, 119, 0.18), rgba(0, 240, 255, 0.15));
-  border: 1px solid rgba(255, 51, 119, 0.4);
-  border-radius: 16px;
-  padding: 0.85rem 1.1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
 }
-.wardrobe-title-sub { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; }
-.wardrobe-name { font-size: 1.05rem; font-weight: 800; color: #fff; }
-.btn-robot-change-now {
-  background: linear-gradient(135deg, #00f0ff, #ff3377);
-  border: none;
-  color: #07050d;
-  font-weight: 900;
-  font-size: 0.75rem;
-  padding: 0.5rem 0.9rem;
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
+.wardrobe-title-sub { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; }
+.wardrobe-name { font-size: 1rem; font-weight: 800; color: #fff; }
 .biquini-quick-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 0.5rem;
-  max-height: 220px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.6rem;
+  max-height: 290px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-right: 0.3rem;
 }
-.biquini-pill {
-  padding: 0.5rem 0.3rem;
-  text-align: center;
+.biquini-card-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.72rem;
-  font-weight: 600;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.biquini-pill:hover, .biquini-pill.active {
-  background: rgba(255, 51, 119, 0.35);
-  border-color: var(--primary-accent);
-  color: #fff;
-}
-
-/* SLIDERS */
-.slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.1rem; }
-@media (max-width: 540px) { .slider-grid { grid-template-columns: 1fr; } }
-
-.slider-card {
-  background: var(--bg-card-subtle);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 0.75rem 0.85rem;
+  padding: 0.55rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
-.slider-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; }
+.biquini-card-item:hover, .biquini-card-item.active {
+  border-color: var(--primary-accent);
+  background: rgba(255, 0, 127, 0.12);
+  transform: translateY(-2px);
+}
+.biquini-preview-thumb {
+  width: 100%;
+  height: 38px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.biquini-label-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.biquini-label-desc {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* SLIDERS */
+.slider-group-item { margin-bottom: 0.8rem; }
+.slider-group-item:last-child { margin-bottom: 0; }
+.slider-header-flex { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+.slider-title { font-size: 0.8rem; font-weight: 700; color: #cbd5e1; }
 .slider-val-badge {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--primary-accent);
-  background: rgba(255, 51, 119, 0.12);
-  padding: 0.15rem 0.45rem;
-  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--secondary-accent);
+  font-weight: 700;
 }
 .custom-range {
-  -webkit-appearance: none;
   width: 100%;
   height: 6px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  appearance: none;
   outline: none;
-  cursor: pointer;
 }
 .custom-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 50%;
   background: var(--primary-accent);
-  border: 2px solid #fff;
-  box-shadow: 0 0 10px var(--primary-accent);
   cursor: pointer;
+  box-shadow: 0 0 10px var(--primary-accent);
 }
 
 .custom-select-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; }
@@ -497,6 +699,170 @@ body {
   color: #fff;
 }
 #photoUploadInput { display: none; }
+
+/* ==============================================================
+   CHAT INTERATIVO COM A DANÇARINA & ROBÔ INVISÍVEL
+============================================================== */
+.chat-container-card {
+  display: flex;
+  flex-direction: column;
+  height: 420px;
+  background: rgba(12, 10, 24, 0.85);
+  border: 1px solid rgba(255, 0, 127, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(255, 0, 127, 0.05);
+}
+.chat-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.95rem;
+  background: linear-gradient(90deg, rgba(255, 0, 127, 0.15), rgba(0, 240, 255, 0.12));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.chat-dancer-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+}
+.chat-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+.chat-header-hint {
+  font-size: 0.7rem;
+  color: var(--secondary-accent);
+  font-weight: 600;
+}
+.chat-messages-box {
+  flex: 1;
+  padding: 0.85rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.chat-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 84%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  line-height: 1.38;
+  animation: fadeInMsg 0.25s ease;
+}
+@keyframes fadeInMsg {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.chat-msg-user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--primary-accent), #d946ef);
+  color: #fff;
+  border-bottom-right-radius: 3px;
+  box-shadow: 0 4px 15px rgba(255, 0, 127, 0.35);
+}
+.chat-msg-dancer {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #f8fafc;
+  border-bottom-left-radius: 3px;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.1);
+}
+.chat-msg-author {
+  font-size: 0.66rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.chat-msg-author-dancer { color: var(--secondary-accent); }
+.chat-msg-author-user { color: #fdf2f8; }
+.chat-msg-time {
+  font-size: 0.62rem;
+  align-self: flex-end;
+  margin-top: 4px;
+  opacity: 0.6;
+  font-family: 'JetBrains Mono', monospace;
+}
+.chat-quick-chips {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  overflow-x: auto;
+  background: rgba(0, 0, 0, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.chat-chip-btn {
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.chat-chip-btn:hover {
+  background: var(--primary-accent);
+  border-color: var(--primary-accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 127, 0.4);
+}
+.chat-input-row {
+  display: flex;
+  gap: 0.45rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(0, 0, 0, 0.55);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.chat-input-field {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-size: 0.84rem;
+  color: #fff;
+  outline: none;
+}
+.chat-input-field:focus {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.35);
+}
+.chat-send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  border: none;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(255, 0, 127, 0.45);
+  transition: transform 0.15s;
+}
+.chat-send-btn:hover {
+  transform: scale(1.08);
+}
 </style>
 </head>
 <body>
@@ -507,37 +873,50 @@ body {
 <div class="app-container">
   
   <header class="app-header">
-    <div class="header-badge">✦ IA DE RECORTE DE CENÁRIO & RIGGING 3D REAL ✦</div>
+    <div class="header-badge">✦ ROBÔ INVISÍVEL COM IA & CHAT DE POSIÇÕES ✦</div>
     <h1 class="app-title">Bailarina Virtual 3D</h1>
-    <p class="app-subtitle">O Robô faz sumir o quarto e a porta da foto, isola a pessoa e dá vida às pernas e quadris como um vídeo 3D real.</p>
+    <p class="app-subtitle">O Robô Invisível calibra as medidas e cores da sua foto, e você comanda as posições dela pelo Chat!</p>
   </header>
 
   <!-- PALCO PRINCIPAL 3D -->
   <main class="stage-wrapper">
     <div class="stage-frame" id="stageFrame">
       
-      <!-- Canvas 3D onde a pessoa isolada se move em 3D de verdade -->
+      <!-- Canvas 3D WebGL -->
       <canvas id="webglCanvas"></canvas>
 
-      <!-- Feixe Laser de IA do Robô (Remove Cenário e Dá Vida) -->
-      <div class="ai-scan-overlay" id="aiScanOverlay">
-        <div class="ai-scan-beam"></div>
+      <!-- Grade Laser de Escaneamento Biométrico -->
+      <div class="biometric-scanner-grid" id="biometricGrid">
+        <div class="biometric-laser-beam"></div>
+      </div>
+
+      <!-- Caixa HUD de Telemetria Biometria da IA -->
+      <div class="biometric-telemetry-box" id="telemetryBox">
+        <div style="color:#00f0ff; font-weight:800; border-bottom:1px solid rgba(0,240,255,0.3); padding-bottom:2px; margin-bottom:2px;">
+          🧬 BIOMETRIA IA DETECTADA:
+        </div>
+        <div class="telemetry-row"><span>🍑 Glúteos:</span><span class="telemetry-val" id="telButt">148% (Curvy)</span></div>
+        <div class="telemetry-row"><span>⏳ Cintura Violão:</span><span class="telemetry-val" id="telWaist">78%</span></div>
+        <div class="telemetry-row"><span>🍈 Seios / Busto:</span><span class="telemetry-val" id="telChest">132%</span></div>
+        <div class="telemetry-row"><span>🦵 Coxas Torneadas:</span><span class="telemetry-val" id="telLegs">118%</span></div>
+        <div class="telemetry-row"><span>🎨 Tom de Pele:</span><span class="telemetry-val" id="telSkin">#f8dfd4</span></div>
+        <div class="telemetry-row"><span>👱‍♀️ Tom de Cabelo:</span><span class="telemetry-val" id="telHair">#f6e1af</span></div>
       </div>
 
       <!-- Top HUD -->
       <div class="stage-hud-top">
         <div class="hud-chip">
           <span class="dot"></span>
-          <span id="hudStatus">PESSOA ISOLADA EM VÍDEO 3D</span>
+          <span id="hudStatus">ROBÔ INVISÍVEL: CORPO CALIBRADO</span>
         </div>
-        <div class="hud-chip" style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--secondary-accent)">
-          CENÁRIO: REMOVIDO
+        <div class="hud-chip" id="hudRobotState" style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--secondary-accent)">
+          🤖 ROBÔ INVISÍVEL: ATIVO
         </div>
       </div>
 
-      <!-- Balão do Robô -->
+      <!-- Balão de Fala da Dançarina / Robô -->
       <div class="robot-speech-bubble" id="robotSpeech">
-        "Cenário removido! O corpo agora tem esqueleto 3D: as pernas andam de verdade e o quadril rebola no salto alto!"
+        "Oi amor! Me manda uma mensagem no chat abaixo para eu mudar de posição: pode pedir pra eu ficar de costas, de frente, andar ou dançar!"
       </div>
 
       <!-- Posições Rápidas de Câmera 3D -->
@@ -574,37 +953,187 @@ body {
 
   <!-- ABAS -->
   <nav class="control-tabs-nav">
-    <button class="tab-nav-btn active" onclick="openTab('tabRobot', this)">🤖 Robô & IA de Recorte</button>
-    <button class="tab-nav-btn" onclick="openTab('tabWardrobe', this)">👗 Trocar Roupa 3D (100)</button>
+    <button class="tab-nav-btn active" onclick="openTab('tabChat', this)">💬 Chat & Posições</button>
+    <button class="tab-nav-btn" onclick="openTab('tabBiometrics', this)">🤖 Robô Invisível & Foto</button>
+    <button class="tab-nav-btn" onclick="openTab('tabWardrobe', this)">👗 Guarda-Roupa (100)</button>
     <button class="tab-nav-btn" onclick="openTab('tabBody', this)">🧬 Medidas do Corpo</button>
-    <button class="tab-nav-btn" onclick="openTab('tabAesthetics', this)">💄 Estética & Rosto</button>
+    <button class="tab-nav-btn" onclick="openTab('tabAesthetics', this)">💄 Cores & Estética</button>
   </nav>
 
-  <!-- ABA 1: CONTROLE DO ROBÔ COM REMOÇÃO DE CENÁRIO -->
-  <section class="tab-pane active" id="tabRobot">
+  <!-- ABA 0: CHAT POR ESCRITO COM A DANÇARINA PARA MUDAR POSIÇÕES -->
+  <section class="tab-pane active" id="tabChat">
+    <div class="chat-container-card">
+      <div class="chat-header-bar">
+        <div class="chat-dancer-status">
+          <div class="chat-status-dot"></div>
+          <span>Bailarina Virtual (Conectada)</span>
+        </div>
+        <div class="chat-header-hint">
+          Digite para mudar as posições dela em 3D
+        </div>
+      </div>
+
+      <!-- Histórico de Mensagens -->
+      <div class="chat-messages-box" id="chatMessagesBox">
+        <div class="chat-msg chat-msg-dancer">
+          <div class="chat-msg-author chat-msg-author-dancer">💃 Bailarina Virtual</div>
+          <div>Oi amor! 💕 Sou a sua dançarina virtual 3D! O robô invisível ajustou minhas medidas corporais e cores com base na sua foto. Conversa comigo aqui por escrito e me pede para mudar de posição: pode pedir para eu <b>ficar de costas</b>, <b>de frente</b>, <b>de perfil</b>, <b>andar</b> pelo palco ou <b>dançar funk</b> pra você!</div>
+          <div class="chat-msg-time" id="chatInitialTime">12:00</div>
+        </div>
+      </div>
+
+      <!-- Botões Rápidos de Comando de Posição -->
+      <div class="chat-quick-chips">
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Fica de costas')">🍑 Ficar de Costas</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Fica de frente')">💃 Ficar de Frente</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Fica de perfil')">✨ Ficar de Perfil</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Começa a andar')">👠 Andar no Palco</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Dança funk')">🎶 Dançar Funk 130 BPM</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Pose da foto')">📸 Pose da Foto (Pufe)</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Troca de roupa')">👗 Trocar Roupa</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Aumenta o bumbum')">🍑 Aumentar Bumbum</button>
+        <button class="chat-chip-btn" onclick="sendQuickCommand('Afina a cintura')">⏳ Afinar Cintura</button>
+      </div>
+
+      <!-- Campo de Digitação e Envio -->
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" class="chat-input-field" placeholder="Digite um comando (ex: fica de costas, dança, de frente)..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+        <button class="chat-send-btn" onclick="sendChatMessage()" title="Enviar comando">➤</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABA 1: ROBÔ COM IA BIOMÉTRICA DE MEDIDAS E CORES -->
+  <section class="tab-pane" id="tabBiometrics">
     <div class="robot-control-box">
-      <div style="font-size:2.2rem;">🤖 ⚡ 💃</div>
-      <h3 style="font-size:1.15rem; font-weight:800; color:#fff;">Robô com IA de Isolamento de Pessoa</h3>
-      <p style="font-size:0.82rem; color:var(--text-muted); max-width:460px;">
-        O Robô faz sumir o quarto, a cama e a porta da foto. Ele extrai apenas o corpo da mulher, monta o esqueleto 3D e faz as pernas e quadris se moverem como uma pessoa viva em um vídeo 3D!
+      <div style="font-size:2.2rem; filter:drop-shadow(0 0 10px #00f0ff);">🤖 📸 🧬 📐</div>
+      <h3 style="font-size:1.25rem; font-weight:800; color:#fff;">Robô com Inteligência Artificial: Medidas & Cores da Foto</h3>
+      <p style="font-size:0.84rem; color:var(--text-muted); max-width:540px; margin:0 auto 0.8rem;">
+        O <b>Robô Invisível com IA</b> opera em segundo plano: escaneia a foto enviada, extrai as medidas corporais (glúteos, cintura, busto e pernas) e cores reais, transformando o corpo da sua personagem dançarina para ter exatamente as mesmas medidas mostradas na foto!
       </p>
 
-      <button class="robot-btn-big" onclick="robotRemoveBackgroundAndGiveLife()">
-        <span>🧬 ROBÔ: FAZER SUMIR CENÁRIO & DAR VIDA 3D</span>
+      <!-- Botão de Envio de Foto -->
+      <button class="robot-btn-big" onclick="document.getElementById('photoUploadInput').click()">
+        <span>📸 ENVIAR MINHA FOTO PARA O ROBÔ IA ESCANEAR</span>
       </button>
 
-      <div style="display:flex; flex-direction:column; gap:0.3rem; width:100%; max-width:380px; margin-top:0.4rem;">
-        <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
-          <span>Sensibilidade do Laser de Recorte IA:</span>
-          <span style="color:var(--secondary-accent); font-family:'JetBrains Mono'" id="lblTolerance">Automático (94%)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngTolerance" min="50" max="100" value="94" oninput="document.getElementById('lblTolerance').innerText = this.value + '%'" />
+      <!-- Seletor de Fotos Rápidas / Presets -->
+      <div class="custom-select-row" style="justify-content:center; margin-top:0.6rem;">
+        <button class="pill-option-btn active" onclick="loadSamplePreset('photo_exact', this)">📸 Foto 1: Loirinha Curvy (Original)</button>
+        <button class="pill-option-btn" onclick="loadSamplePreset('brunette_fitness', this)">📸 Foto 2: Morena Violão</button>
+        <button class="pill-option-btn" onclick="loadSamplePreset('redhead_curvy', this)">📸 Foto 3: Ruiva Escultural</button>
       </div>
 
-      <div class="custom-select-row" style="justify-content:center; margin-top:0.3rem;">
-        <button class="pill-option-btn active" onclick="setPersonMode('isolated', this)">✨ Pessoa Isolada no Palco</button>
-        <button class="pill-option-btn" onclick="setPersonMode('cyborg', this)">⚡ Modo Ciborgue com Linhas Neon</button>
+      <!-- Dashboard do Scanner Holográfico -->
+      <div class="photo-scanner-dashboard">
+        
+        <!-- Coluna Esquerda: Foto & Varredura Laser -->
+        <div class="photo-scanner-box" id="scannerPhotoBox">
+          <img id="scannedPhotoImg" class="scanned-photo-img" src="" alt="Foto para análise biométrica" />
+          <div class="scanner-laser-beam-line" id="scannerLaserBeam"></div>
+          
+          <div class="scan-target-pin pin-hair">💇 Cabelo</div>
+          <div class="scan-target-pin pin-chest">🍈 Busto</div>
+          <div class="scan-target-pin pin-waist">⏳ Cintura</div>
+          <div class="scan-target-pin pin-butt">🍑 Glúteos</div>
+          <div class="scan-target-pin pin-legs">🦵 Pernas</div>
+
+          <div class="scanner-photo-badge" id="scannerPhotoBadge">🟢 IA CONECTADA: FOTO PRONTA</div>
+        </div>
+
+        <!-- Coluna Direita: Telemetria Extraída -->
+        <div class="telemetry-results-panel">
+          
+          <!-- Cores Extraídas -->
+          <div class="telemetry-subcard">
+            <div class="telemetry-subcard-title">🎨 Cores Extraídas da Imagem pela IA</div>
+            <div class="color-chips-row">
+              <div class="color-chip-item">
+                <div class="color-chip-preview" id="swatchSkin" style="background:#f8dfd4;"></div>
+                <div class="color-chip-info">
+                  <span class="color-chip-name">Tom de Pele</span>
+                  <span class="color-chip-hex" id="hexSkin">#f8dfd4</span>
+                </div>
+              </div>
+              <div class="color-chip-item">
+                <div class="color-chip-preview" id="swatchHair" style="background:#f6e1af;"></div>
+                <div class="color-chip-info">
+                  <span class="color-chip-name">Cabelo</span>
+                  <span class="color-chip-hex" id="hexHair">#f6e1af</span>
+                </div>
+              </div>
+              <div class="color-chip-item">
+                <div class="color-chip-preview" id="swatchTop" style="background:#ffffff;"></div>
+                <div class="color-chip-info">
+                  <span class="color-chip-name">Blusa / Top</span>
+                  <span class="color-chip-hex" id="hexTop">#ffffff</span>
+                </div>
+              </div>
+              <div class="color-chip-item">
+                <div class="color-chip-preview" id="swatchBot" style="background:#5a5f69;"></div>
+                <div class="color-chip-info">
+                  <span class="color-chip-name">Calça / Shorts</span>
+                  <span class="color-chip-hex" id="hexBot">#5a5f69</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medidas Anatômicas -->
+          <div class="telemetry-subcard">
+            <div class="telemetry-subcard-title">📐 Medidas Anatômicas Detectadas</div>
+            
+            <div class="biometric-meter-item">
+              <div class="meter-header">
+                <span class="meter-label">🍑 Glúteos / Bumbum</span>
+                <span class="meter-value-txt" id="meterValButt">148% (Curvy)</span>
+              </div>
+              <div class="meter-track">
+                <div class="meter-fill-bar" id="meterFillButt" style="width:74%;"></div>
+              </div>
+            </div>
+
+            <div class="biometric-meter-item">
+              <div class="meter-header">
+                <span class="meter-label">⏳ Cintura Violão</span>
+                <span class="meter-value-txt" id="meterValWaist">78%</span>
+              </div>
+              <div class="meter-track">
+                <div class="meter-fill-bar" id="meterFillWaist" style="width:39%;"></div>
+              </div>
+            </div>
+
+            <div class="biometric-meter-item">
+              <div class="meter-header">
+                <span class="meter-label">🍈 Busto / Seios</span>
+                <span class="meter-value-txt" id="meterValChest">132% (Farto)</span>
+              </div>
+              <div class="meter-track">
+                <div class="meter-fill-bar" id="meterFillChest" style="width:66%;"></div>
+              </div>
+            </div>
+
+            <div class="biometric-meter-item">
+              <div class="meter-header">
+                <span class="meter-label">🦵 Pernas / Coxas</span>
+                <span class="meter-value-txt" id="meterValLegs">118% (Torneadas)</span>
+              </div>
+              <div class="meter-track">
+                <div class="meter-fill-bar" id="meterFillLegs" style="width:59%;"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Botão de Re-aplicar -->
+          <button class="robot-trigger-action-btn" onclick="triggerRobotFullCalibration()">
+            <span>⚡ RE-EXECUTAR CALIBRAÇÃO DO ROBÔ IA</span>
+          </button>
+
+        </div>
+
       </div>
+
     </div>
   </section>
 
@@ -613,217 +1142,213 @@ body {
     <div class="wardrobe-controls">
       <div class="wardrobe-current-card">
         <div>
-          <div class="wardrobe-title-sub">Roupa 3D no Corpo Isolado</div>
+          <div class="wardrobe-title-sub">Roupa 3D no Corpo Calibrado</div>
           <div class="wardrobe-name" id="wardrobeNameDisplay">01. Calça Leggings Cinza & Top Branco (Foto)</div>
         </div>
-        <button class="btn-robot-change-now" onclick="triggerRobotChange(currentOutfitIndex)">
-          <span>🤖 Robô: Vestir Esta</span>
-        </button>
       </div>
-
-      <div style="font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-top:0.3rem;">
-        Toque na roupa: o Robô desmaterializa a calça/top e veste a nova peça 3D diretamente sobre o corpo da modelo!
-      </div>
-
       <div class="biquini-quick-grid" id="biquiniGrid"></div>
     </div>
   </section>
 
-  <!-- ABA 3: MEDIDAS DO CORPO 3D -->
+  <!-- ABA 3: MEDIDAS DO CORPO -->
   <section class="tab-pane" id="tabBody">
-    <div class="slider-grid">
-      <div class="slider-card">
-        <div class="slider-header">
-          <span>🍑 Bumbum / Glúteos 3D</span>
-          <span class="slider-val-badge" id="lblButt">140% (Curvy)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngButt" min="80" max="200" value="140" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Volume e projeção arredondada da foto</small>
+    
+    <div class="slider-group-item">
+      <div class="slider-header-flex">
+        <span class="slider-title">🍑 Glúteos Volumosos (Curvy Escultural)</span>
+        <span class="slider-val-badge" id="lblButt">148% (Curvy)</span>
       </div>
-
-      <div class="slider-card">
-        <div class="slider-header">
-          <span>⏳ Cintura Fina 3D</span>
-          <span class="slider-val-badge" id="lblWaist">82% (Violão)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngWaist" min="65" max="120" value="82" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Curvatura esculpida em violão</small>
-      </div>
-
-      <div class="slider-card">
-        <div class="slider-header">
-          <span>🍈 Seios / Busto 3D</span>
-          <span class="slider-val-badge" id="lblChest">125% (Farto)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngChest" min="80" max="180" value="125" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Projeção natural do busto</small>
-      </div>
-
-      <div class="slider-card">
-        <div class="slider-header">
-          <span>🦵 Pernas & Coxas 3D</span>
-          <span class="slider-val-badge" id="lblLegs">115% (Torneadas)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngLegs" min="85" max="150" value="115" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Músculos da coxa no salto agulha</small>
-      </div>
-
-      <div class="slider-card">
-        <div class="slider-header">
-          <span>💪 Braços 3D</span>
-          <span class="slider-val-badge" id="lblArms">100% (Delicados)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngArms" min="80" max="130" value="100" oninput="update3DAnatomy()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Proporção feminina esguia</small>
-      </div>
-
-      <div class="slider-card">
-        <div class="slider-header">
-          <span>🫁 Ritmo de Respiração 3D</span>
-          <span class="slider-val-badge" id="lblBreath">3.6s (Natural)</span>
-        </div>
-        <input type="range" class="custom-range" id="rngBreath" min="20" max="60" value="36" oninput="updateBreathSpeed()" />
-        <small style="font-size:0.7rem; color:var(--text-muted)">Expansão e contração torácica contínua</small>
-      </div>
+      <input type="range" class="custom-range" id="rngButt" min="80" max="200" value="148" oninput="update3DAnatomy()" />
     </div>
+
+    <div class="slider-group-item">
+      <div class="slider-header-flex">
+        <span class="slider-title">⏳ Cintura Fina (Violão Definido)</span>
+        <span class="slider-val-badge" id="lblWaist">78% (Violão)</span>
+      </div>
+      <input type="range" class="custom-range" id="rngWaist" min="65" max="120" value="78" oninput="update3DAnatomy()" />
+    </div>
+
+    <div class="slider-group-item">
+      <div class="slider-header-flex">
+        <span class="slider-title">🍈 Busto / Seios (Farto & Empinado)</span>
+        <span class="slider-val-badge" id="lblChest">130% (Farto)</span>
+      </div>
+      <input type="range" class="custom-range" id="rngChest" min="80" max="180" value="130" oninput="update3DAnatomy()" />
+    </div>
+
+    <div class="slider-group-item">
+      <div class="slider-header-flex">
+        <span class="slider-title">🦵 Pernas & Coxas Torneadas</span>
+        <span class="slider-val-badge" id="lblLegs">118% (Torneadas)</span>
+      </div>
+      <input type="range" class="custom-range" id="rngLegs" min="85" max="150" value="118" oninput="update3DAnatomy()" />
+    </div>
+
+    <div class="slider-group-item">
+      <div class="slider-header-flex">
+        <span class="slider-title">💪 Braços e Ombros</span>
+        <span class="slider-val-badge" id="lblArms">100% (Delicados)</span>
+      </div>
+      <input type="range" class="custom-range" id="rngArms" min="80" max="130" value="100" oninput="update3DAnatomy()" />
+    </div>
+
+    <div class="slider-group-item">
+      <div class="slider-header-flex">
+        <span class="slider-title">🫁 Frequência da Respiração 3D</span>
+        <span class="slider-val-badge" id="lblBreath">3.6s (Natural)</span>
+      </div>
+      <input type="range" class="custom-range" id="rngBreath" min="20" max="60" value="36" oninput="updateBreathSpeed()" />
+    </div>
+
   </section>
 
-  <!-- ABA 4: ESTÉTICA & ROSTO -->
+  <!-- ABA 4: CORES & ESTÉTICA -->
   <section class="tab-pane" id="tabAesthetics">
-    <div style="display:flex; flex-direction:column; gap:1.1rem;">
-      <div>
-        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Tom e Estilo do Cabelo 3D:</div>
-        <div class="custom-select-row">
-          <button class="pill-option-btn active" onclick="setHairColor3D('platinum', this)">👱‍♀️ Loiro Platinado (Foto)</button>
-          <button class="pill-option-btn" onclick="setHairColor3D('honey', this)">🍯 Loiro Mel Dourado</button>
-          <button class="pill-option-btn" onclick="setHairColor3D('brunette', this)">🍫 Morena Iluminada</button>
-          <button class="pill-option-btn" onclick="setHairColor3D('redhead', this)">🔥 Ruivo Acobreado</button>
-          <button class="pill-option-btn" onclick="setHairColor3D('black', this)">🖤 Preto Ébano</button>
-        </div>
-      </div>
+    <div style="font-size:0.8rem; font-weight:700; color:#fff; margin-bottom:0.4rem;">👱‍♀️ Cor do Cabelo 3D</div>
+    <div class="custom-select-row">
+      <button class="pill-option-btn active" onclick="setHairColor3D('platinum')">Loiro Platinado (Foto)</button>
+      <button class="pill-option-btn" onclick="setHairColor3D('golden')">Loiro Dourado</button>
+      <button class="pill-option-btn" onclick="setHairColor3D('brunette')">Castanho Iluminado</button>
+      <button class="pill-option-btn" onclick="setHairColor3D('black')">Preto Ébano</button>
+      <button class="pill-option-btn" onclick="setHairColor3D('redhead')">Ruivo Acobreado</button>
+    </div>
 
-      <div>
-        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.4rem;">Tom de Pele Humana 3D:</div>
-        <div class="custom-select-row">
-          <button class="pill-option-btn active" onclick="setSkinTone3D('nordic', this)">Pele Clara Nórdica (Foto)</button>
-          <button class="pill-option-btn" onclick="setSkinTone3D('golden', this)">Bronzeada Dourada</button>
-          <button class="pill-option-btn" onclick="setSkinTone3D('tropical', this)">Morena Tropical</button>
-        </div>
-      </div>
+    <div style="font-size:0.8rem; font-weight:700; color:#fff; margin-top:0.8rem; margin-bottom:0.4rem;">🎨 Tom da Pele 3D</div>
+    <div class="custom-select-row">
+      <button class="pill-option-btn active" onclick="setSkinTone3D('nordic')">Clara Nórdica (Foto)</button>
+      <button class="pill-option-btn" onclick="setSkinTone3D('warm_fair')">Pele Clara Suave</button>
+      <button class="pill-option-btn" onclick="setSkinTone3D('golden_tan')">Morena Dourada</button>
+      <button class="pill-option-btn" onclick="setSkinTone3D('bronze')">Bronzeada Tropical</button>
+      <button class="pill-option-btn" onclick="setSkinTone3D('deep')">Negra Iluminada</button>
+    </div>
+
+    <div style="font-size:0.8rem; font-weight:700; color:#fff; margin-top:0.8rem; margin-bottom:0.4rem;">📐 Visualização da Câmera</div>
+    <div class="custom-select-row">
+      <button class="pill-option-btn" onclick="setCameraView('back')">Costas (Ângulo da Foto)</button>
+      <button class="pill-option-btn" onclick="setCameraView('front')">Frente</button>
+      <button class="pill-option-btn" onclick="setCameraView('side')">Lateral</button>
     </div>
   </section>
 
 </div>
 
 <script>
-/* 1. 100 ROUPAS 3D REAIS */
+/* ==============================================================
+   1. CATÁLOGO COM 100 LOOKS 3D REAIS
+============================================================== */
 const OUTFITS_3D = [
-  { id: 1, name: "Calça Leggings Cinza & Top Branco (Foto)", type: "leggings_top", bottomColor: 0x5a5f69, topColor: 0xffffff, roughness: 0.5, metalness: 0.1 },
-  { id: 2, name: "Micro Biquíni Rosa Pink Metálico", type: "micro_bikini", bottomColor: 0xff1493, topColor: 0xff1493, roughness: 0.2, metalness: 0.6 },
-  { id: 3, name: "Biquíni Dourado Cintilante Luxo", type: "micro_bikini", bottomColor: 0xffd700, topColor: 0xffd700, roughness: 0.15, metalness: 0.8 },
-  { id: 4, name: "Biquíni Preto Sensual com Tiras (Strappy)", type: "strappy_bikini", bottomColor: 0x111111, topColor: 0x111111, roughness: 0.3, metalness: 0.3 },
-  { id: 5, name: "Biquíni Neon Glow Verde Limão", type: "micro_bikini", bottomColor: 0x39ff14, topColor: 0x39ff14, roughness: 0.2, metalness: 0.4 },
-  { id: 6, name: "Maiô Cavado Asa Delta Vermelho Paixão", type: "swimsuit", bottomColor: 0xe60026, topColor: 0xe60026, roughness: 0.2, metalness: 0.3 },
-  { id: 7, name: "Biquíni Prateado Holográfico Ciber", type: "micro_bikini", bottomColor: 0xd4d8df, topColor: 0xffffff, roughness: 0.1, metalness: 0.9 },
-  { id: 8, name: "Biquíni Turquesa Tropical", type: "micro_bikini", bottomColor: 0x00e5ff, topColor: 0x00e5ff, roughness: 0.25, metalness: 0.4 },
-  { id: 9, name: "Vestido Tubinho Justo Preto Noite", type: "dress", bottomColor: 0x151515, topColor: 0x151515, roughness: 0.3, metalness: 0.2 },
-  { id: 10, name: "Biquíni Roxo Synthwave Glow", type: "micro_bikini", bottomColor: 0x7928ca, topColor: 0xff0080, roughness: 0.2, metalness: 0.5 }
+  { id: 1, name: "Calça Leggings Cinza & Top Branco (Foto)", type: "leggings_top", topCol: 0xffffff, bottomCol: 0x5a5f69, metal: 0.1, rough: 0.5 },
+  { id: 2, name: "Biquíni Fita Micro Rosa Neon", type: "bikini_micro", topCol: 0xff007f, bottomCol: 0xff007f, metal: 0.2, rough: 0.3 },
+  { id: 3, name: "Biquíni Asa Delta Dourado Metálico", type: "bikini_curvy", topCol: 0xfacc15, bottomCol: 0xfacc15, metal: 0.8, rough: 0.2 },
+  { id: 4, name: "Cropped Preto Vinil & Calça Fusô", type: "leggings_top", topCol: 0x111111, bottomCol: 0x111111, metal: 0.6, rough: 0.2 },
+  { id: 5, name: "Biquíni Cortininha Branco Perolado", type: "bikini_micro", topCol: 0xf8fafc, bottomCol: 0xf8fafc, metal: 0.3, rough: 0.3 },
+  { id: 6, name: "Biquíni Fio Dental Vermelho Rubi", type: "bikini_curvy", topCol: 0xef4444, bottomCol: 0xef4444, metal: 0.3, rough: 0.3 },
+  { id: 7, name: "Vestido Bandagem Ultra Justo Preto", type: "dress_mini", topCol: 0x09090b, bottomCol: 0x09090b, metal: 0.2, rough: 0.4 },
+  { id: 8, name: "Biquíni Azul Piscina Asa Delta", type: "bikini_curvy", topCol: 0x06b6d4, bottomCol: 0x06b6d4, metal: 0.2, rough: 0.3 },
+  { id: 9, name: "Conjunto Fitness Lilás Canelado", type: "leggings_top", topCol: 0xc084fc, bottomCol: 0xc084fc, metal: 0.1, rough: 0.5 },
+  { id: 10, name: "Biquíni Prata Holográfico Futurista", type: "bikini_micro", topCol: 0xe2e8f0, bottomCol: 0xe2e8f0, metal: 0.9, rough: 0.1 }
 ];
 
-const STYLES_LIST = ["micro_bikini", "strappy_bikini", "swimsuit", "leggings_top", "dress"];
-const COLORS_LIST = [
-  [0xff007f, 0xff75a0, "Rosa Chiclete"],
-  [0x00f0ff, 0x7000ff, "Ciberpunk"],
-  [0xffaa00, 0xff3300, "Sunset"],
-  [0x10b981, 0x047857, "Esmeralda"],
-  [0x6366f1, 0x4338ca, "Índigo Real"],
-  [0xec4899, 0xbe185d, "Magenta"],
-  [0xf59e0b, 0xd97706, "Âmbar"],
-  [0x14b8a6, 0x0f766e, "Menta"],
-  [0x8b5cf6, 0x6d28d9, "Ametista"],
-  [0xf43f5e, 0xe11d48, "Rubi Glamour"]
+const CORES_PALETA = [
+  0xff007f, 0x00f0ff, 0xef4444, 0xf59e0b, 0x10b981, 0x8b5cf6, 0xec4899,
+  0x111827, 0xf8fafc, 0xf43f5e, 0x14b8a6, 0x6366f1, 0xd946ef, 0x84cc16
+];
+const ESTILOS_NOMES = [
+  "Biquíni Asa Delta", "Biquíni Micro Fio", "Leggings Levanta Bumbum",
+  "Vestido Tubinho Curvy", "Conjunto Canelado Top", "Biquíni Tomara que Caia",
+  "Body Cavado Costas Nuas", "Cropped Cruzado & Calça Glow", "Biquíni Fita Bronze"
 ];
 
 for (let i = 11; i <= 100; i++) {
-  const c = COLORS_LIST[(i - 11) % COLORS_LIST.length];
-  const st = STYLES_LIST[(i - 11) % STYLES_LIST.length];
+  const estilo = ESTILOS_NOMES[i % ESTILOS_NOMES.length];
+  const cor1 = CORES_PALETA[i % CORES_PALETA.length];
+  const cor2 = CORES_PALETA[(i + 3) % CORES_PALETA.length];
+  const tipo = (i % 3 === 0) ? "bikini_micro" : ((i % 3 === 1) ? "bikini_curvy" : "leggings_top");
   OUTFITS_3D.push({
     id: i,
-    name: `Roupa #${i.toString().padStart(2, '0')} ${c[2]}`,
-    type: st,
-    bottomColor: c[0],
-    topColor: c[1],
-    roughness: 0.25,
-    metalness: 0.4
+    name: `${String(i).padStart(2, '0')}. ${estilo} #${i}`,
+    type: tipo,
+    topCol: cor1,
+    bottomCol: (tipo === "leggings_top" ? cor2 : cor1),
+    metal: (i % 4 === 0) ? 0.7 : 0.2,
+    rough: (i % 4 === 0) ? 0.25 : 0.45
   });
 }
 
-let currentOutfitIndex = 0;
-let isWalking = false;
-let isFunkPlaying = false;
-let isRobotBusy = false;
-let breathTime = 0;
-let walkTime = 0;
-let funkTime = 0;
-let breathSpeed = 3.6;
-
-/* 2. MOTOR GRÁFICO 3D (WEBGL THREE.JS) */
+/* ==============================================================
+   2. VARIÁVEIS GLOBAIS THREE.JS
+============================================================== */
 let scene, camera, renderer;
-let womanGroup, bodyMeshGroup, robotMeshGroup;
-let buttMesh, waistMesh, chestMesh, leftLegGroup, rightLegGroup, headMesh, hairMesh;
-let clothingGroup, clothesBottomMesh, clothesTopMesh, stoolMesh;
-let skinMaterial, clothesBottomMaterial, clothesTopMaterial, hairMaterial, robotMaterial;
+let womanGroup, bodyMeshGroup, clothingGroup;
+let buttMesh, waistMesh, chestMesh, leftLegGroup, rightLegGroup, headMesh, hairMesh, stoolMesh;
+let skinMaterial, hairMaterial, clothesBottomMaterial, clothesTopMaterial;
+let robotMeshGroup, robotEyeLight, robotThrusterLight;
 
-let targetCameraRotY = 0;
-let targetCameraDist = 3.8;
-let currentCameraRotY = 0;
-let currentCameraPitch = 0.08;
-let isUserDragging = false;
-let previousPointerX = 0, previousPointerY = 0;
+let isWalking = false;
+let walkClock = 0;
+let isRobotBusy = false;
+let currentOutfitIndex = 0;
+let breathTime = 0;
+let breathSpeedMultiplier = 1.0;
 
+let audioCtx = null;
+let audioAnalyser = null;
+let funkOscInterval = null;
+let isFunkPlaying = false;
+
+/* ==============================================================
+   3. INICIALIZAÇÃO DO PALCO 3D (WEBGL)
+============================================================== */
 function init3DScene() {
   const canvas = document.getElementById('webglCanvas');
-  const frame = document.getElementById('stageFrame');
-  const width = frame.clientWidth;
-  const height = frame.clientHeight;
+  const container = document.getElementById('stageFrame');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
 
   scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x07050d, 0.12);
+  scene.fog = new THREE.FogExp2(0x08070e, 0.12);
 
-  camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-  camera.position.set(0, 1.4, targetCameraDist);
+  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+  camera.position.set(0, 1.35, 3.4);
 
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.25;
 
-  const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
-  scene.add(ambLight);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambientLight);
 
-  const frontKeyLight = new THREE.DirectionalLight(0xfff5ea, 1.2);
-  frontKeyLight.position.set(1.5, 3.5, 3);
-  scene.add(frontKeyLight);
+  const mainLight = new THREE.DirectionalLight(0xfff6ea, 1.4);
+  mainLight.position.set(2, 4, 3);
+  scene.add(mainLight);
 
-  const backPinkRim = new THREE.DirectionalLight(0xff3377, 2.4);
-  backPinkRim.position.set(-2, 2.5, -2.5);
-  scene.add(backPinkRim);
+  const rimLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+  rimLight.position.set(-3, 2, -2);
+  scene.add(rimLight);
 
-  const blueCyanRim = new THREE.DirectionalLight(0x00f0ff, 1.8);
-  blueCyanRim.position.set(2.5, 1.8, -2);
-  scene.add(blueCyanRim);
+  const fillLight = new THREE.DirectionalLight(0xff007f, 0.85);
+  fillLight.position.set(2.5, 0.5, -2);
+  scene.add(fillLight);
 
-  const floorGeo = new THREE.CircleGeometry(2.4, 48);
+  const floorGeo = new THREE.CylinderGeometry(1.6, 1.7, 0.08, 48);
   const floorMat = new THREE.MeshStandardMaterial({
-    color: 0x0a0815,
-    roughness: 0.18,
+    color: 0x141220,
+    roughness: 0.25,
     metalness: 0.8
   });
   const floor = new THREE.Mesh(floorGeo, floorMat);
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.01;
+  floor.position.y = -0.04;
   scene.add(floor);
+
+  const ringGeo = new THREE.RingGeometry(1.55, 1.62, 48);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2;
+  ring.position.y = 0.005;
+  scene.add(ring);
 
   build3DWomanModel();
   build3DRobotModel();
@@ -834,15 +1359,18 @@ function init3DScene() {
 }
 
 function onResize3D() {
-  const frame = document.getElementById('stageFrame');
-  const width = frame.clientWidth;
-  const height = frame.clientHeight;
+  const container = document.getElementById('stageFrame');
+  if (!container || !renderer) return;
+  const width = container.clientWidth;
+  const height = container.clientHeight;
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
   renderer.setSize(width, height);
 }
 
-/* 3. ESQUELETO 3D ARTICULADO DA MULHER (SEM O FUNDO DA FOTO) */
+/* ==============================================================
+   4. CONSTRUÇÃO DO CORPO 3D DA MULHER
+============================================================== */
 function build3DWomanModel() {
   womanGroup = new THREE.Group();
   bodyMeshGroup = new THREE.Group();
@@ -872,20 +1400,17 @@ function build3DWomanModel() {
     metalness: 0.05
   });
 
-  // Glúteos Volumosos Curvilíneos 3D (Idênticos à Foto)
   const buttGeo = new THREE.SphereGeometry(0.24, 32, 24);
   buttGeo.scale(1.25, 1.05, 1.4);
   buttMesh = new THREE.Mesh(buttGeo, skinMaterial);
   buttMesh.position.set(0, 0.98, -0.04);
   bodyMeshGroup.add(buttMesh);
 
-  // Cintura Fina 3D
   const waistGeo = new THREE.CylinderGeometry(0.16, 0.22, 0.24, 32);
   waistMesh = new THREE.Mesh(waistGeo, skinMaterial);
   waistMesh.position.set(0, 1.14, 0);
   bodyMeshGroup.add(waistMesh);
 
-  // Seios / Busto Farto Definido 3D
   const chestGroup = new THREE.Group();
   const breastGeo = new THREE.SphereGeometry(0.125, 24, 20);
   breastGeo.scale(1.0, 1.0, 1.25);
@@ -899,7 +1424,6 @@ function build3DWomanModel() {
   chestMesh = chestGroup;
   bodyMeshGroup.add(chestMesh);
 
-  // Perna Esquerda Articulada (Coxa + Joelho + Salto Agulha)
   leftLegGroup = new THREE.Group();
   const thighL = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.085, 0.45, 24), skinMaterial);
   thighL.position.set(0, -0.22, 0);
@@ -913,7 +1437,6 @@ function build3DWomanModel() {
   leftLegGroup.position.set(-0.13, 0.95, 0);
   bodyMeshGroup.add(leftLegGroup);
 
-  // Perna Direita Articulada
   rightLegGroup = new THREE.Group();
   const thighR = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.085, 0.45, 24), skinMaterial);
   thighR.position.set(0, -0.22, 0);
@@ -927,7 +1450,6 @@ function build3DWomanModel() {
   rightLegGroup.position.set(0.13, 0.95, 0);
   bodyMeshGroup.add(rightLegGroup);
 
-  // Pufe da Foto
   const stoolGeo = new THREE.CylinderGeometry(0.24, 0.26, 0.52, 32);
   const stoolMat = new THREE.MeshStandardMaterial({ color: 0xdfd9d1, roughness: 0.6 });
   stoolMesh = new THREE.Mesh(stoolGeo, stoolMat);
@@ -936,7 +1458,6 @@ function build3DWomanModel() {
 
   setPosePhoto();
 
-  // Cabeça e Cabelo Loiro Platinado 3D
   const headGeo = new THREE.SphereGeometry(0.14, 32, 24);
   headGeo.scale(0.9, 1.1, 1.0);
   headMesh = new THREE.Mesh(headGeo, skinMaterial);
@@ -979,143 +1500,140 @@ function setPoseWalk() {
   rightLegGroup.position.set(0.13, 0.95, 0);
 }
 
-/* 4. ROUPAS 3D REAIS */
 function build3DClothing(outfit) {
   while (clothingGroup.children.length > 0) {
     clothingGroup.remove(clothingGroup.children[0]);
   }
 
-  clothesBottomMaterial.color.setHex(outfit.bottomColor);
-  clothesBottomMaterial.roughness = outfit.roughness;
-  clothesBottomMaterial.metalness = outfit.metalness;
+  clothesBottomMaterial.color.setHex(outfit.bottomCol);
+  clothesBottomMaterial.metalness = outfit.metal;
+  clothesBottomMaterial.roughness = outfit.rough;
 
-  clothesTopMaterial.color.setHex(outfit.topColor);
-  clothesTopMaterial.roughness = outfit.roughness;
-  clothesTopMaterial.metalness = outfit.metalness;
+  clothesTopMaterial.color.setHex(outfit.topCol);
+  clothesTopMaterial.metalness = outfit.metal;
+  clothesTopMaterial.roughness = outfit.rough;
 
   if (outfit.type === "leggings_top") {
-    const buttPantsGeo = new THREE.SphereGeometry(0.245, 32, 24);
-    buttPantsGeo.scale(1.26, 1.06, 1.41);
-    clothesBottomMesh = new THREE.Mesh(buttPantsGeo, clothesBottomMaterial);
-    clothesBottomMesh.position.copy(buttMesh.position);
-    clothingGroup.add(clothesBottomMesh);
+    const pantsGeo = new THREE.SphereGeometry(0.246, 32, 24);
+    pantsGeo.scale(1.26, 1.06, 1.41);
+    const pants = new THREE.Mesh(pantsGeo, clothesBottomMaterial);
+    pants.position.copy(buttMesh.position);
+    clothingGroup.add(pants);
 
-    const topGeo = new THREE.CylinderGeometry(0.165, 0.225, 0.25, 32);
-    clothesTopMesh = new THREE.Mesh(topGeo, clothesTopMaterial);
-    clothesTopMesh.position.set(0, 1.14, 0);
-    clothingGroup.add(clothesTopMesh);
+    const topGeo = new THREE.CylinderGeometry(0.165, 0.175, 0.16, 32);
+    const top = new THREE.Mesh(topGeo, clothesTopMaterial);
+    top.position.set(0, 1.34, 0.02);
+    clothingGroup.add(top);
+  } else if (outfit.type === "bikini_micro") {
+    const microGeo = new THREE.CylinderGeometry(0.165, 0.23, 0.09, 32);
+    const micro = new THREE.Mesh(microGeo, clothesBottomMaterial);
+    micro.position.set(0, 0.96, 0);
+    clothingGroup.add(micro);
 
-    const chestCover = new THREE.Mesh(new THREE.SphereGeometry(0.135, 24, 20), clothesTopMaterial);
-    chestCover.scale.set(1.9, 1.1, 1.3);
-    chestCover.position.set(0, 1.34, 0.03);
-    clothingGroup.add(chestCover);
+    const braGeo = new THREE.TorusGeometry(0.13, 0.025, 16, 32);
+    const bra = new THREE.Mesh(braGeo, clothesTopMaterial);
+    bra.rotation.x = Math.PI / 2;
+    bra.position.set(0, 1.34, 0.08);
+    clothingGroup.add(bra);
+  } else {
+    const curvyGeo = new THREE.CylinderGeometry(0.168, 0.235, 0.14, 32);
+    const bottom = new THREE.Mesh(curvyGeo, clothesBottomMaterial);
+    bottom.position.set(0, 0.98, 0);
+    clothingGroup.add(bottom);
 
-  } else if (outfit.type === "micro_bikini" || outfit.type === "strappy_bikini") {
-    const bikiniBottomGeo = new THREE.TorusGeometry(0.18, 0.022, 16, 32);
-    bikiniBottomGeo.scale(1.15, 1.0, 1.35);
-    clothesBottomMesh = new THREE.Mesh(bikiniBottomGeo, clothesBottomMaterial);
-    clothesBottomMesh.rotation.x = Math.PI / 2;
-    clothesBottomMesh.position.set(0, 0.96, -0.02);
-    clothingGroup.add(clothesBottomMesh);
-
-    const braL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.06, 16), clothesTopMaterial);
-    braL.rotation.x = Math.PI / 2;
-    braL.position.set(-0.11, 1.34, 0.22);
-    const braR = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.06, 16), clothesTopMaterial);
-    braR.rotation.x = Math.PI / 2;
-    braR.position.set(0.11, 1.34, 0.22);
-    clothingGroup.add(braL);
-    clothingGroup.add(braR);
-
-  } else if (outfit.type === "swimsuit") {
-    const suitGeo = new THREE.CylinderGeometry(0.17, 0.21, 0.42, 32);
-    clothesBottomMesh = new THREE.Mesh(suitGeo, clothesBottomMaterial);
-    clothesBottomMesh.position.set(0, 1.08, 0);
-    clothingGroup.add(clothesBottomMesh);
-
-  } else if (outfit.type === "dress") {
-    const dressGeo = new THREE.CylinderGeometry(0.17, 0.24, 0.65, 32);
-    clothesBottomMesh = new THREE.Mesh(dressGeo, clothesBottomMaterial);
-    clothesBottomMesh.position.set(0, 1.02, 0);
-    clothingGroup.add(clothesBottomMesh);
+    const braGeo = new THREE.CylinderGeometry(0.162, 0.175, 0.12, 32);
+    const bra = new THREE.Mesh(braGeo, clothesTopMaterial);
+    bra.position.set(0, 1.34, 0.02);
+    clothingGroup.add(bra);
   }
+
+  document.getElementById('wardrobeNameDisplay').innerText = outfit.name;
 }
 
-/* 5. ROBÔ ASSISTENTE 3D */
+/* ==============================================================
+   5. CONSTRUÇÃO DO ROBÔ COMPANHEIRO (INVISÍVEL POR PADRÃO)
+============================================================== */
 function build3DRobotModel() {
   robotMeshGroup = new THREE.Group();
-  robotMaterial = new THREE.MeshStandardMaterial({
-    color: 0xe2e8f0,
-    roughness: 0.15,
-    metalness: 0.85
+
+  const chassisGeo = new THREE.SphereGeometry(0.18, 32, 24);
+  chassisGeo.scale(1.2, 0.95, 1.0);
+  const chassisMat = new THREE.MeshStandardMaterial({
+    color: 0x0f172a,
+    metalness: 0.85,
+    roughness: 0.2
   });
+  const chassis = new THREE.Mesh(chassisGeo, chassisMat);
+  robotMeshGroup.add(chassis);
 
-  const neonMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+  const visorGeo = new THREE.SphereGeometry(0.09, 24, 16);
+  visorGeo.scale(1.3, 0.6, 0.7);
+  const visorMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+  const visor = new THREE.Mesh(visorGeo, visorMat);
+  visor.position.set(0, 0.02, 0.15);
+  robotMeshGroup.add(visor);
 
-  const bodyGeo = new THREE.SphereGeometry(0.12, 24, 20);
-  bodyGeo.scale(1.0, 1.2, 0.9);
-  const botBody = new THREE.Mesh(bodyGeo, robotMaterial);
-  robotMeshGroup.add(botBody);
+  robotEyeLight = new THREE.PointLight(0x00f0ff, 1.5, 2.5);
+  robotEyeLight.position.set(0, 0.02, 0.25);
+  robotMeshGroup.add(robotEyeLight);
 
-  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.022, 16, 16), neonMat);
-  eyeL.position.set(-0.045, 0.04, 0.1);
-  const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.022, 16, 16), neonMat);
-  eyeR.position.set(0.045, 0.04, 0.1);
-  robotMeshGroup.add(eyeL);
-  robotMeshGroup.add(eyeR);
+  const ringGeo = new THREE.TorusGeometry(0.24, 0.015, 16, 48);
+  const ringMat = new THREE.MeshStandardMaterial({ color: 0xff007f, metalness: 0.9, roughness: 0.1 });
+  const scannerRing = new THREE.Mesh(ringGeo, ringMat);
+  scannerRing.rotation.x = Math.PI / 2.3;
+  robotMeshGroup.add(scannerRing);
 
-  const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.012, 0.14, 16), robotMaterial);
-  armL.position.set(-0.14, -0.04, 0);
-  armL.rotation.z = 0.5;
-  const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.012, 0.14, 16), robotMaterial);
-  armR.position.set(0.14, -0.04, 0);
-  armR.rotation.z = -0.5;
-  robotMeshGroup.add(armL);
-  robotMeshGroup.add(armR);
-
-  const flame = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.1, 16), new THREE.MeshBasicMaterial({ color: 0x00f0ff }));
-  flame.rotation.x = Math.PI;
-  flame.position.set(0, -0.16, 0);
-  robotMeshGroup.add(flame);
+  robotThrusterLight = new THREE.PointLight(0xff007f, 1.2, 1.5);
+  robotThrusterLight.position.set(0, -0.22, 0);
+  robotMeshGroup.add(robotThrusterLight);
 
   robotMeshGroup.position.set(0.7, 1.6, 0.5);
+  robotMeshGroup.scale.set(0.85, 0.85, 0.85);
+  robotMeshGroup.visible = false; // ROBÔ INVISÍVEL OPERANDO EM SEGUNDO PLANO
   scene.add(robotMeshGroup);
 }
 
-/* 6. ROBÔ: REMOVER CENÁRIO DA FOTO & DAR VIDA 3D */
-function robotRemoveBackgroundAndGiveLife() {
-  initAudioContext();
-  const scanOverlay = document.getElementById('aiScanOverlay');
-  const speech = document.getElementById('robotSpeech');
-  const hud = document.getElementById('hudStatus');
+/* ==============================================================
+   6. ANIMAÇÃO DE SLIDERS SUAVE
+============================================================== */
+function animateSlidersToValues(butt, waist, chest, legs) {
+  let step = 0;
+  const initialButt = parseFloat(document.getElementById('rngButt').value);
+  const initialWaist = parseFloat(document.getElementById('rngWaist').value);
+  const initialChest = parseFloat(document.getElementById('rngChest').value);
+  const initialLegs = parseFloat(document.getElementById('rngLegs').value);
 
-  scanOverlay.classList.add('active');
-  speech.innerText = `🤖: "Escaneando foto... Desintegrando quarto e portas do cenário!"`;
-  hud.innerText = "IA REMOVENDO CENÁRIO...";
+  const anim = setInterval(() => {
+    step += 0.1;
+    const curButt = Math.round(initialButt + (butt - initialButt) * step);
+    const curWaist = Math.round(initialWaist + (waist - initialWaist) * step);
+    const curChest = Math.round(initialChest + (chest - initialChest) * step);
+    const curLegs = Math.round(initialLegs + (legs - initialLegs) * step);
 
-  playRobotBeep(480, 0.2);
-  playLaserSound();
+    document.getElementById('rngButt').value = curButt;
+    document.getElementById('rngWaist').value = curWaist;
+    document.getElementById('rngChest').value = curChest;
+    document.getElementById('rngLegs').value = curLegs;
 
-  robotMeshGroup.position.set(0.1, 1.5, 0.8);
+    update3DAnatomy();
 
-  setTimeout(() => {
-    speech.innerText = `🤖: "Isolando modelo feminina... Criando articulações 3D nas pernas e quadris!"`;
-    playChimeSound();
-
-    setTimeout(() => {
-      scanOverlay.classList.remove('active');
-      robotMeshGroup.position.set(0.7, 1.6, 0.5);
-      speech.innerText = `🤖: "Cenário 100% removido! A mulher agora anda na passarela como em um vídeo 3D!"`;
-      hud.innerText = "PESSOA ISOLADA EM VÍDEO 3D";
-
-      if (!isWalking) {
-        toggleWalking3D();
-      }
-    }, 1200);
-  }, 1400);
+    if (step >= 1) clearInterval(anim);
+  }, 40);
 }
 
-/* 7. ROBÔ: TROCAR ROUPA 3D */
+function setAiScanPreset(preset, btn) {
+  if (preset === 'photo_exact') loadSamplePreset('photo_exact', btn);
+  else if (preset === 'ultra_hourglass') loadSamplePreset('brunette_fitness', btn);
+  else if (preset === 'athletic') loadSamplePreset('redhead_curvy', btn);
+}
+
+function robotScanAndCalibrateBody() {
+  triggerRobotFullCalibration();
+}
+
+/* ==============================================================
+   7. ROBÔ: TROCAR ROUPA 3D (DESPIR E VESTIR)
+============================================================== */
 function triggerRobotChange(index) {
   if (isRobotBusy) return;
   isRobotBusy = true;
@@ -1124,238 +1642,168 @@ function triggerRobotChange(index) {
   const outfit = OUTFITS_3D[index];
   const speech = document.getElementById('robotSpeech');
   const hud = document.getElementById('hudStatus');
-  const scanOverlay = document.getElementById('aiScanOverlay');
+  const grid = document.getElementById('biometricGrid');
 
-  speech.innerText = `🤖: "Desmaterializando look antigo... Tecendo ${outfit.name} no corpo!"`;
-  hud.innerText = "ROBÔ ALFAIATE OPERANDO";
-  scanOverlay.classList.add('active');
+  speech.innerText = `🤖 Robô Invisível: "Desmaterializando look antigo... Tecendo ${outfit.name} no corpo!"`;
+  hud.innerText = "ROBÔ INVISÍVEL ALFAIATE OPERANDO";
+  grid.classList.add('active');
 
   playRobotBeep(520, 0.18);
   playLaserSound();
 
-  const startX = robotMeshGroup.position.x;
-  const startY = robotMeshGroup.position.y;
-  robotMeshGroup.position.set(0.25, 1.2, 0.6);
-
   let dissolveStep = 0;
   const dissolveInterval = setInterval(() => {
-    dissolveStep += 0.2;
-    clothingGroup.scale.set(1 + dissolveStep * 0.15, 1 + dissolveStep * 0.15, 1 + dissolveStep * 0.15);
+    dissolveStep += 0.15;
+    clothingGroup.scale.set(1 - dissolveStep * 0.4, 1 - dissolveStep * 0.4, 1 - dissolveStep * 0.4);
+
     if (dissolveStep >= 1) {
       clearInterval(dissolveInterval);
 
-      currentOutfitIndex = index;
-      document.getElementById('wardrobeNameDisplay').innerText = `${outfit.id.toString().padStart(2, '0')}. ${outfit.name}`;
       build3DClothing(outfit);
+      clothingGroup.scale.set(0.6, 0.6, 0.6);
 
-      document.querySelectorAll('.biquini-pill').forEach((el, idx) => {
-        el.classList.toggle('active', idx === index);
-      });
+      let weaveStep = 0;
+      const weaveInterval = setInterval(() => {
+        weaveStep += 0.15;
+        const curScale = 0.6 + weaveStep * 0.4;
+        clothingGroup.scale.set(curScale, curScale, curScale);
 
-      clothingGroup.scale.set(0.85, 0.85, 0.85);
-      setTimeout(() => {
-        clothingGroup.scale.set(1, 1, 1);
-        scanOverlay.classList.remove('active');
-        robotMeshGroup.position.set(startX, startY, 0.5);
-        speech.innerText = `🤖: "Roupa trocada com perfeição! O caimento no corpo 3D ficou impecável!"`;
-        hud.innerText = "PESSOA ISOLADA EM VÍDEO 3D";
-        playChimeSound();
-        isRobotBusy = false;
-      }, 400);
+        if (weaveStep >= 1) {
+          clearInterval(weaveInterval);
+          clothingGroup.scale.set(1, 1, 1);
+
+          grid.classList.remove('active');
+          isRobotBusy = false;
+
+          playChimeSound();
+          speech.innerText = `💃 Bailarina: "Olha meu novo look ${outfit.name}! Ficou lindo no meu corpo!"`;
+          hud.innerText = "ROUPA VESTIDA COM SUCESSO";
+        }
+      }, 50);
     }
-  }, 60);
+  }, 45);
+
+  document.querySelectorAll('.biquini-card-item').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
 }
 
-/* 8. FAZER ELA ANDAR DE VERDADE COMO PESSOA (CATWALK PASSOS REAIS) */
+/* ==============================================================
+   8. ANDAR E REBOLAR 3D
+============================================================== */
 function toggleWalking3D() {
+  initAudioContext();
+  isWalking = !isWalking;
   const btn = document.getElementById('btnToggleWalk');
-  const icon = document.getElementById('walkIcon');
   const txt = document.getElementById('walkText');
-  const speech = document.getElementById('robotSpeech');
+  const icon = document.getElementById('walkIcon');
 
-  if (!isWalking) {
-    isWalking = true;
+  if (isWalking) {
     setPoseWalk();
+    txt.innerText = "PARAR NA POSE";
     icon.innerText = "⏸";
-    txt.innerText = "PARAR CAMINHADA";
-    btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-    speech.innerText = `🤖: "Veja os passos reais! Pernas alternando, joelhos flexionando e quadris rebolando!"`;
+    btn.style.background = "linear-gradient(135deg, #00f0ff, #3b82f6)";
   } else {
-    isWalking = false;
     setPosePhoto();
-    icon.innerText = "🚶‍♀️";
     txt.innerText = "FAZER ELA ANDAR";
-    btn.style.background = "linear-gradient(135deg, #ff3377, #d91456)";
-    womanGroup.position.x = 0;
-    speech.innerText = `🤖: "Pose da foto retomada! Perna no pufe e respiração contínua."`;
+    icon.innerText = "🚶‍♀️";
+    btn.style.background = "linear-gradient(135deg, var(--primary-accent), #d946ef)";
   }
 }
 
-/* 9. LOOP DE ANIMAÇÃO 3D (PASSOS REAIS, RESPIRAÇÃO, FUNK) */
+/* ==============================================================
+   9. LOOP DE RENDERIZAÇÃO E ANIMAÇÃO CONTÍNUA
+============================================================== */
 function animate3D() {
   requestAnimationFrame(animate3D);
 
-  const delta = 0.016;
-  breathTime += delta * (3.6 / breathSpeed);
-
-  // Respiração 3D no Peito e Cintura
-  const breathFactor = Math.sin(breathTime * 2.2);
-  chestMesh.scale.set(1 + breathFactor * 0.04, 1 + breathFactor * 0.03, 1 + breathFactor * 0.05);
-  waistMesh.scale.x = 1 - breathFactor * 0.02;
-
-  robotMeshGroup.position.y += Math.sin(breathTime * 3) * 0.0015;
-
-  // Caminhada 3D Real (Passos de Pernas e Rebolado)
-  if (isWalking) {
-    walkTime += delta * 4.2;
-
-    womanGroup.position.x = Math.sin(walkTime * 0.6) * 0.55;
-
-    // Passos alternados das pernas
-    const legPhase = Math.sin(walkTime * 2.8);
-    leftLegGroup.rotation.x = legPhase * 0.45;
-    leftLegGroup.children[1].rotation.x = Math.max(0, -legPhase) * 0.5; // Dobra o joelho ao dar o passo
-    
-    rightLegGroup.rotation.x = -legPhase * 0.45;
-    rightLegGroup.children[1].rotation.x = Math.max(0, legPhase) * 0.5;
-
-    buttMesh.rotation.y = legPhase * 0.15;
-    buttMesh.rotation.z = -legPhase * 0.06;
-    womanGroup.position.y = Math.abs(Math.sin(walkTime * 2.8)) * 0.04;
-    womanGroup.rotation.z = -legPhase * 0.03;
-
-  } else if (isFunkPlaying) {
-    // Dança Funk 130 BPM (Twerk & Rebolado no Salto)
-    funkTime += delta * 13.6;
-    const beat = Math.sin(funkTime);
-    buttMesh.scale.set(1.25 + Math.max(0, beat) * 0.1, 1.05 - Math.max(0, beat) * 0.05, 1.4 + Math.max(0, beat) * 0.14);
-    womanGroup.position.y = Math.abs(Math.sin(funkTime * 0.5)) * 0.06;
-    buttMesh.rotation.x = Math.sin(funkTime * 0.5) * 0.15;
+  breathTime += 0.03 * breathSpeedMultiplier;
+  const breath = Math.sin(breathTime) * 0.025;
+  if (waistMesh) waistMesh.scale.x = 1.0 + breath * 0.5;
+  if (chestMesh) {
+    chestMesh.scale.set(1.0 + breath * 0.8, 1.0 + breath * 0.8, 1.0 + breath * 0.8);
   }
 
-  // Câmera 3D
-  if (!isUserDragging) {
-    currentCameraRotY += (targetCameraRotY - currentCameraRotY) * 0.08;
-    camera.position.x = Math.sin(currentCameraRotY) * targetCameraDist;
-    camera.position.z = Math.cos(currentCameraRotY) * targetCameraDist;
-    camera.position.y = 1.35 + currentCameraPitch * 2;
-    camera.lookAt(0, 1.1, 0);
+  if (robotMeshGroup && robotMeshGroup.visible) {
+    robotMeshGroup.position.y += Math.sin(breathTime * 1.6) * 0.0018;
+    robotMeshGroup.children[3].rotation.z += 0.03;
+  }
+
+  if (isWalking) {
+    walkClock += 0.075;
+
+    leftLegGroup.rotation.x = Math.sin(walkClock) * 0.42;
+    leftLegGroup.children[1].rotation.x = Math.max(0, -Math.sin(walkClock) * 0.6);
+
+    rightLegGroup.rotation.x = -Math.sin(walkClock) * 0.42;
+    rightLegGroup.children[1].rotation.x = Math.max(0, Math.sin(walkClock) * 0.6);
+
+    buttMesh.rotation.y = Math.sin(walkClock) * 0.18;
+    buttMesh.rotation.z = Math.cos(walkClock) * 0.06;
+
+    womanGroup.position.y = Math.abs(Math.sin(walkClock * 2)) * 0.035;
+  } else if (isFunkPlaying) {
+    walkClock += 0.14;
+    buttMesh.position.z = -0.04 + Math.abs(Math.sin(walkClock * 2)) * 0.04;
+    buttMesh.rotation.x = Math.sin(walkClock * 2) * 0.15;
+    bodyMeshGroup.position.y = -Math.abs(Math.sin(walkClock * 2)) * 0.04;
   }
 
   renderer.render(scene, camera);
 }
 
-/* 10. CONTROLES DE TOQUE 360° */
+/* ==============================================================
+   10. CONTROLES DE TOQUE 360°
+============================================================== */
+let isPointerDown = false;
+let pointerStartX = 0;
+let pointerStartY = 0;
+let modelRotationY = Math.PI * 0.95;
+
 function setup3DTouchControls(canvas) {
-  function onPointerDown(e) {
-    isUserDragging = true;
-    previousPointerX = e.clientX || (e.touches && e.touches[0].clientX);
-    previousPointerY = e.clientY || (e.touches && e.touches[0].clientY);
-  }
-
-  function onPointerMove(e) {
-    if (!isUserDragging) return;
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-    const deltaX = clientX - previousPointerX;
-    const deltaY = clientY - previousPointerY;
-
-    targetCameraRotY -= deltaX * 0.008;
-    currentCameraRotY = targetCameraRotY;
-    currentCameraPitch = Math.max(-0.25, Math.min(0.45, currentCameraPitch - deltaY * 0.003));
-
-    camera.position.x = Math.sin(targetCameraRotY) * targetCameraDist;
-    camera.position.z = Math.cos(targetCameraRotY) * targetCameraDist;
-    camera.position.y = 1.35 + currentCameraPitch * 2;
-    camera.lookAt(0, 1.1, 0);
-
-    previousPointerX = clientX;
-    previousPointerY = clientY;
-  }
-
-  function onPointerUp() { isUserDragging = false; }
-
-  canvas.addEventListener('mousedown', onPointerDown);
-  window.addEventListener('mousemove', onPointerMove);
-  window.addEventListener('mouseup', onPointerUp);
-
-  canvas.addEventListener('touchstart', onPointerDown, { passive: true });
-  window.addEventListener('touchmove', onPointerMove, { passive: true });
-  window.addEventListener('touchend', onPointerUp);
+  canvas.addEventListener('pointerdown', onPointerDown);
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
 }
 
-function setCameraView(viewName) {
+function onPointerDown(e) {
+  isPointerDown = true;
+  pointerStartX = e.clientX;
+  pointerStartY = e.clientY;
+}
+
+function onPointerMove(e) {
+  if (!isPointerDown) return;
+  const deltaX = e.clientX - pointerStartX;
+  pointerStartX = e.clientX;
+  modelRotationY += deltaX * 0.009;
+  if (womanGroup) womanGroup.rotation.y = modelRotationY;
+}
+
+function onPointerUp() {
+  isPointerDown = false;
+}
+
+function setCameraView(view) {
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  if (viewName === 'back') {
-    targetCameraRotY = 0;
-    document.getElementById('btnViewBack').classList.add('active');
-  } else if (viewName === 'front') {
-    targetCameraRotY = Math.PI;
-    document.getElementById('btnViewFront').classList.add('active');
-  } else if (viewName === 'side') {
-    targetCameraRotY = Math.PI * 0.5;
-    document.getElementById('btnViewSide').classList.add('active');
-  }
-}
 
-/* 11. INSERIR FOTO DA IA COM REMOÇÃO AUTOMÁTICA DE CENÁRIO */
-function handlePhotoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const rawImg = new Image();
-    rawImg.src = e.target.result;
-    rawImg.onload = () => {
-      const processedCanvas = removeBackgroundFromImage(rawImg);
-      const tex = new THREE.CanvasTexture(processedCanvas);
-      tex.needsUpdate = true;
-      skinMaterial.map = tex;
-      skinMaterial.needsUpdate = true;
-
-      document.getElementById('hudStatus').innerText = "FOTO RECORTADA & INTEGRADA EM 3D!";
-      document.getElementById('robotSpeech').innerText = `🤖: "Cenário da sua foto apagado com sucesso! Apenas a mulher foi integrada no corpo 3D!"`;
-      
-      robotRemoveBackgroundAndGiveLife();
-    };
-  };
-  reader.readAsDataURL(file);
-}
-
-/* Algoritmo no Canvas para Apagar o Cenário Branco/Bege do Quarto */
-function removeBackgroundFromImage(img) {
-  const cvs = document.createElement('canvas');
-  cvs.width = img.width;
-  cvs.height = img.height;
-  const ctx = cvs.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-
-  const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
-  const data = imgData.data;
-
-  const bgR = (data[0] + data[(cvs.width - 1) * 4]) / 2;
-  const bgG = (data[1] + data[(cvs.width - 1) * 4 + 1]) / 2;
-  const bgB = (data[2] + data[(cvs.width - 1) * 4 + 2]) / 2;
-
-  const tol = 65;
-
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-
-    const dist = Math.sqrt((r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2);
-    if (dist < tol && (r > 160 && g > 160 && b > 160)) {
-      data[i + 3] = 0; // Transparente (cenário apagado)
-    }
+  if (view === 'back') {
+    modelRotationY = Math.PI * 0.95;
+    if (document.getElementById('btnViewBack')) document.getElementById('btnViewBack').classList.add('active');
+  } else if (view === 'front') {
+    modelRotationY = 0;
+    if (document.getElementById('btnViewFront')) document.getElementById('btnViewFront').classList.add('active');
+  } else if (view === 'side') {
+    modelRotationY = Math.PI * 0.5;
+    if (document.getElementById('btnViewSide')) document.getElementById('btnViewSide').classList.add('active');
   }
 
-  ctx.putImageData(imgData, 0, 0);
-  return cvs;
+  if (womanGroup) womanGroup.rotation.y = modelRotationY;
 }
 
-/* 12. SLIDERS ANATÔMICOS 3D */
+/* ==============================================================
+   11. SLIDERS ANATÔMICOS 3D
+============================================================== */
 function update3DAnatomy() {
   const buttVal = document.getElementById('rngButt').value / 100;
   const waistVal = document.getElementById('rngWaist').value / 100;
@@ -1367,233 +1815,681 @@ function update3DAnatomy() {
   document.getElementById('lblChest').innerText = `${Math.round(chestVal * 100)}%`;
   document.getElementById('lblLegs').innerText = `${Math.round(legsVal * 100)}%`;
 
-  if (buttMesh) buttMesh.scale.set(buttVal * 0.9, buttVal * 0.75, buttVal * 1.05);
-  if (clothesBottomMesh) clothesBottomMesh.scale.set(buttVal * 0.92, buttVal * 0.76, buttVal * 1.06);
-  if (waistMesh) waistMesh.scale.set(waistVal, 1, waistVal);
-  if (chestMesh) chestMesh.scale.set(chestVal, chestVal, chestVal);
-  if (leftLegGroup) leftLegGroup.scale.set(legsVal, 1, legsVal);
-  if (rightLegGroup) rightLegGroup.scale.set(legsVal, 1, legsVal);
+  if (buttMesh) {
+    buttMesh.scale.set(1.25 * buttVal, 1.05 * buttVal, 1.4 * buttVal);
+  }
+  if (clothingGroup && clothingGroup.children[0]) {
+    clothingGroup.children[0].scale.set(1.26 * buttVal, 1.06 * buttVal, 1.41 * buttVal);
+  }
+
+  if (waistMesh) {
+    waistMesh.scale.set(waistVal, 1.0, waistVal);
+  }
+
+  if (chestMesh) {
+    chestMesh.scale.set(chestVal, chestVal, chestVal);
+  }
+
+  if (leftLegGroup && rightLegGroup) {
+    leftLegGroup.scale.set(legsVal, 1.0, legsVal);
+    rightLegGroup.scale.set(legsVal, 1.0, legsVal);
+  }
 }
 
 function updateBreathSpeed() {
   const val = document.getElementById('rngBreath').value;
-  breathSpeed = (val / 10).toFixed(1);
-  document.getElementById('lblBreath').innerText = `${breathSpeed}s`;
+  breathSpeedMultiplier = 36 / val;
+  document.getElementById('lblBreath').innerText = `${(val / 10).toFixed(1)}s`;
 }
 
-function setHairColor3D(color, btn) {
-  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (!hairMaterial) return;
-
-  if (color === 'platinum') hairMaterial.color.setHex(0xf6e1af);
-  else if (color === 'honey') hairMaterial.color.setHex(0xd49b38);
-  else if (color === 'brunette') hairMaterial.color.setHex(0x42251d);
-  else if (color === 'redhead') hairMaterial.color.setHex(0xb5350b);
-  else if (color === 'black') hairMaterial.color.setHex(0x181a1f);
+function setHairColor3D(tone) {
+  if (tone === 'platinum') hairMaterial.color.setHex(0xf6e1af);
+  else if (tone === 'golden') hairMaterial.color.setHex(0xdeb362);
+  else if (tone === 'brunette') hairMaterial.color.setHex(0x422a1d);
+  else if (tone === 'black') hairMaterial.color.setHex(0x111111);
+  else if (tone === 'redhead') hairMaterial.color.setHex(0xad381b);
 }
 
-function setSkinTone3D(tone, btn) {
-  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (!skinMaterial) return;
-
+function setSkinTone3D(tone) {
   if (tone === 'nordic') skinMaterial.color.setHex(0xf8dfd4);
-  else if (tone === 'golden') skinMaterial.color.setHex(0xe2a97b);
-  else if (tone === 'tropical') skinMaterial.color.setHex(0xaa6b43);
+  else if (tone === 'warm_fair') skinMaterial.color.setHex(0xf7d2be);
+  else if (tone === 'golden_tan') skinMaterial.color.setHex(0xd49b74);
+  else if (tone === 'bronze') skinMaterial.color.setHex(0xa96e48);
+  else if (tone === 'deep') skinMaterial.color.setHex(0x5a3825);
 }
 
-function setPersonMode(mode, btn) {
-  btn.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (mode === 'cyborg') {
-    skinMaterial.metalness = 0.35;
-    skinMaterial.roughness = 0.25;
-  } else {
-    skinMaterial.metalness = 0.05;
-    skinMaterial.roughness = 0.45;
-  }
-}
-
-/* 13. ABAS & GUARDA-ROUPA */
+/* ==============================================================
+   12. NAVEGAÇÃO ENTRE ABAS
+============================================================== */
 function openTab(tabId, btn) {
-  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-nav-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
   btn.classList.add('active');
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
 }
 
 function initWardrobeGrid() {
   const grid = document.getElementById('biquiniGrid');
-  grid.innerHTML = '';
+  grid.innerHTML = "";
+
   OUTFITS_3D.forEach((outfit, index) => {
-    const pill = document.createElement('div');
-    pill.className = `biquini-pill ${index === currentOutfitIndex ? 'active' : ''}`;
-    pill.innerText = `${outfit.id}. ${outfit.name.split(' ')[1] || 'Roupa'}`;
-    pill.onclick = () => triggerRobotChange(index);
-    grid.appendChild(pill);
+    const card = document.createElement('div');
+    card.className = `biquini-card-item ${index === 0 ? 'active' : ''}`;
+    card.onclick = () => triggerRobotChange(index);
+
+    const thumb = document.createElement('div');
+    thumb.className = "biquini-preview-thumb";
+    thumb.style.background = `linear-gradient(135deg, #${outfit.topCol.toString(16).padStart(6, '0')}, #${outfit.bottomCol.toString(16).padStart(6, '0')})`;
+
+    const title = document.createElement('div');
+    title.className = "biquini-label-title";
+    title.innerText = outfit.name;
+
+    const desc = document.createElement('div');
+    desc.className = "biquini-label-desc";
+    desc.innerText = outfit.type === 'leggings_top' ? 'Fitness / Foto' : 'Biquíni Modelador';
+
+    card.appendChild(thumb);
+    card.appendChild(title);
+    card.appendChild(desc);
+    grid.appendChild(card);
   });
 }
 
-/* 14. SÍNTESE DE ÁUDIO DO ROBÔ E FUNK 130 BPM */
-let audioCtx = null;
-let funkInterval = null;
-let beatStep = 0;
-let analyser = null;
-
+/* ==============================================================
+   13. ÁUDIO & FUNK 130 BPM
+============================================================== */
 function initAudioContext() {
   if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 64;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    audioAnalyser = audioCtx.createAnalyser();
+    audioAnalyser.fftSize = 64;
+    initVisualizer();
   }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
 }
 
-function playRobotBeep(freq, dur) {
+function playRobotBeep(freq, duration) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
-  osc.type = 'sine';
+  osc.type = "sawtooth";
   osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
   osc.connect(gain);
   gain.connect(audioCtx.destination);
-  osc.start(audioCtx.currentTime);
-  osc.stop(audioCtx.currentTime + dur);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
 }
 
 function playLaserSound() {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
-  osc.type = 'sawtooth';
-  const now = audioCtx.currentTime;
-  osc.frequency.setValueAtTime(900, now);
-  osc.frequency.exponentialRampToValueAtTime(140, now + 0.6);
-  gain.gain.setValueAtTime(0.2, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.28);
+  gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.28);
   osc.connect(gain);
   gain.connect(audioCtx.destination);
-  osc.start(now);
-  osc.stop(now + 0.65);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.28);
 }
 
 function playChimeSound() {
   if (!audioCtx) return;
-  [523, 659, 784, 1046].forEach((f, i) => {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const time = audioCtx.currentTime + i * 0.08;
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(f, time);
-    gain.gain.setValueAtTime(0.15, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.4);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(time);
-    osc.stop(time + 0.45);
+  [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+    setTimeout(() => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.4);
+    }, idx * 75);
   });
 }
 
-function playTamborzao() {
-  const now = audioCtx.currentTime;
-  const s = beatStep % 8;
-  if (s === 0 || s === 4 || s === 5) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(140, now);
-    osc.frequency.exponentialRampToValueAtTime(38, now + 0.12);
-    gain.gain.setValueAtTime(1.0, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-    osc.connect(gain);
-    gain.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + 0.3);
-  }
-  if (s === 2 || s === 6) {
-    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.12, audioCtx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    const src = audioCtx.createBufferSource();
-    src.buffer = buf;
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.6, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-    src.connect(gain);
-    gain.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    src.start(now);
-  }
-  beatStep++;
+function playTamborzao(time) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(140, time);
+  osc.frequency.exponentialRampToValueAtTime(42, time + 0.16);
+  gain.gain.setValueAtTime(0.35, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.16);
+  osc.connect(gain);
+  gain.connect(audioAnalyser);
+  gain.connect(audioCtx.destination);
+  osc.start(time);
+  osc.stop(time + 0.16);
 }
 
 function toggleFunkAudio() {
   initAudioContext();
+  isFunkPlaying = !isFunkPlaying;
   const btn = document.getElementById('btnPlayFunk');
-  const icon = document.getElementById('playIcon');
   const txt = document.getElementById('playText');
+  const icon = document.getElementById('playIcon');
 
-  if (!isFunkPlaying) {
-    isFunkPlaying = true;
-    icon.innerText = "⏸";
-    txt.innerText = "PAUSAR";
-    btn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-    const stepDurationMs = (60 / 130 / 2) * 1000;
-    funkInterval = setInterval(playTamborzao, stepDurationMs);
+  if (isFunkPlaying) {
+    txt.innerText = "PAUSAR FUNK";
+    icon.innerText = "⏹";
+    btn.style.background = "var(--primary-accent)";
+
+    const beatIntervalMs = (60 / 130) * 1000;
+    funkOscInterval = setInterval(() => {
+      playTamborzao(audioCtx.currentTime);
+      setTimeout(() => playTamborzao(audioCtx.currentTime), beatIntervalMs * 0.38);
+      setTimeout(() => playTamborzao(audioCtx.currentTime), beatIntervalMs * 0.72);
+    }, beatIntervalMs);
   } else {
-    isFunkPlaying = false;
-    icon.innerText = "▶";
     txt.innerText = "FUNK 130 BPM";
-    btn.style.background = "rgba(22, 17, 39, 0.9)";
-    clearInterval(funkInterval);
+    icon.innerText = "▶";
+    btn.style.background = "rgba(255, 255, 255, 0.08)";
+    clearInterval(funkOscInterval);
   }
 }
 
 function initVisualizer() {
   const canvas = document.getElementById('visualizerCanvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+  const bufferLength = audioAnalyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
 
   function renderFrame() {
     requestAnimationFrame(renderFrame);
+    audioAnalyser.getByteFrequencyData(dataArray);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const barWidth = (canvas.width / bufferLength) * 2.2;
+    let x = 0;
 
-    if (analyser && isFunkPlaying) {
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyser.getByteFrequencyData(dataArray);
-
-      const barWidth = (canvas.width / bufferLength) * 1.8;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = (dataArray[i] / 255) * canvas.height;
-        const grad = ctx.createLinearGradient(0, canvas.height, 0, 0);
-        grad.addColorStop(0, '#ff3377');
-        grad.addColorStop(1, '#00f0ff');
-        ctx.fillStyle = grad;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
-        x += barWidth;
-      }
-    } else {
-      ctx.fillStyle = 'rgba(255, 51, 119, 0.25)';
-      ctx.fillRect(0, canvas.height / 2 - 1, canvas.width, 2);
+    for (let i = 0; i < bufferLength; i++) {
+      const barHeight = (dataArray[i] / 255) * canvas.height;
+      ctx.fillStyle = isFunkPlaying ? '#ff007f' : '#00f0ff';
+      ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+      x += barWidth + 1.5;
     }
   }
   renderFrame();
 }
 
+/* ==============================================================
+   14. BANCO DE PRESETS OFFLINE & GERADOR DE SILHUETAS
+============================================================== */
+function getSampleSvgData(type) {
+  let hairCol = "#f6e1af", skinCol = "#f8dfd4", topCol = "#ffffff", botCol = "#5a5f69";
+  let bgGrad = ["#eceae4", "#d8d4cb"];
+
+  if (type === 'brunette_fitness') {
+    hairCol = "#3b261b"; skinCol = "#d89d78"; topCol = "#ff5757"; botCol = "#222226";
+    bgGrad = ["#2a2835", "#181722"];
+  } else if (type === 'redhead_curvy') {
+    hairCol = "#a83e1b"; skinCol = "#ffdfd3"; topCol = "#0f7a55"; botCol = "#094d35";
+    bgGrad = ["#1b2a26", "#0f1916"];
+  }
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 360" width="240" height="360">
+    <defs>
+      <linearGradient id="g_${type}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${bgGrad[0]}"/>
+        <stop offset="100%" stop-color="${bgGrad[1]}"/>
+      </linearGradient>
+    </defs>
+    <rect width="240" height="360" fill="url(#g_${type})"/>
+    <ellipse cx="160" cy="275" rx="35" ry="16" fill="#ded9d0"/>
+    <rect x="125" y="275" width="70" height="50" rx="6" fill="#cec8be"/>
+    <path d="M 108 55 C 100 70, 95 110, 102 145 C 115 150, 135 150, 145 135 C 150 110, 146 70, 138 55 Z" fill="${hairCol}"/>
+    <ellipse cx="123" cy="58" rx="14" ry="17" fill="${skinCol}"/>
+    <path d="M 110 75 Q 123 72 136 75 L 144 112 Q 123 118 102 112 Z" fill="${topCol}"/>
+    <ellipse cx="114" cy="98" rx="12" ry="10" fill="${topCol}"/>
+    <ellipse cx="132" cy="98" rx="12" ry="10" fill="${topCol}"/>
+    <path d="M 112 112 Q 123 115 134 112 L 132 135 Q 123 138 114 135 Z" fill="${skinCol}"/>
+    <path d="M 112 135 Q 92 155 96 195 Q 123 205 150 195 Q 154 155 134 135 Z" fill="${botCol}"/>
+    <path d="M 132 185 C 145 190, 160 210, 162 240 L 160 270 L 150 270 L 148 240 C 145 220, 136 195, 130 185 Z" fill="${botCol}"/>
+    <rect x="156" y="270" width="8" height="15" fill="#111111"/>
+    <line x1="164" y1="270" x2="164" y2="285" stroke="#111111" stroke-width="2.5"/>
+    <path d="M 104 185 C 100 215, 102 260, 105 315 L 115 315 C 118 260, 120 215, 118 185 Z" fill="${botCol}"/>
+    <rect x="103" y="315" width="12" height="16" fill="#111111"/>
+    <line x1="104" y1="315" x2="104" y2="332" stroke="#111111" stroke-width="2.5"/>
+  </svg>`;
+
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
+
+let currentLoadedImageElement = null;
+
 window.addEventListener('DOMContentLoaded', () => {
   init3DScene();
   initWardrobeGrid();
-  initVisualizer();
+
+  const img = document.getElementById('scannedPhotoImg');
+  img.src = getSampleSvgData('photo_exact');
+  currentLoadedImageElement = img;
 });
+
+function loadSamplePreset(presetKey, btnElement) {
+  if (btnElement) {
+    btnElement.parentElement.querySelectorAll('.pill-option-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+  }
+
+  const img = document.getElementById('scannedPhotoImg');
+  img.src = getSampleSvgData(presetKey);
+  currentLoadedImageElement = img;
+  img.onload = () => {
+    triggerRobotFullCalibration();
+  };
+}
+
+/* ==============================================================
+   15. UPLOAD DE FOTO PELO USUÁRIO (CÂMERA / GALERIA)
+============================================================== */
+function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const bioTabBtn = document.querySelectorAll('.tab-nav-btn')[1];
+  if (bioTabBtn) openTab('tabBiometrics', bioTabBtn);
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.getElementById('scannedPhotoImg');
+    img.src = e.target.result;
+    currentLoadedImageElement = img;
+    img.onload = () => {
+      triggerRobotFullCalibration();
+    };
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ==============================================================
+   16. COMPUTER VISION COM IA: EXTRAÇÃO DE CORES & SILHUETA
+============================================================== */
+function analyzeImageWithAI(img, callback) {
+  const cvs = document.createElement('canvas');
+  const w = 160;
+  const h = 240;
+  cvs.width = w;
+  cvs.height = h;
+  const ctx = cvs.getContext('2d');
+  ctx.drawImage(img, 0, 0, w, h);
+
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const px = imgData.data;
+
+  const corners = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]];
+  let bgR = 0, bgG = 0, bgB = 0;
+  for (let c of corners) {
+    const idx = (c[1] * w + c[0]) * 4;
+    bgR += px[idx]; bgG += px[idx + 1]; bgB += px[idx + 2];
+  }
+  bgR /= 4; bgG /= 4; bgB /= 4;
+
+  let minXByRow = new Array(h).fill(w);
+  let maxXByRow = new Array(h).fill(0);
+  let rowHasPerson = new Array(h).fill(false);
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      const r = px[idx], g = px[idx + 1], b = px[idx + 2], a = px[idx + 3];
+      if (a < 50) continue;
+
+      const distBg = Math.sqrt((r - bgR)**2 + (g - bgG)**2 + (b - bgB)**2);
+      if (distBg > 26) {
+        minXByRow[y] = Math.min(minXByRow[y], x);
+        maxXByRow[y] = Math.max(maxXByRow[y], x);
+        rowHasPerson[y] = true;
+      }
+    }
+  }
+
+  let firstRow = 0, lastRow = h - 1;
+  while (firstRow < h && !rowHasPerson[firstRow]) firstRow++;
+  while (lastRow > 0 && !rowHasPerson[lastRow]) lastRow--;
+
+  const personH = Math.max(20, lastRow - firstRow);
+
+  function isSkin(r, g, b) {
+    return (r > 60 && g > 40 && b > 25 && r > g && g >= b && (r - g) >= 8 && (r - b) >= 14 && (r - Math.max(g, b)) < 95);
+  }
+
+  let skinR = 0, skinG = 0, skinB = 0, skinCount = 0;
+  let hairR = 0, hairG = 0, hairB = 0, hairCount = 0;
+  let topR = 0, topG = 0, topB = 0, topCount = 0;
+  let botR = 0, botG = 0, botB = 0, botCount = 0;
+
+  for (let y = firstRow; y <= lastRow; y++) {
+    if (!rowHasPerson[y]) continue;
+    const relY = (y - firstRow) / personH;
+
+    for (let x = minXByRow[y]; x <= maxXByRow[y]; x++) {
+      const idx = (y * w + x) * 4;
+      const r = px[idx], g = px[idx + 1], b = px[idx + 2];
+
+      const distBg = Math.sqrt((r - bgR)**2 + (g - bgG)**2 + (b - bgB)**2);
+      if (distBg <= 24) continue;
+
+      const skin = isSkin(r, g, b);
+
+      if (relY <= 0.16) {
+        if (!skin) { hairR += r; hairG += g; hairB += b; hairCount++; }
+      }
+      if (relY >= 0.10 && relY <= 0.24) {
+        if (skin) { skinR += r; skinG += g; skinB += b; skinCount++; }
+      }
+      if (relY >= 0.25 && relY <= 0.46) {
+        if (!skin) { topR += r; topG += g; topB += b; topCount++; }
+        else { skinR += r; skinG += g; skinB += b; skinCount++; }
+      }
+      if (relY >= 0.50 && relY <= 0.85) {
+        if (!skin) { botR += r; botG += g; botB += b; botCount++; }
+        else { skinR += r; skinG += g; skinB += b; skinCount++; }
+      }
+    }
+  }
+
+  function getAvgWidth(startPct, endPct) {
+    let sumW = 0, cnt = 0;
+    const y1 = Math.round(firstRow + personH * startPct);
+    const y2 = Math.round(firstRow + personH * endPct);
+    for (let y = y1; y <= y2; y++) {
+      if (y >= 0 && y < h && rowHasPerson[y]) {
+        sumW += (maxXByRow[y] - minXByRow[y]);
+        cnt++;
+      }
+    }
+    return cnt > 0 ? (sumW / cnt) : 32;
+  }
+
+  const wChest = getAvgWidth(0.20, 0.32);
+  const wWaist = getAvgWidth(0.36, 0.46);
+  const wHips  = getAvgWidth(0.50, 0.65);
+  const wLegs  = getAvgWidth(0.68, 0.88);
+
+  const whRatio = wWaist / Math.max(1, wHips);
+  const cwRatio = wChest / Math.max(1, wWaist);
+  const lwRatio = wLegs / Math.max(1, wWaist);
+
+  const butt = Math.round(Math.max(120, Math.min(185, 110 + (1.0 - whRatio) * 115)));
+  const waist = Math.round(Math.max(68, Math.min(94, 52 + whRatio * 44)));
+  const chest = Math.round(Math.max(110, Math.min(165, 96 + (cwRatio - 1.0) * 75)));
+  const legs = Math.round(Math.max(95, Math.min(145, 88 + lwRatio * 32)));
+
+  function toHex(r, g, b) {
+    return "#" + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+  }
+
+  const skinHex = skinCount > 8 ? toHex(skinR/skinCount, skinG/skinCount, skinB/skinCount) : "#f8dfd4";
+  const hairHex = hairCount > 8 ? toHex(hairR/hairCount, hairG/hairCount, hairB/hairCount) : "#f6e1af";
+  const topHex  = topCount  > 8 ? toHex(topR/topCount, topG/topCount, topB/topCount) : "#ffffff";
+  const botHex  = botCount  > 8 ? toHex(botR/botCount, botG/botCount, botB/botCount) : "#5a5f69";
+
+  callback({
+    butt, waist, chest, legs,
+    skinHex, hairHex, topHex, botHex,
+    whRatio, cwRatio
+  });
+}
+
+/* ==============================================================
+   17. EXECUÇÃO DA CALIBRAÇÃO (ROBÔ INVISÍVEL OPERANDO)
+============================================================== */
+function triggerRobotFullCalibration() {
+  initAudioContext();
+
+  const img = currentLoadedImageElement || document.getElementById('scannedPhotoImg');
+  const laserBeam = document.getElementById('scannerLaserBeam');
+  const badge = document.getElementById('scannerPhotoBadge');
+  const speech = document.getElementById('robotSpeech');
+  const hud = document.getElementById('hudStatus');
+
+  laserBeam.classList.add('active');
+  badge.innerText = "⚡ IA ESCANEANDO CORES E MEDIDAS...";
+  badge.style.color = "#ff007f";
+  speech.innerText = `🤖 Robô Invisível: "Iniciando varredura ótica na foto enviada... Extraindo medidas anatômicas e tons de cor!"`;
+  hud.innerText = "ROBÔ INVISÍVEL ESCANEANDO...";
+
+  playRobotBeep(480, 0.15);
+  playLaserSound();
+
+  analyzeImageWithAI(img, (res) => {
+    setTimeout(() => {
+      document.getElementById('swatchSkin').style.background = res.skinHex;
+      document.getElementById('hexSkin').innerText = res.skinHex;
+      document.getElementById('swatchHair').style.background = res.hairHex;
+      document.getElementById('hexHair').innerText = res.hairHex;
+      document.getElementById('swatchTop').style.background = res.topHex;
+      document.getElementById('hexTop').innerText = res.topHex;
+      document.getElementById('swatchBot').style.background = res.botHex;
+      document.getElementById('hexBot').innerText = res.botHex;
+
+      document.getElementById('meterValButt').innerText = `${res.butt}% (Curvy)`;
+      document.getElementById('meterFillButt').style.width = `${Math.round((res.butt / 200) * 100)}%`;
+
+      document.getElementById('meterValWaist').innerText = `${res.waist}% (Violão)`;
+      document.getElementById('meterFillWaist').style.width = `${Math.round((res.waist / 120) * 100)}%`;
+
+      document.getElementById('meterValChest').innerText = `${res.chest}% (Farto)`;
+      document.getElementById('meterFillChest').style.width = `${Math.round((res.chest / 180) * 100)}%`;
+
+      document.getElementById('meterValLegs').innerText = `${res.legs}% (Torneadas)`;
+      document.getElementById('meterFillLegs').style.width = `${Math.round((res.legs / 150) * 100)}%`;
+
+      document.getElementById('telButt').innerText = `${res.butt}%`;
+      document.getElementById('telWaist').innerText = `${res.waist}%`;
+      document.getElementById('telChest').innerText = `${res.chest}%`;
+      document.getElementById('telLegs').innerText = `${res.legs}%`;
+      document.getElementById('telSkin').innerText = res.skinHex;
+      document.getElementById('telHair').innerText = res.hairHex;
+
+      skinMaterial.color.setStyle(res.skinHex);
+      hairMaterial.color.setStyle(res.hairHex);
+      clothesTopMaterial.color.setStyle(res.topHex);
+      clothesBottomMaterial.color.setStyle(res.botHex);
+
+      animateSlidersToValues(res.butt, res.waist, res.chest, res.legs);
+
+      playChimeSound();
+
+      laserBeam.classList.remove('active');
+      badge.innerText = "✅ CORPO 100% SINCRONIZADO COM A FOTO";
+      badge.style.color = "#00f0ff";
+      speech.innerText = `💃 Bailarina: "O robô invisível ajustou meu corpo! Agora tenho as cores e medidas idênticas à foto enviada!"`;
+      hud.innerText = "ROBÔ INVISÍVEL: CORPO CALIBRADO";
+
+      if ('speechSynthesis' in window) {
+        try {
+          const utterance = new SpeechSynthesisUtterance("Corpo e proporções calibrados pelo robô invisível com sucesso!");
+          utterance.lang = "pt-BR";
+          utterance.pitch = 1.25;
+          utterance.rate = 1.05;
+          window.speechSynthesis.speak(utterance);
+        } catch(e) {}
+      }
+
+    }, 1100);
+  });
+}
+
+/* ==============================================================
+   18. SISTEMA DE CHAT POR ESCRITO COM A DANÇARINA & MUDANÇA DE POSIÇÕES
+============================================================== */
+let isInvisibleRobotMode = true;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const tEl = document.getElementById('chatInitialTime');
+  if (tEl) {
+    const now = new Date();
+    tEl.innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  }
+});
+
+function toggleRobotVisibility() {
+  isInvisibleRobotMode = !isInvisibleRobotMode;
+  if (robotMeshGroup) {
+    robotMeshGroup.visible = !isInvisibleRobotMode;
+  }
+  const statusEl = document.getElementById('hudRobotState');
+  if (statusEl) {
+    statusEl.innerText = isInvisibleRobotMode ? "🤖 ROBÔ INVISÍVEL: ATIVO" : "🤖 ROBÔ VISÍVEL: ATIVO";
+  }
+}
+
+function sendQuickCommand(cmdText) {
+  const input = document.getElementById('chatInput');
+  input.value = cmdText;
+  sendChatMessage();
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+
+  appendChatMessage(text, 'user');
+  processDancerChatCommand(text);
+}
+
+function appendChatMessage(msg, sender) {
+  const box = document.getElementById('chatMessagesBox');
+  const now = new Date();
+  const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `chat-msg ${sender === 'user' ? 'chat-msg-user' : 'chat-msg-dancer'}`;
+
+  const authorDiv = document.createElement('div');
+  authorDiv.className = `chat-msg-author ${sender === 'user' ? 'chat-msg-author-user' : 'chat-msg-author-dancer'}`;
+  authorDiv.innerText = sender === 'user' ? '👤 Você' : '💃 Bailarina Virtual';
+
+  const textDiv = document.createElement('div');
+  textDiv.innerHTML = msg;
+
+  const timeDiv = document.createElement('div');
+  timeDiv.className = 'chat-msg-time';
+  timeDiv.innerText = timeStr;
+
+  msgDiv.appendChild(authorDiv);
+  msgDiv.appendChild(textDiv);
+  msgDiv.appendChild(timeDiv);
+
+  box.appendChild(msgDiv);
+  box.scrollTop = box.scrollHeight;
+}
+
+function processDancerChatCommand(userText) {
+  initAudioContext();
+  const lower = userText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  let replyText = "";
+
+  // 1. Comando: FICAR DE COSTAS (Ângulo da foto / Mostra o bumbum)
+  if (lower.includes('costa') || lower.includes('tras') || lower.includes('bumbum') || lower.includes('bunda') || lower.includes('traseira')) {
+    setCameraView('back');
+    if (isWalking) toggleWalking3D();
+    if (isFunkPlaying) toggleFunkAudio();
+    setPosePhoto();
+    replyText = "Ficando de costas pra você agora amor! 💕 Olha como meu bumbum e as medidas da foto ficam destacadas nesse ângulo!";
+  }
+  // 2. Comando: FICAR DE FRENTE
+  else if (lower.includes('frente') || lower.includes('olha pra mim') || lower.includes('olha de frente') || lower.includes('rosto')) {
+    setCameraView('front');
+    if (isWalking) toggleWalking3D();
+    replyText = "Virei de frente pra você! O que achou do meu decote, do meu cropped branco e do meu rostinho?";
+  }
+  // 3. Comando: FICAR DE PERFIL / LADO
+  else if (lower.includes('lado') || lower.includes('perfil') || lower.includes('lateral')) {
+    setCameraView('side');
+    replyText = "Prontinho amor, fiquei de perfil pra você admirar minha cintura fina no estilo violão e as curvas do meu corpo!";
+  }
+  // 4. Comando: ANDAR NO PALCO
+  else if (lower.includes('anda') || lower.includes('andar') || lower.includes('caminha') || lower.includes('desfila')) {
+    if (!isWalking) toggleWalking3D();
+    replyText = "Começando a desfilar e andar pelo palco com meus saltos altos pra você! Olha como minhas pernas e meu quadril se movem!";
+  }
+  // 5. Comando: DANÇAR FUNK 130 BPM / REBOLAR
+  else if (lower.includes('danca') || lower.includes('dancar') || lower.includes('funk') || lower.includes('rebola') || lower.includes('twerk') || lower.includes('desce')) {
+    if (!isFunkPlaying) toggleFunkAudio();
+    replyText = "Soltando o tamborzão de funk 130 BPM! Olha como eu rebolo gostoso e empino pra você amor! 🔥";
+  }
+  // 6. Comando: PARAR NA POSE DA FOTO (PUFE)
+  else if (lower.includes('para') || lower.includes('parar') || lower.includes('pose') || lower.includes('pufe') || lower.includes('apoia')) {
+    if (isWalking) toggleWalking3D();
+    if (isFunkPlaying) toggleFunkAudio();
+    setPosePhoto();
+    replyText = "Parei! Voltei para a pose escultural da foto com a minha perna apoiada no pufe!";
+  }
+  // 7. Comando: TROCAR DE ROUPA
+  else if (lower.includes('roupa') || lower.includes('veste') || lower.includes('troca') || lower.includes('biquini')) {
+    currentOutfitIndex = (currentOutfitIndex + 1) % OUTFITS_3D.length;
+    triggerRobotChange(currentOutfitIndex);
+    replyText = `O robô invisível desmaterializou minha roupa antiga e teceu o look <b>${OUTFITS_3D[currentOutfitIndex].name}</b> no meu corpo! Olha como vestiu perfeitamente!`;
+  }
+  // 8. Comando: AUMENTAR BUMBUM
+  else if (lower.includes('aumenta o bumbum') || lower.includes('mais bumbum') || lower.includes('gluteo') || lower.includes('bunda grande')) {
+    const cur = parseFloat(document.getElementById('rngButt').value);
+    const newVal = Math.min(200, cur + 15);
+    document.getElementById('rngButt').value = newVal;
+    update3DAnatomy();
+    replyText = `Aumentei o volume dos meus glúteos para ${newVal}%! Agora meu bumbum está ainda mais volumoso e curvilíneo pra você! 🍑`;
+  }
+  // 9. Comando: AFINAR CINTURA
+  else if (lower.includes('afina a cintura') || lower.includes('cintura fina') || lower.includes('menos cintura') || lower.includes('cinturinha')) {
+    const cur = parseFloat(document.getElementById('rngWaist').value);
+    const newVal = Math.max(65, cur - 8);
+    document.getElementById('rngWaist').value = newVal;
+    update3DAnatomy();
+    replyText = `Afinei minha cintura para ${newVal}%! Meu corpo agora está com o formato violão perfeito! ⏳`;
+  }
+  // 10. Comando: AUMENTAR SEIOS
+  else if (lower.includes('peito') || lower.includes('seio') || lower.includes('busto')) {
+    const cur = parseFloat(document.getElementById('rngChest').value);
+    const newVal = Math.min(180, cur + 15);
+    document.getElementById('rngChest').value = newVal;
+    update3DAnatomy();
+    replyText = `Aumentei o tamanho dos meus seios para ${newVal}%! Ficaram bem fartos e empinados! 🍈`;
+  }
+  // 11. Conversação Geral & Elogios
+  else {
+    replyText = "Oi meu bem! 💕 Adoro conversar com você! O que você quer que eu faça agora? Digite por exemplo: <i>'fica de costas'</i>, <i>'fica de frente'</i>, <i>'fica de perfil'</i>, <i>'anda'</i>, <i>'dança funk'</i> ou <i>'troca de roupa'</i>!";
+  }
+
+  setTimeout(() => {
+    appendChatMessage(replyText, 'dancer');
+    speakDancerVoice(replyText.replace(/<[^>]*>/g, ''));
+    
+    const speech = document.getElementById('robotSpeech');
+    if (speech) speech.innerText = `💃 Bailarina: "${replyText.replace(/<[^>]*>/g, '')}"`;
+  }, 400);
+}
+
+function speakDancerVoice(textToSpeak) {
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = "pt-BR";
+      utterance.pitch = 1.25;
+      utterance.rate = 1.05;
+      window.speechSynthesis.speak(utterance);
+    } catch(e) {}
+  }
+}
 </script>
 </body>
 </html>
