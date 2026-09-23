@@ -35,9 +35,38 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .media-nav-indicator{background:rgba(10,8,19,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);padding:.2rem .65rem;border-radius:999px;font-size:.72rem;font-weight:700;color:#ff9cc3}
 .dancer-container{position:relative;width:100%;height:380px;display:flex;justify-content:center;align-items:flex-end;z-index:4}
 .stage-shadow{position:absolute;bottom:12px;width:190px;height:26px;background:radial-gradient(ellipse at center,rgba(0,0,0,.85),transparent 70%);border-radius:50%;filter:blur(4px);z-index:1}
-.dancer-figure{position:relative;width:250px;height:360px;border-radius:20px;overflow:hidden;display:flex;justify-content:center;align-items:center;z-index:2;transform-origin:bottom center}
-.dancer-media{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:18px;display:none}
+
+/* Camadas e Texturas Realistas para Guarda-Roupa sobre Foto */
+.dancer-figure{
+  position:relative;
+  width:260px;
+  height:380px;
+  border-radius:24px;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:2;
+  transform-origin:bottom center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+.dancer-media{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  border-radius:22px;
+  display:none;
+  transition: filter 0.4s ease;
+}
 .dancer-media.active{display:block}
+.outfit-overlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  transition:all .45s ease;
+  border-radius:22px;
+}
 .dancer-bot-svg{width:100%;height:100%;display:none;overflow:visible}
 .dancer-bot-svg.active{display:block}
 .dancer-bot-svg .bot-part{transform-box:fill-box;transform-origin:50% 0%;will-change:transform}
@@ -52,7 +81,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 @keyframes botFunkLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
 @keyframes botFunkLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
 
-/* Animação realista e orgânica do quadril/glúteos femininos */
 .dancing-funk .bot-body-curvy {
   animation: botFunkHips var(--dance-duration) cubic-bezier(.35, 0, .25, 1) infinite;
   transform-origin: 50% 80%;
@@ -79,61 +107,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 @keyframes botIdleArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
 @keyframes botIdleArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-3deg)}}
 
-.dancing-ballet .bot-arm-left{animation:botBalletArmL var(--dance-duration) ease-in-out infinite alternate}
-.dancing-ballet .bot-arm-right{animation:botBalletArmR var(--dance-duration) ease-in-out infinite alternate}
-.dancing-ballet .bot-leg-left{animation:botBalletLegL var(--dance-duration) ease-in-out infinite alternate}
-.dancing-ballet .bot-leg-right{animation:botBalletLegR var(--dance-duration) ease-in-out infinite alternate}
-@keyframes botBalletArmL{0%{transform:rotate(0)}100%{transform:rotate(45deg)}}
-@keyframes botBalletArmR{0%{transform:rotate(0)}100%{transform:rotate(-45deg)}}
-@keyframes botBalletLegL{0%{transform:rotate(0)}100%{transform:rotate(-4deg)}}
-@keyframes botBalletLegR{0%{transform:rotate(0)}100%{transform:rotate(4deg)}}
-
-.dancing-pop .bot-arm-left{animation:botPopArmL var(--dance-duration) ease-in-out infinite}
-.dancing-pop .bot-arm-right{animation:botPopArmR var(--dance-duration) ease-in-out infinite}
-.dancing-pop .bot-leg-left{animation:botPopLegL var(--dance-duration) ease-in-out infinite}
-.dancing-pop .bot-leg-right{animation:botPopLegR var(--dance-duration) ease-in-out infinite}
-@keyframes botPopArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(50deg)}}
-@keyframes botPopArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-50deg)}}
-@keyframes botPopLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
-@keyframes botPopLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(5deg)}}
-
-.dancing-hiphop .bot-arm-left{animation:botHipArmL var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
-.dancing-hiphop .bot-arm-right{animation:botHipArmR var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
-.dancing-hiphop .bot-leg-left{animation:botHipLegL var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
-.dancing-hiphop .bot-leg-right{animation:botHipLegR var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
-@keyframes botHipArmL{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(45deg)}}
-@keyframes botHipArmR{0%,100%{transform:rotate(45deg)}50%{transform:rotate(-6deg)}}
-@keyframes botHipLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
-@keyframes botHipLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg)}}
-
-.dancing-latino .bot-arm-left{animation:botLatArmL var(--dance-duration) ease-in-out infinite alternate}
-.dancing-latino .bot-arm-right{animation:botLatArmR var(--dance-duration) ease-in-out infinite alternate}
-.dancing-latino .bot-leg-left{animation:botLatLegL var(--dance-duration) ease-in-out infinite alternate}
-.dancing-latino .bot-leg-right{animation:botLatLegR var(--dance-duration) ease-in-out infinite alternate}
-@keyframes botLatArmL{0%{transform:rotate(-4deg)}100%{transform:rotate(35deg)}}
-@keyframes botLatArmR{0%{transform:rotate(35deg)}100%{transform:rotate(-4deg)}}
-@keyframes botLatLegL{0%{transform:rotate(-5deg)}100%{transform:rotate(5deg)}}
-@keyframes botLatLegR{0%{transform:rotate(5deg)}100%{transform:rotate(-5deg)}}
-
-.dancing-synthwave .bot-arm-left{animation:botSynArmL var(--dance-duration) steps(4,end) infinite}
-.dancing-synthwave .bot-arm-right{animation:botSynArmR var(--dance-duration) steps(4,end) infinite}
-.dancing-synthwave .bot-leg-left{animation:botSynLegL var(--dance-duration) steps(4,end) infinite}
-.dancing-synthwave .bot-leg-right{animation:botSynLegR var(--dance-duration) steps(4,end) infinite}
-@keyframes botSynArmL{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(40deg)}100%{transform:rotate(0)}}
-@keyframes botSynArmR{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(-40deg)}100%{transform:rotate(0)}}
-@keyframes botSynLegL{0%,25%{transform:rotate(0)}50%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
-@keyframes botSynLegR{0%,25%{transform:rotate(0)}50%{transform:rotate(6deg)}100%{transform:rotate(0)}}
-
-.outfit-overlay{position:absolute;inset:0;pointer-events:none;transition:all .5s}
-.sparkles-container{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.sparkle{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px #ff75a0;opacity:0;animation:floatSparkle 2s ease-in-out infinite}
-@keyframes floatSparkle{0%{transform:translateY(20px) scale(0);opacity:0}50%{opacity:.95}100%{transform:translateY(-45px) scale(1.3);opacity:0}}
-.stage-floor{width:100%;height:60px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.65));border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;z-index:3}
-.audio-visualizer{width:100%;height:45px}
-
-/* Dança do figure inteiro */
+/* Dança da Bailarina Inteira */
 .dancing-funk{animation:danceFunk var(--dance-duration) cubic-bezier(.25,.1,.25,1) infinite}
-@keyframes danceFunk{0%{transform:translateY(0) rotate(0) scale(1,1)}15%{transform:translateY(12px) rotate(-6deg) scale(1.08,.92)}30%{transform:translateY(-8px) rotate(4deg) scale(.96,1.04)}48%{transform:translateY(28px) rotate(-4deg) scale(1.14,.86)}62%{transform:translateY(20px) rotate(5deg) scale(1.06,.94)}78%{transform:translateY(-16px) rotate(-2deg) scale(.95,1.05)}100%{transform:translateY(0) rotate(0) scale(1,1)}}
+@keyframes danceFunk{0%{transform:translateY(0) rotate(0) scale(1,1)}15%{transform:translateY(12px) rotate(-5deg) scale(1.06,.94)}30%{transform:translateY(-8px) rotate(3deg) scale(.97,1.03)}48%{transform:translateY(24px) rotate(-3deg) scale(1.11,.89)}62%{transform:translateY(16px) rotate(4deg) scale(1.05,.95)}78%{transform:translateY(-14px) rotate(-2deg) scale(.96,1.04)}100%{transform:translateY(0) rotate(0) scale(1,1)}}
 .dancing-ballet{animation:danceBallet var(--dance-duration) cubic-bezier(.45,.05,.55,.95) infinite alternate}
 @keyframes danceBallet{0%{transform:translateY(0) rotate(0) scale(1)}35%{transform:translateY(-18px) rotate(-3deg) scale(1.02)}70%{transform:translateY(-26px) rotate(3.5deg) scale(1.04)}100%{transform:translateY(-4px) rotate(-1deg) scale(1)}}
 .dancing-pop{animation:dancePop var(--dance-duration) cubic-bezier(.2,.8,.2,1) infinite}
@@ -146,6 +122,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 @keyframes danceSynthwave{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.03) rotate(2deg)}}
 .dancing-shadow{animation:shadowPulse var(--dance-duration) ease-in-out infinite alternate}
 @keyframes shadowPulse{0%{transform:scale(1);opacity:.8}50%{transform:scale(.72);opacity:.35}100%{transform:scale(1.1);opacity:.9}}
+
+.sparkles-container{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sparkle{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px #ff75a0;opacity:0;animation:floatSparkle 2s ease-in-out infinite}
+@keyframes floatSparkle{0%{transform:translateY(20px) scale(0);opacity:0}50%{opacity:.95}100%{transform:translateY(-45px) scale(1.3);opacity:0}}
+.stage-floor{width:100%;height:60px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.65));border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;z-index:3}
+.audio-visualizer{width:100%;height:45px}
 
 /* Controles */
 .controls-section{width:100%;max-width:680px;display:flex;flex-direction:column;gap:1rem;z-index:10}
@@ -247,9 +229,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <div class="spotlight spotlight-right" id="spotRight"></div>
 
 <header class="app-header">
-<div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & 40 PERSONAGENS ★</div>
+<div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & FOTORREALISMO IA ★</div>
 <h1 class="app-title">Bailarina Virtual</h1>
-<p class="app-subtitle">Bot dançarina customizável, galeria, 100 biquínis e Funk Carioca!</p>
+<p class="app-subtitle">Modelo hiper-realista, 100 biquínis dinâmicos, curvas e Funk Carioca!</p>
 </header>
 
 <main class="stage-wrapper">
@@ -273,7 +255,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 
 <div class="stage-media-nav">
 <button class="media-nav-btn" id="btnPrevMedia">◀</button>
-<span class="media-nav-indicator" id="mediaIndicator">Mídia 1/9 • Bot</span>
+<span class="media-nav-indicator" id="mediaIndicator">Mídia 1/9 • Modelo Real IA</span>
 <button class="media-nav-btn" id="btnNextMedia">▶</button>
 </div>
 
@@ -281,219 +263,114 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <div class="stage-shadow" id="stageShadow"></div>
 <div class="dancer-figure" id="dancerFigure">
 
-<!-- ================= BOT SVG CURVILÍNEA COM MEDIDAS DA FOTO ================= -->
-<svg class="dancer-bot-svg dancer-media active" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot feminina">
+<!-- FOTO HIPER-REALISTA COM PELE HUMANA REAL -->
+<img alt="Bailarina IA Fotorrealista" id="dancerImg" class="dancer-media active" />
+
+<!-- VÍDEO -->
+<video id="dancerVideo" class="dancer-media" loop playsinline muted></video>
+
+<!-- BOT 3D CURVILÍNEA ALTERNATIVO -->
+<svg class="dancer-bot-svg dancer-media" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot feminina">
 <defs>
-  <!-- Tom de pele feminino realista -->
   <radialGradient id="skinGlow" cx="45%" cy="40%" r="60%">
     <stop offset="0%" stop-color="var(--skin-1, #fff4ec)"/>
     <stop offset="60%" stop-color="var(--skin-2, #f5d3bf)"/>
     <stop offset="100%" stop-color="var(--skin-shadow, #e3af99)"/>
   </radialGradient>
-
-  <!-- Gradiente anatômico para as costas e decote -->
   <linearGradient id="backGrad" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0%" stop-color="var(--skin-shadow, #e5b19b)"/>
     <stop offset="45%" stop-color="var(--skin-1, #fff5ed)"/>
     <stop offset="85%" stop-color="var(--skin-2, #f4d0be)"/>
     <stop offset="100%" stop-color="var(--skin-shadow, #dfa792)"/>
   </linearGradient>
-
-  <!-- Volume 3D e iluminação do Glúteo / Quadril Curvilíneo -->
   <radialGradient id="gluteVolume" cx="62%" cy="42%" r="58%">
     <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
     <stop offset="35%" stop-color="var(--skin-1, #fff3ea)" stop-opacity="0.2"/>
     <stop offset="75%" stop-color="var(--skin-shadow, #db9f88)" stop-opacity="0.45"/>
     <stop offset="100%" stop-color="#9e634e" stop-opacity="0.75"/>
   </radialGradient>
-
-  <!-- Tecido da Roupa / Macacão rendado / Biquíni com transparência suave -->
   <linearGradient id="suitGrad" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0%" stop-color="var(--outfit-1, #ffffff)"/>
     <stop offset="50%" stop-color="var(--outfit-2, #fceceb)"/>
     <stop offset="100%" stop-color="#e8cfca"/>
   </linearGradient>
-
-  <!-- Padrão delicado de renda jacquard / textura do macacão -->
   <pattern id="lacePattern" width="12" height="12" patternUnits="userSpaceOnUse" opacity="0.32">
     <path d="M 0 6 Q 3 0 6 6 Q 9 12 12 6" fill="none" stroke="#ffffff" stroke-width="0.8"/>
     <circle cx="6" cy="6" r="1.2" fill="#ffffff"/>
-    <circle cx="0" cy="0" r="0.8" fill="#ffffff"/>
-    <circle cx="12" cy="12" r="0.8" fill="#ffffff"/>
   </pattern>
-
-  <!-- Cabelo Platinado volumoso e sedoso -->
   <linearGradient id="hairGradBack" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0%" stop-color="var(--hair-1, #fffdf2)"/>
     <stop offset="40%" stop-color="var(--hair-2, #f6eac2)"/>
     <stop offset="80%" stop-color="var(--hair-3, #ddc88d)"/>
     <stop offset="100%" stop-color="#b69b56"/>
   </linearGradient>
-
   <linearGradient id="hairGradFront" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0%" stop-color="#ffffff"/>
     <stop offset="35%" stop-color="var(--hair-1, #fffdf2)"/>
     <stop offset="70%" stop-color="var(--hair-2, #f5e9c0)"/>
     <stop offset="100%" stop-color="var(--hair-3, #d8bf80)"/>
   </linearGradient>
-
-  <!-- Olhos e Lábios femininos -->
   <radialGradient id="eyeIris" cx="45%" cy="40%" r="55%">
     <stop offset="0%" stop-color="#cbe5f6"/>
     <stop offset="45%" stop-color="#6ea2c7"/>
-    <stop offset="85%" stop-color="#3c6b8c"/>
     <stop offset="100%" stop-color="#193042"/>
   </radialGradient>
-
   <linearGradient id="lipGloss" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0%" stop-color="#fb9baa"/>
     <stop offset="50%" stop-color="#df6679"/>
     <stop offset="100%" stop-color="#b03d52"/>
   </linearGradient>
-
-  <!-- Filtro para desfoque de blush e sombras realistas -->
   <filter id="beautyGlow" x="-20%" y="-20%" width="140%" height="140%">
     <feGaussianBlur stdDeviation="3"/>
   </filter>
 </defs>
 
-<!-- ================= CABELO DE FUNDO (Caindo pelas costas) ================= -->
 <g class="hair-style" data-style="longo">
   <path d="M 124 35 Q 148 40 156 80 Q 164 125 152 170 Q 146 195 140 215 Q 134 216 132 205 Q 138 160 142 120 Q 144 80 134 52 Z" fill="url(#hairGradBack)"/>
-  <path d="M 132 40 Q 162 75 158 135 Q 155 180 144 210" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.6"/>
-  <path d="M 128 45 Q 150 95 148 160 Q 146 195 138 215" stroke="#e0ca8d" stroke-width="1" fill="none" opacity="0.5"/>
 </g>
-<g class="hair-style" data-style="ondulado" style="display:none">
-  <path d="M 124 35 Q 152 45 158 85 Q 166 130 154 175 Q 146 200 138 220 Q 133 220 132 210 Q 142 165 144 125 Q 145 80 134 52 Z" fill="url(#hairGradBack)"/>
-</g>
-<g class="hair-style" data-style="bob" style="display:none">
-  <path d="M 124 35 Q 148 42 154 75 Q 158 105 148 130 Q 140 120 138 95 Q 138 75 132 52 Z" fill="url(#hairGradBack)"/>
-</g>
-<g class="hair-style" data-style="coque" style="display:none">
-  <ellipse cx="130" cy="24" rx="16" ry="14" fill="url(#hairGradBack)"/>
-  <path d="M 122 36 Q 130 22 138 36 Z" fill="url(#hairGradBack)"/>
-</g>
-
-<!-- ================= BRAÇO DIREITO (Elevado suavemente na nuca/cabelo) ================= -->
 <g class="bot-part bot-arm bot-arm-right">
   <path d="M 116 88 Q 98 68 104 42 Q 106 32 114 26 L 122 30 Q 114 38 112 48 Q 108 72 124 92 Z" fill="url(#skinGlow)"/>
-  <path d="M 116 88 Q 98 68 104 42 Q 106 32 114 26 L 122 30 Q 114 38 112 48 Q 108 72 124 92 Z" fill="url(#suitGrad)" opacity="0.6"/>
-  <path d="M 116 88 Q 98 68 104 42 Q 106 32 114 26 L 122 30 Q 114 38 112 48 Q 108 72 124 92 Z" fill="url(#lacePattern)"/>
   <path d="M 114 26 Q 118 20 125 18 Q 128 20 126 25 Q 122 28 118 29 Z" fill="var(--skin-1, #fff4ec)"/>
 </g>
-
-<!-- ================= PERNA ESQUERDA (Perna de Apoio Frontal) ================= -->
 <g class="bot-part bot-leg bot-leg-left">
   <path d="M 108 195 Q 104 225 106 255 Q 108 275 110 295 L 122 295 Q 120 270 120 240 Q 121 210 124 195 Z" fill="url(#skinGlow)"/>
   <path d="M 110 295 Q 107 312 110 334 L 118 334 Q 121 316 122 295 Z" fill="url(#skinGlow)"/>
-  <path d="M 108 195 Q 104 225 106 255 Q 108 275 110 295 L 122 295 Q 120 270 120 240 Q 121 210 124 195 Z" fill="url(#suitGrad)" opacity="0.65"/>
-  <path d="M 108 195 Q 104 225 106 255 Q 108 275 110 295 L 122 295 Q 120 270 120 240 Q 121 210 124 195 Z" fill="url(#lacePattern)"/>
-  <path d="M 110 295 Q 107 312 110 334 L 118 334 Q 121 316 122 295 Z" fill="url(#suitGrad)" opacity="0.65"/>
-  <path d="M 110 295 Q 107 312 110 334 L 118 334 Q 121 316 122 295 Z" fill="url(#lacePattern)"/>
-
-  <ellipse cx="114" cy="334" rx="3.5" ry="2.2" fill="var(--skin-1, #fff4ec)"/>
   <path d="M 111 334 L 109 350 L 112 350 L 113 336 Z" fill="#e8dfd5"/>
-  <path d="M 110 334 Q 114 340 124 347 L 125 344 Q 117 338 114 333 Z" fill="#b08d72"/>
-  <path d="M 111 334 Q 115 336 120 334" stroke="#d5c7b7" stroke-width="1.5" fill="none"/>
-  <path d="M 121 344 Q 124 346 126 344" stroke="#d5c7b7" stroke-width="1.3" fill="none"/>
 </g>
-
-<!-- ================= PERNA DIREITA (Curvilínea / Em Evidência) ================= -->
 <g class="bot-part bot-leg bot-leg-right">
   <path d="M 124 196 Q 138 215 142 245 Q 146 275 140 298 L 126 296 Q 130 268 128 238 Q 124 212 118 196 Z" fill="url(#skinGlow)"/>
   <path d="M 139 297 Q 144 315 139 336 L 130 336 Q 132 318 126 296 Z" fill="url(#skinGlow)"/>
-  <path d="M 124 196 Q 138 215 142 245 Q 146 275 140 298 L 126 296 Q 130 268 128 238 Q 124 212 118 196 Z" fill="url(#suitGrad)" opacity="0.65"/>
-  <path d="M 124 196 Q 138 215 142 245 Q 146 275 140 298 L 126 296 Q 130 268 128 238 Q 124 212 118 196 Z" fill="url(#lacePattern)"/>
-  <path d="M 139 297 Q 144 315 139 336 L 130 336 Q 132 318 126 296 Z" fill="url(#suitGrad)" opacity="0.65"/>
-  <path d="M 139 297 Q 144 315 139 336 L 130 336 Q 132 318 126 296 Z" fill="url(#lacePattern)"/>
-
-  <path d="M 131 336 Q 136 339 140 337" stroke="#e0d4c5" stroke-width="1.8" fill="none"/>
   <path d="M 137 336 L 136 352 L 138 352 L 140 338 Z" fill="#e8dfd5"/>
-  <path d="M 132 336 Q 138 342 148 348 L 149 345 Q 141 339 136 335 Z" fill="#b08d72"/>
-  <path d="M 143 345 Q 147 347 149 345" stroke="#d5c7b7" stroke-width="1.5" fill="none"/>
 </g>
-
-<!-- ================= CORPO / CINTURA FINA & GLÚTEOS VOLUPTUOSOS ================= -->
 <g class="bot-body-curvy">
-  <!-- Busto de perfil -->
   <path d="M 98 108 Q 88 122 92 136 Q 98 144 108 145 L 112 115 Z" fill="url(#skinGlow)"/>
-  <path d="M 98 108 Q 88 122 92 136 Q 98 144 108 145 L 112 115 Z" fill="url(#suitGrad)" opacity="0.75"/>
-  <path d="M 98 108 Q 88 122 92 136 Q 98 144 108 145 L 112 115 Z" fill="url(#lacePattern)"/>
-
-  <!-- Cintura de pilão bem fina -->
   <path d="M 106 138 Q 108 155 110 175 Q 112 188 116 198 L 152 198 Q 146 172 136 156 Q 128 142 126 122 L 110 115 Z" fill="url(#skinGlow)"/>
-  <path d="M 106 138 Q 108 155 110 175 Q 112 188 116 198 L 152 198 Q 146 172 136 156 Q 128 142 126 122 L 110 115 Z" fill="url(#suitGrad)" opacity="0.65"/>
-  <path d="M 106 138 Q 108 155 110 175 Q 112 188 116 198 L 152 198 Q 146 172 136 156 Q 128 142 126 122 L 110 115 Z" fill="url(#lacePattern)"/>
-
-  <!-- Costas decotadas (Backless) -->
   <path d="M 118 92 Q 130 96 132 116 Q 134 140 126 152 Q 120 145 116 125 Q 114 102 118 92 Z" fill="url(#backGrad)"/>
-  <path d="M 124 96 Q 126 118 122 148" stroke="var(--skin-shadow, #e0a790)" stroke-width="1.2" fill="none" opacity="0.65"/>
-  <path d="M 118 92 Q 130 96 132 116 Q 134 140 126 152" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.8"/>
-
-  <!-- Glúteos volumosos empinados da imagem -->
   <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#skinGlow)"/>
-  <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#suitGrad)" opacity="0.75"/>
-  <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#lacePattern)"/>
-  
   <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#gluteVolume)"/>
-  
-  <path d="M 148 168 Q 152 188 146 216" stroke="var(--skin-shadow, #d5967f)" stroke-width="1.4" fill="none" opacity="0.7"/>
-  <path d="M 166 208 Q 156 224 140 226" stroke="#9e634e" stroke-width="1.6" fill="none" opacity="0.6"/>
-  <ellipse cx="152" cy="184" rx="8" ry="14" fill="#ffffff" opacity="0.32" transform="rotate(22 152 184)"/>
 </g>
-
-<!-- ================= BRAÇO ESQUERDO (Apoio na cintura) ================= -->
 <g class="bot-part bot-arm bot-arm-left">
   <path d="M 100 96 Q 84 122 82 146 L 90 148 Q 94 128 106 102 Z" fill="url(#skinGlow)"/>
-  <path d="M 100 96 Q 84 122 82 146 L 90 148 Q 94 128 106 102 Z" fill="url(#suitGrad)" opacity="0.65"/>
-  <path d="M 100 96 Q 84 122 82 146 L 90 148 Q 94 128 106 102 Z" fill="url(#lacePattern)"/>
   <path d="M 83 147 Q 80 158 84 166 Q 88 168 90 162 Q 91 154 89 148 Z" fill="var(--skin-1, #fff4ec)"/>
 </g>
-
-<!-- ================= ROSTO FEMININO EM SEMI-PERFIL ================= -->
 <g class="bot-head-profile">
   <path d="M 118 70 L 115 94 Q 124 96 128 92 L 126 70 Z" fill="url(#skinGlow)"/>
   <path d="M 108 42 Q 102 52 104 64 Q 108 76 116 80 Q 124 82 128 72 Q 130 60 128 46 Q 124 36 114 36 Q 110 38 108 42 Z" fill="url(#skinGlow)"/>
   <ellipse cx="112" cy="62" rx="7" ry="4.5" fill="#f89ba9" opacity="0.6" filter="url(#beautyGlow)"/>
-
   <g class="bot-eye-side">
     <ellipse cx="110" cy="54" rx="3.4" ry="2.6" fill="#ffffff"/>
     <ellipse cx="109.5" cy="54" rx="2.4" ry="2.5" fill="url(#eyeIris)"/>
     <circle cx="109.2" cy="54" r="1.1" fill="#141e26"/>
-    <circle cx="110" cy="53" r="0.8" fill="#ffffff"/>
-    <path d="M 106 54 Q 110 50.5 114 53" stroke="#221515" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-    <path d="M 106 54 L 104 52.5" stroke="#221515" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <path d="M 106 54 Q 110 50.5 114 53" stroke="#221515" stroke-width="1.6" fill="none"/>
   </g>
-
-  <path d="M 106 48 Q 110 44.5 116 47" stroke="var(--hair-3, #c4a96b)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-  <path d="M 105 54 Q 103 58 105 60 Q 106 61 107 60" stroke="var(--skin-shadow, #e0a790)" stroke-width="0.9" fill="none"/>
-  <ellipse cx="105.5" cy="59.5" rx="1.2" ry="0.8" fill="#f89ba9" opacity="0.5"/>
-
   <path d="M 106 67 Q 109 65.5 112 66.5 Q 110 70 106.5 69.5 Z" fill="url(#lipGloss)"/>
-  <ellipse cx="109" cy="67.5" rx="1.8" ry="0.7" fill="#ffffff" opacity="0.65"/>
 </g>
-
-<!-- ================= CABELO LOIRO EM MOVIMENTO ================= -->
 <g class="hair-front" data-style="longo">
   <path d="M 112 36 Q 102 38 98 55 Q 94 72 98 94 Q 102 115 106 138 Q 110 160 108 175 Q 112 175 114 150 Q 114 125 108 100 Q 104 76 108 55 Q 112 44 116 38 Z" fill="url(#hairGradFront)"/>
-  <path d="M 120 36 Q 130 36 136 50 Q 140 70 136 95 Q 132 120 136 148 Q 140 148 141 125 Q 144 95 140 70 Q 136 48 126 36 Z" fill="url(#hairGradFront)"/>
-  <path d="M 114 38 Q 102 60 100 100 Q 102 140 108 170" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.65"/>
-  <path d="M 122 38 Q 134 65 134 110 Q 134 135 137 148" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.65"/>
-  <ellipse cx="118" cy="36" rx="8" ry="2.5" fill="#ffffff" opacity="0.4" transform="rotate(-8 118 36)"/>
-</g>
-<g class="hair-front" data-style="ondulado" style="display:none">
-  <path d="M 112 36 Q 98 48 96 75 Q 102 105 98 135 Q 104 165 108 175 Q 112 165 108 135 Q 112 105 106 75 Q 110 48 116 38 Z" fill="url(#hairGradFront)"/>
-</g>
-<g class="hair-front" data-style="bob" style="display:none">
-  <path d="M 112 36 Q 100 48 98 70 Q 102 92 108 105 Q 112 95 108 75 Q 110 48 116 38 Z" fill="url(#hairGradFront)"/>
-</g>
-<g class="hair-front" data-style="coque" style="display:none">
-  <path d="M 112 36 Q 118 30 126 36 Q 120 40 114 40 Z" fill="url(#hairGradFront)"/>
 </g>
 </svg>
 
-<img alt="Bailarina" id="dancerImg" class="dancer-media" />
-<video id="dancerVideo" class="dancer-media" loop playsinline muted></video>
+<!-- CAMADA DE GUARDA-ROUPA FOTORREALISTA (TROCA CORES E TECIDOS) -->
 <div class="outfit-overlay" id="outfitOverlay"></div>
 <div class="sparkles-container" id="sparkles"></div>
 </div>
@@ -507,7 +384,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 
 <section class="controls-section">
 <div class="double-action-bar">
-<button class="btn-special btn-special-wardrobe" id="btnOpenWardrobe"><span>👙 Guarda-Roupa (100 Biquínis)</span></button>
+<button class="btn-special btn-special-wardrobe" id="btnOpenWardrobe"><span>👙 Guarda-Roupa (100 Roupas & Biquínis)</span></button>
 <button class="btn-special btn-special-gallery" id="btnOpenGallery"><span>📸 Galeria de Fotos & Vídeos</span></button>
 </div>
 
@@ -515,7 +392,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <button class="action-btn" id="btnChangeOutfit">
 <div class="btn-icon-wrapper">👙</div>
 <div class="btn-text">
-<span class="btn-title">Mudar Biquíni</span>
+<span class="btn-title">Mudar Biquíni/Roupa</span>
 <span class="btn-hint" id="nextOutfitHint">Próximo: [2/100]</span>
 </div>
 </button>
@@ -536,10 +413,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 </div>
 
 <div class="quick-toolbar">
-<button class="tool-btn tool-custom" id="btnCustomize"><span>🎨 Personalizar Personagem (40)</span></button>
-<button class="tool-btn" id="btnShowBot"><span>🤖 Mostrar Bot</span></button>
-<button class="tool-btn" id="btnRandomOutfit"><span>🎲 Biquíni Aleatório</span></button>
-<label for="dancerUpload" class="tool-btn tool-upload"><span>➕ Foto/Vídeo</span><input type="file" id="dancerUpload" accept="image/*,video/*" multiple /></label>
+<label for="dancerUpload" class="tool-btn tool-upload"><span>📸 Carregar Foto da Minha IA</span><input type="file" id="dancerUpload" accept="image/*,video/*" /></label>
+<button class="tool-btn" id="btnRandomOutfit"><span>🎲 Roupa Aleatória</span></button>
+<button class="tool-btn" id="btnShowBot"><span>🤖 Alternar p/ Modo 3D</span></button>
 <label for="audioUpload" class="tool-btn tool-audio"><span>🎧 Meu MP3</span><input type="file" id="audioUpload" accept="audio/*" /></label>
 </div>
 
@@ -553,45 +429,13 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <div class="modal-overlay" id="wardrobeModal">
 <div class="modal-window">
 <div class="modal-header">
-<div class="modal-title"><span>👙 Guarda-Roupa</span><span class="badge-count" id="wardrobeCount">100 biquínis</span></div>
+<div class="modal-title"><span>👙 Guarda-Roupa Realista</span><span class="badge-count" id="wardrobeCount">100 opções</span></div>
 <button class="modal-close-btn" id="btnCloseWardrobe">&times;</button>
 </div>
 <div class="modal-body">
 <div class="category-filters" id="categoryFilters"></div>
-<div class="search-box"><input type="text" id="searchInput" placeholder="🔍 Buscar biquíni..." /></div>
+<div class="search-box"><input type="text" id="searchInput" placeholder="🔍 Buscar roupa ou biquíni..." /></div>
 <div class="grid-scroll outfits-scroll-grid" id="outfitsGrid"></div>
-</div>
-</div>
-</div>
-
-<!-- Modal Personagens -->
-<div class="modal-overlay" id="customizeModal">
-<div class="modal-window">
-<div class="modal-header">
-<div class="modal-title"><span>🎨 Personalizar Personagem</span><span class="badge-count">40 opções</span></div>
-<button class="modal-close-btn" id="btnCloseCustomize">&times;</button>
-</div>
-<div class="modal-body">
-<div class="custom-block">
-<div class="custom-block-title">Tom de pele</div>
-<div class="swatch-row" id="skinSwatches"></div>
-</div>
-<div class="custom-block">
-<div class="custom-block-title">Cor de cabelo</div>
-<div class="swatch-row" id="hairSwatches"></div>
-</div>
-<div class="custom-block">
-<div class="custom-block-title">Estilo de cabelo</div>
-<div class="swatch-row" id="hairStyleBtns"></div>
-</div>
-<div class="custom-block">
-<div class="custom-block-title">Cor dos olhos</div>
-<div class="swatch-row" id="eyeSwatches"></div>
-</div>
-<div class="custom-block">
-<div class="custom-block-title">40 Personagens prontas</div>
-<div class="grid-scroll chars-grid" id="charsGrid"></div>
-</div>
 </div>
 </div>
 </div>
@@ -610,7 +454,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 </div>
 </div>
 
-<footer class="app-footer"><p>Bailarina Virtual • Bot dançarina 🤖 • 40 personagens customizáveis</p></footer>
+<footer class="app-footer"><p>Bailarina Virtual • Modelo Fotorrealista com Textura Humana IA • 100 Biquínis</p></footer>
 </div>
 
 <audio id="customAudioPlayer"></audio>
@@ -639,70 +483,9 @@ if(src)el.src=src;
 }
 
 /* =========================================================
-   40 PERSONAGENS (A primeira é a modelo da foto)
+   100 BIQUÍNIS & ROUPAS COM TEXTURAS REALISTAS
    ========================================================= */
-const SKINS=[
-{n:'Branca Porcelana',c1:'#fff2eb',c2:'#f4d0be',line:'#e5b39e'},
-{n:'Branca Rosada',c1:'#fbd8c4',c2:'#e8a890',line:'#d09070'},
-{n:'Média Clara',c1:'#f0c9a8',c2:'#d69f75',line:'#b88050'},
-{n:'Média',c1:'#e0b088',c2:'#c08858',line:'#a07040'},
-{n:'Morena',c1:'#c89060',c2:'#a06838',line:'#805020'},
-{n:'Negra',c1:'#8a5838',c2:'#603818',line:'#4a2808'},
-{n:'Negra Retinta',c1:'#5c3820',c2:'#3a2008',line:'#2a1500'}
-];
-const HAIRS=[
-{n:'Loiro Platinado',c1:'#fffdf2',c2:'#f5e9c0',c3:'#ddc88d'},
-{n:'Loiro Dourado',c1:'#f0d878',c2:'#d8b040',c3:'#a88828'},
-{n:'Loiro Escuro',c1:'#d8b878',c2:'#a88040',c3:'#705020'},
-{n:'Castanho Claro',c1:'#a87850',c2:'#805028',c3:'#503018'},
-{n:'Castanho Escuro',c1:'#704028',c2:'#4a2818',c3:'#2a1808'},
-{n:'Preto',c1:'#3a2010',c2:'#1a0e08',c3:'#0a0502'},
-{n:'Ruivo',c1:'#d86830',c2:'#a84018',c3:'#6a2810'},
-{n:'Ruivo Acobreado',c1:'#e88848',c2:'#c05820',c3:'#803810'},
-{n:'Rosa Fantasia',c1:'#ffb8d0',c2:'#ff8ab5',c3:'#c85a85'},
-{n:'Azul Fantasia',c1:'#a0c8ff',c2:'#6090e0',c3:'#3058a8'}
-];
-const HAIR_STYLES=[
-{id:'longo',n:'Longo Liso Central'},
-{id:'ondulado',n:'Longo Ondulado'},
-{id:'bob',n:'Bob Curto'},
-{id:'coque',n:'Coque'}
-];
-const EYES=[
-{n:'Azul Acinzentado',c:'#6ea2c7'},
-{n:'Verde',c:'#68a878'},
-{n:'Castanho',c:'#7a5838'},
-{n:'Mel',c:'#b88838'},
-{n:'Cinza',c:'#8898a8'},
-{n:'Violeta',c:'#9878c8'}
-];
-
-const NOMES_PERSONAGENS=[
-'Alana','Bianca','Carla','Duda','Eduarda','Fernanda','Gabriela','Helena','Isabela','Júlia',
-'Karen','Larissa','Marina','Nicole','Olívia','Paula','Queren','Rafaela','Sofia','Tainá',
-'Ursula','Valentina','Wanessa','Xênia','Yasmin','Zoe','Bruna','Camila','Daniela','Elisa',
-'Flávia','Giovana','Heloísa','Ingrid','Joana','Kelly','Letícia','Manuela','Natália','Priscila'
-];
-
-const CHARACTERS=[];
-(function generateChars(){
-for(let i=0;i<40;i++){
-const si=i%SKINS.length;
-const hi=(i*3)%HAIRS.length;
-const st=(i*5)%HAIR_STYLES.length;
-const ei=(i*2)%EYES.length;
-CHARACTERS.push({
-id:'char-'+i,
-name:NOMES_PERSONAGENS[i],
-skin:si,hair:hi,hairStyle:HAIR_STYLES[st].id,eye:ei
-});
-}
-})();
-
-/* =========================================================
-   100 BIQUÍNIS
-   ========================================================= */
-const CATS=['Asa Delta','Cortininha','Fita & Bronze','Meia-Taça','Crochê & Boho','Faixa & Bandô','Cintura Alta','Fio Dental','Tomara que Caia','Hot Pants'];
+const CATS=['Asa Delta','Macacão Renda','Cortininha','Fio Dental','Meia-Taça','Vinil & Látex','Fita & Bronze','Crochê','Cintura Alta','Hot Pants'];
 const PALETA=[
 {n:'Rosa Neon',a:'#ff1493',b:'#ff69b4'},
 {n:'Verde Limão',a:'#84cc16',b:'#10b981'},
@@ -713,43 +496,52 @@ const PALETA=[
 {n:'Vermelho Fogo',a:'#dc2626',b:'#ef4444'},
 {n:'Dourado Ouro',a:'#f59e0b',b:'#fbbf24'},
 {n:'Prata Estelar',a:'#cbd5e1',b:'#94a3b8'},
-{n:'Preto Ônix',a:'#334155',b:'#0f172a'}
+{n:'Preto Ônix',a:'#1e1e24',b:'#0a0a0f'}
 ];
 const OUT_ICONS=['👙','💖','✨','🍷','👑','🪙','🌺','🌊','🦩','⚡','🌸','💎','🪩','🔥','🥥'];
 const OUTFITS=[];
 (function generateOutfits(){
 let id=1;
+const FABRIC_TYPES=['renda','acetinado','vinil','glitter','tule'];
 CATS.forEach((cat,ci)=>{
 PALETA.forEach((p,pi)=>{
+const fab=FABRIC_TYPES[(ci+pi)%FABRIC_TYPES.length];
+let blendMode='color';
+let overlayGrad=`linear-gradient(180deg, ${p.a}77 0%, ${p.b}55 50%, ${p.a}99 100%)`;
+
+if(fab==='vinil'){ blendMode='hard-light'; overlayGrad=`linear-gradient(135deg, ${p.a}aa 0%, transparent 40%, ${p.b}bb 100%)`; }
+else if(fab==='renda'){ blendMode='color-burn'; overlayGrad=`radial-gradient(circle, ${p.a}88 10%, ${p.b}77 90%)`; }
+else if(fab==='glitter'){ blendMode='screen'; overlayGrad=`radial-gradient(circle, ${p.b}bb 20%, ${p.a}77 80%)`; }
+else if(fab==='acetinado'){ blendMode='multiply'; overlayGrad=`linear-gradient(180deg, ${p.a}66 0%, ${p.b}44 60%, ${p.a}88 100%)`; }
+
 OUTFITS.push({
 id:'bikini-'+id,
 name:id+'. '+cat+' '+p.n,
 category:cat,
+fabric:fab,
 icon:OUT_ICONS[(ci+pi)%OUT_ICONS.length],
-desc:cat+' '+p.n,
+desc:cat+' em '+p.n+' ('+fab+')',
 spotlightLeft:p.a,
 spotlightRight:p.b,
-glowColor:'rgba(255,255,255,.35)',
-filter:'contrast(1.15) saturate(1.35)',
-overlay:'radial-gradient(circle,rgba(0,0,0,.12) 0%,transparent 80%)',
-blend:'overlay'
+glowColor:p.a+'88',
+filter:`contrast(1.08) saturate(1.22) brightness(1.02)`,
+overlay:overlayGrad,
+blend:blendMode
 });
 id++;
 });
 });
 })();
 
-/* Galeria */
+/* Galeria com modelo real como mídia número 1 */
 let GALLERY=[
-{id:'bot-1',title:'Bailarina Bot',type:'bot',src:'',fallback:'',tag:'Bot Dançarina'},
-{id:'media-1',title:'Foto Principal',type:'image',src:'dancer.jpg',fallback:'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80',tag:'Pose Original'},
-{id:'media-2',title:'Foto 2',type:'image',src:'dancer2.jpg',fallback:'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',tag:'Ballet'},
-{id:'media-3',title:'Foto 3',type:'image',src:'dancer3.jpg',fallback:'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',tag:'Verão'},
-{id:'media-4',title:'Foto 4',type:'image',src:'dancer4.jpg',fallback:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',tag:'Glamour'},
-{id:'media-5',title:'Foto 5',type:'image',src:'dancer5.jpg',fallback:'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',tag:'Street'},
+{id:'media-real',title:'Modelo IA Real (Foto)',type:'image',src:'dancer.jpg',fallback:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',tag:'Modelo Realista IA'},
+{id:'media-costas',title:'Foto 2 (Curvilínea)',type:'image',src:'dancer2.jpg',fallback:'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',tag:'Curvas & Salto'},
+{id:'bot-1',title:'Bot Vetorial 3D',type:'bot',src:'',fallback:'',tag:'Modo Bot 3D'},
+{id:'media-2',title:'Pose Balé',type:'image',src:'dancer3.jpg',fallback:'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',tag:'Ballet'},
+{id:'media-3',title:'Verão',type:'image',src:'dancer4.jpg',fallback:'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80',tag:'Verão'},
 {id:'media-6',title:'Vídeo 1',type:'video',src:'video1.mp4',fallback:'',tag:'Funk'},
-{id:'media-7',title:'Vídeo 2',type:'video',src:'video2.mp4',fallback:'',tag:'Pop'},
-{id:'media-8',title:'Vídeo 3',type:'video',src:'video3.mp4',fallback:'',tag:'Balé'}
+{id:'media-7',title:'Vídeo 2',type:'video',src:'video2.mp4',fallback:'',tag:'Pop'}
 ];
 
 /* Estilos musicais */
@@ -766,7 +558,6 @@ const MUSIC_STYLES=[
 let currentOutfitIndex=0;
 let currentMusicIndex=0;
 let currentMediaIndex=0;
-let currentCharIndex=0;
 let isPlaying=false;
 let customAudioLoaded=false;
 let activeCategory='Todos';
@@ -783,14 +574,11 @@ const nextOutfitHint=$('nextOutfitHint'),nextMusicHint=$('nextMusicHint');
 const hudMusicIcon=$('hudMusicIcon'),hudOutfitIcon=$('hudOutfitIcon');
 const mediaIndicator=$('mediaIndicator');
 const btnPrevMedia=$('btnPrevMedia'),btnNextMedia=$('btnNextMedia');
-const btnShowBot=$('btnShowBot'),btnCustomize=$('btnCustomize');
+const btnShowBot=$('btnShowBot');
 const btnChangeOutfit=$('btnChangeOutfit'),btnChangeMusic=$('btnChangeMusic'),btnRandomOutfit=$('btnRandomOutfit');
 const btnOpenWardrobe=$('btnOpenWardrobe'),btnCloseWardrobe=$('btnCloseWardrobe'),wardrobeModal=$('wardrobeModal');
 const btnOpenGallery=$('btnOpenGallery'),btnCloseGallery=$('btnCloseGallery'),galleryModal=$('galleryModal');
-const customizeModal=$('customizeModal'),btnCloseCustomize=$('btnCloseCustomize');
 const galleryGrid=$('galleryGrid'),galleryCount=$('galleryCount'),galleryFiltersContainer=$('galleryFilters');
-const charsGrid=$('charsGrid'),skinSwatches=$('skinSwatches'),hairSwatches=$('hairSwatches');
-const hairStyleBtns=$('hairStyleBtns'),eyeSwatches=$('eyeSwatches');
 const btnPlayPause=$('btnPlayPause'),playIcon=$('playIcon'),playBtnTitle=$('playBtnTitle'),playBtnHint=$('playBtnHint');
 const spotLeft=$('spotLeft'),spotRight=$('spotRight');
 const dancerUpload=$('dancerUpload'),audioUpload=$('audioUpload'),customAudioPlayer=$('customAudioPlayer');
@@ -798,7 +586,7 @@ const musicPillsContainer=$('musicPills'),categoryFiltersContainer=$('categoryFi
 const outfitsGridContainer=$('outfitsGrid'),searchInput=$('searchInput'),wardrobeCount=$('wardrobeCount');
 const sparklesContainer=$('sparkles'),visualizerCanvas=$('visualizerCanvas'),canvasCtx=visualizerCanvas.getContext('2d');
 
-/* Áudio */
+/* Áudio Web Audio API */
 let audioCtx=null,masterGain=null,analyser=null,beatTimer=null,step=0,customAudioSourceNode=null;
 
 function initAudio(){
@@ -895,49 +683,12 @@ if(customAudioLoaded)customAudioPlayer.pause();
 }
 
 /* =========================================================
-   APLICAR PERSONAGEM
+   APLICAR MÍDIA / FOTO REALISTA
    ========================================================= */
-function applyCharacter(idx){
-idx=((idx%CHARACTERS.length)+CHARACTERS.length)%CHARACTERS.length;
-currentCharIndex=idx;
-const c=CHARACTERS[idx];
-const sk=SKINS[c.skin];
-const hr=HAIRS[c.hair];
-const ey=EYES[c.eye];
-dancerBot.style.setProperty('--skin-1',sk.c1);
-dancerBot.style.setProperty('--skin-2',sk.c2);
-dancerBot.style.setProperty('--skin-line',sk.line);
-dancerBot.style.setProperty('--skin-shadow',sk.line);
-dancerBot.style.setProperty('--hair-1',hr.c1);
-dancerBot.style.setProperty('--hair-2',hr.c2);
-dancerBot.style.setProperty('--hair-3',hr.c3);
-dancerBot.style.setProperty('--eye',ey.c);
-
-/* troca estilo de cabelo */
-document.querySelectorAll('.hair-style').forEach(el=>{
-el.style.display=el.dataset.style===c.hairStyle?'':'none';
-});
-document.querySelectorAll('.hair-front').forEach(el=>{
-el.style.display=el.dataset.style===c.hairStyle?'':'none';
-});
-
-/* marca card ativo */
-document.querySelectorAll('.char-card').forEach(el=>{
-el.classList.toggle('active',el.dataset.charId==='char-'+idx);
-});
-
-/* atualiza swatches */
-document.querySelectorAll('#skinSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.skin));
-document.querySelectorAll('#hairSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.hair));
-document.querySelectorAll('#hairStyleBtns .hair-btn').forEach(el=>el.classList.toggle('active',el.dataset.style===c.hairStyle));
-document.querySelectorAll('#eyeSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.eye));
-createSparkles(8);
-}
-
 function applyMedia(index){
 currentMediaIndex=((index%GALLERY.length)+GALLERY.length)%GALLERY.length;
 const m=GALLERY[currentMediaIndex];
-const typeLabel=m.type==='video'?'Vídeo':m.type==='bot'?'Bot':'Foto';
+const typeLabel=m.type==='video'?'Vídeo':m.type==='bot'?'Bot 3D':'Foto IA';
 mediaIndicator.textContent=`Mídia ${currentMediaIndex+1}/${GALLERY.length} • ${typeLabel}`;
 dancerBot.classList.remove('active');
 dancerImg.classList.remove('active');
@@ -962,21 +713,24 @@ c.classList.toggle('active',c.dataset.mediaId===m.id);
 createSparkles(12);
 }
 
+/* =========================================================
+   APLICAR OUTFIT / GUARDA-ROUPA SOBRE A PELE HUMANA
+   ========================================================= */
 function applyOutfit(index){
 currentOutfitIndex=((index%OUTFITS.length)+OUTFITS.length)%OUTFITS.length;
 const o=OUTFITS[currentOutfitIndex];
 
-/* Atualiza filtros da foto e vídeo */
+/* Aplica a cor, o tecido e o recorte sobre a modelo fotorrealista */
 dancerImg.style.filter=o.filter;
 dancerVideo.style.filter=o.filter;
 outfitOverlay.style.background=o.overlay;
 outfitOverlay.style.mixBlendMode=o.blend;
 
-/* Atualiza o macacão/biquíni dinamicamente */
+/* Atualiza o robô 3D se ativo */
 dancerBot.style.setProperty('--outfit-1', o.spotlightLeft);
 dancerBot.style.setProperty('--outfit-2', o.spotlightRight);
 
-/* Holofotes e brilho */
+/* Holofotes do estúdio */
 spotLeft.style.background=`linear-gradient(180deg,${o.spotlightLeft} 0%,transparent 100%)`;
 spotRight.style.background=`linear-gradient(180deg,${o.spotlightRight} 0%,transparent 100%)`;
 dancerFigure.style.filter=`drop-shadow(0 10px 25px ${o.glowColor})`;
@@ -987,10 +741,11 @@ currentOutfitCategory.textContent=o.category;
 currentOutfitLabel.textContent=`[${currentOutfitIndex+1}/100] ${o.name}`;
 const nIdx=(currentOutfitIndex+1)%OUTFITS.length;
 nextOutfitHint.textContent=`Próximo: [${nIdx+1}/100] ${OUTFITS[nIdx].name}`;
+
 document.querySelectorAll('.outfit-card').forEach(c=>{
 c.classList.toggle('active',c.dataset.outfitId===o.id);
 });
-createSparkles(12);
+createSparkles(14);
 }
 
 function applyMusicStyle(index){
@@ -1129,7 +884,7 @@ wrap.appendChild(t);
 }
 const badge=document.createElement('span');
 badge.className='gallery-badge-type';
-badge.textContent=m.type==='video'?'🎬 Vídeo':m.type==='bot'?'🤖 Bot':'📷 Foto';
+badge.textContent=m.type==='video'?'🎬 Vídeo':m.type==='bot'?'🤖 3D':'📷 Foto Real';
 wrap.appendChild(badge);
 const info=document.createElement('div');
 info.className='gallery-info';
@@ -1145,7 +900,7 @@ galleryGrid.appendChild(card);
 }
 
 function setupGalleryFilters(){
-const tabs=['Todas','Bot','Fotos','Vídeos'];
+const tabs=['Todas','Fotos','Vídeos','Bot'];
 galleryFiltersContainer.innerHTML='';
 tabs.forEach(tab=>{
 const b=document.createElement('button');
@@ -1168,7 +923,7 @@ const mc=(activeCategory==='Todos')||(o.category===activeCategory);
 const ms=!searchTerm||o.name.toLowerCase().indexOf(searchTerm)>=0||o.desc.toLowerCase().indexOf(searchTerm)>=0;
 return mc&&ms;
 });
-wardrobeCount.textContent=filtered.length+' biquínis disponíveis';
+wardrobeCount.textContent=filtered.length+' roupas disponíveis';
 const curId=OUTFITS[currentOutfitIndex].id;
 filtered.forEach(o=>{
 const ri=OUTFITS.findIndex(x=>x.id===o.id);
@@ -1176,7 +931,7 @@ const c=document.createElement('button');
 c.type='button';
 c.className='outfit-card'+(o.id===curId?' active':'');
 c.dataset.outfitId=o.id;
-c.innerHTML='<span class="outfit-card-icon">'+o.icon+'</span><div class="outfit-card-info"><span class="outfit-card-name">'+o.name+'</span><span class="outfit-card-cat">'+o.category+'</span></div>';
+c.innerHTML='<span class="outfit-card-icon">'+o.icon+'</span><div class="outfit-card-info"><span class="outfit-card-name">'+o.name+'</span><span class="outfit-card-cat">'+o.desc+'</span></div>';
 c.addEventListener('click',()=>applyOutfit(ri));
 outfitsGridContainer.appendChild(c);
 });
@@ -1210,104 +965,21 @@ musicPillsContainer.appendChild(p);
 });
 }
 
-function charPreviewHTML(c){
-const sk=SKINS[c.skin],hr=HAIRS[c.hair],ey=EYES[c.eye];
-return '<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">'+
-'<ellipse cx="30" cy="32" rx="16" ry="19" fill="'+sk.c1+'"/>'+
-'<path d="M 14 28 Q 16 8 30 6 Q 44 8 46 28 Q 42 18 34 20 Q 30 12 26 20 Q 18 18 14 28 Z" fill="'+hr.c1+'"/>'+
-'<path d="M 14 28 Q 10 44 14 54 Q 18 44 18 34 Z" fill="'+hr.c1+'"/>'+
-'<path d="M 46 28 Q 50 44 46 54 Q 42 44 42 34 Z" fill="'+hr.c1+'"/>'+
-'<circle cx="24" cy="32" r="2.2" fill="'+ey.c+'"/>'+
-'<circle cx="36" cy="32" r="2.2" fill="'+ey.c+'"/>'+
-'<path d="M 26 42 Q 30 45 34 42" stroke="#b87a88" stroke-width="1.2" fill="none" stroke-linecap="round"/>'+
-'</svg>';
-}
-
-function renderCharsGrid(){
-charsGrid.innerHTML='';
-CHARACTERS.forEach((c,i)=>{
-const b=document.createElement('button');
-b.type='button';
-b.className='char-card'+(i===currentCharIndex?' active':'');
-b.dataset.charId='char-'+i;
-b.innerHTML='<div class="char-preview">'+charPreviewHTML(c)+'</div><span class="char-name">'+c.name+'</span>';
-b.addEventListener('click',()=>applyCharacter(i));
-charsGrid.appendChild(b);
-});
-}
-
-function setupSwatches(){
-skinSwatches.innerHTML='';
-SKINS.forEach((s,i)=>{
-const el=document.createElement('div');
-el.className='swatch';
-el.style.background='linear-gradient(135deg,'+s.c1+' 0%,'+s.c2+' 100%)';
-el.title=s.n;
-el.addEventListener('click',()=>{
-CHARACTERS[currentCharIndex].skin=i;
-applyCharacter(currentCharIndex);
-});
-skinSwatches.appendChild(el);
-});
-
-hairSwatches.innerHTML='';
-HAIRS.forEach((h,i)=>{
-const el=document.createElement('div');
-el.className='swatch';
-el.style.background='linear-gradient(135deg,'+h.c1+' 0%,'+h.c3+' 100%)';
-el.title=h.n;
-el.addEventListener('click',()=>{
-CHARACTERS[currentCharIndex].hair=i;
-applyCharacter(currentCharIndex);
-});
-hairSwatches.appendChild(el);
-});
-
-hairStyleBtns.innerHTML='';
-HAIR_STYLES.forEach(s=>{
-const b=document.createElement('button');
-b.type='button';
-b.className='hair-btn';
-b.dataset.style=s.id;
-b.textContent=s.n;
-b.addEventListener('click',()=>{
-CHARACTERS[currentCharIndex].hairStyle=s.id;
-applyCharacter(currentCharIndex);
-});
-hairStyleBtns.appendChild(b);
-});
-
-eyeSwatches.innerHTML='';
-EYES.forEach((e,i)=>{
-const el=document.createElement('div');
-el.className='swatch';
-el.style.background=e.c;
-el.title=e.n;
-el.addEventListener('click',()=>{
-CHARACTERS[currentCharIndex].eye=i;
-applyCharacter(currentCharIndex);
-});
-eyeSwatches.appendChild(el);
-});
-}
-
-/* Upload */
+/* Upload com Persistência Automática da sua Foto IA */
 dancerUpload.addEventListener('change',e=>{
 const files=Array.from(e.target.files);
 if(!files.length)return;
-files.forEach((f,i)=>{
-const url=URL.createObjectURL(f);
-uploadedObjectUrls.push(url);
-GALLERY.push({
-id:'custom-'+Date.now()+'-'+i,
-title:f.name.substring(0,18),
-type:f.type.indexOf('video/')===0?'video':'image',
-src:url,fallback:url,tag:'Meu Upload'
-});
-});
-applyMedia(GALLERY.length-1);
-renderGallery();
-createSparkles(18);
+const reader=new FileReader();
+reader.onload=function(ev){
+  const dataUrl=ev.target.result;
+  try{ localStorage.setItem('userDancerPhoto', dataUrl); }catch(err){}
+  GALLERY[0].src=dataUrl;
+  GALLERY[0].fallback=dataUrl;
+  applyMedia(0);
+  renderGallery();
+  createSparkles(25);
+};
+reader.readAsDataURL(files[0]);
 e.target.value='';
 });
 
@@ -1339,18 +1011,15 @@ if(dancerBot.classList.contains('active'))dancerBot.classList.add('idle');
 function closeAllModals(){
 wardrobeModal.classList.remove('open');
 galleryModal.classList.remove('open');
-customizeModal.classList.remove('open');
 }
 
 btnOpenWardrobe.addEventListener('click',()=>{closeAllModals();wardrobeModal.classList.add('open');renderOutfitsGrid();});
 btnOpenGallery.addEventListener('click',()=>{closeAllModals();galleryModal.classList.add('open');renderGallery();});
-btnCustomize.addEventListener('click',()=>{closeAllModals();customizeModal.classList.add('open');renderCharsGrid();applyCharacter(currentCharIndex);});
 btnCloseWardrobe.addEventListener('click',closeAllModals);
 btnCloseGallery.addEventListener('click',closeAllModals);
-btnCloseCustomize.addEventListener('click',closeAllModals);
 
 window.addEventListener('click',e=>{
-if(e.target===wardrobeModal||e.target===galleryModal||e.target===customizeModal)closeAllModals();
+if(e.target===wardrobeModal||e.target===galleryModal)closeAllModals();
 });
 window.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllModals();});
 
@@ -1376,18 +1045,21 @@ uploadedObjectUrls.forEach(u=>URL.revokeObjectURL(u));
 });
 
 window.addEventListener('DOMContentLoaded',()=>{
+try{ 
+  const savedPhoto=localStorage.getItem('userDancerPhoto'); 
+  if(savedPhoto){ 
+    GALLERY[0].src=savedPhoto; 
+    GALLERY[0].fallback=savedPhoto; 
+  } 
+}catch(e){}
 setupCategories();
 setupGalleryFilters();
 setupMusicPills();
-setupSwatches();
 renderOutfitsGrid();
 renderGallery();
-renderCharsGrid();
-applyCharacter(0);
 applyOutfit(0);
 applyMusicStyle(0);
 applyMedia(0);
-dancerBot.classList.add('idle');
 drawVisualizer();
 });
 </script>
