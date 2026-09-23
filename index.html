@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bailarina Virtual - 100 Biquínis & Funk Dance</title>
+  <title>Bailarina Virtual - Galeria de Fotos e Vídeos, 100 Biquínis & Funk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
@@ -123,7 +123,7 @@
     .app-subtitle {
       font-size: 0.9rem;
       color: var(--text-muted);
-      max-width: 550px;
+      max-width: 580px;
     }
 
     /* Palco Central */
@@ -132,7 +132,7 @@
       display: flex;
       justify-content: center;
       z-index: 5;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.15rem;
     }
 
     .stage-frame {
@@ -176,6 +176,53 @@
     .hud-info { display: flex; flex-direction: column; overflow: hidden; }
     .hud-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; white-space: nowrap; }
     .hud-value { font-size: 0.8rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Barra Rápida de Navegação de Fotos/Vídeos no Palco */
+    .stage-media-nav {
+      position: absolute;
+      top: 60px;
+      width: calc(100% - 2rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 12;
+      pointer-events: none;
+    }
+
+    .media-nav-btn {
+      pointer-events: auto;
+      background: rgba(10, 8, 19, 0.65);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .media-nav-btn:hover {
+      background: var(--primary-accent);
+      border-color: var(--primary-accent);
+      transform: scale(1.1);
+    }
+
+    .media-nav-indicator {
+      background: rgba(10, 8, 19, 0.65);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #ff9cc3;
+      pointer-events: auto;
+    }
 
     /* Área da Dançarina */
     .dancer-container {
@@ -362,8 +409,56 @@
       max-width: 680px;
       display: flex;
       flex-direction: column;
-      gap: 1.15rem;
+      gap: 1rem;
       z-index: 10;
+    }
+
+    /* Linha com Guarda-Roupa & Galeria */
+    .double-action-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+    }
+
+    @media (max-width: 500px) {
+      .double-action-bar { grid-template-columns: 1fr; }
+    }
+
+    .btn-special {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 0.8rem 1rem;
+      border-radius: 16px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.25s;
+    }
+
+    .btn-special-wardrobe {
+      background: linear-gradient(135deg, rgba(255, 77, 141, 0.3) 0%, rgba(121, 40, 202, 0.4) 100%);
+      border-color: rgba(255, 77, 141, 0.5);
+      box-shadow: 0 4px 15px rgba(255, 77, 141, 0.25);
+    }
+    .btn-special-wardrobe:hover {
+      border-color: #ff4d8d;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 77, 141, 0.45);
+    }
+
+    .btn-special-gallery {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(59, 130, 246, 0.4) 100%);
+      border-color: rgba(6, 182, 212, 0.5);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.25);
+    }
+    .btn-special-gallery:hover {
+      border-color: #06b6d4;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.45);
     }
 
     .primary-actions {
@@ -423,31 +518,6 @@
     @keyframes pulseButton {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.08); }
-    }
-
-    /* Botão Principal: Abrir o Guarda-Roupa */
-    .btn-open-wardrobe-main {
-      background: linear-gradient(135deg, rgba(255, 77, 141, 0.25) 0%, rgba(121, 40, 202, 0.35) 100%);
-      border: 1px solid rgba(255, 77, 141, 0.45);
-      color: #fff;
-      padding: 0.85rem 1.25rem;
-      border-radius: 16px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      transition: all 0.25s;
-      box-shadow: 0 6px 20px rgba(255, 77, 141, 0.2);
-    }
-
-    .btn-open-wardrobe-main:hover {
-      background: linear-gradient(135deg, rgba(255, 77, 141, 0.4) 0%, rgba(121, 40, 202, 0.5) 100%);
-      border-color: #ff4d8d;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(255, 77, 141, 0.4);
     }
 
     .quick-toolbar {
@@ -538,12 +608,15 @@
       font-weight: 700;
     }
 
-    /* Modal do Guarda-Roupa com 100 Biquínis */
-    .wardrobe-modal-overlay {
+    /* =========================================
+       MODAIS: GUARDA-ROUPA & GALERIA
+       ========================================= */
+
+    .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5, 3, 12, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(5, 3, 12, 0.88);
+      backdrop-filter: blur(12px);
       z-index: 100;
       display: none;
       justify-content: center;
@@ -551,11 +624,9 @@
       padding: 1rem;
     }
 
-    .wardrobe-modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
 
-    .wardrobe-modal {
+    .modal-window {
       width: 100%;
       max-width: 750px;
       max-height: 88vh;
@@ -568,7 +639,7 @@
       overflow: hidden;
     }
 
-    .wardrobe-modal-header {
+    .modal-header {
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
@@ -577,7 +648,7 @@
       background: rgba(255, 255, 255, 0.03);
     }
 
-    .wardrobe-modal-title {
+    .modal-title {
       font-size: 1.2rem;
       font-weight: 700;
       color: #fff;
@@ -586,7 +657,7 @@
       gap: 0.5rem;
     }
 
-    .wardrobe-close-btn {
+    .modal-close-btn {
       background: rgba(255, 255, 255, 0.08);
       border: none;
       color: #fff;
@@ -601,11 +672,9 @@
       transition: all 0.2s;
     }
 
-    .wardrobe-close-btn:hover {
-      background: #ff4d8d;
-    }
+    .modal-close-btn:hover { background: #ff4d8d; }
 
-    .wardrobe-modal-body {
+    .modal-body {
       padding: 1.25rem 1.5rem;
       overflow-y: auto;
       display: flex;
@@ -708,6 +777,92 @@
     .outfit-card-name { font-size: 0.82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .outfit-card-cat { font-size: 0.68rem; color: var(--text-muted); }
 
+    /* Galeria de Fotos e Vídeos */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.85rem;
+      max-height: 52vh;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+    }
+
+    .gallery-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary-accent);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .gallery-card.active {
+      border: 2px solid var(--primary-accent);
+      box-shadow: 0 0 18px rgba(255, 77, 141, 0.5);
+    }
+
+    .gallery-thumb-wrapper {
+      width: 100%;
+      height: 150px;
+      background: #0d0918;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-thumb-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-badge-type {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(10, 8, 19, 0.75);
+      backdrop-filter: blur(8px);
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .gallery-info {
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      background: rgba(20, 16, 35, 0.7);
+    }
+
+    .gallery-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gallery-tag {
+      font-size: 0.7rem;
+      color: #ff9cc3;
+    }
+
     .app-footer {
       margin-top: 1.5rem;
       text-align: center;
@@ -729,9 +884,9 @@
     <div class="spotlight spotlight-right" id="spotRight"></div>
 
     <header class="app-header">
-      <div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS ★</div>
+      <div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & VÍDEOS ★</div>
       <h1 class="app-title">Bailarina Virtual</h1>
-      <p class="app-subtitle">Dança Funk Carioca, Balé, Pop e ritmos com guarda-roupa de 100 tipos de biquínis!</p>
+      <p class="app-subtitle">Galeria completa de fotos e vídeos, 100 tipos de biquínis e Funk Carioca!</p>
     </header>
 
     <main class="stage-wrapper">
@@ -754,11 +909,16 @@
           </div>
         </div>
 
+        <div class="stage-media-nav">
+          <button class="media-nav-btn" id="btnPrevMedia" title="Foto/Vídeo Anterior">◀</button>
+          <span class="media-nav-indicator" id="mediaIndicator">Mídia 1/8 • Foto</span>
+          <button class="media-nav-btn" id="btnNextMedia" title="Próxima Foto/Vídeo">▶</button>
+        </div>
+
         <div class="dancer-container" id="dancerContainer">
           <div class="stage-shadow" id="stageShadow"></div>
 
           <div class="dancer-figure" id="dancerFigure">
-            <!-- Salve a foto enviada como dancer.jpg na pasta do GitHub -->
             <img src="dancer.jpg" alt="Bailarina Dançando" id="dancerImg" class="dancer-media active" onerror="this.src='https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80'" />
             <video id="dancerVideo" class="dancer-media" loop playsinline muted></video>
             
@@ -774,13 +934,16 @@
     </main>
 
     <section class="controls-section">
-      <!-- Botão em Destaque: Abrir o Guarda-Roupa -->
-      <button class="btn-open-wardrobe-main" id="btnOpenWardrobeMain">
-        <span>👙 Abrir o Guarda-Roupa (100 Biquínis)</span>
-      </button>
+      <div class="double-action-bar">
+        <button class="btn-special btn-special-wardrobe" id="btnOpenWardrobe">
+          <span>👙 Abrir o Guarda-Roupa (100 Biquínis)</span>
+        </button>
+        <button class="btn-special btn-special-gallery" id="btnOpenGallery">
+          <span>📸 Galeria de Fotos & Vídeos</span>
+        </button>
+      </div>
 
       <div class="primary-actions">
-        <!-- 1. Botão Mudar Roupa / Biquíni -->
         <button class="action-btn btn-outfit" id="btnChangeOutfit">
           <div class="btn-icon-wrapper">
             <span class="btn-emoji">👙</span>
@@ -791,7 +954,6 @@
           </div>
         </button>
 
-        <!-- Play / Pause Principal -->
         <button class="action-btn btn-play" id="btnPlayPause">
           <div class="btn-icon-wrapper play-pulse">
             <span class="btn-emoji" id="playIcon">▶</span>
@@ -802,7 +964,6 @@
           </div>
         </button>
 
-        <!-- 2. Botão Mudar Música -->
         <button class="action-btn btn-music" id="btnChangeMusic">
           <div class="btn-icon-wrapper">
             <span class="btn-emoji" id="musicBtnIcon">🎵</span>
@@ -818,12 +979,12 @@
         <button class="tool-btn" id="btnRandomOutfit">
           <span>🎲 Biquíni Aleatório</span>
         </button>
-        <button class="tool-btn" id="btnOpenWardrobe2">
-          <span>📂 Ver Catálogo</span>
+        <button class="tool-btn" id="btnNextMediaToolbar">
+          <span>🔄 Trocar Pose / Vídeo</span>
         </button>
         <label for="dancerUpload" class="tool-btn tool-upload">
-          <span>📷 Trocar Foto / Vídeo</span>
-          <input type="file" id="dancerUpload" accept="image/*,video/*" />
+          <span>➕ Adicionar Foto/Vídeo à Galeria</span>
+          <input type="file" id="dancerUpload" accept="image/*,video/*" multiple />
         </label>
         <label for="audioUpload" class="tool-btn tool-audio">
           <span>🎧 Meu MP3</span>
@@ -837,30 +998,45 @@
       </div>
     </section>
 
-    <!-- Modal do Guarda-Roupa com os 100 Biquínis -->
-    <div class="wardrobe-modal-overlay" id="wardrobeModal">
-      <div class="wardrobe-modal">
-        <div class="wardrobe-modal-header">
-          <div class="wardrobe-modal-title">
+    <!-- Modal 1: Guarda-Roupa com 100 Biquínis -->
+    <div class="modal-overlay" id="wardrobeModal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="modal-title">
             <span>👙 Guarda-Roupa da Dançarina</span>
             <span class="badge-count" id="wardrobeCount">100 biquínis disponíveis</span>
           </div>
-          <button class="wardrobe-close-btn" id="btnCloseWardrobe">&times;</button>
+          <button class="modal-close-btn" id="btnCloseWardrobe">&times;</button>
         </div>
-        <div class="wardrobe-modal-body">
+        <div class="modal-body">
           <div class="category-filters" id="categoryFilters"></div>
-
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="🔍 Buscar entre os 100 biquínis (ex: asa delta, fita, rosa, ouro, crochê)..." />
           </div>
-
           <div class="outfits-scroll-grid" id="outfitsGrid"></div>
         </div>
       </div>
     </div>
 
+    <!-- Modal 2: Galeria de Fotos e Vídeos -->
+    <div class="modal-overlay" id="galleryModal">
+      <div class="modal-window">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span>📸 Galeria de Fotos & Vídeos da Dançarina</span>
+            <span class="badge-count" id="galleryCount">8 mídias</span>
+          </div>
+          <button class="modal-close-btn" id="btnCloseGallery">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="category-filters" id="galleryFilters"></div>
+          <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+      </div>
+    </div>
+
     <footer class="app-footer">
-      <p>Bailarina Virtual • Salve a foto da sua bailarina como <code>dancer.jpg</code> no repositório do GitHub.</p>
+      <p>Bailarina Virtual • Suba suas fotos como <code>dancer.jpg</code>, <code>dancer2.jpg</code> e seus vídeos como <code>video1.mp4</code> no GitHub!</p>
     </footer>
   </div>
 
@@ -971,7 +1147,19 @@
       {"id": "bikini-100", "name": "100. Hot Pants Prata Cyberpunk", "category": "Cintura Alta", "icon": "🪞", "desc": "Cintura alta metalizada prateada com brilho de espelho", "spotlightLeft": "#cbd5e1", "spotlightRight": "#64748b", "glowColor": "rgba(203, 213, 225, 0.55)", "filter": "contrast(1.35) brightness(1.12) saturate(0.6)", "overlay": "linear-gradient(45deg, rgba(255,255,255,0.4), transparent)", "blend": "overlay"}
     ];
 
-    // 2. ESTILOS DE MÚSICA & DANÇA (COM FUNK!)
+    // 2. DADOS DA GALERIA DE FOTOS E VÍDEOS
+    let GALLERY = [
+      {"id": "media-1", "title": "Foto Principal (Rosa)", "type": "image", "src": "dancer.jpg", "fallback": "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80", "tag": "Pose Original"},
+      {"id": "media-2", "title": "Foto 2 (Pose Ballet)", "type": "image", "src": "dancer2.jpg", "fallback": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80", "tag": "Ballet Clássico"},
+      {"id": "media-3", "title": "Foto 3 (Praia Sol)", "type": "image", "src": "dancer3.jpg", "fallback": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80", "tag": "Verão Biquíni"},
+      {"id": "media-4", "title": "Foto 4 (Gala Noite)", "type": "image", "src": "dancer4.jpg", "fallback": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80", "tag": "Glamour Noite"},
+      {"id": "media-5", "title": "Foto 5 (Urbana Funk)", "type": "image", "src": "dancer5.jpg", "fallback": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80", "tag": "Street Funk"},
+      {"id": "media-6", "title": "Vídeo 1 (Coreografia Funk)", "type": "video", "src": "video1.mp4", "fallback": "https://assets.mixkit.co/videos/preview/mixkit-girl-dancing-in-a-nightclub-42998-large.mp4", "tag": "Vídeo Dança"},
+      {"id": "media-7", "title": "Vídeo 2 (Passo Pop Dance)", "type": "video", "src": "video2.mp4", "fallback": "https://assets.mixkit.co/videos/preview/mixkit-woman-dancing-under-neon-lights-43004-large.mp4", "tag": "Vídeo Dança"},
+      {"id": "media-8", "title": "Vídeo 3 (Giro de Balé)", "type": "video", "src": "video3.mp4", "fallback": "https://assets.mixkit.co/videos/preview/mixkit-ballerina-doing-a-pirouette-on-stage-41014-large.mp4", "tag": "Vídeo Dança"}
+    ];
+
+    // 3. ESTILOS DE MÚSICA & DANÇA (COM FUNK!)
     const MUSIC_STYLES = [
       { id: 'funk', name: 'Funk Carioca', sub: 'Batidão 130 BPM & Tamborzão', icon: '🔥', bpm: 130, danceClass: 'dancing-funk', danceDuration: 0.92 },
       { id: 'ballet', name: 'Balé Clássico', sub: 'Valsa & Harmonia', icon: '🎼', bpm: 88, danceClass: 'dancing-ballet', danceDuration: 1.6 },
@@ -981,13 +1169,15 @@
       { id: 'synthwave', name: 'Synthwave Anos 80', sub: 'Arpejador Retrô & Synth Bass', icon: '🕹️', bpm: 120, danceClass: 'dancing-synthwave', danceDuration: 1.0 }
     ];
 
-    // 3. ESTADO GLOBAL
+    // 4. ESTADO GLOBAL
     let currentOutfitIndex = 0;
     let currentMusicIndex = 0;
+    let currentMediaIndex = 0;
     let isPlaying = false;
     let speedMultiplier = 1.0;
     let customAudioLoaded = false;
     let activeCategory = 'Todos';
+    let activeGalleryTab = 'Todas';
     let searchTerm = '';
 
     // Elementos DOM
@@ -1003,13 +1193,22 @@
     const nextMusicHint = document.getElementById('nextMusicHint');
     const hudMusicIcon = document.getElementById('hudMusicIcon');
     const hudOutfitIcon = document.getElementById('hudOutfitIcon');
+    const mediaIndicator = document.getElementById('mediaIndicator');
+    const btnPrevMedia = document.getElementById('btnPrevMedia');
+    const btnNextMedia = document.getElementById('btnNextMedia');
+    const btnNextMediaToolbar = document.getElementById('btnNextMediaToolbar');
     const btnChangeOutfit = document.getElementById('btnChangeOutfit');
     const btnChangeMusic = document.getElementById('btnChangeMusic');
     const btnRandomOutfit = document.getElementById('btnRandomOutfit');
-    const btnOpenWardrobeMain = document.getElementById('btnOpenWardrobeMain');
-    const btnOpenWardrobe2 = document.getElementById('btnOpenWardrobe2');
+    const btnOpenWardrobe = document.getElementById('btnOpenWardrobe');
     const btnCloseWardrobe = document.getElementById('btnCloseWardrobe');
     const wardrobeModal = document.getElementById('wardrobeModal');
+    const btnOpenGallery = document.getElementById('btnOpenGallery');
+    const btnCloseGallery = document.getElementById('btnCloseGallery');
+    const galleryModal = document.getElementById('galleryModal');
+    const galleryGrid = document.getElementById('galleryGrid');
+    const galleryCount = document.getElementById('galleryCount');
+    const galleryFiltersContainer = document.getElementById('galleryFilters');
     const btnPlayPause = document.getElementById('btnPlayPause');
     const playIcon = document.getElementById('playIcon');
     const playBtnTitle = document.getElementById('playBtnTitle');
@@ -1028,7 +1227,7 @@
     const visualizerCanvas = document.getElementById('visualizerCanvas');
     const canvasCtx = visualizerCanvas.getContext('2d');
 
-    // 4. SINTETIZADOR MUSICAL (WEB AUDIO API)
+    // 5. MOTOR DE ÁUDIO WEB AUDIO API
     let audioCtx = null;
     let masterGain = null;
     let analyser = null;
@@ -1238,12 +1437,41 @@
       if (customAudioLoaded) customAudioPlayer.pause();
     }
 
-    // 5. TROCA DE BIQUÍNIS (100 MODELOS)
+    // 6. APLICAÇÃO DE MÍDIA (FOTO OU VÍDEO NO PALCO)
+    function applyMedia(index) {
+      currentMediaIndex = (index + GALLERY.length) % GALLERY.length;
+      const media = GALLERY[currentMediaIndex];
+
+      mediaIndicator.textContent = `Mídia ${currentMediaIndex + 1}/${GALLERY.length} • ${media.type === 'video' ? 'Vídeo' : 'Foto'}`;
+
+      if (media.type === 'video') {
+        dancerImg.classList.remove('active');
+        dancerVideo.src = media.src;
+        dancerVideo.onerror = () => { dancerVideo.src = media.fallback; };
+        dancerVideo.classList.add('active');
+        if (isPlaying) dancerVideo.play();
+      } else {
+        dancerVideo.pause();
+        dancerVideo.classList.remove('active');
+        dancerImg.src = media.src;
+        dancerImg.onerror = () => { dancerImg.src = media.fallback; };
+        dancerImg.classList.add('active');
+      }
+
+      document.querySelectorAll('.gallery-card').forEach((card, idx) => {
+        card.classList.toggle('active', idx === currentMediaIndex);
+      });
+
+      createSparkles(12);
+    }
+
+    // 7. TROCA DE BIQUÍNIS (100 MODELOS)
     function applyOutfit(index) {
       currentOutfitIndex = (index + OUTFITS.length) % OUTFITS.length;
       const outfit = OUTFITS[currentOutfitIndex];
 
       dancerImg.style.filter = outfit.filter;
+      dancerVideo.style.filter = outfit.filter;
       outfitOverlay.style.background = outfit.overlay;
       outfitOverlay.style.mixBlendMode = outfit.blend;
 
@@ -1265,7 +1493,7 @@
       createSparkles(12);
     }
 
-    // 6. TROCA DE ESTILOS DE MÚSICA & DANÇA
+    // 8. TROCA DE ESTILOS DE MÚSICA & DANÇA
     function applyMusicStyle(index) {
       currentMusicIndex = (index + MUSIC_STYLES.length) % MUSIC_STYLES.length;
       const style = MUSIC_STYLES[currentMusicIndex];
@@ -1292,7 +1520,7 @@
       });
     }
 
-    // 7. PLAY / PAUSE
+    // 9. PLAY / PAUSE
     function togglePlayPause() {
       isPlaying = !isPlaying;
       const style = MUSIC_STYLES[currentMusicIndex];
@@ -1315,7 +1543,7 @@
       }
     }
 
-    // 8. BRILHO & PARTÍCULAS
+    // 10. BRILHO & PARTÍCULAS
     function createSparkles(amount = 8) {
       for (let i = 0; i < amount; i++) {
         const sparkle = document.createElement('div');
@@ -1329,7 +1557,7 @@
       }
     }
 
-    // 9. VISUALIZADOR DE ÁUDIO NO PALCO
+    // 11. VISUALIZADOR DE ÁUDIO
     function drawVisualizer() {
       requestAnimationFrame(drawVisualizer);
       const width = visualizerCanvas.width = visualizerCanvas.clientWidth;
@@ -1376,37 +1604,64 @@
       }
     }
 
-    // 10. UPLOAD DE FOTO E ÁUDIO
-    dancerUpload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
+    // 12. RENDERIZAÇÃO DA GALERIA DE FOTOS E VÍDEOS
+    function renderGallery() {
+      galleryGrid.innerHTML = '';
 
-      if (file.type.startsWith('video/')) {
-        dancerImg.classList.remove('active');
-        dancerVideo.src = url;
-        dancerVideo.classList.add('active');
-        if (isPlaying) dancerVideo.play();
-      } else {
-        dancerVideo.classList.remove('active');
-        dancerImg.src = url;
-        dancerImg.classList.add('active');
-      }
-      createSparkles(15);
-    });
+      const filtered = GALLERY.filter(m => {
+        if (activeGalleryTab === 'Todas') return true;
+        if (activeGalleryTab === 'Fotos') return m.type === 'image';
+        if (activeGalleryTab === 'Vídeos') return m.type === 'video';
+        return true;
+      });
 
-    audioUpload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      customAudioPlayer.src = URL.createObjectURL(file);
-      customAudioLoaded = true;
-      if (isPlaying) {
-        stopMusicLoop();
-        customAudioPlayer.play();
-      }
-    });
+      galleryCount.textContent = `${GALLERY.length} mídias cadastradas`;
 
-    // 11. CATÁLOGO DOS 100 BIQUÍNIS
+      filtered.forEach((media) => {
+        const realIdx = GALLERY.findIndex(item => item.id === media.id);
+        const card = document.createElement('div');
+        card.className = `gallery-card ${realIdx === currentMediaIndex ? 'active' : ''}`;
+
+        card.innerHTML = `
+          <div class="gallery-thumb-wrapper">
+            ${media.type === 'video'
+              ? `<video src="${media.src}" class="gallery-thumb-media" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()" onerror="this.src='${media.fallback}'"></video>`
+              : `<img src="${media.src}" class="gallery-thumb-media" onerror="this.src='${media.fallback}'" />`}
+            <span class="gallery-badge-type">${media.type === 'video' ? '🎬 Vídeo' : '📷 Foto'}</span>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-title">${media.title}</span>
+            <span class="gallery-tag">${media.tag}</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          applyMedia(realIdx);
+          closeAllModals();
+        });
+
+        galleryGrid.appendChild(card);
+      });
+    }
+
+    function setupGalleryFilters() {
+      const tabs = ['Todas', 'Fotos', 'Vídeos'];
+      galleryFiltersContainer.innerHTML = '';
+      tabs.forEach(tab => {
+        const btn = document.createElement('button');
+        btn.className = `cat-filter-btn ${tab === activeGalleryTab ? 'active' : ''}`;
+        btn.textContent = tab;
+        btn.addEventListener('click', () => {
+          activeGalleryTab = tab;
+          document.querySelectorAll('#galleryFilters .cat-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderGallery();
+        });
+        galleryFiltersContainer.appendChild(btn);
+      });
+    }
+
+    // 13. CATÁLOGO DOS 100 BIQUÍNIS
     function renderOutfitsGrid() {
       outfitsGridContainer.innerHTML = '';
 
@@ -1446,7 +1701,7 @@
         btn.textContent = cat;
         btn.addEventListener('click', () => {
           activeCategory = cat;
-          document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('#categoryFilters .cat-filter-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           renderOutfitsGrid();
         });
@@ -1465,28 +1720,75 @@
       });
     }
 
-    // 12. EVENTOS DOS BOTÕES E MODAL
+    // 14. UPLOAD DE NOVAS FOTOS E VÍDEOS PARA A GALERIA
+    dancerUpload.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      files.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+        const isVideo = file.type.startsWith('video/');
+        const newMedia = {
+          id: `custom-media-${Date.now()}-${index}`,
+          title: file.name.substring(0, 18),
+          type: isVideo ? 'video' : 'image',
+          src: url,
+          fallback: url,
+          tag: 'Meu Upload'
+        };
+        GALLERY.push(newMedia);
+      });
+
+      applyMedia(GALLERY.length - 1);
+      renderGallery();
+      createSparkles(18);
+    });
+
+    audioUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      customAudioPlayer.src = URL.createObjectURL(file);
+      customAudioLoaded = true;
+      if (isPlaying) {
+        stopMusicLoop();
+        customAudioPlayer.play();
+      }
+    });
+
+    // 15. MODAIS & EVENTOS
+    function closeAllModals() {
+      wardrobeModal.classList.remove('open');
+      galleryModal.classList.remove('open');
+    }
+
+    btnOpenWardrobe.addEventListener('click', () => {
+      closeAllModals();
+      wardrobeModal.classList.add('open');
+      renderOutfitsGrid();
+    });
+
+    btnOpenGallery.addEventListener('click', () => {
+      closeAllModals();
+      galleryModal.classList.add('open');
+      renderGallery();
+    });
+
+    btnCloseWardrobe.addEventListener('click', closeAllModals);
+    btnCloseGallery.addEventListener('click', closeAllModals);
+
+    window.addEventListener('click', (e) => {
+      if (e.target === wardrobeModal || e.target === galleryModal) closeAllModals();
+    });
+
+    btnPrevMedia.addEventListener('click', () => applyMedia(currentMediaIndex - 1));
+    btnNextMedia.addEventListener('click', () => applyMedia(currentMediaIndex + 1));
+    btnNextMediaToolbar.addEventListener('click', () => applyMedia(currentMediaIndex + 1));
+
     btnChangeOutfit.addEventListener('click', () => applyOutfit(currentOutfitIndex + 1));
     btnChangeMusic.addEventListener('click', () => applyMusicStyle(currentMusicIndex + 1));
     btnRandomOutfit.addEventListener('click', () => {
       const randomIndex = Math.floor(Math.random() * OUTFITS.length);
       applyOutfit(randomIndex);
-    });
-
-    function openWardrobe() {
-      wardrobeModal.classList.add('open');
-      renderOutfitsGrid();
-    }
-    function closeWardrobe() {
-      wardrobeModal.classList.remove('open');
-    }
-
-    btnOpenWardrobeMain.addEventListener('click', openWardrobe);
-    btnOpenWardrobe2.addEventListener('click', openWardrobe);
-    btnCloseWardrobe.addEventListener('click', closeWardrobe);
-
-    wardrobeModal.addEventListener('click', (e) => {
-      if (e.target === wardrobeModal) closeWardrobe();
     });
 
     btnPlayPause.addEventListener('click', togglePlayPause);
@@ -1498,10 +1800,13 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       setupCategories();
+      setupGalleryFilters();
       setupMusicPills();
       renderOutfitsGrid();
+      renderGallery();
       applyOutfit(0);
       applyMusicStyle(0);
+      applyMedia(0);
       drawVisualizer();
     });
   </script>
