@@ -41,6 +41,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .dancer-bot-svg{width:100%;height:100%;display:none;overflow:visible}
 .dancer-bot-svg.active{display:block}
 .dancer-bot-svg .bot-part{transform-box:fill-box;transform-origin:50% 0%;will-change:transform}
+
 /* Danças */
 .dancing-funk .bot-arm-left{animation:botFunkArmL var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
 .dancing-funk .bot-arm-right{animation:botFunkArmR var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
@@ -88,8 +89,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .dancing-synthwave .bot-leg-right{animation:botSynLegR var(--dance-duration) steps(4,end) infinite}
 @keyframes botSynArmL{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(50deg)}100%{transform:rotate(0)}}
 @keyframes botSynArmR{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(-50deg)}100%{transform:rotate(0)}}
-@keyframes botSynLegL{0%{transform:rotate(0)}50%{transform:rotate(-8deg)}100%{transform:rotate(0)}}
-@keyframes botSynLegR{0%{transform:rotate(0)}50%{transform:rotate(8deg)}100%{transform:rotate(0)}}
+@keyframes botSynLegL{0%,25%{transform:rotate(0)}50%{transform:rotate(-8deg)}100%{transform:rotate(0)}}
+@keyframes botSynLegR{0%,25%{transform:rotate(0)}50%{transform:rotate(8deg)}100%{transform:rotate(0)}}
 .dancer-bot-svg.idle .bot-arm-left{animation:botIdleArmL 3.5s ease-in-out infinite}
 .dancer-bot-svg.idle .bot-arm-right{animation:botIdleArmR 3.5s ease-in-out infinite}
 @keyframes botIdleArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(4deg)}}
@@ -100,6 +101,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 @keyframes floatSparkle{0%{transform:translateY(20px) scale(0);opacity:0}50%{opacity:.95}100%{transform:translateY(-45px) scale(1.3);opacity:0}}
 .stage-floor{width:100%;height:60px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.65));border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;z-index:3}
 .audio-visualizer{width:100%;height:45px}
+
 /* Dança do figure inteiro */
 .dancing-funk{animation:danceFunk var(--dance-duration) cubic-bezier(.25,.1,.25,1) infinite}
 @keyframes danceFunk{0%{transform:translateY(0) rotate(0) scale(1,1)}15%{transform:translateY(12px) rotate(-6deg) scale(1.08,.92)}30%{transform:translateY(-8px) rotate(4deg) scale(.96,1.04)}48%{transform:translateY(28px) rotate(-4deg) scale(1.14,.86)}62%{transform:translateY(20px) rotate(5deg) scale(1.06,.94)}78%{transform:translateY(-16px) rotate(-2deg) scale(.95,1.05)}100%{transform:translateY(0) rotate(0) scale(1,1)}}
@@ -115,6 +117,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 @keyframes danceSynthwave{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.03) rotate(2deg)}}
 .dancing-shadow{animation:shadowPulse var(--dance-duration) ease-in-out infinite alternate}
 @keyframes shadowPulse{0%{transform:scale(1);opacity:.8}50%{transform:scale(.72);opacity:.35}100%{transform:scale(1.1);opacity:.9}}
+
 /* Controles */
 .controls-section{width:100%;max-width:680px;display:flex;flex-direction:column;gap:1rem;z-index:10}
 .double-action-bar{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
@@ -146,6 +149,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .music-pills{display:flex;flex-wrap:wrap;gap:.5rem}
 .music-pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:.45rem .9rem;border-radius:999px;font-size:.82rem;color:var(--text-main);cursor:pointer;display:flex;align-items:center;gap:.4rem;font-family:inherit}
 .music-pill.active{background:linear-gradient(135deg,rgba(255,77,141,.35),rgba(121,40,202,.45));border-color:var(--primary-accent);box-shadow:0 0 14px rgba(255,77,141,.4);font-weight:700}
+
 /* Modais */
 .modal-overlay{position:fixed;inset:0;background:rgba(5,3,12,.88);backdrop-filter:blur(12px);z-index:100;display:none;justify-content:center;align-items:center;padding:1rem}
 .modal-overlay.open{display:flex}
@@ -161,6 +165,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .cat-filter-btn.active,.cat-filter-btn:hover{background:var(--primary-accent);color:#fff;border-color:var(--primary-accent)}
 .search-box input{width:100%;background:rgba(10,8,19,.7);border:1px solid var(--border-subtle);border-radius:14px;padding:.7rem 1rem;color:#fff;font-size:.88rem;outline:none;font-family:inherit}
 .search-box input:focus{border-color:var(--primary-accent);box-shadow:0 0 15px rgba(255,77,141,.3)}
+
 /* Grids */
 .grid-scroll{display:grid;gap:.65rem;max-height:52vh;overflow-y:auto;padding-right:.4rem}
 .outfits-scroll-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
@@ -171,6 +176,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .outfit-card-info{display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .outfit-card-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .outfit-card-cat{font-size:.68rem;color:var(--text-muted)}
+
 /* Personagens */
 .chars-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 .char-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:.5rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.4rem;font-family:inherit;color:#fff}
@@ -179,6 +185,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .char-preview{width:64px;height:64px;border-radius:50%;overflow:hidden;background:rgba(0,0,0,.35);flex-shrink:0}
 .char-preview svg{width:100%;height:100%;display:block}
 .char-name{font-size:.72rem;font-weight:700;text-align:center;line-height:1.15}
+
 /* Customização manual */
 .custom-block{display:flex;flex-direction:column;gap:.5rem;padding:.85rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px}
 .custom-block-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
@@ -189,6 +196,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .hair-btn{padding:.5rem .85rem;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;font-size:.78rem;cursor:pointer;font-weight:600;font-family:inherit}
 .hair-btn:hover{background:rgba(255,255,255,.12)}
 .hair-btn.active{background:linear-gradient(135deg,rgba(255,77,141,.4),rgba(121,40,202,.4));border-color:#ff4d8d}
+
 /* Galeria */
 .gallery-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
 .gallery-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;position:relative}
@@ -260,12 +268,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <stop offset="100%" stop-color="var(--hair-2)"/>
 </linearGradient>
 <linearGradient id="botTopGrad" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0%" stop-color="#fdfaf4"/>
-<stop offset="100%" stop-color="#e4dccb"/>
+<stop offset="0%" stop-color="var(--outfit-1, #ff4d8d)"/>
+<stop offset="100%" stop-color="var(--outfit-2, #7928ca)"/>
 </linearGradient>
 <linearGradient id="botLeggingGrad" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0%" stop-color="#9a9ea5"/>
-<stop offset="100%" stop-color="#65686c"/>
+<stop offset="0%" stop-color="var(--outfit-1, #ff4d8d)"/>
+<stop offset="100%" stop-color="var(--outfit-2, #7928ca)"/>
 </linearGradient>
 </defs>
 
@@ -309,9 +317,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <path d="M 129 320 Q 139 318 149 320" stroke="#1a1a1a" stroke-width="1.4" fill="none"/>
 </g>
 
-<!-- TOP BRANCO MANGA LONGA -->
-<path d="M 92 124 Q 88 128 86 152 L 86 202 Q 110 212 125 211 Q 140 212 164 202 L 164 152 Q 162 128 158 124 Q 140 118 125 118 Q 110 118 92 124 Z" fill ="url(#botTop101Grad)"/>
- <path d="M 112 148122 Q 125 132 138 122" stroke="#d8cebb" stroke-width="2" fill="none" stroke-linecap="round"/>
+<!-- TOP BRANCO / BIQUÍNI (GRADIENTE CORRIGIDO) -->
+<path d="M 92 124 Q 88 128 86 152 L 86 202 Q 110 212 125 211 Q 140 212 164 202 L 164 152 Q 162 128 158 124 Q 140 118 125 118 Q 110 118 92 124 Z" fill="url(#botTopGrad)"/>
+<path d="M 112 122 Q 125 132 138 122" stroke="#d8cebb" stroke-width="2" fill="none" stroke-linecap="round"/>
 <path d="M 88 197 Q 125 207 162 197" stroke="#d8cebb" stroke-width="1.2" fill="none" opacity=".55"/>
 
 <!-- BRAÇO DIREITO -->
@@ -511,7 +519,7 @@ if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prot
 CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
 if(typeof r==='number')r=[r,r,r,r];else if(!Array.isArray(r))r=[0,0,0,0];
 const[tl,tr,br,bl]=r;
-this.beginPath();this.moveTo(x+tl,y);this.lineTo(x+w-tr,y);this.quadraticCurveTo(x+w,y,x+w,y+tr);
+this.beginPath();this.moveTo(x+tl,y);this.lineTo(x+w-tr,y);this.quadraticCurveTo(x+w,y+tr);
 this.lineTo(x+w,y+h-br);this.quadraticCurveTo(x+w,y+h,x+w-br,y+h);this.lineTo(x+bl,y+h);
 this.quadraticCurveTo(x,y+h,x,y+h-bl);this.lineTo(x,y+tl);this.quadraticCurveTo(x,y,x+tl,y);
 this.closePath();return this;};
@@ -566,6 +574,7 @@ const EYES=[
 {n:'Cinza',c:'#8898a8'},
 {n:'Violeta',c:'#9878c8'}
 ];
+
 /* 40 nomes brasileiros para as combinações */
 const NOMES_PERSONAGENS=[
 'Alice','Bianca','Carla','Duda','Eduarda','Fernanda','Gabriela','Helena','Isabela','Júlia',
@@ -573,22 +582,21 @@ const NOMES_PERSONAGENS=[
 'Ursula','Valentina','Wanessa','Xênia','Yasmin','Zoe','Bruna','Camila','Daniela','Elisa',
 'Flávia','Giovana','Heloísa','Ingrid','Joana','Kelly','Letícia','Manuela','Natália','Priscila'
 ];
+
 /* Gera 40 personagens com combos variados */
 const CHARACTERS=[];
 (function generateChars(){
-const combos=[];
 for(let i=0;i<40;i++){
 const si=i%SKINS.length;
 const hi=(i*3)%HAIRS.length;
 const st=(i*5)%HAIR_STYLES.length;
 const ei=(i*2)%EYES.length;
-combos.push({
+CHARACTERS.push({
 id:'char-'+i,
 name:NOMES_PERSONAGENS[i],
 skin:si,hair:hi,hairStyle:HAIR_STYLES[st].id,eye:ei
 });
 }
-CHARACTERS.push(...combos);
 })();
 
 /* =========================================================
@@ -644,7 +652,7 @@ let GALLERY=[
 {id:'media-8',title:'Vídeo 3',type:'video',src:'video3.mp4',fallback:'',tag:'Balé'}
 ];
 
-/* Estilos musicais — CORRIGIDO */
+/* Estilos musicais */
 const MUSIC_STYLES=[
 {id:'funk',name:'Funk Carioca',sub:'Batidão 130 BPM & Tamborzão',icon:'🔥',bpm:130,danceClass:'dancing-funk',danceDuration:0.92},
 {id:'ballet',name:'Balé Clássico',sub:'Valsa & Harmonia',icon:'🎼',bpm:88,danceClass:'dancing-ballet',danceDuration:1.6},
@@ -704,6 +712,7 @@ analyser.fftSize=64;
 masterGain.connect(analyser);
 analyser.connect(audioCtx.destination);
 }
+
 function connectCustomAudio(){
 if(customAudioSourceNode)return;
 initAudio();
@@ -712,6 +721,7 @@ customAudioSourceNode=audioCtx.createMediaElementSource(customAudioPlayer);
 customAudioSourceNode.connect(masterGain);
 }catch(e){console.warn('MP3 não conectado ao analyser:',e);}
 }
+
 function playKick(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(0.01,t+0.35);g.gain.setValueAtTime(0.9,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.35);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35);}
 function playSnare(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='triangle';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(50,t+0.15);g.gain.setValueAtTime(0.4,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.2);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2);}
 function playHiHat(t,a){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(8000,t);g.gain.setValueAtTime(a?0.2:0.09,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.05);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.06);}
@@ -767,14 +777,18 @@ step++;
 }
 
 function startMusicLoop(){
-if(customAudioLoaded){customAudioPlayer.play().catch(e=>console.warn(e));return;}
 initAudio();
-if(audioCtx.state==='suspended')audioCtx.resume();
+if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
+if(customAudioLoaded){
+customAudioPlayer.play().catch(e=>console.warn(e));
+return;
+}
 if(beatTimer)clearInterval(beatTimer);
 const st=MUSIC_STYLES[currentMusicIndex];
 const ms=(60000/st.bpm)/4;
 beatTimer=setInterval(stepBeat,ms);
 }
+
 function stopMusicLoop(){
 if(beatTimer){clearInterval(beatTimer);beatTimer=null;}
 if(customAudioLoaded)customAudioPlayer.pause();
@@ -797,6 +811,7 @@ dancerBot.style.setProperty('--hair-1',hr.c1);
 dancerBot.style.setProperty('--hair-2',hr.c2);
 dancerBot.style.setProperty('--hair-3',hr.c3);
 dancerBot.style.setProperty('--eye',ey.c);
+
 /* troca estilo de cabelo */
 document.querySelectorAll('.hair-style').forEach(el=>{
 el.style.display=el.dataset.style===c.hairStyle?'':'none';
@@ -804,10 +819,12 @@ el.style.display=el.dataset.style===c.hairStyle?'':'none';
 document.querySelectorAll('.hair-front').forEach(el=>{
 el.style.display=el.dataset.style===c.hairStyle?'':'none';
 });
+
 /* marca card ativo */
 document.querySelectorAll('.char-card').forEach(el=>{
 el.classList.toggle('active',el.dataset.charId==='char-'+idx);
 });
+
 /* atualiza swatches */
 document.querySelectorAll('#skinSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.skin));
 document.querySelectorAll('#hairSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.hair));
@@ -826,6 +843,7 @@ dancerImg.classList.remove('active');
 dancerVideo.classList.remove('active');
 try{dancerVideo.pause();}catch(e){}
 dancerVideo.removeAttribute('src');
+
 if(m.type==='bot'){
 dancerBot.classList.add('active');
 if(!isPlaying)dancerBot.classList.add('idle');else dancerBot.classList.remove('idle');
@@ -846,13 +864,23 @@ createSparkles(12);
 function applyOutfit(index){
 currentOutfitIndex=((index%OUTFITS.length)+OUTFITS.length)%OUTFITS.length;
 const o=OUTFITS[currentOutfitIndex];
+
+/* Atualiza filtros da foto e vídeo */
 dancerImg.style.filter=o.filter;
 dancerVideo.style.filter=o.filter;
 outfitOverlay.style.background=o.overlay;
 outfitOverlay.style.mixBlendMode=o.blend;
+
+/* Atualiza o biquíni do robô SVG dinamicamente com as cores da paleta */
+dancerBot.style.setProperty('--outfit-1', o.spotlightLeft);
+dancerBot.style.setProperty('--outfit-2', o.spotlightRight);
+
+/* Holofotes e brilho */
 spotLeft.style.background=`linear-gradient(180deg,${o.spotlightLeft} 0%,transparent 100%)`;
 spotRight.style.background=`linear-gradient(180deg,${o.spotlightRight} 0%,transparent 100%)`;
 dancerFigure.style.filter=`drop-shadow(0 10px 25px ${o.glowColor})`;
+
+/* HUD */
 hudOutfitIcon.textContent=o.icon;
 currentOutfitCategory.textContent=o.category;
 currentOutfitLabel.textContent=`[${currentOutfitIndex+1}/100] ${o.name}`;
@@ -869,6 +897,7 @@ currentMusicIndex=((index%MUSIC_STYLES.length)+MUSIC_STYLES.length)%MUSIC_STYLES
 const st=MUSIC_STYLES[currentMusicIndex];
 document.documentElement.style.setProperty('--dance-duration',st.danceDuration+'s');
 MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
+
 if(isPlaying){
 dancerFigure.classList.add(st.danceClass);
 stageShadow.classList.add('dancing-shadow');
@@ -1121,6 +1150,7 @@ applyCharacter(currentCharIndex);
 });
 skinSwatches.appendChild(el);
 });
+
 /* Cabelo */
 hairSwatches.innerHTML='';
 HAIRS.forEach((h,i)=>{
@@ -1134,6 +1164,7 @@ applyCharacter(currentCharIndex);
 });
 hairSwatches.appendChild(el);
 });
+
 /* Estilos */
 hairStyleBtns.innerHTML='';
 HAIR_STYLES.forEach(s=>{
@@ -1148,6 +1179,7 @@ applyCharacter(currentCharIndex);
 });
 hairStyleBtns.appendChild(b);
 });
+
 /* Olhos */
 eyeSwatches.innerHTML='';
 EYES.forEach((e,i)=>{
@@ -1193,7 +1225,7 @@ customAudioPlayer.dataset.prevUrl=url;
 customAudioPlayer.src=url;
 connectCustomAudio();
 customAudioLoaded=true;
-if(isPlaying){stopMusicLoop();customAudioPlayer.play().catch(()=>{});}
+if(isPlaying){stopMusicLoop();startMusicLoop();}
 e.target.value='';
 });
 
@@ -1220,6 +1252,7 @@ btnCustomize.addEventListener('click',()=>{closeAllModals();customizeModal.class
 btnCloseWardrobe.addEventListener('click',closeAllModals);
 btnCloseGallery.addEventListener('click',closeAllModals);
 btnCloseCustomize.addEventListener('click',closeAllModals);
+
 window.addEventListener('click',e=>{
 if(e.target===wardrobeModal||e.target===galleryModal||e.target===customizeModal)closeAllModals();
 });
