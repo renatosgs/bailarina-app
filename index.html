@@ -47,54 +47,83 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 .dancing-funk .bot-arm-right{animation:botFunkArmR var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
 .dancing-funk .bot-leg-left{animation:botFunkLegL var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
 .dancing-funk .bot-leg-right{animation:botFunkLegR var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
-@keyframes botFunkArmL{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(45deg)}}
-@keyframes botFunkArmR{0%,100%{transform:rotate(15deg)}50%{transform:rotate(-45deg)}}
-@keyframes botFunkLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
-@keyframes botFunkLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg)}}
+@keyframes botFunkArmL{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(35deg)}}
+@keyframes botFunkArmR{0%,100%{transform:rotate(10deg)}50%{transform:rotate(-35deg)}}
+@keyframes botFunkLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}}
+@keyframes botFunkLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
+
+/* Animação realista e orgânica do quadril/glúteos femininos */
+.dancing-funk .bot-body-curvy {
+  animation: botFunkHips var(--dance-duration) cubic-bezier(.35, 0, .25, 1) infinite;
+  transform-origin: 50% 80%;
+  will-change: transform;
+}
+@keyframes botFunkHips {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  25% { transform: translateY(4px) rotate(2.5deg) scale(1.03, 0.97); }
+  50% { transform: translateY(-3px) rotate(-3deg) scale(0.97, 1.03); }
+  75% { transform: translateY(6px) rotate(3.5deg) scale(1.04, 0.96); }
+}
+
+.dancer-bot-svg.idle .bot-body-curvy {
+  animation: botIdleBreathe 3.6s ease-in-out infinite;
+  transform-origin: 50% 60%;
+}
+@keyframes botIdleBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015, 1.01) translateY(-1px); }
+}
+
+.dancer-bot-svg.idle .bot-arm-left{animation:botIdleArmL 3.5s ease-in-out infinite}
+.dancer-bot-svg.idle .bot-arm-right{animation:botIdleArmR 3.5s ease-in-out infinite}
+@keyframes botIdleArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
+@keyframes botIdleArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-3deg)}}
+
 .dancing-ballet .bot-arm-left{animation:botBalletArmL var(--dance-duration) ease-in-out infinite alternate}
 .dancing-ballet .bot-arm-right{animation:botBalletArmR var(--dance-duration) ease-in-out infinite alternate}
 .dancing-ballet .bot-leg-left{animation:botBalletLegL var(--dance-duration) ease-in-out infinite alternate}
 .dancing-ballet .bot-leg-right{animation:botBalletLegR var(--dance-duration) ease-in-out infinite alternate}
-@keyframes botBalletArmL{0%{transform:rotate(0)}100%{transform:rotate(55deg)}}
-@keyframes botBalletArmR{0%{transform:rotate(0)}100%{transform:rotate(-55deg)}}
+@keyframes botBalletArmL{0%{transform:rotate(0)}100%{transform:rotate(45deg)}}
+@keyframes botBalletArmR{0%{transform:rotate(0)}100%{transform:rotate(-45deg)}}
 @keyframes botBalletLegL{0%{transform:rotate(0)}100%{transform:rotate(-4deg)}}
 @keyframes botBalletLegR{0%{transform:rotate(0)}100%{transform:rotate(4deg)}}
+
 .dancing-pop .bot-arm-left{animation:botPopArmL var(--dance-duration) ease-in-out infinite}
 .dancing-pop .bot-arm-right{animation:botPopArmR var(--dance-duration) ease-in-out infinite}
 .dancing-pop .bot-leg-left{animation:botPopLegL var(--dance-duration) ease-in-out infinite}
 .dancing-pop .bot-leg-right{animation:botPopLegR var(--dance-duration) ease-in-out infinite}
-@keyframes botPopArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(60deg)}}
-@keyframes botPopArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-60deg)}}
-@keyframes botPopLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
-@keyframes botPopLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
+@keyframes botPopArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(50deg)}}
+@keyframes botPopArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-50deg)}}
+@keyframes botPopLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
+@keyframes botPopLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(5deg)}}
+
 .dancing-hiphop .bot-arm-left{animation:botHipArmL var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
 .dancing-hiphop .bot-arm-right{animation:botHipArmR var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
 .dancing-hiphop .bot-leg-left{animation:botHipLegL var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
 .dancing-hiphop .bot-leg-right{animation:botHipLegR var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
-@keyframes botHipArmL{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(55deg)}}
-@keyframes botHipArmR{0%,100%{transform:rotate(55deg)}50%{transform:rotate(-8deg)}}
-@keyframes botHipLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
-@keyframes botHipLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(12deg)}}
+@keyframes botHipArmL{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(45deg)}}
+@keyframes botHipArmR{0%,100%{transform:rotate(45deg)}50%{transform:rotate(-6deg)}}
+@keyframes botHipLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+@keyframes botHipLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg)}}
+
 .dancing-latino .bot-arm-left{animation:botLatArmL var(--dance-duration) ease-in-out infinite alternate}
 .dancing-latino .bot-arm-right{animation:botLatArmR var(--dance-duration) ease-in-out infinite alternate}
 .dancing-latino .bot-leg-left{animation:botLatLegL var(--dance-duration) ease-in-out infinite alternate}
 .dancing-latino .bot-leg-right{animation:botLatLegR var(--dance-duration) ease-in-out infinite alternate}
-@keyframes botLatArmL{0%{transform:rotate(-5deg)}100%{transform:rotate(40deg)}}
-@keyframes botLatArmR{0%{transform:rotate(40deg)}100%{transform:rotate(-5deg)}}
-@keyframes botLatLegL{0%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
-@keyframes botLatLegR{0%{transform:rotate(6deg)}100%{transform:rotate(-6deg)}}
+@keyframes botLatArmL{0%{transform:rotate(-4deg)}100%{transform:rotate(35deg)}}
+@keyframes botLatArmR{0%{transform:rotate(35deg)}100%{transform:rotate(-4deg)}}
+@keyframes botLatLegL{0%{transform:rotate(-5deg)}100%{transform:rotate(5deg)}}
+@keyframes botLatLegR{0%{transform:rotate(5deg)}100%{transform:rotate(-5deg)}}
+
 .dancing-synthwave .bot-arm-left{animation:botSynArmL var(--dance-duration) steps(4,end) infinite}
 .dancing-synthwave .bot-arm-right{animation:botSynArmR var(--dance-duration) steps(4,end) infinite}
 .dancing-synthwave .bot-leg-left{animation:botSynLegL var(--dance-duration) steps(4,end) infinite}
 .dancing-synthwave .bot-leg-right{animation:botSynLegR var(--dance-duration) steps(4,end) infinite}
-@keyframes botSynArmL{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(50deg)}100%{transform:rotate(0)}}
-@keyframes botSynArmR{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(-50deg)}100%{transform:rotate(0)}}
-@keyframes botSynLegL{0%,25%{transform:rotate(0)}50%{transform:rotate(-8deg)}100%{transform:rotate(0)}}
-@keyframes botSynLegR{0%,25%{transform:rotate(0)}50%{transform:rotate(8deg)}100%{transform:rotate(0)}}
-.dancer-bot-svg.idle .bot-arm-left{animation:botIdleArmL 3.5s ease-in-out infinite}
-.dancer-bot-svg.idle .bot-arm-right{animation:botIdleArmR 3.5s ease-in-out infinite}
-@keyframes botIdleArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(4deg)}}
-@keyframes botIdleArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+@keyframes botSynArmL{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(40deg)}100%{transform:rotate(0)}}
+@keyframes botSynArmR{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(-40deg)}100%{transform:rotate(0)}}
+@keyframes botSynLegL{0%,25%{transform:rotate(0)}50%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
+@keyframes botSynLegR{0%,25%{transform:rotate(0)}50%{transform:rotate(6deg)}100%{transform:rotate(0)}}
+
 .outfit-overlay{position:absolute;inset:0;pointer-events:none;transition:all .5s}
 .sparkles-container{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .sparkle{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px #ff75a0;opacity:0;animation:floatSparkle 2s ease-in-out infinite}
@@ -252,243 +281,214 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-
 <div class="stage-shadow" id="stageShadow"></div>
 <div class="dancer-figure" id="dancerFigure">
 
-<!-- ================= BOT SVG INSPIRADO NA IA ================= -->
-<svg class="dancer-bot-svg dancer-media active" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot">
+<!-- ================= BOT SVG CURVILÍNEA COM MEDIDAS DA FOTO ================= -->
+<svg class="dancer-bot-svg dancer-media active" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot feminina">
 <defs>
-  <!-- Tom de pele com sombra suave e luz -->
-  <radialGradient id="botSkin" cx="50%" cy="35%" r="65%">
-    <stop offset="0%" stop-color="var(--skin-1, #fff2eb)"/>
-    <stop offset="65%" stop-color="var(--skin-2, #f4d0be)"/>
-    <stop offset="100%" stop-color="var(--skin-shadow, #e5b39e)"/>
-  </radialGradient>
-  
-  <linearGradient id="botLegSkin" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0%" stop-color="var(--skin-2, #edd0be)"/>
-    <stop offset="35%" stop-color="var(--skin-1, #fff4ed)"/>
-    <stop offset="75%" stop-color="var(--skin-1, #fae3d5)"/>
+  <!-- Tom de pele feminino realista -->
+  <radialGradient id="skinGlow" cx="45%" cy="40%" r="60%">
+    <stop offset="0%" stop-color="var(--skin-1, #fff4ec)"/>
+    <stop offset="60%" stop-color="var(--skin-2, #f5d3bf)"/>
     <stop offset="100%" stop-color="var(--skin-shadow, #e3af99)"/>
+  </radialGradient>
+
+  <!-- Gradiente anatômico para as costas e decote -->
+  <linearGradient id="backGrad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%" stop-color="var(--skin-shadow, #e5b19b)"/>
+    <stop offset="45%" stop-color="var(--skin-1, #fff5ed)"/>
+    <stop offset="85%" stop-color="var(--skin-2, #f4d0be)"/>
+    <stop offset="100%" stop-color="var(--skin-shadow, #dfa792)"/>
   </linearGradient>
 
-  <!-- Cabelo Platinado com reflexos e mechas -->
-  <linearGradient id="botHairBack" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="var(--hair-1, #fdf8e2)"/>
-    <stop offset="30%" stop-color="var(--hair-2, #f3e5b8)"/>
-    <stop offset="70%" stop-color="var(--hair-3, #d9c488)"/>
-    <stop offset="100%" stop-color="#ba9f5c"/>
-  </linearGradient>
-  
-  <linearGradient id="botHairFront" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="var(--hair-1, #fffdf2)"/>
-    <stop offset="45%" stop-color="var(--hair-2, #f5e9c0)"/>
-    <stop offset="85%" stop-color="var(--hair-3, #ddc88d)"/>
-    <stop offset="100%" stop-color="#ba9f5c"/>
-  </linearGradient>
+  <!-- Volume 3D e iluminação do Glúteo / Quadril Curvilíneo -->
+  <radialGradient id="gluteVolume" cx="62%" cy="42%" r="58%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+    <stop offset="35%" stop-color="var(--skin-1, #fff3ea)" stop-opacity="0.2"/>
+    <stop offset="75%" stop-color="var(--skin-shadow, #db9f88)" stop-opacity="0.45"/>
+    <stop offset="100%" stop-color="#9e634e" stop-opacity="0.75"/>
+  </radialGradient>
 
-  <!-- Top cropped branco de manga longa com nó frontal -->
-  <linearGradient id="botTopGrad" x1="0" y1="0" x2="0" y2="1">
+  <!-- Tecido da Roupa / Macacão rendado / Biquíni com transparência suave -->
+  <linearGradient id="suitGrad" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0%" stop-color="var(--outfit-1, #ffffff)"/>
-    <stop offset="50%" stop-color="var(--outfit-2, #f5eee4)"/>
-    <stop offset="100%" stop-color="#ded3c1"/>
+    <stop offset="50%" stop-color="var(--outfit-2, #fceceb)"/>
+    <stop offset="100%" stop-color="#e8cfca"/>
   </linearGradient>
 
-  <!-- Saia / Fenda fluida bege/creme acetinada -->
-  <linearGradient id="botSkirtGrad" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#fdfbf7"/>
-    <stop offset="45%" stop-color="#f2ebe0"/>
-    <stop offset="100%" stop-color="#dbcebc"/>
+  <!-- Padrão delicado de renda jacquard / textura do macacão -->
+  <pattern id="lacePattern" width="12" height="12" patternUnits="userSpaceOnUse" opacity="0.32">
+    <path d="M 0 6 Q 3 0 6 6 Q 9 12 12 6" fill="none" stroke="#ffffff" stroke-width="0.8"/>
+    <circle cx="6" cy="6" r="1.2" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="0.8" fill="#ffffff"/>
+    <circle cx="12" cy="12" r="0.8" fill="#ffffff"/>
+  </pattern>
+
+  <!-- Cabelo Platinado volumoso e sedoso -->
+  <linearGradient id="hairGradBack" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="var(--hair-1, #fffdf2)"/>
+    <stop offset="40%" stop-color="var(--hair-2, #f6eac2)"/>
+    <stop offset="80%" stop-color="var(--hair-3, #ddc88d)"/>
+    <stop offset="100%" stop-color="#b69b56"/>
   </linearGradient>
 
-  <!-- Olhos azul-acinzentados expressivos -->
+  <linearGradient id="hairGradFront" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#ffffff"/>
+    <stop offset="35%" stop-color="var(--hair-1, #fffdf2)"/>
+    <stop offset="70%" stop-color="var(--hair-2, #f5e9c0)"/>
+    <stop offset="100%" stop-color="var(--hair-3, #d8bf80)"/>
+  </linearGradient>
+
+  <!-- Olhos e Lábios femininos -->
   <radialGradient id="eyeIris" cx="45%" cy="40%" r="55%">
     <stop offset="0%" stop-color="#cbe5f6"/>
-    <stop offset="40%" stop-color="#6ea2c7"/>
+    <stop offset="45%" stop-color="#6ea2c7"/>
     <stop offset="85%" stop-color="#3c6b8c"/>
-    <stop offset="100%" stop-color="#1e384c"/>
+    <stop offset="100%" stop-color="#193042"/>
   </radialGradient>
 
-  <!-- Lábios volumosos com gloss rosado -->
-  <linearGradient id="lipGrad" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#f99aa8"/>
-    <stop offset="50%" stop-color="#df7082"/>
-    <stop offset="100%" stop-color="#b84d60"/>
+  <linearGradient id="lipGloss" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#fb9baa"/>
+    <stop offset="50%" stop-color="#df6679"/>
+    <stop offset="100%" stop-color="#b03d52"/>
   </linearGradient>
 
-  <!-- Filtro de blush suave nas bochechas -->
-  <filter id="blushGlow" x="-20%" y="-20%" width="140%" height="140%">
-    <feGaussianBlur stdDeviation="3.2"/>
+  <!-- Filtro para desfoque de blush e sombras realistas -->
+  <filter id="beautyGlow" x="-20%" y="-20%" width="140%" height="140%">
+    <feGaussianBlur stdDeviation="3"/>
   </filter>
 </defs>
 
-<!-- ================= CABELO DE FUNDO (LONGO / DIVIDIDO) ================= -->
+<!-- ================= CABELO DE FUNDO (Caindo pelas costas) ================= -->
 <g class="hair-style" data-style="longo">
-  <path d="M 80 50 Q 64 22 125 10 Q 186 22 170 50 Q 185 105 186 195 Q 186 230 176 250 Q 170 252 165 240 Q 166 180 162 135 Q 158 55 125 45 Q 92 55 88 135 Q 84 180 85 240 Q 80 252 74 250 Q 64 230 64 195 Q 65 105 80 50 Z" fill="url(#botHairBack)"/>
-  <path d="M 72 140 Q 70 200 78 245" stroke="#ba9f5c" stroke-width="1.2" fill="none" opacity="0.4"/>
-  <path d="M 178 140 Q 180 200 172 245" stroke="#ba9f5c" stroke-width="1.2" fill="none" opacity="0.4"/>
+  <path d="M 124 35 Q 148 40 156 80 Q 164 125 152 170 Q 146 195 140 215 Q 134 216 132 205 Q 138 160 142 120 Q 144 80 134 52 Z" fill="url(#hairGradBack)"/>
+  <path d="M 132 40 Q 162 75 158 135 Q 155 180 144 210" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.6"/>
+  <path d="M 128 45 Q 150 95 148 160 Q 146 195 138 215" stroke="#e0ca8d" stroke-width="1" fill="none" opacity="0.5"/>
 </g>
 <g class="hair-style" data-style="ondulado" style="display:none">
-  <path d="M 78 50 Q 62 20 125 8 Q 188 20 172 50 Q 192 110 176 225 Q 170 242 162 230 Q 172 170 160 135 Q 162 55 125 46 Q 88 55 90 135 Q 78 170 88 230 Q 80 242 74 225 Q 58 110 78 50 Z" fill="url(#botHairBack)"/>
+  <path d="M 124 35 Q 152 45 158 85 Q 166 130 154 175 Q 146 200 138 220 Q 133 220 132 210 Q 142 165 144 125 Q 145 80 134 52 Z" fill="url(#hairGradBack)"/>
 </g>
 <g class="hair-style" data-style="bob" style="display:none">
-  <path d="M 82 50 Q 66 18 125 10 Q 184 18 168 50 Q 178 95 170 142 Q 160 120 160 90 Q 156 55 125 46 Q 94 55 90 90 Q 90 120 80 142 Q 72 95 82 50 Z" fill="url(#botHairBack)"/>
+  <path d="M 124 35 Q 148 42 154 75 Q 158 105 148 130 Q 140 120 138 95 Q 138 75 132 52 Z" fill="url(#hairGradBack)"/>
 </g>
 <g class="hair-style" data-style="coque" style="display:none">
-  <ellipse cx="125" cy="18" rx="26" ry="16" fill="url(#botHairBack)"/>
-  <path d="M 94 50 Q 90 16 125 14 Q 160 16 156 50 Q 150 36 125 34 Q 100 36 94 50 Z" fill="url(#botHairBack)"/>
+  <ellipse cx="130" cy="24" rx="16" ry="14" fill="url(#hairGradBack)"/>
+  <path d="M 122 36 Q 130 22 138 36 Z" fill="url(#hairGradBack)"/>
 </g>
 
-<!-- ================= BRAÇO ESQUERDO (Manga Longa) ================= -->
-<g class="bot-part bot-arm bot-arm-left">
-  <path d="M 74 114 Q 60 145 56 185 L 68 188 Q 72 152 82 122 Z" fill="url(#botTopGrad)"/>
-  <path d="M 58 152 Q 65 155 72 150" stroke="#d5c8b5" stroke-width="1.2" fill="none" opacity="0.6"/>
-  <rect x="54" y="184" width="16" height="5" rx="2.5" fill="#f8f4ec" stroke="#d8ccb8" stroke-width="0.8"/>
-  <path d="M 57 189 Q 54 205 60 215 Q 65 218 69 210 Q 72 198 70 189 Z" fill="var(--skin-1, #fff2eb)"/>
-  <path d="M 60 205 Q 62 216 66 215" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.7" fill="none"/>
-</g>
-
-<!-- ================= PERNAS E QUADRIL (Coxas Volumosas) ================= -->
-<g class="bot-part bot-leg bot-leg-left">
-  <path d="M 92 196 Q 76 218 78 250 Q 82 278 96 295 L 108 295 Q 102 268 106 230 Q 108 208 108 196 Z" fill="url(#botLegSkin)"/>
-  <path d="M 94 292 Q 90 315 94 336 L 105 336 Q 108 318 106 292 Z" fill="url(#botLegSkin)"/>
-  <ellipse cx="98" cy="294" rx="6" ry="3.5" fill="var(--skin-shadow, #e5b39e)" opacity="0.45"/>
-  <ellipse cx="99" cy="336" rx="4.5" ry="3" fill="var(--skin-1, #fff2eb)"/>
-  <!-- Salto fino preto -->
-  <path d="M 93 336 L 91 352 L 94 352 L 95 338 Z" fill="#181414"/>
-  <path d="M 92 336 Q 96 342 108 348 Q 112 349 110 345 Q 102 340 98 335 Z" fill="#7d4826"/>
-  <path d="M 95 336 Q 101 337 106 335" stroke="#111" stroke-width="1.8" fill="none"/>
-  <path d="M 103 344 Q 108 347 111 345" stroke="#111" stroke-width="1.6" fill="none"/>
-</g>
-
-<g class="bot-part bot-leg bot-leg-right">
-  <path d="M 124 196 Q 146 208 156 232 Q 166 258 154 286 Q 144 305 136 312 L 122 308 Q 134 285 134 252 Q 132 215 120 196 Z" fill="url(#botLegSkin)"/>
-  <path d="M 125 306 Q 136 322 142 338 L 132 342 Q 124 326 121 308 Z" fill="url(#botLegSkin)"/>
-  <ellipse cx="140" cy="245" rx="9" ry="24" fill="#ffffff" opacity="0.22" transform="rotate(18 140 245)"/>
-  <ellipse cx="138" cy="298" rx="7" ry="4" fill="var(--skin-shadow, #e5b39e)" opacity="0.4"/>
-  <!-- Tornozeleira dourada da imagem -->
-  <path d="M 134 338 Q 138 342 143 339" stroke="#eab308" stroke-width="1.6" fill="none"/>
-  <!-- Salto alto direito -->
-  <path d="M 132 342 L 131 354 L 133 354 L 135 343 Z" fill="#181414"/>
-  <path d="M 132 341 Q 138 347 148 350 L 149 347 Q 140 343 135 340 Z" fill="#7d4826"/>
-  <path d="M 133 340 Q 139 341 144 338" stroke="#111" stroke-width="1.8" fill="none"/>
-  <path d="M 142 347 Q 146 349 149 347" stroke="#111" stroke-width="1.6" fill="none"/>
-</g>
-
-<!-- ================= SAIA ACETINADA COM FENDA ================= -->
-<g class="bot-skirt">
-  <path d="M 98 188 Q 84 195 72 230 Q 64 275 62 332 Q 72 345 84 346 Q 88 310 94 260 Q 98 220 106 195 Z" fill="url(#botSkirtGrad)" opacity="0.95"/>
-  <path d="M 76 225 Q 70 280 72 342" stroke="#d5c7b3" stroke-width="1.2" fill="none" opacity="0.6"/>
-  <path d="M 84 250 Q 82 305 84 345" stroke="#d5c7b3" stroke-width="1" fill="none" opacity="0.5"/>
-  <path d="M 98 185 Q 125 192 152 185 L 152 192 Q 125 200 98 192 Z" fill="#f4ede1" stroke="#d8ccb8" stroke-width="0.8"/>
-</g>
-
-<!-- ================= TRONCO / CINTURA / ABDÔMEN ================= -->
-<g class="bot-torso">
-  <path d="M 104 158 Q 100 172 98 188 Q 125 194 152 188 Q 150 172 146 158 Q 136 166 125 166 Q 114 166 104 158 Z" fill="url(#botSkin)"/>
-  <ellipse cx="125" cy="178" rx="1.5" ry="2.2" fill="var(--skin-shadow, #e5b39e)"/>
-  <path d="M 125 167 L 125 174" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.9" fill="none" opacity="0.5"/>
-</g>
-
-<!-- ================= TOP CROPPED COM NÓ FRONTAL ================= -->
-<g class="bot-top">
-  <path d="M 88 116 Q 82 138 88 158 Q 104 168 122 158 Q 118 135 116 120 Z" fill="url(#botTopGrad)"/>
-  <path d="M 162 116 Q 168 138 162 158 Q 146 168 128 158 Q 132 135 134 120 Z" fill="url(#botTopGrad)"/>
-  <path d="M 116 114 Q 125 132 125 152 Q 125 132 134 114 Z" fill="url(#botSkin)"/>
-  <path d="M 125 130 L 125 153" stroke="var(--skin-shadow, #e5b39e)" stroke-width="1.3" fill="none" opacity="0.7"/>
-  <path d="M 116 114 Q 122 135 124 154" stroke="#d5c8b5" stroke-width="1.4" fill="none"/>
-  <path d="M 134 114 Q 128 135 126 154" stroke="#d5c8b5" stroke-width="1.4" fill="none"/>
-  <!-- Nó frontal -->
-  <ellipse cx="125" cy="156" rx="5" ry="4" fill="#ffffff" stroke="#d5c8b5" stroke-width="1"/>
-  <path d="M 123 158 Q 120 168 122 172 Q 124 172 125 160 Z" fill="#faf6ef" stroke="#d8ccb8" stroke-width="0.7"/>
-  <path d="M 126 158 Q 129 169 131 172 Q 130 167 127 160 Z" fill="#f4ece0" stroke="#d8ccb8" stroke-width="0.7"/>
-</g>
-
-<!-- ================= BRAÇO DIREITO (Manga Longa) ================= -->
+<!-- ================= BRAÇO DIREITO (Elevado suavemente na nuca/cabelo) ================= -->
 <g class="bot-part bot-arm bot-arm-right">
-  <path d="M 176 114 Q 190 145 194 185 L 182 188 Q 178 152 168 122 Z" fill="url(#botTopGrad)"/>
-  <path d="M 192 152 Q 185 155 178 150" stroke="#d5c8b5" stroke-width="1.2" fill="none" opacity="0.6"/>
-  <rect x="180" y="184" width="16" height="5" rx="2.5" fill="#f8f4ec" stroke="#d8ccb8" stroke-width="0.8"/>
-  <path d="M 183 189 Q 186 205 180 215 Q 175 218 171 210 Q 168 198 170 189 Z" fill="var(--skin-1, #fff2eb)"/>
-  <path d="M 180 205 Q 178 216 174 215" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.7" fill="none"/>
+  <path d="M 116 88 Q 98 68 104 42 Q 106 32 114 26 L 122 30 Q 114 38 112 48 Q 108 72 124 92 Z" fill="url(#skinGlow)"/>
+  <path d="M 116 88 Q 98 68 104 42 Q 106 32 114 26 L 122 30 Q 114 38 112 48 Q 108 72 124 92 Z" fill="url(#suitGrad)" opacity="0.6"/>
+  <path d="M 116 88 Q 98 68 104 42 Q 106 32 114 26 L 122 30 Q 114 38 112 48 Q 108 72 124 92 Z" fill="url(#lacePattern)"/>
+  <path d="M 114 26 Q 118 20 125 18 Q 128 20 126 25 Q 122 28 118 29 Z" fill="var(--skin-1, #fff4ec)"/>
 </g>
 
-<!-- ================= PESCOÇO E COLO ================= -->
-<g class="bot-neck">
-  <path d="M 117 84 L 115 116 Q 125 120 135 116 L 133 84 Z" fill="url(#botSkin)"/>
-  <ellipse cx="125" cy="88" rx="9" ry="3.5" fill="var(--skin-shadow, #e5b39e)" opacity="0.5"/>
-  <path d="M 112 114 Q 120 117 124 122" stroke="var(--skin-shadow, #e5b39e)" stroke-width="1" fill="none" opacity="0.55"/>
-  <path d="M 138 114 Q 130 117 126 122" stroke="var(--skin-shadow, #e5b39e)" stroke-width="1" fill="none" opacity="0.55"/>
+<!-- ================= PERNA ESQUERDA (Perna de Apoio Frontal) ================= -->
+<g class="bot-part bot-leg bot-leg-left">
+  <path d="M 108 195 Q 104 225 106 255 Q 108 275 110 295 L 122 295 Q 120 270 120 240 Q 121 210 124 195 Z" fill="url(#skinGlow)"/>
+  <path d="M 110 295 Q 107 312 110 334 L 118 334 Q 121 316 122 295 Z" fill="url(#skinGlow)"/>
+  <path d="M 108 195 Q 104 225 106 255 Q 108 275 110 295 L 122 295 Q 120 270 120 240 Q 121 210 124 195 Z" fill="url(#suitGrad)" opacity="0.65"/>
+  <path d="M 108 195 Q 104 225 106 255 Q 108 275 110 295 L 122 295 Q 120 270 120 240 Q 121 210 124 195 Z" fill="url(#lacePattern)"/>
+  <path d="M 110 295 Q 107 312 110 334 L 118 334 Q 121 316 122 295 Z" fill="url(#suitGrad)" opacity="0.65"/>
+  <path d="M 110 295 Q 107 312 110 334 L 118 334 Q 121 316 122 295 Z" fill="url(#lacePattern)"/>
+
+  <ellipse cx="114" cy="334" rx="3.5" ry="2.2" fill="var(--skin-1, #fff4ec)"/>
+  <path d="M 111 334 L 109 350 L 112 350 L 113 336 Z" fill="#e8dfd5"/>
+  <path d="M 110 334 Q 114 340 124 347 L 125 344 Q 117 338 114 333 Z" fill="#b08d72"/>
+  <path d="M 111 334 Q 115 336 120 334" stroke="#d5c7b7" stroke-width="1.5" fill="none"/>
+  <path d="M 121 344 Q 124 346 126 344" stroke="#d5c7b7" stroke-width="1.3" fill="none"/>
 </g>
 
-<!-- ================= ROSTO E TRAÇOS FEMININOS ================= -->
-<g class="bot-head">
-  <!-- Formato suave do rosto -->
-  <path d="M 96 54 Q 93 30 125 24 Q 157 30 154 54 Q 154 75 142 88 Q 132 96 125 96 Q 118 96 108 88 Q 96 75 96 54 Z" fill="url(#botSkin)"/>
+<!-- ================= PERNA DIREITA (Curvilínea / Em Evidência) ================= -->
+<g class="bot-part bot-leg bot-leg-right">
+  <path d="M 124 196 Q 138 215 142 245 Q 146 275 140 298 L 126 296 Q 130 268 128 238 Q 124 212 118 196 Z" fill="url(#skinGlow)"/>
+  <path d="M 139 297 Q 144 315 139 336 L 130 336 Q 132 318 126 296 Z" fill="url(#skinGlow)"/>
+  <path d="M 124 196 Q 138 215 142 245 Q 146 275 140 298 L 126 296 Q 130 268 128 238 Q 124 212 118 196 Z" fill="url(#suitGrad)" opacity="0.65"/>
+  <path d="M 124 196 Q 138 215 142 245 Q 146 275 140 298 L 126 296 Q 130 268 128 238 Q 124 212 118 196 Z" fill="url(#lacePattern)"/>
+  <path d="M 139 297 Q 144 315 139 336 L 130 336 Q 132 318 126 296 Z" fill="url(#suitGrad)" opacity="0.65"/>
+  <path d="M 139 297 Q 144 315 139 336 L 130 336 Q 132 318 126 296 Z" fill="url(#lacePattern)"/>
+
+  <path d="M 131 336 Q 136 339 140 337" stroke="#e0d4c5" stroke-width="1.8" fill="none"/>
+  <path d="M 137 336 L 136 352 L 138 352 L 140 338 Z" fill="#e8dfd5"/>
+  <path d="M 132 336 Q 138 342 148 348 L 149 345 Q 141 339 136 335 Z" fill="#b08d72"/>
+  <path d="M 143 345 Q 147 347 149 345" stroke="#d5c7b7" stroke-width="1.5" fill="none"/>
+</g>
+
+<!-- ================= CORPO / CINTURA FINA & GLÚTEOS VOLUPTUOSOS ================= -->
+<g class="bot-body-curvy">
+  <!-- Busto de perfil -->
+  <path d="M 98 108 Q 88 122 92 136 Q 98 144 108 145 L 112 115 Z" fill="url(#skinGlow)"/>
+  <path d="M 98 108 Q 88 122 92 136 Q 98 144 108 145 L 112 115 Z" fill="url(#suitGrad)" opacity="0.75"/>
+  <path d="M 98 108 Q 88 122 92 136 Q 98 144 108 145 L 112 115 Z" fill="url(#lacePattern)"/>
+
+  <!-- Cintura de pilão bem fina -->
+  <path d="M 106 138 Q 108 155 110 175 Q 112 188 116 198 L 152 198 Q 146 172 136 156 Q 128 142 126 122 L 110 115 Z" fill="url(#skinGlow)"/>
+  <path d="M 106 138 Q 108 155 110 175 Q 112 188 116 198 L 152 198 Q 146 172 136 156 Q 128 142 126 122 L 110 115 Z" fill="url(#suitGrad)" opacity="0.65"/>
+  <path d="M 106 138 Q 108 155 110 175 Q 112 188 116 198 L 152 198 Q 146 172 136 156 Q 128 142 126 122 L 110 115 Z" fill="url(#lacePattern)"/>
+
+  <!-- Costas decotadas (Backless) -->
+  <path d="M 118 92 Q 130 96 132 116 Q 134 140 126 152 Q 120 145 116 125 Q 114 102 118 92 Z" fill="url(#backGrad)"/>
+  <path d="M 124 96 Q 126 118 122 148" stroke="var(--skin-shadow, #e0a790)" stroke-width="1.2" fill="none" opacity="0.65"/>
+  <path d="M 118 92 Q 130 96 132 116 Q 134 140 126 152" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.8"/>
+
+  <!-- Glúteos volumosos empinados da imagem -->
+  <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#skinGlow)"/>
+  <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#suitGrad)" opacity="0.75"/>
+  <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#lacePattern)"/>
   
-  <!-- Blush rosado nas bochechas e nariz -->
-  <ellipse cx="107" cy="74" rx="10" ry="6" fill="#f89ba9" opacity="0.55" filter="url(#blushGlow)"/>
-  <ellipse cx="143" cy="74" rx="10" ry="6" fill="#f89ba9" opacity="0.55" filter="url(#blushGlow)"/>
-  <ellipse cx="125" cy="73" rx="4.5" ry="3" fill="#f89ba9" opacity="0.4" filter="url(#blushGlow)"/>
-
-  <!-- Olho Esquerdo -->
-  <g class="bot-eye-left">
-    <path d="M 106 63 Q 113 58 120 63 Q 113 68 106 63 Z" fill="#ffffff"/>
-    <ellipse cx="113" cy="63" rx="3.8" ry="4.2" fill="url(#eyeIris)"/>
-    <circle cx="113" cy="63" r="1.8" fill="#141e26"/>
-    <circle cx="114.2" cy="61.5" r="1.1" fill="#ffffff"/>
-    <circle cx="111.8" cy="64.2" r="0.6" fill="#ffffff" opacity="0.8"/>
-    <path d="M 105 63 Q 112 57.5 121 62" stroke="#261a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <path d="M 105 63 L 103.5 61.8" stroke="#261a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-  </g>
-
-  <!-- Olho Direito -->
-  <g class="bot-eye-right">
-    <path d="M 130 63 Q 137 58 144 63 Q 137 68 130 63 Z" fill="#ffffff"/>
-    <ellipse cx="137" cy="63" rx="3.8" ry="4.2" fill="url(#eyeIris)"/>
-    <circle cx="137" cy="63" r="1.8" fill="#141e26"/>
-    <circle cx="138.2" cy="61.5" r="1.1" fill="#ffffff"/>
-    <circle cx="135.8" cy="64.2" r="0.6" fill="#ffffff" opacity="0.8"/>
-    <path d="M 129 62 Q 138 57.5 145 63" stroke="#261a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <path d="M 145 63 L 146.5 61.8" stroke="#261a1a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-  </g>
-
-  <!-- Sobrancelhas naturais -->
-  <path d="M 104 56 Q 112 51.5 120 54" stroke="var(--hair-3, #c9b072)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  <path d="M 130 54 Q 138 51.5 146 56" stroke="var(--hair-3, #c9b072)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-
-  <!-- Nariz fino -->
-  <path d="M 124 64 Q 125 72 123 74 Q 125 76 127 74 Q 125 72 126 64" stroke="var(--skin-shadow, #e5b39e)" stroke-width="0.9" fill="none"/>
-  <ellipse cx="125" cy="74" rx="2" ry="1.2" fill="#f89ba9" opacity="0.4"/>
-  <ellipse cx="122.5" cy="74.5" rx="0.7" ry="0.5" fill="#ba8070"/>
-  <ellipse cx="127.5" cy="74.5" rx="0.7" ry="0.5" fill="#ba8070"/>
-
-  <!-- Boca com gloss rosado -->
-  <g class="bot-lips">
-    <path d="M 117 83 Q 121 80.5 125 82 Q 129 80.5 133 83 Q 129 84 125 84.5 Q 121 84 117 83 Z" fill="url(#lipGrad)"/>
-    <path d="M 117.5 83.5 Q 125 84 132.5 83.5 Q 131 90 125 90.5 Q 119 90 117.5 83.5 Z" fill="url(#lipGrad)"/>
-    <path d="M 118 83.5 Q 125 84.5 132 83.5" stroke="#8c2a3e" stroke-width="0.8" fill="none"/>
-    <ellipse cx="125" cy="87.5" rx="3.5" ry="1.4" fill="#ffffff" opacity="0.6"/>
-  </g>
+  <path d="M 126 154 Q 145 158 158 172 Q 172 188 168 206 Q 162 222 146 226 Q 134 228 124 212 L 120 196 Z" fill="url(#gluteVolume)"/>
+  
+  <path d="M 148 168 Q 152 188 146 216" stroke="var(--skin-shadow, #d5967f)" stroke-width="1.4" fill="none" opacity="0.7"/>
+  <path d="M 166 208 Q 156 224 140 226" stroke="#9e634e" stroke-width="1.6" fill="none" opacity="0.6"/>
+  <ellipse cx="152" cy="184" rx="8" ry="14" fill="#ffffff" opacity="0.32" transform="rotate(22 152 184)"/>
 </g>
 
-<!-- ================= CABELO FRONTAL / MECHAS NA FRENTE ================= -->
+<!-- ================= BRAÇO ESQUERDO (Apoio na cintura) ================= -->
+<g class="bot-part bot-arm bot-arm-left">
+  <path d="M 100 96 Q 84 122 82 146 L 90 148 Q 94 128 106 102 Z" fill="url(#skinGlow)"/>
+  <path d="M 100 96 Q 84 122 82 146 L 90 148 Q 94 128 106 102 Z" fill="url(#suitGrad)" opacity="0.65"/>
+  <path d="M 100 96 Q 84 122 82 146 L 90 148 Q 94 128 106 102 Z" fill="url(#lacePattern)"/>
+  <path d="M 83 147 Q 80 158 84 166 Q 88 168 90 162 Q 91 154 89 148 Z" fill="var(--skin-1, #fff4ec)"/>
+</g>
+
+<!-- ================= ROSTO FEMININO EM SEMI-PERFIL ================= -->
+<g class="bot-head-profile">
+  <path d="M 118 70 L 115 94 Q 124 96 128 92 L 126 70 Z" fill="url(#skinGlow)"/>
+  <path d="M 108 42 Q 102 52 104 64 Q 108 76 116 80 Q 124 82 128 72 Q 130 60 128 46 Q 124 36 114 36 Q 110 38 108 42 Z" fill="url(#skinGlow)"/>
+  <ellipse cx="112" cy="62" rx="7" ry="4.5" fill="#f89ba9" opacity="0.6" filter="url(#beautyGlow)"/>
+
+  <g class="bot-eye-side">
+    <ellipse cx="110" cy="54" rx="3.4" ry="2.6" fill="#ffffff"/>
+    <ellipse cx="109.5" cy="54" rx="2.4" ry="2.5" fill="url(#eyeIris)"/>
+    <circle cx="109.2" cy="54" r="1.1" fill="#141e26"/>
+    <circle cx="110" cy="53" r="0.8" fill="#ffffff"/>
+    <path d="M 106 54 Q 110 50.5 114 53" stroke="#221515" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M 106 54 L 104 52.5" stroke="#221515" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <path d="M 106 48 Q 110 44.5 116 47" stroke="var(--hair-3, #c4a96b)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  <path d="M 105 54 Q 103 58 105 60 Q 106 61 107 60" stroke="var(--skin-shadow, #e0a790)" stroke-width="0.9" fill="none"/>
+  <ellipse cx="105.5" cy="59.5" rx="1.2" ry="0.8" fill="#f89ba9" opacity="0.5"/>
+
+  <path d="M 106 67 Q 109 65.5 112 66.5 Q 110 70 106.5 69.5 Z" fill="url(#lipGloss)"/>
+  <ellipse cx="109" cy="67.5" rx="1.8" ry="0.7" fill="#ffffff" opacity="0.65"/>
+</g>
+
+<!-- ================= CABELO LOIRO EM MOVIMENTO ================= -->
 <g class="hair-front" data-style="longo">
-  <path d="M 125 24 Q 102 24 94 45 Q 88 65 92 90 Q 94 115 88 150 Q 82 195 86 240 Q 92 240 94 210 Q 98 165 98 120 Q 98 75 106 50 Q 114 36 125 28 Z" fill="url(#botHairFront)"/>
-  <path d="M 125 24 Q 148 24 156 45 Q 162 65 158 90 Q 156 115 162 150 Q 168 195 164 240 Q 158 240 156 210 Q 152 165 152 120 Q 152 75 144 50 Q 136 36 125 28 Z" fill="url(#botHairFront)"/>
-  <path d="M 125 26 Q 106 38 98 70 Q 94 110 92 160 Q 90 200 90 235" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.5"/>
-  <path d="M 125 26 Q 144 38 152 70 Q 156 110 158 160 Q 160 200 160 235" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.5"/>
-  <path d="M 125 25 L 125 35" stroke="#ba9f5c" stroke-width="1.2" fill="none" opacity="0.6"/>
-  <ellipse cx="112" cy="30" rx="10" ry="3.5" fill="#ffffff" opacity="0.35" transform="rotate(-12 112 30)"/>
-  <ellipse cx="138" cy="30" rx="10" ry="3.5" fill="#ffffff" opacity="0.35" transform="rotate(12 138 30)"/>
+  <path d="M 112 36 Q 102 38 98 55 Q 94 72 98 94 Q 102 115 106 138 Q 110 160 108 175 Q 112 175 114 150 Q 114 125 108 100 Q 104 76 108 55 Q 112 44 116 38 Z" fill="url(#hairGradFront)"/>
+  <path d="M 120 36 Q 130 36 136 50 Q 140 70 136 95 Q 132 120 136 148 Q 140 148 141 125 Q 144 95 140 70 Q 136 48 126 36 Z" fill="url(#hairGradFront)"/>
+  <path d="M 114 38 Q 102 60 100 100 Q 102 140 108 170" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.65"/>
+  <path d="M 122 38 Q 134 65 134 110 Q 134 135 137 148" stroke="#ffffff" stroke-width="1.1" fill="none" opacity="0.65"/>
+  <ellipse cx="118" cy="36" rx="8" ry="2.5" fill="#ffffff" opacity="0.4" transform="rotate(-8 118 36)"/>
 </g>
 <g class="hair-front" data-style="ondulado" style="display:none">
-  <path d="M 125 24 Q 98 24 90 48 Q 80 85 92 135 Q 82 175 90 235 Q 96 235 98 200 Q 94 150 102 115 Q 102 65 125 28 Z" fill="url(#botHairFront)"/>
-  <path d="M 125 24 Q 152 24 160 48 Q 170 85 158 135 Q 168 175 160 235 Q 154 235 152 200 Q 156 150 148 115 Q 148 65 125 28 Z" fill="url(#botHairFront)"/>
+  <path d="M 112 36 Q 98 48 96 75 Q 102 105 98 135 Q 104 165 108 175 Q 112 165 108 135 Q 112 105 106 75 Q 110 48 116 38 Z" fill="url(#hairGradFront)"/>
 </g>
 <g class="hair-front" data-style="bob" style="display:none">
-  <path d="M 125 24 Q 98 22 90 48 Q 84 80 92 120 Q 98 100 102 80 Q 104 55 125 28 Z" fill="url(#botHairFront)"/>
-  <path d="M 125 24 Q 152 22 160 48 Q 166 80 158 120 Q 152 100 148 80 Q 146 55 125 28 Z" fill="url(#botHairFront)"/>
+  <path d="M 112 36 Q 100 48 98 70 Q 102 92 108 105 Q 112 95 108 75 Q 110 48 116 38 Z" fill="url(#hairGradFront)"/>
 </g>
 <g class="hair-front" data-style="coque" style="display:none">
-  <path d="M 94 48 Q 98 22 125 20 Q 152 22 156 48 Q 148 35 136 38 Q 125 30 114 38 Q 102 35 94 48 Z" fill="url(#botHairFront)"/>
+  <path d="M 112 36 Q 118 30 126 36 Q 120 40 114 40 Z" fill="url(#hairGradFront)"/>
 </g>
 </svg>
 
@@ -639,7 +639,7 @@ if(src)el.src=src;
 }
 
 /* =========================================================
-   40 PERSONAGENS (A primeira personagem [0] é a modelo da foto)
+   40 PERSONAGENS (A primeira é a modelo da foto)
    ========================================================= */
 const SKINS=[
 {n:'Branca Porcelana',c1:'#fff2eb',c2:'#f4d0be',line:'#e5b39e'},
@@ -972,7 +972,7 @@ dancerVideo.style.filter=o.filter;
 outfitOverlay.style.background=o.overlay;
 outfitOverlay.style.mixBlendMode=o.blend;
 
-/* Atualiza o top do robô dinamicamente */
+/* Atualiza o macacão/biquíni dinamicamente */
 dancerBot.style.setProperty('--outfit-1', o.spotlightLeft);
 dancerBot.style.setProperty('--outfit-2', o.spotlightRight);
 
