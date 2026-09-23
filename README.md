@@ -161,6 +161,6 @@ Este projeto é de uso livre para fins pessoais e educacionais.
 
 ## 👤 Autor
 
-Feito com 💖 por **SEU NOME**
+Feito com 💖 por **RENATOSGS**
 
-* GitHub: [@SEU-USUARIO](https://github.com/SEU-USUARIO)
+* GitHub: [@renatosgs](https://github.com/renatosgs)
