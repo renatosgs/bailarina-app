@@ -1,129 +1,1266 @@
-<svg class="dancer-bot-svg dancer-media" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot dançando">
-  <defs>
-    <radialGradient id="botSkin" cx="50%" cy="30%">
-      <stop offset="0%" stop-color="#fce6d4"/>
-      <stop offset="100%" stop-color="#eab896"/>
-    </radialGradient>
-    <linearGradient id="botHairBack" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f7ecc4"/>
-      <stop offset="45%" stop-color="#e3ce98"/>
-      <stop offset="100%" stop-color="#b8a068"/>
-    </linearGradient>
-    <linearGradient id="botHairFront" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fdf6dc"/>
-      <stop offset="100%" stop-color="#ddc890"/>
-    </linearGradient>
-    <linearGradient id="botTopGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#c8c4bc"/>
-      <stop offset="100%" stop-color="#8f8a80"/>
-    </linearGradient>
-    <linearGradient id="botDenim" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#b6cfdf"/>
-      <stop offset="100%" stop-color="#8aabc2"/>
-    </linearGradient>
-  </defs>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bailarina Virtual - Galeria, 100 Biquínis & Funk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg-dark:#090713;--bg-card:rgba(20,15,36,.85);--primary-accent:#ff4d8d;--text-main:#f8fafc;--text-muted:#94a3b8;--border-subtle:rgba(255,255,255,.12);--dance-duration:.92s}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',sans-serif;background:var(--bg-dark);color:var(--text-main);min-height:100vh;overflow-x:hidden;display:flex;justify-content:center;background-image:radial-gradient(circle at 50% 0%,rgba(121,40,202,.28),transparent 60%),radial-gradient(circle at 10% 40%,rgba(255,77,141,.18),transparent 50%),radial-gradient(circle at 90% 60%,rgba(59,130,246,.18),transparent 50%)}
+.app-container{width:100%;max-width:960px;min-height:100vh;padding:1.25rem 1rem 3rem;display:flex;flex-direction:column;align-items:center;position:relative}
+.spotlight{position:fixed;top:-100px;width:340px;height:850px;pointer-events:none;z-index:1;opacity:.4;filter:blur(45px);transition:all .7s}
+.spotlight-left{left:8%;background:linear-gradient(180deg,#ff4d8d,transparent);animation:sweepLeft 8s ease-in-out infinite alternate}
+.spotlight-right{right:8%;background:linear-gradient(180deg,#ec4899,transparent);animation:sweepRight 7s ease-in-out infinite alternate}
+@keyframes sweepLeft{0%{transform:rotate(-28deg) scale(.9);opacity:.28}100%{transform:rotate(-12deg) scale(1.15);opacity:.5}}
+@keyframes sweepRight{0%{transform:rotate(28deg) scale(.9);opacity:.28}100%{transform:rotate(12deg) scale(1.15);opacity:.5}}
+.app-header{text-align:center;margin-bottom:1.25rem;z-index:5}
+.header-badge{display:inline-block;padding:.25rem .9rem;background:rgba(255,77,141,.16);border:1px solid rgba(255,77,141,.45);border-radius:999px;font-size:.74rem;font-weight:800;letter-spacing:2px;color:#ff75a0;margin-bottom:.45rem}
+.app-title{font-family:'Playfair Display',serif;font-size:2.3rem;font-weight:600;background:linear-gradient(135deg,#fff 40%,#ff8ab2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.app-subtitle{font-size:.9rem;color:var(--text-muted);max-width:600px}
+.stage-wrapper{width:100%;display:flex;justify-content:center;z-index:5;margin-bottom:1.15rem}
+.stage-frame{position:relative;width:100%;max-width:440px;height:520px;background:radial-gradient(circle at 50% 35%,#1d1338,#0a0715 80%);border-radius:28px;border:1px solid var(--border-subtle);box-shadow:0 25px 60px rgba(0,0,0,.7),0 0 45px rgba(255,77,141,.2);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:1.15rem 1rem 0}
+.hud-top{width:100%;display:flex;justify-content:space-between;gap:.5rem;z-index:10}
+.hud-pill{display:flex;align-items:center;gap:.45rem;background:rgba(10,8,19,.75);backdrop-filter:blur(14px);padding:.4rem .75rem;border-radius:14px;border:1px solid rgba(255,255,255,.12);flex:1;min-width:0}
+.hud-icon{font-size:1.2rem}
+.hud-info{display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.hud-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase;white-space:nowrap}
+.hud-value{font-size:.8rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage-media-nav{position:absolute;top:78px;width:calc(100% - 2rem);display:flex;justify-content:space-between;align-items:center;z-index:12;pointer-events:none}
+.media-nav-btn{pointer-events:auto;background:rgba(10,8,19,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem}
+.media-nav-btn:hover{background:var(--primary-accent);border-color:var(--primary-accent);transform:scale(1.1)}
+.media-nav-indicator{background:rgba(10,8,19,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);padding:.2rem .65rem;border-radius:999px;font-size:.72rem;font-weight:700;color:#ff9cc3}
+.dancer-container{position:relative;width:100%;height:380px;display:flex;justify-content:center;align-items:flex-end;z-index:4}
+.stage-shadow{position:absolute;bottom:12px;width:190px;height:26px;background:radial-gradient(ellipse at center,rgba(0,0,0,.85),transparent 70%);border-radius:50%;filter:blur(4px);z-index:1}
+.dancer-figure{position:relative;width:250px;height:360px;border-radius:20px;overflow:hidden;display:flex;justify-content:center;align-items:center;z-index:2;transform-origin:bottom center}
+.dancer-media{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:18px;display:none}
+.dancer-media.active{display:block}
+.dancer-bot-svg{width:100%;height:100%;display:none;overflow:visible}
+.dancer-bot-svg.active{display:block}
+.dancer-bot-svg .bot-part{transform-box:fill-box;transform-origin:50% 0%;will-change:transform}
+/* Danças */
+.dancing-funk .bot-arm-left{animation:botFunkArmL var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
+.dancing-funk .bot-arm-right{animation:botFunkArmR var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
+.dancing-funk .bot-leg-left{animation:botFunkLegL var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
+.dancing-funk .bot-leg-right{animation:botFunkLegR var(--dance-duration) cubic-bezier(.4,0,.6,1) infinite}
+@keyframes botFunkArmL{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(45deg)}}
+@keyframes botFunkArmR{0%,100%{transform:rotate(15deg)}50%{transform:rotate(-45deg)}}
+@keyframes botFunkLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+@keyframes botFunkLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg)}}
+.dancing-ballet .bot-arm-left{animation:botBalletArmL var(--dance-duration) ease-in-out infinite alternate}
+.dancing-ballet .bot-arm-right{animation:botBalletArmR var(--dance-duration) ease-in-out infinite alternate}
+.dancing-ballet .bot-leg-left{animation:botBalletLegL var(--dance-duration) ease-in-out infinite alternate}
+.dancing-ballet .bot-leg-right{animation:botBalletLegR var(--dance-duration) ease-in-out infinite alternate}
+@keyframes botBalletArmL{0%{transform:rotate(0)}100%{transform:rotate(55deg)}}
+@keyframes botBalletArmR{0%{transform:rotate(0)}100%{transform:rotate(-55deg)}}
+@keyframes botBalletLegL{0%{transform:rotate(0)}100%{transform:rotate(-4deg)}}
+@keyframes botBalletLegR{0%{transform:rotate(0)}100%{transform:rotate(4deg)}}
+.dancing-pop .bot-arm-left{animation:botPopArmL var(--dance-duration) ease-in-out infinite}
+.dancing-pop .bot-arm-right{animation:botPopArmR var(--dance-duration) ease-in-out infinite}
+.dancing-pop .bot-leg-left{animation:botPopLegL var(--dance-duration) ease-in-out infinite}
+.dancing-pop .bot-leg-right{animation:botPopLegR var(--dance-duration) ease-in-out infinite}
+@keyframes botPopArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(60deg)}}
+@keyframes botPopArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-60deg)}}
+@keyframes botPopLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
+@keyframes botPopLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
+.dancing-hiphop .bot-arm-left{animation:botHipArmL var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
+.dancing-hiphop .bot-arm-right{animation:botHipArmR var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
+.dancing-hiphop .bot-leg-left{animation:botHipLegL var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
+.dancing-hiphop .bot-leg-right{animation:botHipLegR var(--dance-duration) cubic-bezier(.5,0,.5,1) infinite}
+@keyframes botHipArmL{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(55deg)}}
+@keyframes botHipArmR{0%,100%{transform:rotate(55deg)}50%{transform:rotate(-8deg)}}
+@keyframes botHipLegL{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+@keyframes botHipLegR{0%,100%{transform:rotate(0)}50%{transform:rotate(12deg)}}
+.dancing-latino .bot-arm-left{animation:botLatArmL var(--dance-duration) ease-in-out infinite alternate}
+.dancing-latino .bot-arm-right{animation:botLatArmR var(--dance-duration) ease-in-out infinite alternate}
+.dancing-latino .bot-leg-left{animation:botLatLegL var(--dance-duration) ease-in-out infinite alternate}
+.dancing-latino .bot-leg-right{animation:botLatLegR var(--dance-duration) ease-in-out infinite alternate}
+@keyframes botLatArmL{0%{transform:rotate(-5deg)}100%{transform:rotate(40deg)}}
+@keyframes botLatArmR{0%{transform:rotate(40deg)}100%{transform:rotate(-5deg)}}
+@keyframes botLatLegL{0%{transform:rotate(-6deg)}100%{transform:rotate(6deg)}}
+@keyframes botLatLegR{0%{transform:rotate(6deg)}100%{transform:rotate(-6deg)}}
+.dancing-synthwave .bot-arm-left{animation:botSynArmL var(--dance-duration) steps(4,end) infinite}
+.dancing-synthwave .bot-arm-right{animation:botSynArmR var(--dance-duration) steps(4,end) infinite}
+.dancing-synthwave .bot-leg-left{animation:botSynLegL var(--dance-duration) steps(4,end) infinite}
+.dancing-synthwave .bot-leg-right{animation:botSynLegR var(--dance-duration) steps(4,end) infinite}
+@keyframes botSynArmL{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(50deg)}100%{transform:rotate(0)}}
+@keyframes botSynArmR{0%,25%{transform:rotate(0)}50%,75%{transform:rotate(-50deg)}100%{transform:rotate(0)}}
+@keyframes botSynLegL{0%{transform:rotate(0)}50%{transform:rotate(-8deg)}100%{transform:rotate(0)}}
+@keyframes botSynLegR{0%{transform:rotate(0)}50%{transform:rotate(8deg)}100%{transform:rotate(0)}}
+.dancer-bot-svg.idle .bot-arm-left{animation:botIdleArmL 3.5s ease-in-out infinite}
+.dancer-bot-svg.idle .bot-arm-right{animation:botIdleArmR 3.5s ease-in-out infinite}
+@keyframes botIdleArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(4deg)}}
+@keyframes botIdleArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+.outfit-overlay{position:absolute;inset:0;pointer-events:none;transition:all .5s}
+.sparkles-container{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sparkle{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 10px #ff75a0;opacity:0;animation:floatSparkle 2s ease-in-out infinite}
+@keyframes floatSparkle{0%{transform:translateY(20px) scale(0);opacity:0}50%{opacity:.95}100%{transform:translateY(-45px) scale(1.3);opacity:0}}
+.stage-floor{width:100%;height:60px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(0,0,0,.65));border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;z-index:3}
+.audio-visualizer{width:100%;height:45px}
+/* Dança do figure inteiro */
+.dancing-funk{animation:danceFunk var(--dance-duration) cubic-bezier(.25,.1,.25,1) infinite}
+@keyframes danceFunk{0%{transform:translateY(0) rotate(0) scale(1,1)}15%{transform:translateY(12px) rotate(-6deg) scale(1.08,.92)}30%{transform:translateY(-8px) rotate(4deg) scale(.96,1.04)}48%{transform:translateY(28px) rotate(-4deg) scale(1.14,.86)}62%{transform:translateY(20px) rotate(5deg) scale(1.06,.94)}78%{transform:translateY(-16px) rotate(-2deg) scale(.95,1.05)}100%{transform:translateY(0) rotate(0) scale(1,1)}}
+.dancing-ballet{animation:danceBallet var(--dance-duration) cubic-bezier(.45,.05,.55,.95) infinite alternate}
+@keyframes danceBallet{0%{transform:translateY(0) rotate(0) scale(1)}35%{transform:translateY(-18px) rotate(-3deg) scale(1.02)}70%{transform:translateY(-26px) rotate(3.5deg) scale(1.04)}100%{transform:translateY(-4px) rotate(-1deg) scale(1)}}
+.dancing-pop{animation:dancePop var(--dance-duration) cubic-bezier(.2,.8,.2,1) infinite}
+@keyframes dancePop{0%,100%{transform:translateY(0) scale(1,1)}25%{transform:translateY(-18px) rotate(-4deg) scale(.98,1.03)}50%{transform:translateY(0) scale(1.03,.97)}75%{transform:translateY(-22px) rotate(4deg) scale(.98,1.04)}}
+.dancing-hiphop{animation:danceHipHop var(--dance-duration) cubic-bezier(.3,0,.2,1) infinite}
+@keyframes danceHipHop{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(8px) rotate(-5deg) scale(1.05,.95)}45%{transform:translateY(-20px) rotate(4deg) scale(.96,1.04)}70%{transform:translateY(6px) rotate(-2deg)}}
+.dancing-latino{animation:danceLatino var(--dance-duration) ease-in-out infinite alternate}
+@keyframes danceLatino{0%{transform:translateY(0) rotate(-6deg) skewX(-2deg)}25%{transform:translateY(-12px) rotate(0) skewX(2deg)}50%{transform:translateY(-4px) rotate(6deg) skewX(3deg)}100%{transform:translateY(0) rotate(-6deg) skewX(-2deg)}}
+.dancing-synthwave{animation:danceSynthwave var(--dance-duration) ease-in-out infinite}
+@keyframes danceSynthwave{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.03) rotate(2deg)}}
+.dancing-shadow{animation:shadowPulse var(--dance-duration) ease-in-out infinite alternate}
+@keyframes shadowPulse{0%{transform:scale(1);opacity:.8}50%{transform:scale(.72);opacity:.35}100%{transform:scale(1.1);opacity:.9}}
+/* Controles */
+.controls-section{width:100%;max-width:680px;display:flex;flex-direction:column;gap:1rem;z-index:10}
+.double-action-bar{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+@media(max-width:500px){.double-action-bar{grid-template-columns:1fr}}
+.btn-special{border:1px solid rgba(255,255,255,.2);color:#fff;padding:.8rem 1rem;border-radius:16px;font-size:.92rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .25s;font-family:inherit}
+.btn-special-wardrobe{background:linear-gradient(135deg,rgba(255,77,141,.3),rgba(121,40,202,.4));border-color:rgba(255,77,141,.5)}
+.btn-special-wardrobe:hover{border-color:#ff4d8d;transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,77,141,.45)}
+.btn-special-gallery{background:linear-gradient(135deg,rgba(6,182,212,.3),rgba(59,130,246,.4));border-color:rgba(6,182,212,.5)}
+.btn-special-gallery:hover{border-color:#06b6d4;transform:translateY(-2px);box-shadow:0 8px 25px rgba(6,182,212,.45)}
+.primary-actions{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:.75rem}
+@media(max-width:580px){.primary-actions{grid-template-columns:1fr}}
+.action-btn{border:none;cursor:pointer;border-radius:18px;padding:.9rem .8rem;display:flex;align-items:center;gap:.75rem;background:var(--bg-card);backdrop-filter:blur(14px);border:1px solid var(--border-subtle);color:#fff;transition:all .25s;text-align:left;font-family:inherit}
+.action-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);box-shadow:0 8px 25px rgba(0,0,0,.45)}
+.btn-icon-wrapper{width:44px;height:44px;min-width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);font-size:1.3rem}
+.btn-title{font-weight:700;font-size:.92rem;white-space:nowrap}
+.btn-hint{font-size:.72rem;color:var(--text-muted);white-space:nowrap}
+.btn-play{background:linear-gradient(135deg,#ff4d8d,#7928ca);border:1px solid rgba(255,255,255,.25);box-shadow:0 6px 20px rgba(255,77,141,.4)}
+.play-pulse{animation:pulseButton 2s infinite}
+@keyframes pulseButton{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.quick-toolbar{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.tool-btn{background:rgba(255,255,255,.06);border:1px solid var(--border-subtle);border-radius:12px;padding:.45rem .85rem;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.35rem;font-family:inherit}
+.tool-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
+.tool-custom{color:#fbbf24;background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.45)}
+.tool-upload{color:#ff9cc3;background:rgba(255,77,141,.12);border-color:rgba(255,77,141,.4)}
+.tool-upload input,.tool-audio input{display:none}
+.tool-audio{color:#93c5fd;background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.4)}
+.section-card{background:var(--bg-card);backdrop-filter:blur(14px);border:1px solid var(--border-subtle);border-radius:20px;padding:1.1rem;display:flex;flex-direction:column;gap:.85rem}
+.card-title{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+.music-pills{display:flex;flex-wrap:wrap;gap:.5rem}
+.music-pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:.45rem .9rem;border-radius:999px;font-size:.82rem;color:var(--text-main);cursor:pointer;display:flex;align-items:center;gap:.4rem;font-family:inherit}
+.music-pill.active{background:linear-gradient(135deg,rgba(255,77,141,.35),rgba(121,40,202,.45));border-color:var(--primary-accent);box-shadow:0 0 14px rgba(255,77,141,.4);font-weight:700}
+/* Modais */
+.modal-overlay{position:fixed;inset:0;background:rgba(5,3,12,.88);backdrop-filter:blur(12px);z-index:100;display:none;justify-content:center;align-items:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal-window{width:100%;max-width:800px;max-height:90vh;background:#140e28;border:1px solid rgba(255,255,255,.2);border-radius:24px;box-shadow:0 25px 60px rgba(0,0,0,.8),0 0 40px rgba(255,77,141,.3);display:flex;flex-direction:column;overflow:hidden}
+.modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);gap:1rem}
+.modal-title{font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.modal-close-btn{background:rgba(255,255,255,.08);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-close-btn:hover{background:#ff4d8d}
+.modal-body{padding:1.25rem 1.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem}
+.badge-count{font-size:.78rem;padding:.25rem .75rem;border-radius:999px;background:rgba(255,77,141,.15);color:#ff9cc3;font-weight:600;border:1px solid rgba(255,77,141,.3)}
+.category-filters{display:flex;flex-wrap:wrap;gap:.4rem}
+.cat-filter-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text-muted);font-size:.78rem;padding:.35rem .75rem;border-radius:999px;cursor:pointer;font-family:inherit}
+.cat-filter-btn.active,.cat-filter-btn:hover{background:var(--primary-accent);color:#fff;border-color:var(--primary-accent)}
+.search-box input{width:100%;background:rgba(10,8,19,.7);border:1px solid var(--border-subtle);border-radius:14px;padding:.7rem 1rem;color:#fff;font-size:.88rem;outline:none;font-family:inherit}
+.search-box input:focus{border-color:var(--primary-accent);box-shadow:0 0 15px rgba(255,77,141,.3)}
+/* Grids */
+.grid-scroll{display:grid;gap:.65rem;max-height:52vh;overflow-y:auto;padding-right:.4rem}
+.outfits-scroll-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.outfit-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:.65rem .75rem;cursor:pointer;display:flex;align-items:center;gap:.65rem;text-align:left;color:#fff;font-family:inherit}
+.outfit-card:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.outfit-card.active{background:linear-gradient(135deg,rgba(255,77,141,.35),rgba(121,40,202,.4));border-color:var(--primary-accent);box-shadow:0 0 14px rgba(255,77,141,.4)}
+.outfit-card-icon{font-size:1.4rem}
+.outfit-card-info{display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.outfit-card-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.outfit-card-cat{font-size:.68rem;color:var(--text-muted)}
+/* Personagens */
+.chars-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.char-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:.5rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:.4rem;font-family:inherit;color:#fff}
+.char-card:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.char-card.active{background:linear-gradient(135deg,rgba(255,77,141,.3),rgba(121,40,202,.35));border-color:var(--primary-accent);box-shadow:0 0 12px rgba(255,77,141,.4)}
+.char-preview{width:64px;height:64px;border-radius:50%;overflow:hidden;background:rgba(0,0,0,.35);flex-shrink:0}
+.char-preview svg{width:100%;height:100%;display:block}
+.char-name{font-size:.72rem;font-weight:700;text-align:center;line-height:1.15}
+/* Customização manual */
+.custom-block{display:flex;flex-direction:column;gap:.5rem;padding:.85rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px}
+.custom-block-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+.swatch-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.swatch{width:38px;height:38px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.swatch:hover{transform:scale(1.1)}
+.swatch.active{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,.6)}
+.hair-btn{padding:.5rem .85rem;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;font-size:.78rem;cursor:pointer;font-weight:600;font-family:inherit}
+.hair-btn:hover{background:rgba(255,255,255,.12)}
+.hair-btn.active{background:linear-gradient(135deg,rgba(255,77,141,.4),rgba(121,40,202,.4));border-color:#ff4d8d}
+/* Galeria */
+.gallery-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.gallery-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;position:relative}
+.gallery-card:hover{transform:translateY(-3px);border-color:var(--primary-accent)}
+.gallery-card.active{border:2px solid var(--primary-accent);box-shadow:0 0 18px rgba(255,77,141,.5)}
+.gallery-thumb-wrapper{width:100%;height:150px;background:#0d0918;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.gallery-thumb-media{width:100%;height:100%;object-fit:cover}
+.gallery-thumb-bot{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 60%,#2a1750,#0d0918 80%);font-size:3rem}
+.gallery-badge-type{position:absolute;top:8px;right:8px;background:rgba(10,8,19,.75);backdrop-filter:blur(8px);padding:.2rem .5rem;border-radius:999px;font-size:.68rem;font-weight:700;border:1px solid rgba(255,255,255,.15)}
+.gallery-info{padding:.6rem .75rem;display:flex;flex-direction:column;gap:.2rem;background:rgba(20,16,35,.7)}
+.gallery-title{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gallery-tag{font-size:.7rem;color:#ff9cc3}
+.app-footer{margin-top:1.5rem;text-align:center;font-size:.78rem;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="app-container">
+<div class="spotlight spotlight-left" id="spotLeft"></div>
+<div class="spotlight spotlight-right" id="spotRight"></div>
 
-  <!-- CABELO TRASEIRO -->
-  <path d="M 84 62 Q 73 14 125 10 Q 177 14 166 62 Q 179 122 175 208 Q 173 222 169 226 Q 163 190 161 145 Q 159 58 125 50 Q 91 58 89 145 Q 87 190 81 226 Q 77 222 75 208 Q 71 122 84 62 Z" fill="url(#botHairBack)"/>
+<header class="app-header">
+<div class="header-badge">★ DANCE STUDIO PRO • 100 BIQUÍNIS & 40 PERSONAGENS ★</div>
+<h1 class="app-title">Bailarina Virtual</h1>
+<p class="app-subtitle">Bot dançarina customizável, galeria, 100 biquínis e Funk Carioca!</p>
+</header>
 
-  <!-- BRAÇO ESQUERDO -->
-  <g class="bot-part bot-arm bot-arm-left">
-    <rect x="68" y="128" width="16" height="88" rx="8" fill="#e8b592"/>
-    <circle cx="76" cy="220" r="9" fill="#f5d0b4"/>
-  </g>
+<main class="stage-wrapper">
+<div class="stage-frame" id="stageFrame">
+<div class="hud-top">
+<div class="hud-pill">
+<span class="hud-icon" id="hudMusicIcon">🔥</span>
+<div class="hud-info">
+<span class="hud-label">Estilo Musical</span>
+<span class="hud-value" id="currentMusicLabel">Funk Carioca (130 BPM)</span>
+</div>
+</div>
+<div class="hud-pill">
+<span class="hud-icon" id="hudOutfitIcon">👙</span>
+<div class="hud-info">
+<span class="hud-label" id="currentOutfitCategory">Asa Delta</span>
+<span class="hud-value" id="currentOutfitLabel">[1/100] Asa Delta Rosa Neon</span>
+</div>
+</div>
+</div>
 
-  <!-- PERNAS com short jeans + meias -->
-  <g class="bot-part bot-leg bot-leg-left">
-    <rect x="102" y="200" width="22" height="118" rx="11" fill="#f0c4a4"/>
-    <!-- Short jeans perna esquerda -->
-    <path d="M 100 195 Q 98 218 98 232 L 124 232 Q 124 218 122 195 Z" fill="url(#botDenim)"/>
-    <path d="M 98 228 L 124 228" stroke="#7a9cb3" stroke-width="0.8" opacity="0.7"/>
-    <!-- Meia branca estampada -->
-    <path d="M 102 296 L 124 296 L 124 320 L 102 320 Z" fill="#fbfbf7"/>
-    <!-- Estampas (folhinhas/corações) -->
-    <circle cx="108" cy="303" r="2" fill="#c96b4a"/>
-    <circle cx="118" cy="308" r="2" fill="#4a7a5a"/>
-    <circle cx="106" cy="313" r="1.8" fill="#7a5aa8"/>
-    <!-- Pé -->
-    <ellipse cx="113" cy="324" rx="11" ry="5" fill="#f5d0b4"/>
-  </g>
-  <g class="bot-part bot-leg bot-leg-right">
-    <rect x="126" y="200" width="22" height="118" rx="11" fill="#f0c4a4"/>
-    <path d="M 126 195 Q 126 218 126 232 L 152 232 Q 152 218 150 195 Z" fill="url(#botDenim)"/>
-    <path d="M 126 228 L 152 228" stroke="#7a9cb3" stroke-width="0.8" opacity="0.7"/>
-    <path d="M 126 296 L 148 296 L 148 320 L 126 320 Z" fill="#fbfbf7"/>
-    <circle cx="132" cy="303" r="2" fill="#4a7a5a"/>
-    <circle cx="142" cy="308" r="2" fill="#c96b4a"/>
-    <circle cx="136" cy="313" r="1.8" fill="#7a5aa8"/>
-    <ellipse cx="137" cy="324" rx="11" ry="5" fill="#f5d0b4"/>
-  </g>
+<div class="stage-media-nav">
+<button class="media-nav-btn" id="btnPrevMedia">◀</button>
+<span class="media-nav-indicator" id="mediaIndicator">Mídia 1/9 • Bot</span>
+<button class="media-nav-btn" id="btnNextMedia">▶</button>
+</div>
 
-  <!-- TOP CINZA BANDEAU -->
-  <path id="botBikiniTop"
-        d="M 92 132 Q 125 126 158 132 L 160 172 Q 125 182 90 172 Z"
-        fill="url(#botTopGrad)"/>
-  <!-- Detalhe costura central -->
-  <path d="M 125 128 L 125 178" stroke="#78736a" stroke-width="0.8" opacity="0.5"/>
+<div class="dancer-container">
+<div class="stage-shadow" id="stageShadow"></div>
+<div class="dancer-figure" id="dancerFigure">
 
-  <!-- CINTURA / BARRIGA VISÍVEL -->
-  <path d="M 100 172 Q 125 180 150 172 L 152 195 Q 125 205 98 195 Z" fill="#f5d0b4"/>
+<svg class="dancer-bot-svg dancer-media active" id="dancerBot" viewBox="0 0 250 360" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" aria-label="Bailarina bot">
+<defs>
+<radialGradient id="botSkin" cx="50%" cy="30%">
+<stop offset="0%" stop-color="var(--skin-1)"/>
+<stop offset="100%" stop-color="var(--skin-2)"/>
+</radialGradient>
+<linearGradient id="botHairBack" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="var(--hair-1)"/>
+<stop offset="55%" stop-color="var(--hair-2)"/>
+<stop offset="100%" stop-color="var(--hair-3)"/>
+</linearGradient>
+<linearGradient id="botHairFront" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="var(--hair-1)"/>
+<stop offset="100%" stop-color="var(--hair-2)"/>
+</linearGradient>
+<linearGradient id="botTopGrad" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#fdfaf4"/>
+<stop offset="100%" stop-color="#e4dccb"/>
+</linearGradient>
+<linearGradient id="botLeggingGrad" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#9a9ea5"/>
+<stop offset="100%" stop-color="#65686c"/>
+</linearGradient>
+</defs>
 
-  <!-- SHORT JEANS (bloco principal) -->
-  <path id="botBikiniBottom"
-        d="M 96 195 Q 125 205 154 195 L 152 232 Q 125 240 98 232 Z"
-        fill="url(#botDenim)"/>
-  <!-- Bolso falso -->
-  <path d="M 104 200 Q 108 214 104 226" stroke="#7a9cb3" stroke-width="0.8" fill="none" opacity="0.7"/>
-  <path d="M 146 200 Q 142 214 146 226" stroke="#7a9cb3" stroke-width="0.8" fill="none" opacity="0.7"/>
-  <!-- Cós -->
-  <path d="M 96 196 Q 125 206 154 196" stroke="#7a9cb3" stroke-width="1.2" fill="none"/>
+<!-- CABELO TRASEIRO — ESTILO LONGO -->
+<g class="hair-style" data-style="longo">
+<path d="M 84 62 Q 73 14 125 10 Q 177 14 166 62 Q 179 122 175 208 Q 173 222 169 226 Q 163 190 161 145 Q 159 58 125 50 Q 91 58 89 145 Q 87 190 81 226 Q 77 222 75 208 Q 71 122 84 62 Z" fill="url(#botHairBack)"/>
+</g>
+<!-- ONDULADO -->
+<g class="hair-style" data-style="ondulado" style="display:none">
+<path d="M 82 62 Q 70 14 125 8 Q 180 14 168 62 Q 186 130 174 220 Q 168 230 160 218 Q 172 160 158 130 Q 162 62 125 48 Q 88 62 92 130 Q 78 160 90 218 Q 82 230 76 220 Q 64 130 82 62 Z" fill="url(#botHairBack)"/>
+</g>
+<!-- BOB -->
+<g class="hair-style" data-style="bob" style="display:none">
+<path d="M 86 62 Q 74 14 125 10 Q 176 14 164 62 Q 172 100 165 138 Q 158 118 158 90 Q 156 58 125 50 Q 94 58 92 90 Q 92 118 85 138 Q 78 100 86 62 Z" fill="url(#botHairBack)"/>
+</g>
+<!-- COQUE / PONTA -->
+<g class="hair-style" data-style="coque" style="display:none">
+<ellipse cx="125" cy="22" rx="28" ry="18" fill="url(#botHairBack)"/>
+<path d="M 96 55 Q 92 20 125 18 Q 158 20 154 55 Q 150 40 125 38 Q 100 40 96 55 Z" fill="url(#botHairBack)"/>
+</g>
 
-  <!-- BRAÇO DIREITO (na frente) -->
-  <g class="bot-part bot-arm bot-arm-right">
-    <rect x="166" y="128" width="16" height="88" rx="8" fill="#e8b592"/>
-    <circle cx="174" cy="220" r="9" fill="#f5d0b4"/>
-  </g>
+<!-- BRAÇO ESQUERDO -->
+<g class="bot-part bot-arm bot-arm-left">
+<rect x="66" y="128" width="18" height="94" rx="9" fill="url(#botTopGrad)"/>
+<circle cx="75" cy="224" r="9.5" fill="var(--skin-1)"/>
+</g>
 
-  <!-- PESCOÇO -->
-  <rect x="117" y="98" width="16" height="26" rx="6" fill="#e8b592"/>
+<!-- PERNAS -->
+<g class="bot-part bot-leg bot-leg-left">
+<rect x="100" y="205" width="23" height="120" rx="11" fill="url(#botLeggingGrad)"/>
+<path d="M 96 322 Q 94 336 112 338 Q 126 338 128 326 L 122 318 Z" fill="#1a1a1a"/>
+<path d="M 108 338 L 108 348 L 112 348 L 112 338 Z" fill="#1a1a1a"/>
+<ellipse cx="110" cy="349" rx="6" ry="1.6" fill="#0a0a0a"/>
+<path d="M 102 320 Q 112 318 122 320" stroke="#1a1a1a" stroke-width="1.4" fill="none"/>
+</g>
+<g class="bot-part bot-leg bot-leg-right">
+<rect x="127" y="205" width="23" height="120" rx="11" fill="url(#botLeggingGrad)"/>
+<path d="M 123 322 Q 121 336 139 338 Q 153 338 155 326 L 149 318 Z" fill="#1a1a1a"/>
+<path d="M 135 338 L 135 348 L 139 348 L 139 338 Z" fill="#1a1a1a"/>
+<ellipse cx="137" cy="349" rx="6" ry="1.6" fill="#0a0a0a"/>
+<path d="M 129 320 Q 139 318 149 320" stroke="#1a1a1a" stroke-width="1.4" fill="none"/>
+</g>
 
-  <!-- CABEÇA -->
-  <ellipse cx="125" cy="68" rx="32" ry="37" fill="url(#botSkin)"/>
+<!-- TOP BRANCO MANGA LONGA -->
+<path d="M 92 124 Q 88 128 86 152 L 86 202 Q 110 212 125 211 Q 140 212 164 202 L 164 152 Q 162 128 158 124 Q 140 118 125 118 Q 110 118 92 124 Z" fill ="url(#botTop101Grad)"/>
+ <path d="M 112 148122 Q 125 132 138 122" stroke="#d8cebb" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M 88 197 Q 125 207 162 197" stroke="#d8cebb" stroke-width="1.2" fill="none" opacity=".55"/>
 
-  <!-- CABELO FRENTE -->
-  <path d="M 86 60 Q 90 22 125 16 L 125 33 Q 109 38 101 54 Q 94 58 86 60 Z" fill="url(#botHairFront)"/>
-  <path d="M 164 60 Q 160 22 125 16 L 125 33 Q 141 38 149 54 Q 156 58 164 60 Z" fill="url(#botHairFront)"/>
-  <path d="M 94 58 Q 85 116 90 188 Q 101 148 103 100 Z" fill="url(#botHairFront)"/>
-  <path d="M 156 58 Q 165 116 160 188 Q 149 148 147 100 Z" fill="url(#botHairFront)"/>
-  <path d="M 100 74 Q 94 120 98 160 Q 104 128 106 96 Z" fill="url(#botHairFront)" opacity=".75"/>
-  <path d="M 150 74 Q 156 120 152 160 Q 146 128 144 96 Z" fill="url(#botHairFront)" opacity=".75"/>
-  <ellipse cx="108" cy="34" rx="9" ry="4" fill="#fff8e0" opacity=".45" transform="rotate(-15 108 34)"/>
-  <ellipse cx="142" cy="34" rx="9" ry="4" fill="#fff8e0" opacity=".45" transform="rotate(15 142 34)"/>
+<!-- BRAÇO DIREITO -->
+<g class="bot-part bot-arm bot-arm-right">
+<rect x="164" y="128" width="18" height="94" rx="9" fill="url(#botTopGrad)"/>
+<circle cx="173" cy="224" r="9.5" fill="var(--skin-1)"/>
+</g>
 
-  <!-- OLHOS -->
-  <ellipse cx="112" cy="70" rx="5" ry="5.5" fill="#f7f2ea"/>
-  <ellipse cx="138" cy="70" rx="5" ry="5.5" fill="#f7f2ea"/>
-  <ellipse cx="112" cy="70.5" rx="4" ry="4.8" fill="#9cbccc"/>
-  <ellipse cx="138" cy="70.5" rx="4" ry="4.8" fill="#9cbccc"/>
-  <circle cx="112" cy="70.5" r="2" fill="#2c3c4a"/>
-  <circle cx="138" cy="70.5" r="2" fill="#2c3c4a"/>
-  <circle cx="113" cy="69" r="1.3" fill="#fff"/>
-  <circle cx="139" cy="69" r="1.3" fill="#fff"/>
-  <path d="M 106 67 Q 112 62 118 66" stroke="#5a4030" stroke-width="1.7" fill="none" stroke-linecap="round"/>
-  <path d="M 132 66 Q 138 62 144 67" stroke="#5a4030" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+<!-- PESCOÇO -->
+<rect x="117" y="94" width="16" height="28" rx="6" fill="var(--skin-1)"/>
 
-  <!-- SOBRANCELHAS -->
-  <path d="M 105 60 Q 112 57 118 59" stroke="#c9b47c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  <path d="M 132 59 Q 138 57 145 60" stroke="#c9b47c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<!-- CABEÇA -->
+<ellipse cx="125" cy="68" rx="32" ry="37" fill="url(#botSkin)"/>
 
-  <!-- NARIZ -->
-  <path d="M 125 74 Q 122 82 124 83 Q 126 83 127 82" stroke="#d8a888" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<!-- CABELO FRENTE — LONGO -->
+<g class="hair-front" data-style="longo">
+<path d="M 86 60 Q 90 22 125 16 L 125 33 Q 109 38 101 54 Q 94 58 86 60 Z" fill="url(#botHairFront)"/>
+<path d="M 164 60 Q 160 22 125 16 L 125 33 Q 141 38 149 54 Q 156 58 164 60 Z" fill="url(#botHairFront)"/>
+<path d="M 94 58 Q 85 116 90 188 Q 103 100 Z" fill="url(#botHairFront)"/>
+<path d="M 156 58 Q 165 116 160 188 Q 149 148 147 100 Z" fill="url(#botHairFront)"/>
+<ellipse cx="108" cy="34" rx="9" ry="4" fill="#fff" opacity=".25" transform="rotate(-15 108 34)"/>
+</g>
+<!-- ONDULADO FRENTE -->
+<g class="hair-front" data-style="ondulado" style="display:none">
+<path d="M 84 60 Q 88 22 125 14 L 125 32 Q 108 38 100 56 Q 92 60 84 60 Z" fill="url(#botHairFront)"/>
+<path d="M 166 60 Q 162 22 125 14 L 125 32 Q 142 38 150 56 Q 158 60 166 60 Z" fill="url(#botHairFront)"/>
+<path d="M 92 58 Q 80 118 88 196 Q 100 150 104 100 Z" fill="url(#botHairFront)"/>
+<path d="M 158 58 Q 170 118 162 196 Q 150 150 146 100 Z" fill="url(#botHairFront)"/>
+<ellipse cx="108" cy="32" rx="10" ry="4" fill="#fff" opacity=".28" transform="rotate(-15 108 32)"/>
+</g>
+<!-- BOB FRENTE -->
+<g class="hair-front" data-style="bob" style="display:none">
+<path d="M 84 60 Q 88 20 125 14 L 125 30 Q 106 36 100 54 Q 92 58 84 60 Z" fill="url(#botHairFront)"/>
+<path d="M 166 60 Q 162 20 125 14 L 125 30 Q 144 36 150 54 Q 158 58 166 60 Z" fill="url(#botHairFront)"/>
+<path d="M 90 58 Q 84 96 90 128 Q 100 108 100 90 Z" fill="url(#botHairFront)"/>
+<path d="M 160 58 Q 166 96 160 128 Q 150 108 150 90 Z" fill="url(#botHairFront)"/>
+</g>
+<!-- COQUE FRENTE -->
+<g class="hair-front" data-style="coque" style="display:none">
+<path d="M 90 55 Q 94 20 125 18 Q 156 20 160 55 Q 152 38 138 42 Q 125 32 112 42 Q 98 38 90 55 Z" fill="url(#botHairFront)"/>
+</g>
 
-  <!-- BOCA -->
-  <path d="M 118 91 Q 125 88 132 91 Q 125 97 118 91 Z" fill="#d99aa5"/>
-  <path d="M 119 91 Q 125 93 131 91" stroke="#b87a88" stroke-width=".7" fill="none"/>
+<!-- OLHOS -->
+<ellipse cx="112" cy="70" rx="5" ry="5.5" fill="#f7f2ea"/>
+<ellipse cx="138" cy="70" rx="5" ry="5.5" fill="#f7f2ea"/>
+<ellipse cx="112" cy="70.5" rx="4" ry="4.8" fill="var(--eye)"/>
+<ellipse cx="138" cy="70.5" rx="4" ry="4.8" fill="var(--eye)"/>
+<circle cx="112" cy="70.5" r="2" fill="#2c3c4a"/>
+<circle cx="138" cy="70.5" r="2" fill="#2c3c4a"/>
+<circle cx="113" cy="69" r="1.3" fill="#fff"/>
+<circle cx="139" cy="69" r="1.3" fill="#fff"/>
+<path d="M 106 67 Q 112 62 118 66" stroke="#5a4030" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+<path d="M 132 66 Q 138 62 144 67" stroke="#5a4030" stroke-width="1.7" fill="none" stroke-linecap="round"/>
 
-  <!-- BLUSH -->
-  <ellipse cx="104" cy="85" rx="6" ry="3" fill="#f2a0b0" opacity=".42"/>
-  <ellipse cx="146" cy="85" rx="6" ry="3" fill="#f2a0b0" opacity=".42"/>
+<!-- SOBRANCELHAS -->
+<path d="M 105 60 Q 112 57 118 59" stroke="var(--hair-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<path d="M 132 59 Q 138 57 145 60" stroke="var(--hair-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+
+<!-- NARIZ -->
+<path d="M 125 74 Q 122 82 124 83 Q 126 83 127 82" stroke="var(--skin-line)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+
+<!-- BOCA -->
+<path d="M 118 91 Q 125 88 132 91 Q 125 97 118 91 Z" fill="#d99aa5"/>
+<path d="M 119 91 Q 125 93 131 91" stroke="#b87a88" stroke-width=".7" fill="none"/>
+
+<!-- BLUSH -->
+<ellipse cx="104" cy="85" rx="6" ry="3" fill="#f2a0b0" opacity=".42"/>
+<ellipse cx="146" cy="85" rx="6" ry="3" fill="#f2a0b0" opacity=".42"/>
 </svg>
+
+<img alt="Bailarina" id="dancerImg" class="dancer-media" />
+<video id="dancerVideo" class="dancer-media" loop playsinline muted></video>
+<div class="outfit-overlay" id="outfitOverlay"></div>
+<div class="sparkles-container" id="sparkles"></div>
+</div>
+</div>
+
+<div class="stage-floor">
+<canvas id="visualizerCanvas" class="audio-visualizer"></canvas>
+</div>
+</div>
+</main>
+
+<section class="controls-section">
+<div class="double-action-bar">
+<button class="btn-special btn-special-wardrobe" id="btnOpenWardrobe"><span>👙 Guarda-Roupa (100 Biquínis)</span></button>
+<button class="btn-special btn-special-gallery" id="btnOpenGallery"><span>📸 Galeria de Fotos & Vídeos</span></button>
+</div>
+
+<div class="primary-actions">
+<button class="action-btn" id="btnChangeOutfit">
+<div class="btn-icon-wrapper">👙</div>
+<div class="btn-text">
+<span class="btn-title">Mudar Biquíni</span>
+<span class="btn-hint" id="nextOutfitHint">Próximo: [2/100]</span>
+</div>
+</button>
+<button class="action-btn btn-play" id="btnPlayPause">
+<div class="btn-icon-wrapper play-pulse"><span id="playIcon">▶</span></div>
+<div class="btn-text">
+<span class="btn-title" id="playBtnTitle">Tocar Música & Dançar</span>
+<span class="btn-hint" id="playBtnHint">Batidão 130 BPM</span>
+</div>
+</button>
+<button class="action-btn" id="btnChangeMusic">
+<div class="btn-icon-wrapper">🎵</div>
+<div class="btn-text">
+<span class="btn-title">Mudar Música</span>
+<span class="btn-hint" id="nextMusicHint">Próximo: Balé Clássico</span>
+</div>
+</button>
+</div>
+
+<div class="quick-toolbar">
+<button class="tool-btn tool-custom" id="btnCustomize"><span>🎨 Personalizar Personagem (40)</span></button>
+<button class="tool-btn" id="btnShowBot"><span>🤖 Mostrar Bot</span></button>
+<button class="tool-btn" id="btnRandomOutfit"><span>🎲 Biquíni Aleatório</span></button>
+<label for="dancerUpload" class="tool-btn tool-upload"><span>➕ Foto/Vídeo</span><input type="file" id="dancerUpload" accept="image/*,video/*" multiple /></label>
+<label for="audioUpload" class="tool-btn tool-audio"><span>🎧 Meu MP3</span><input type="file" id="audioUpload" accept="audio/*" /></label>
+</div>
+
+<div class="section-card">
+<h3 class="card-title">Estilos Musicais & Dança:</h3>
+<div class="music-pills" id="musicPills"></div>
+</div>
+</section>
+
+<!-- Modal Guarda-Roupa -->
+<div class="modal-overlay" id="wardrobeModal">
+<div class="modal-window">
+<div class="modal-header">
+<div class="modal-title"><span>👙 Guarda-Roupa</span><span class="badge-count" id="wardrobeCount">100 biquínis</span></div>
+<button class="modal-close-btn" id="btnCloseWardrobe">&times;</button>
+</div>
+<div class="modal-body">
+<div class="category-filters" id="categoryFilters"></div>
+<div class="search-box"><input type="text" id="searchInput" placeholder="🔍 Buscar biquíni..." /></div>
+<div class="grid-scroll outfits-scroll-grid" id="outfitsGrid"></div>
+</div>
+</div>
+</div>
+
+<!-- Modal Personagens -->
+<div class="modal-overlay" id="customizeModal">
+<div class="modal-window">
+<div class="modal-header">
+<div class="modal-title"><span>🎨 Personalizar Personagem</span><span class="badge-count">40 opções</span></div>
+<button class="modal-close-btn" id="btnCloseCustomize">&times;</button>
+</div>
+<div class="modal-body">
+<div class="custom-block">
+<div class="custom-block-title">Tom de pele</div>
+<div class="swatch-row" id="skinSwatches"></div>
+</div>
+<div class="custom-block">
+<div class="custom-block-title">Cor de cabelo</div>
+<div class="swatch-row" id="hairSwatches"></div>
+</div>
+<div class="custom-block">
+<div class="custom-block-title">Estilo de cabelo</div>
+<div class="swatch-row" id="hairStyleBtns"></div>
+</div>
+<div class="custom-block">
+<div class="custom-block-title">Cor dos olhos</div>
+<div class="swatch-row" id="eyeSwatches"></div>
+</div>
+<div class="custom-block">
+<div class="custom-block-title">40 Personagens prontas</div>
+<div class="grid-scroll chars-grid" id="charsGrid"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal Galeria -->
+<div class="modal-overlay" id="galleryModal">
+<div class="modal-window">
+<div class="modal-header">
+<div class="modal-title"><span>📸 Galeria</span><span class="badge-count" id="galleryCount">9 mídias</span></div>
+<button class="modal-close-btn" id="btnCloseGallery">&times;</button>
+</div>
+<div class="modal-body">
+<div class="category-filters" id="galleryFilters"></div>
+<div class="grid-scroll gallery-grid" id="galleryGrid"></div>
+</div>
+</div>
+</div>
+
+<footer class="app-footer"><p>Bailarina Virtual • Bot dançarina 🤖 • 40 personagens customizáveis</p></footer>
+</div>
+
+<audio id="customAudioPlayer"></audio>
+
+<script>
+/* Polyfill roundRect */
+if(typeof CanvasRenderingContext2D!=='undefined'&&!CanvasRenderingContext2D.prototype.roundRect){
+CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+if(typeof r==='number')r=[r,r,r,r];else if(!Array.isArray(r))r=[0,0,0,0];
+const[tl,tr,br,bl]=r;
+this.beginPath();this.moveTo(x+tl,y);this.lineTo(x+w-tr,y);this.quadraticCurveTo(x+w,y,x+w,y+tr);
+this.lineTo(x+w,y+h-br);this.quadraticCurveTo(x+w,y+h,x+w-br,y+h);this.lineTo(x+bl,y+h);
+this.quadraticCurveTo(x,y+h,x,y+h-bl);this.lineTo(x,y+tl);this.quadraticCurveTo(x,y,x+tl,y);
+this.closePath();return this;};
+}
+
+function setMediaSrc(el,src,fallback){
+el.onerror=null;el.dataset.triedFallback='';
+el.dataset.fallbackSrc=fallback||'';
+el.onerror=function(){
+if(el.dataset.triedFallback==='1'){el.onerror=null;return;}
+el.dataset.triedFallback='1';
+if(el.dataset.fallbackSrc)el.src=el.dataset.fallbackSrc;else el.onerror=null;
+};
+if(src)el.src=src;
+}
+
+/* =========================================================
+   40 PERSONAGENS — combinações de pele + cabelo + estilo + olho
+   ========================================================= */
+const SKINS=[
+{n:'Branca',c1:'#fce6d4',c2:'#eab896',line:'#d8a888'},
+{n:'Branca Rosada',c1:'#fbd8c4',c2:'#e8a890',line:'#d09070'},
+{n:'Média Clara',c1:'#f0c9a8',c2:'#d69f75',line:'#b88050'},
+{n:'Média',c1:'#e0b088',c2:'#c08858',line:'#a07040'},
+{n:'Morena',c1:'#c89060',c2:'#a06838',line:'#805020'},
+{n:'Negra',c1:'#8a5838',c2:'#603818',line:'#4a2808'},
+{n:'Negra Retinta',c1:'#5c3820',c2:'#3a2008',line:'#2a1500'}
+];
+const HAIRS=[
+{n:'Platinado',c1:'#f7ecc4',c2:'#e3ce98',c3:'#b8a068'},
+{n:'Loiro Dourado',c1:'#f0d878',c2:'#d8b040',c3:'#a88828'},
+{n:'Loiro Escuro',c1:'#d8b878',c2:'#a88040',c3:'#705020'},
+{n:'Castanho Claro',c1:'#a87850',c2:'#805028',c3:'#503018'},
+{n:'Castanho Escuro',c1:'#704028',c2:'#4a2818',c3:'#2a1808'},
+{n:'Preto',c1:'#3a2010',c2:'#1a0e08',c3:'#0a0502'},
+{n:'Ruivo',c1:'#d86830',c2:'#a84018',c3:'#6a2810'},
+{n:'Ruivo Acobreado',c1:'#e88848',c2:'#c05820',c3:'#803810'},
+{n:'Rosa Fantasia',c1:'#ffb8d0',c2:'#ff8ab5',c3:'#c85a85'},
+{n:'Azul Fantasia',c1:'#a0c8ff',c2:'#6090e0',c3:'#3058a8'}
+];
+const HAIR_STYLES=[
+{id:'longo',n:'Longo Liso'},
+{id:'ondulado',n:'Longo Ondulado'},
+{id:'bob',n:'Bob Curto'},
+{id:'coque',n:'Coque'}
+];
+const EYES=[
+{n:'Azul',c:'#5a90c8'},
+{n:'Verde',c:'#68a878'},
+{n:'Castanho',c:'#7a5838'},
+{n:'Mel',c:'#b88838'},
+{n:'Cinza',c:'#8898a8'},
+{n:'Violeta',c:'#9878c8'}
+];
+/* 40 nomes brasileiros para as combinações */
+const NOMES_PERSONAGENS=[
+'Alice','Bianca','Carla','Duda','Eduarda','Fernanda','Gabriela','Helena','Isabela','Júlia',
+'Karen','Larissa','Marina','Nicole','Olívia','Paula','Queren','Rafaela','Sofia','Tainá',
+'Ursula','Valentina','Wanessa','Xênia','Yasmin','Zoe','Bruna','Camila','Daniela','Elisa',
+'Flávia','Giovana','Heloísa','Ingrid','Joana','Kelly','Letícia','Manuela','Natália','Priscila'
+];
+/* Gera 40 personagens com combos variados */
+const CHARACTERS=[];
+(function generateChars(){
+const combos=[];
+for(let i=0;i<40;i++){
+const si=i%SKINS.length;
+const hi=(i*3)%HAIRS.length;
+const st=(i*5)%HAIR_STYLES.length;
+const ei=(i*2)%EYES.length;
+combos.push({
+id:'char-'+i,
+name:NOMES_PERSONAGENS[i],
+skin:si,hair:hi,hairStyle:HAIR_STYLES[st].id,eye:ei
+});
+}
+CHARACTERS.push(...combos);
+})();
+
+/* =========================================================
+   100 BIQUÍNIS — gerados programaticamente
+   ========================================================= */
+const CATS=['Asa Delta','Cortininha','Fita & Bronze','Meia-Taça','Crochê & Boho','Faixa & Bandô','Cintura Alta','Fio Dental','Tomara que Caia','Hot Pants'];
+const PALETA=[
+{n:'Rosa Neon',a:'#ff1493',b:'#ff69b4'},
+{n:'Verde Limão',a:'#84cc16',b:'#10b981'},
+{n:'Laranja Cítrico',a:'#ea580c',b:'#f97316'},
+{n:'Azul Piscina',a:'#0284c7',b:'#38bdf8'},
+{n:'Roxo Elétrico',a:'#9333ea',b:'#c084fc'},
+{n:'Amarelo Sol',a:'#facc15',b:'#fde047'},
+{n:'Vermelho Fogo',a:'#dc2626',b:'#ef4444'},
+{n:'Dourado Ouro',a:'#f59e0b',b:'#fbbf24'},
+{n:'Prata Estelar',a:'#cbd5e1',b:'#94a3b8'},
+{n:'Preto Ônix',a:'#334155',b:'#0f172a'}
+];
+const OUT_ICONS=['👙','💖','✨','🍷','👑','🪙','🌺','🌊','🦩','⚡','🌸','💎','🪩','🔥','🥥'];
+const OUTFITS=[];
+(function generateOutfits(){
+let id=1;
+CATS.forEach((cat,ci)=>{
+PALETA.forEach((p,pi)=>{
+OUTFITS.push({
+id:'bikini-'+id,
+name:id+'. '+cat+' '+p.n,
+category:cat,
+icon:OUT_ICONS[(ci+pi)%OUT_ICONS.length],
+desc:cat+' '+p.n,
+spotlightLeft:p.a,
+spotlightRight:p.b,
+glowColor:'rgba(255,255,255,.35)',
+filter:'contrast(1.15) saturate(1.35)',
+overlay:'radial-gradient(circle,rgba(0,0,0,.12) 0%,transparent 80%)',
+blend:'overlay'
+});
+id++;
+});
+});
+})();
+
+/* Galeria */
+let GALLERY=[
+{id:'bot-1',title:'Bailarina Bot',type:'bot',src:'',fallback:'',tag:'Bot Dançarina'},
+{id:'media-1',title:'Foto Principal',type:'image',src:'dancer.jpg',fallback:'https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=800&q=80',tag:'Pose Original'},
+{id:'media-2',title:'Foto 2',type:'image',src:'dancer2.jpg',fallback:'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80',tag:'Ballet'},
+{id:'media-3',title:'Foto 3',type:'image',src:'dancer3.jpg',fallback:'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',tag:'Verão'},
+{id:'media-4',title:'Foto 4',type:'image',src:'dancer4.jpg',fallback:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',tag:'Glamour'},
+{id:'media-5',title:'Foto 5',type:'image',src:'dancer5.jpg',fallback:'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',tag:'Street'},
+{id:'media-6',title:'Vídeo 1',type:'video',src:'video1.mp4',fallback:'',tag:'Funk'},
+{id:'media-7',title:'Vídeo 2',type:'video',src:'video2.mp4',fallback:'',tag:'Pop'},
+{id:'media-8',title:'Vídeo 3',type:'video',src:'video3.mp4',fallback:'',tag:'Balé'}
+];
+
+/* Estilos musicais — CORRIGIDO */
+const MUSIC_STYLES=[
+{id:'funk',name:'Funk Carioca',sub:'Batidão 130 BPM & Tamborzão',icon:'🔥',bpm:130,danceClass:'dancing-funk',danceDuration:0.92},
+{id:'ballet',name:'Balé Clássico',sub:'Valsa & Harmonia',icon:'🎼',bpm:88,danceClass:'dancing-ballet',danceDuration:1.6},
+{id:'pop',name:'Pop & Dance Club',sub:'Batida 4x4 Eletrônica',icon:'🪩',bpm:124,danceClass:'dancing-pop',danceDuration:0.96},
+{id:'hiphop',name:'Hip-Hop Urban Beat',sub:'Groove & Bumbo Marcado',icon:'🎧',bpm:94,danceClass:'dancing-hiphop',danceDuration:1.25},
+{id:'latino',name:'Salsa & Ritmo Latino',sub:'Clave e Percussão',icon:'🎺',bpm:112,danceClass:'dancing-latino',danceDuration:1.05},
+{id:'synthwave',name:'Synthwave Anos 80',sub:'Arpejador Retrô & Synth Bass',icon:'🕹️',bpm:120,danceClass:'dancing-synthwave',danceDuration:1.0}
+];
+
+/* Estado */
+let currentOutfitIndex=0;
+let currentMusicIndex=0;
+let currentMediaIndex=0;
+let currentCharIndex=0;
+let isPlaying=false;
+let customAudioLoaded=false;
+let activeCategory='Todos';
+let activeGalleryTab='Todas';
+let searchTerm='';
+let uploadedObjectUrls=[];
+
+/* DOM */
+const $=id=>document.getElementById(id);
+const dancerFigure=$('dancerFigure'),dancerBot=$('dancerBot'),dancerImg=$('dancerImg'),dancerVideo=$('dancerVideo');
+const outfitOverlay=$('outfitOverlay'),stageShadow=$('stageShadow');
+const currentMusicLabel=$('currentMusicLabel'),currentOutfitLabel=$('currentOutfitLabel'),currentOutfitCategory=$('currentOutfitCategory');
+const nextOutfitHint=$('nextOutfitHint'),nextMusicHint=$('nextMusicHint');
+const hudMusicIcon=$('hudMusicIcon'),hudOutfitIcon=$('hudOutfitIcon');
+const mediaIndicator=$('mediaIndicator');
+const btnPrevMedia=$('btnPrevMedia'),btnNextMedia=$('btnNextMedia');
+const btnShowBot=$('btnShowBot'),btnCustomize=$('btnCustomize');
+const btnChangeOutfit=$('btnChangeOutfit'),btnChangeMusic=$('btnChangeMusic'),btnRandomOutfit=$('btnRandomOutfit');
+const btnOpenWardrobe=$('btnOpenWardrobe'),btnCloseWardrobe=$('btnCloseWardrobe'),wardrobeModal=$('wardrobeModal');
+const btnOpenGallery=$('btnOpenGallery'),btnCloseGallery=$('btnCloseGallery'),galleryModal=$('galleryModal');
+const customizeModal=$('customizeModal'),btnCloseCustomize=$('btnCloseCustomize');
+const galleryGrid=$('galleryGrid'),galleryCount=$('galleryCount'),galleryFiltersContainer=$('galleryFilters');
+const charsGrid=$('charsGrid'),skinSwatches=$('skinSwatches'),hairSwatches=$('hairSwatches');
+const hairStyleBtns=$('hairStyleBtns'),eyeSwatches=$('eyeSwatches');
+const btnPlayPause=$('btnPlayPause'),playIcon=$('playIcon'),playBtnTitle=$('playBtnTitle'),playBtnHint=$('playBtnHint');
+const spotLeft=$('spotLeft'),spotRight=$('spotRight');
+const dancerUpload=$('dancerUpload'),audioUpload=$('audioUpload'),customAudioPlayer=$('customAudioPlayer');
+const musicPillsContainer=$('musicPills'),categoryFiltersContainer=$('categoryFilters');
+const outfitsGridContainer=$('outfitsGrid'),searchInput=$('searchInput'),wardrobeCount=$('wardrobeCount');
+const sparklesContainer=$('sparkles'),visualizerCanvas=$('visualizerCanvas'),canvasCtx=visualizerCanvas.getContext('2d');
+
+/* Áudio */
+let audioCtx=null,masterGain=null,analyser=null,beatTimer=null,step=0,customAudioSourceNode=null;
+
+function initAudio(){
+if(audioCtx)return;
+const AC=window.AudioContext||window.webkitAudioContext;
+audioCtx=new AC();
+masterGain=audioCtx.createGain();
+masterGain.gain.setValueAtTime(0.4,audioCtx.currentTime);
+analyser=audioCtx.createAnalyser();
+analyser.fftSize=64;
+masterGain.connect(analyser);
+analyser.connect(audioCtx.destination);
+}
+function connectCustomAudio(){
+if(customAudioSourceNode)return;
+initAudio();
+try{
+customAudioSourceNode=audioCtx.createMediaElementSource(customAudioPlayer);
+customAudioSourceNode.connect(masterGain);
+}catch(e){console.warn('MP3 não conectado ao analyser:',e);}
+}
+function playKick(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(0.01,t+0.35);g.gain.setValueAtTime(0.9,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.35);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.35);}
+function playSnare(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='triangle';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(50,t+0.15);g.gain.setValueAtTime(0.4,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.2);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.2);}
+function playHiHat(t,a){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(8000,t);g.gain.setValueAtTime(a?0.2:0.09,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.05);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.06);}
+function playFKick(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(160,t);o.frequency.exponentialRampToValueAtTime(32,t+0.28);g.gain.setValueAtTime(1,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.3);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.3);}
+function playFSnare(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(450,t);o.frequency.exponentialRampToValueAtTime(120,t+0.12);g.gain.setValueAtTime(0.5,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.14);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.14);}
+function playFTom(t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.setValueAtTime(240,t);o.frequency.exponentialRampToValueAtTime(110,t+0.15);g.gain.setValueAtTime(0.55,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.15);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.15);}
+function playFStab(f,t){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0.18,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.12);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+0.12);}
+function playSyn(f,t,d,ty,v){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v||0.2,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);o.connect(g);g.connect(masterGain);o.start(t);o.stop(t+d);}
+
+function stepBeat(){
+if(!isPlaying||!audioCtx)return;
+const st=MUSIC_STYLES[currentMusicIndex];
+const t=audioCtx.currentTime,s=step%16;
+switch(st.id){
+case 'funk':
+if(s===0||s===8||s===12)playFKick(t);
+if(s===3||s===10||s===14)playFSnare(t);
+if(s===6)playFTom(t);
+if(s===0)playSyn(48,t,0.45,'sine',0.5);else if(s===8)playSyn(52,t,0.35,'sine',0.45);
+if(s===0)playFStab(587.33,t);else if(s===2)playFStab(659.25,t);
+break;
+case 'ballet':{
+const sc=[261.63,329.63,392,523.25,659.25];
+playSyn(sc[(s*2)%sc.length],t,0.5,'sine',0.24);
+if(s%3===0)playSyn(130.81,t,0.45,'triangle',0.32);
+break;}
+case 'pop':
+if(s%4===0)playKick(t);
+if(s%8===4)playSnare(t);
+if(s%2===1)playHiHat(t,true);
+{const b=[110,110,130.81,146.83,164.81,146.83,130.81,98];playSyn(b[s%8],t,0.2,'sawtooth',0.14);}
+break;
+case 'hiphop':
+if(s===0||s===6||s===10)playKick(t);
+if(s===4||s===12)playSnare(t);
+if(s%2===0)playHiHat(t,s%4===0);
+if(s===0||s===6)playSyn(55,t,0.6,'sine',0.42);
+break;
+case 'latino':
+if([0,3,6,10,12].indexOf(s)>=0)playSnare(t);
+if(s%4===0)playKick(t);
+playHiHat(t,s%3===0);
+{const sa=[329.63,392,523.25,440,392,329.63,293.66,329.63];playSyn(sa[s%8],t,0.22,'triangle',0.2);}
+break;
+case 'synthwave':
+if(s%4===0)playKick(t);
+if(s%8===4)playSnare(t);
+playHiHat(t,true);
+{const sy=[146.83,220,293.66,369.99,440,369.99,293.66,220];playSyn(sy[s%8],t,0.15,'sawtooth',0.16);}
+break;
+}
+step++;
+}
+
+function startMusicLoop(){
+if(customAudioLoaded){customAudioPlayer.play().catch(e=>console.warn(e));return;}
+initAudio();
+if(audioCtx.state==='suspended')audioCtx.resume();
+if(beatTimer)clearInterval(beatTimer);
+const st=MUSIC_STYLES[currentMusicIndex];
+const ms=(60000/st.bpm)/4;
+beatTimer=setInterval(stepBeat,ms);
+}
+function stopMusicLoop(){
+if(beatTimer){clearInterval(beatTimer);beatTimer=null;}
+if(customAudioLoaded)customAudioPlayer.pause();
+}
+
+/* =========================================================
+   APLICAR PERSONAGEM
+   ========================================================= */
+function applyCharacter(idx){
+idx=((idx%CHARACTERS.length)+CHARACTERS.length)%CHARACTERS.length;
+currentCharIndex=idx;
+const c=CHARACTERS[idx];
+const sk=SKINS[c.skin];
+const hr=HAIRS[c.hair];
+const ey=EYES[c.eye];
+dancerBot.style.setProperty('--skin-1',sk.c1);
+dancerBot.style.setProperty('--skin-2',sk.c2);
+dancerBot.style.setProperty('--skin-line',sk.line);
+dancerBot.style.setProperty('--hair-1',hr.c1);
+dancerBot.style.setProperty('--hair-2',hr.c2);
+dancerBot.style.setProperty('--hair-3',hr.c3);
+dancerBot.style.setProperty('--eye',ey.c);
+/* troca estilo de cabelo */
+document.querySelectorAll('.hair-style').forEach(el=>{
+el.style.display=el.dataset.style===c.hairStyle?'':'none';
+});
+document.querySelectorAll('.hair-front').forEach(el=>{
+el.style.display=el.dataset.style===c.hairStyle?'':'none';
+});
+/* marca card ativo */
+document.querySelectorAll('.char-card').forEach(el=>{
+el.classList.toggle('active',el.dataset.charId==='char-'+idx);
+});
+/* atualiza swatches */
+document.querySelectorAll('#skinSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.skin));
+document.querySelectorAll('#hairSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.hair));
+document.querySelectorAll('#hairStyleBtns .hair-btn').forEach(el=>el.classList.toggle('active',el.dataset.style===c.hairStyle));
+document.querySelectorAll('#eyeSwatches .swatch').forEach((el,i)=>el.classList.toggle('active',i===c.eye));
+createSparkles(8);
+}
+
+function applyMedia(index){
+currentMediaIndex=((index%GALLERY.length)+GALLERY.length)%GALLERY.length;
+const m=GALLERY[currentMediaIndex];
+const typeLabel=m.type==='video'?'Vídeo':m.type==='bot'?'Bot':'Foto';
+mediaIndicator.textContent=`Mídia ${currentMediaIndex+1}/${GALLERY.length} • ${typeLabel}`;
+dancerBot.classList.remove('active');
+dancerImg.classList.remove('active');
+dancerVideo.classList.remove('active');
+try{dancerVideo.pause();}catch(e){}
+dancerVideo.removeAttribute('src');
+if(m.type==='bot'){
+dancerBot.classList.add('active');
+if(!isPlaying)dancerBot.classList.add('idle');else dancerBot.classList.remove('idle');
+}else if(m.type==='video'){
+setMediaSrc(dancerVideo,m.src,m.fallback);
+dancerVideo.classList.add('active');
+if(isPlaying)dancerVideo.play().catch(()=>{});
+}else{
+setMediaSrc(dancerImg,m.src,m.fallback);
+dancerImg.classList.add('active');
+}
+document.querySelectorAll('.gallery-card').forEach(c=>{
+c.classList.toggle('active',c.dataset.mediaId===m.id);
+});
+createSparkles(12);
+}
+
+function applyOutfit(index){
+currentOutfitIndex=((index%OUTFITS.length)+OUTFITS.length)%OUTFITS.length;
+const o=OUTFITS[currentOutfitIndex];
+dancerImg.style.filter=o.filter;
+dancerVideo.style.filter=o.filter;
+outfitOverlay.style.background=o.overlay;
+outfitOverlay.style.mixBlendMode=o.blend;
+spotLeft.style.background=`linear-gradient(180deg,${o.spotlightLeft} 0%,transparent 100%)`;
+spotRight.style.background=`linear-gradient(180deg,${o.spotlightRight} 0%,transparent 100%)`;
+dancerFigure.style.filter=`drop-shadow(0 10px 25px ${o.glowColor})`;
+hudOutfitIcon.textContent=o.icon;
+currentOutfitCategory.textContent=o.category;
+currentOutfitLabel.textContent=`[${currentOutfitIndex+1}/100] ${o.name}`;
+const nIdx=(currentOutfitIndex+1)%OUTFITS.length;
+nextOutfitHint.textContent=`Próximo: [${nIdx+1}/100] ${OUTFITS[nIdx].name}`;
+document.querySelectorAll('.outfit-card').forEach(c=>{
+c.classList.toggle('active',c.dataset.outfitId===o.id);
+});
+createSparkles(12);
+}
+
+function applyMusicStyle(index){
+currentMusicIndex=((index%MUSIC_STYLES.length)+MUSIC_STYLES.length)%MUSIC_STYLES.length;
+const st=MUSIC_STYLES[currentMusicIndex];
+document.documentElement.style.setProperty('--dance-duration',st.danceDuration+'s');
+MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
+if(isPlaying){
+dancerFigure.classList.add(st.danceClass);
+stageShadow.classList.add('dancing-shadow');
+startMusicLoop();
+}
+hudMusicIcon.textContent=st.icon;
+currentMusicLabel.textContent=`${st.name} (${st.bpm} BPM)`;
+nextMusicHint.textContent=`Próximo: ${MUSIC_STYLES[(currentMusicIndex+1)%MUSIC_STYLES.length].name}`;
+playBtnHint.textContent=`${st.sub} • ${st.bpm} BPM`;
+document.querySelectorAll('.music-pill').forEach((p,i)=>p.classList.toggle('active',i===currentMusicIndex));
+}
+
+function togglePlayPause(){
+isPlaying=!isPlaying;
+const st=MUSIC_STYLES[currentMusicIndex];
+if(isPlaying){
+playIcon.textContent='⏸';
+playBtnTitle.textContent='Pausar Dança';
+dancerFigure.classList.add(st.danceClass);
+stageShadow.classList.add('dancing-shadow');
+dancerBot.classList.remove('idle');
+if(dancerVideo.classList.contains('active'))dancerVideo.play().catch(()=>{});
+startMusicLoop();
+createSparkles(20);
+}else{
+playIcon.textContent='▶';
+playBtnTitle.textContent='Tocar Música & Dançar';
+MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
+stageShadow.classList.remove('dancing-shadow');
+if(dancerBot.classList.contains('active'))dancerBot.classList.add('idle');
+if(dancerVideo.classList.contains('active')){try{dancerVideo.pause();}catch(e){}}
+stopMusicLoop();
+}
+}
+
+function createSparkles(n){
+n=n||8;
+for(let i=0;i<n;i++){
+const s=document.createElement('div');
+s.className='sparkle';
+s.style.left=(Math.random()*85+5)+'%';
+s.style.bottom=(Math.random()*40+10)+'%';
+s.style.animationDelay=(Math.random()*0.8)+'s';
+s.style.animationDuration=(1.2+Math.random()*1.5)+'s';
+sparklesContainer.appendChild(s);
+setTimeout(()=>s.remove(),2800);
+}
+}
+
+function drawVisualizer(){
+requestAnimationFrame(drawVisualizer);
+const w=visualizerCanvas.width=visualizerCanvas.clientWidth;
+const h=visualizerCanvas.height=visualizerCanvas.clientHeight;
+canvasCtx.clearRect(0,0,w,h);
+if(!isPlaying){
+canvasCtx.strokeStyle='rgba(255,255,255,0.12)';
+canvasCtx.lineWidth=2;
+canvasCtx.beginPath();
+canvasCtx.moveTo(0,h/2);
+canvasCtx.lineTo(w,h/2);
+canvasCtx.stroke();
+return;
+}
+const n=36,bw=(w/n)*0.7;
+const o=OUTFITS[currentOutfitIndex];
+let vals=[];
+if(analyser){
+const bl=analyser.frequencyBinCount;
+const da=new Uint8Array(bl);
+analyser.getByteFrequencyData(da);
+for(let i=0;i<n;i++)vals.push(da[i%bl]||12);
+}else{
+for(let i=0;i<n;i++)vals.push(Math.sin(i*0.5+Date.now()*0.01)*80+100);
+}
+for(let i=0;i<n;i++){
+const bh=Math.max(4,(vals[i]/255)*h*0.85);
+const x=i*(w/n)+(w/n-bw)/2;
+const y=h-bh;
+const g=canvasCtx.createLinearGradient(0,h,0,0);
+g.addColorStop(0,o.spotlightLeft);
+g.addColorStop(1,o.spotlightRight);
+canvasCtx.fillStyle=g;
+canvasCtx.beginPath();
+if(canvasCtx.roundRect)canvasCtx.roundRect(x,y,bw,bh,[4,4,0,0]);
+else canvasCtx.rect(x,y,bw,bh);
+canvasCtx.fill();
+}
+}
+
+function renderGallery(){
+galleryGrid.innerHTML='';
+const filtered=GALLERY.filter(m=>{
+if(activeGalleryTab==='Todas')return true;
+if(activeGalleryTab==='Fotos')return m.type==='image';
+if(activeGalleryTab==='Vídeos')return m.type==='video';
+if(activeGalleryTab==='Bot')return m.type==='bot';
+return true;
+});
+galleryCount.textContent=GALLERY.length+' mídias cadastradas';
+const curId=GALLERY[currentMediaIndex]?GALLERY[currentMediaIndex].id:null;
+filtered.forEach(m=>{
+const ri=GALLERY.findIndex(x=>x.id===m.id);
+const card=document.createElement('div');
+card.className='gallery-card'+(m.id===curId?' active':'');
+card.dataset.mediaId=m.id;
+const wrap=document.createElement('div');
+wrap.className='gallery-thumb-wrapper';
+if(m.type==='bot'){
+const b=document.createElement('div');
+b.className='gallery-thumb-bot';
+b.textContent='🤖💃';
+wrap.appendChild(b);
+}else{
+let t;
+if(m.type==='video'){
+t=document.createElement('video');
+t.className='gallery-thumb-media';
+t.muted=true;t.loop=true;t.playsInline=true;
+t.addEventListener('mouseover',()=>t.play().catch(()=>{}));
+t.addEventListener('mouseout',()=>{try{t.pause();}catch(e){}});
+}else{
+t=document.createElement('img');
+t.className='gallery-thumb-media';
+t.alt=m.title;
+}
+setMediaSrc(t,m.src,m.fallback);
+wrap.appendChild(t);
+}
+const badge=document.createElement('span');
+badge.className='gallery-badge-type';
+badge.textContent=m.type==='video'?'🎬 Vídeo':m.type==='bot'?'🤖 Bot':'📷 Foto';
+wrap.appendChild(badge);
+const info=document.createElement('div');
+info.className='gallery-info';
+const ti=document.createElement('span');
+ti.className='gallery-title';ti.textContent=m.title;
+const tg=document.createElement('span');
+tg.className='gallery-tag';tg.textContent=m.tag;
+info.appendChild(ti);info.appendChild(tg);
+card.appendChild(wrap);card.appendChild(info);
+card.addEventListener('click',()=>{applyMedia(ri);closeAllModals();});
+galleryGrid.appendChild(card);
+});
+}
+
+function setupGalleryFilters(){
+const tabs=['Todas','Bot','Fotos','Vídeos'];
+galleryFiltersContainer.innerHTML='';
+tabs.forEach(tab=>{
+const b=document.createElement('button');
+b.className='cat-filter-btn'+(tab===activeGalleryTab?' active':'');
+b.textContent=tab;
+b.addEventListener('click',()=>{
+activeGalleryTab=tab;
+document.querySelectorAll('#galleryFilters .cat-filter-btn').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+renderGallery();
+});
+galleryFiltersContainer.appendChild(b);
+});
+}
+
+function renderOutfitsGrid(){
+outfitsGridContainer.innerHTML='';
+const filtered=OUTFITS.filter(o=>{
+const mc=(activeCategory==='Todos')||(o.category===activeCategory);
+const ms=!searchTerm||o.name.toLowerCase().indexOf(searchTerm)>=0||o.desc.toLowerCase().indexOf(searchTerm)>=0;
+return mc&&ms;
+});
+wardrobeCount.textContent=filtered.length+' biquínis disponíveis';
+const curId=OUTFITS[currentOutfitIndex].id;
+filtered.forEach(o=>{
+const ri=OUTFITS.findIndex(x=>x.id===o.id);
+const c=document.createElement('button');
+c.type='button';
+c.className='outfit-card'+(o.id===curId?' active':'');
+c.dataset.outfitId=o.id;
+c.innerHTML='<span class="outfit-card-icon">'+o.icon+'</span><div class="outfit-card-info"><span class="outfit-card-name">'+o.name+'</span><span class="outfit-card-cat">'+o.category+'</span></div>';
+c.addEventListener('click',()=>applyOutfit(ri));
+outfitsGridContainer.appendChild(c);
+});
+}
+
+function setupCategories(){
+const cats=['Todos'].concat(CATS);
+categoryFiltersContainer.innerHTML='';
+cats.forEach(cat=>{
+const b=document.createElement('button');
+b.className='cat-filter-btn'+(cat===activeCategory?' active':'');
+b.textContent=cat;
+b.addEventListener('click',()=>{
+activeCategory=cat;
+document.querySelectorAll('#categoryFilters .cat-filter-btn').forEach(x=>x.classList.remove('active'));
+b.classList.add('active');
+renderOutfitsGrid();
+});
+categoryFiltersContainer.appendChild(b);
+});
+}
+
+function setupMusicPills(){
+musicPillsContainer.innerHTML='';
+MUSIC_STYLES.forEach((s,i)=>{
+const p=document.createElement('button');
+p.className='music-pill'+(i===0?' active':'');
+p.innerHTML='<span>'+s.icon+'</span><span>'+s.name+'</span>';
+p.addEventListener('click',()=>applyMusicStyle(i));
+musicPillsContainer.appendChild(p);
+});
+}
+
+/* Preview miniatura de personagem */
+function charPreviewHTML(c){
+const sk=SKINS[c.skin],hr=HAIRS[c.hair],ey=EYES[c.eye];
+return '<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">'+
+'<ellipse cx="30" cy="32" rx="16" ry="19" fill="'+sk.c1+'"/>'+
+'<path d="M 14 28 Q 16 8 30 6 Q 44 8 46 28 Q 42 18 34 20 Q 30 12 26 20 Q 18 18 14 28 Z" fill="'+hr.c1+'"/>'+
+'<path d="M 14 28 Q 10 44 14 54 Q 18 44 18 34 Z" fill="'+hr.c1+'"/>'+
+'<path d="M 46 28 Q 50 44 46 54 Q 42 44 42 34 Z" fill="'+hr.c1+'"/>'+
+'<circle cx="24" cy="32" r="2.2" fill="'+ey.c+'"/>'+
+'<circle cx="36" cy="32" r="2.2" fill="'+ey.c+'"/>'+
+'<path d="M 26 42 Q 30 45 34 42" stroke="#b87a88" stroke-width="1.2" fill="none" stroke-linecap="round"/>'+
+'</svg>';
+}
+
+function renderCharsGrid(){
+charsGrid.innerHTML='';
+CHARACTERS.forEach((c,i)=>{
+const b=document.createElement('button');
+b.type='button';
+b.className='char-card'+(i===currentCharIndex?' active':'');
+b.dataset.charId='char-'+i;
+b.innerHTML='<div class="char-preview">'+charPreviewHTML(c)+'</div><span class="char-name">'+c.name+'</span>';
+b.addEventListener('click',()=>applyCharacter(i));
+charsGrid.appendChild(b);
+});
+}
+
+function setupSwatches(){
+/* Pele */
+skinSwatches.innerHTML='';
+SKINS.forEach((s,i)=>{
+const el=document.createElement('div');
+el.className='swatch';
+el.style.background='linear-gradient(135deg,'+s.c1+' 0%,'+s.c2+' 100%)';
+el.title=s.n;
+el.addEventListener('click',()=>{
+CHARACTERS[currentCharIndex].skin=i;
+applyCharacter(currentCharIndex);
+});
+skinSwatches.appendChild(el);
+});
+/* Cabelo */
+hairSwatches.innerHTML='';
+HAIRS.forEach((h,i)=>{
+const el=document.createElement('div');
+el.className='swatch';
+el.style.background='linear-gradient(135deg,'+h.c1+' 0%,'+h.c3+' 100%)';
+el.title=h.n;
+el.addEventListener('click',()=>{
+CHARACTERS[currentCharIndex].hair=i;
+applyCharacter(currentCharIndex);
+});
+hairSwatches.appendChild(el);
+});
+/* Estilos */
+hairStyleBtns.innerHTML='';
+HAIR_STYLES.forEach(s=>{
+const b=document.createElement('button');
+b.type='button';
+b.className='hair-btn';
+b.dataset.style=s.id;
+b.textContent=s.n;
+b.addEventListener('click',()=>{
+CHARACTERS[currentCharIndex].hairStyle=s.id;
+applyCharacter(currentCharIndex);
+});
+hairStyleBtns.appendChild(b);
+});
+/* Olhos */
+eyeSwatches.innerHTML='';
+EYES.forEach((e,i)=>{
+const el=document.createElement('div');
+el.className='swatch';
+el.style.background=e.c;
+el.title=e.n;
+el.addEventListener('click',()=>{
+CHARACTERS[currentCharIndex].eye=i;
+applyCharacter(currentCharIndex);
+});
+eyeSwatches.appendChild(el);
+});
+}
+
+/* Upload */
+dancerUpload.addEventListener('change',e=>{
+const files=Array.from(e.target.files);
+if(!files.length)return;
+files.forEach((f,i)=>{
+const url=URL.createObjectURL(f);
+uploadedObjectUrls.push(url);
+GALLERY.push({
+id:'custom-'+Date.now()+'-'+i,
+title:f.name.substring(0,18),
+type:f.type.indexOf('video/')===0?'video':'image',
+src:url,fallback:url,tag:'Meu Upload'
+});
+});
+applyMedia(GALLERY.length-1);
+renderGallery();
+createSparkles(18);
+e.target.value='';
+});
+
+audioUpload.addEventListener('change',e=>{
+const f=e.target.files[0];
+if(!f)return;
+const url=URL.createObjectURL(f);
+uploadedObjectUrls.push(url);
+if(customAudioPlayer.dataset.prevUrl)URL.revokeObjectURL(customAudioPlayer.dataset.prevUrl);
+customAudioPlayer.dataset.prevUrl=url;
+customAudioPlayer.src=url;
+connectCustomAudio();
+customAudioLoaded=true;
+if(isPlaying){stopMusicLoop();customAudioPlayer.play().catch(()=>{});}
+e.target.value='';
+});
+
+customAudioPlayer.addEventListener('ended',()=>{
+if(isPlaying){
+isPlaying=false;
+playIcon.textContent='▶';
+playBtnTitle.textContent='Tocar Música & Dançar';
+MUSIC_STYLES.forEach(x=>dancerFigure.classList.remove(x.danceClass));
+stageShadow.classList.remove('dancing-shadow');
+if(dancerBot.classList.contains('active'))dancerBot.classList.add('idle');
+}
+});
+
+function closeAllModals(){
+wardrobeModal.classList.remove('open');
+galleryModal.classList.remove('open');
+customizeModal.classList.remove('open');
+}
+
+btnOpenWardrobe.addEventListener('click',()=>{closeAllModals();wardrobeModal.classList.add('open');renderOutfitsGrid();});
+btnOpenGallery.addEventListener('click',()=>{closeAllModals();galleryModal.classList.add('open');renderGallery();});
+btnCustomize.addEventListener('click',()=>{closeAllModals();customizeModal.classList.add('open');renderCharsGrid();applyCharacter(currentCharIndex);});
+btnCloseWardrobe.addEventListener('click',closeAllModals);
+btnCloseGallery.addEventListener('click',closeAllModals);
+btnCloseCustomize.addEventListener('click',closeAllModals);
+window.addEventListener('click',e=>{
+if(e.target===wardrobeModal||e.target===galleryModal||e.target===customizeModal)closeAllModals();
+});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllModals();});
+
+btnPrevMedia.addEventListener('click',()=>applyMedia(currentMediaIndex-1));
+btnNextMedia.addEventListener('click',()=>applyMedia(currentMediaIndex+1));
+btnShowBot.addEventListener('click',()=>{
+const i=GALLERY.findIndex(m=>m.type==='bot');
+if(i>=0)applyMedia(i);
+});
+btnChangeOutfit.addEventListener('click',()=>applyOutfit(currentOutfitIndex+1));
+btnChangeMusic.addEventListener('click',()=>applyMusicStyle(currentMusicIndex+1));
+btnRandomOutfit.addEventListener('click',()=>{
+applyOutfit(Math.floor(Math.random()*OUTFITS.length));
+});
+btnPlayPause.addEventListener('click',togglePlayPause);
+searchInput.addEventListener('input',e=>{
+searchTerm=e.target.value.toLowerCase().trim();
+renderOutfitsGrid();
+});
+
+window.addEventListener('beforeunload',()=>{
+uploadedObjectUrls.forEach(u=>URL.revokeObjectURL(u));
+});
+
+window.addEventListener('DOMContentLoaded',()=>{
+setupCategories();
+setupGalleryFilters();
+setupMusicPills();
+setupSwatches();
+renderOutfitsGrid();
+renderGallery();
+renderCharsGrid();
+applyCharacter(0);
+applyOutfit(0);
+applyMusicStyle(0);
+applyMedia(0);
+dancerBot.classList.add('idle');
+drawVisualizer();
+});
+</script>
+</body>
+</html>
