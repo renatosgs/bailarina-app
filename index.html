@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Bailarina 3D Realista - Palco Amplo & IA</title>
+  <title>Mulher 3D Realista - Personalização & Dança</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: #07070e;
+      background: radial-gradient(circle at center, #1b1e2e 0%, #090a12 100%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #fff;
     }
@@ -20,539 +20,688 @@
       display: block;
     }
 
-    /* Painel de Controle Compacto e Elegante */
-    #painel {
+    /* Botão Flutuante de Ocultar / Mostrar Menu */
+    #btn-toggle-menu {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(14, 14, 24, 0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 42, 112, 0.4);
-      border-radius: 12px;
-      padding: 14px;
-      width: 270px;
-      max-width: calc(100vw - 24px);
-      max-height: 92vh;
+      top: 15px;
+      right: 15px;
+      background: rgba(20, 20, 35, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s;
+    }
+    #btn-toggle-menu:active { transform: scale(0.95); }
+
+    /* Painel do Menu Completo */
+    #menu-container {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 310px;
+      max-width: calc(100vw - 30px);
+      max-height: calc(100vh - 30px);
+      background: rgba(13, 14, 24, 0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 16px;
       overflow-y: auto;
-      z-index: 100;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      z-index: 150;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    #menu-container.oculto {
+      opacity: 0;
+      transform: translateX(-40px);
+      pointer-events: none;
     }
 
     h2 {
-      margin: 0 0 10px 0;
-      font-size: 14px;
+      margin: 0 0 14px 0;
+      font-size: 16px;
+      color: #ff3377;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #ff2a70;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .secao {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .secao:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .titulo-secao {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #9aa0b6;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .bloco { margin-bottom: 10px; }
-
-    label.titulo-secao {
-      display: block;
-      font-size: 10px;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: #888;
-      margin-bottom: 5px;
-    }
-
-    .btn-principal {
-      display: block;
-      width: 100%;
-      text-align: center;
-      background: linear-gradient(135deg, #ff2a70, #9b1fe8);
-      color: #fff;
-      padding: 9px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: transform 0.1s;
-    }
-    .btn-principal:active { transform: scale(0.98); }
-    input[type="file"] { display: none; }
-
-    /* Comparador Discreto com a Foto */
-    #comparador-box {
-      display: none;
-      margin-top: 8px;
-      background: #000;
-      border-radius: 8px;
-      padding: 4px;
-      border: 1px solid #ff2a70;
-      text-align: center;
-    }
-    #foto-preview {
-      width: 100%;
-      max-height: 140px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-    #status-ia {
-      font-size: 11px;
-      color: #00ffaa;
-      margin-top: 4px;
-      font-weight: 600;
-    }
-
-    /* Botões de Dança */
-    .grid-acoes {
+    /* Grade de Botões */
+    .grid-botoes {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5px;
+      gap: 6px;
     }
-    .btn-acao {
-      background: rgba(255, 255, 255, 0.08);
+    .btn-opcao {
+      background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
-      padding: 7px 4px;
-      border-radius: 6px;
+      color: #eee;
+      padding: 8px 6px;
+      border-radius: 8px;
       font-size: 11px;
       cursor: pointer;
+      text-align: center;
+      transition: background 0.2s, border-color 0.2s;
     }
-    .btn-acao.ativo {
+    .btn-opcao:hover { background: rgba(255, 255, 255, 0.15); }
+    .btn-opcao.ativo {
       background: #ff2a70;
       border-color: #ff2a70;
+      color: #fff;
       font-weight: 700;
     }
     .btn-destaque {
       grid-column: span 2;
       background: linear-gradient(135deg, #ff2a70, #ff5722);
       font-weight: 700;
+      border: none;
     }
 
-    #loading-overlay {
-      position: absolute;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(7, 7, 14, 0.85);
+    /* Sliders de Estrutura Corpórea */
+    .slider-grupo { margin-bottom: 8px; }
+    .slider-header {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      font-size: 14px;
-      color: #fff;
-      transition: opacity 0.4s ease;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #ccc;
+      margin-bottom: 3px;
     }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid rgba(255, 42, 112, 0.3);
-      border-top-color: #ff2a70;
-      border-radius: 50%;
-      animation: girar 0.8s linear infinite;
-      margin-bottom: 12px;
+    input[type="range"] {
+      width: 100%;
+      accent-color: #ff2a70;
+      cursor: pointer;
     }
-    @keyframes girar { to { transform: rotate(360deg); } }
+
+    .dica {
+      font-size: 10px;
+      color: #666;
+      text-align: center;
+      margin-top: 6px;
+    }
   </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 
-  <!-- Tela de Carregamento Inicial -->
-  <div id="loading-overlay">
-    <div class="spinner"></div>
-    <div id="loading-txt">Carregando Dançarina Humana 3D...</div>
-  </div>
+  <!-- Botão de Ocultar / Mostrar Menu -->
+  <button id="btn-toggle-menu" onclick="toggleMenu()">👁️ Ocultar Menu</button>
 
-  <!-- Painel de Controle Único -->
-  <div id="painel">
-    <h2>Bailarina 3D Real</h2>
+  <!-- Painel do Menu -->
+  <div id="menu-container">
+    <h2>Personalizar Mulher</h2>
 
-    <div class="bloco">
-      <label class="titulo-secao">1. Robô de IA (Invisível)</label>
-      <label for="input-foto" class="btn-principal">📷 Enviar Foto da Dançarina</label>
-      <input type="file" id="input-foto" accept="image/*">
-
-      <div id="comparador-box">
-        <img id="foto-preview" alt="Foto Comparada">
-        <div id="status-ia">✓ Pele e vestido ajustados</div>
+    <!-- 1. Danças e Posições -->
+    <div class="secao">
+      <div class="titulo-secao">💃 Danças & Posições</div>
+      <div class="grid-botoes">
+        <button class="btn-opcao ativo" onclick="setAcao('pose')">📸 Pose da Foto</button>
+        <button class="btn-opcao" onclick="setAcao('rebolado')">✨ Rebolado Pop</button>
+        <button class="btn-opcao" onclick="setAcao('agachar')">🧘 Agachar</button>
+        <button class="btn-opcao" onclick="setAcao('sentar')">🪑 Sentar</button>
+        <button class="btn-opcao" onclick="setAcao('deitar')">🛌 Deitar</button>
+        <button class="btn-opcao btn-destaque" onclick="setAcao('funk')">🔥 Dançar Funk até o Chão</button>
       </div>
     </div>
 
-    <div class="bloco">
-      <label class="titulo-secao">2. Movimentos & Dança</label>
-      <div class="grid-acoes">
-        <button class="btn-acao ativo" onclick="setAcao('pose')">📸 Pose da Foto</button>
-        <button class="btn-acao" onclick="setAcao('agachar')">🧘 Agachar</button>
-        <button class="btn-acao" onclick="setAcao('sentar')">🪑 Sentar</button>
-        <button class="btn-acao" onclick="setAcao('deitar')">🛌 Deitar</button>
-        <button class="btn-acao btn-destaque" onclick="setAcao('funk')">🔥 Funk: Mãos no Joelho até o Chão</button>
+    <!-- 2. Estrutura Corpórea (Curvas e Bumbum Atrás) -->
+    <div class="secao">
+      <div class="titulo-secao">📐 Estrutura Corpórea</div>
+      
+      <div class="slider-grupo">
+        <div class="slider-header">
+          <span>Bumbum (Só Atrás)</span>
+          <span id="txt-bumbum">1.60x</span>
+        </div>
+        <input type="range" id="range-bumbum" min="1.0" max="2.6" step="0.05" value="1.6" oninput="atualizarCorpo()">
+      </div>
+
+      <div class="slider-grupo">
+        <div class="slider-header">
+          <span>Cintura Fina</span>
+          <span id="txt-cintura">0.82x</span>
+        </div>
+        <input type="range" id="range-cintura" min="0.65" max="1.1" step="0.02" value="0.82" oninput="atualizarCorpo()">
+      </div>
+
+      <div class="slider-grupo">
+        <div class="slider-header">
+          <span>Quadril & Coxas</span>
+          <span id="txt-quadril">1.15x</span>
+        </div>
+        <input type="range" id="range-quadril" min="0.85" max="1.45" step="0.02" value="1.15" oninput="atualizarCorpo()">
+      </div>
+
+      <div class="slider-grupo">
+        <div class="slider-header">
+          <span>Busto</span>
+          <span id="txt-busto">1.20x</span>
+        </div>
+        <input type="range" id="range-busto" min="0.8" max="1.6" step="0.05" value="1.2" oninput="atualizarCorpo()">
       </div>
     </div>
 
-    <div class="bloco">
-      <label class="titulo-secao">3. Ângulos de Câmera</label>
-      <div class="grid-acoes">
-        <button class="btn-acao" onclick="cameraCostas()">👀 Ver Bumbum Traseiro</button>
-        <button class="btn-acao" onclick="cameraFrente()">👤 Ver Frente</button>
+    <!-- 3. Roupas da Foto -->
+    <div class="secao">
+      <div class="titulo-secao">👗 Mudar de Roupa</div>
+      <div class="grid-botoes">
+        <button class="btn-opcao ativo" onclick="mudarRoupa('glitter_azul')">✨ Vestido Azul da Foto</button>
+        <button class="btn-opcao" onclick="mudarRoupa('preto_noite')">🖤 Vestido Preto Noite</button>
+        <button class="btn-opcao" onclick="mudarRoupa('vermelho_glam')">❤️ Vermelho Paetê</button>
+        <button class="btn-opcao" onclick="mudarRoupa('biquini')">👙 Biquíni</button>
       </div>
     </div>
 
-    <div class="bloco">
-      <label class="titulo-secao">4. Modelo Personalizado (.GLB)</label>
-      <label for="input-glb" class="btn-acao" style="display:block; text-align:center;">📂 Carregar Outro Modelo .GLB</label>
-      <input type="file" id="input-glb" accept=".glb,.gltf">
+    <!-- 4. Cabelos -->
+    <div class="secao">
+      <div class="titulo-secao">💇 Mudar Cabelo</div>
+      <div class="grid-botoes">
+        <button class="btn-opcao ativo" onclick="mudarCabelo('loiro')">👱‍♀️ Loiro Longo da Foto</button>
+        <button class="btn-opcao" onclick="mudarCabelo('morena')">👩 Castanho Iluminado</button>
+        <button class="btn-opcao" onclick="mudarCabelo('preto')">🖤 Preto Sedoso</button>
+        <button class="btn-opcao" onclick="mudarCabelo('ruivo')">🧡 Ruivo Acobreado</button>
+      </div>
     </div>
+
+    <!-- 5. Tom de Pele -->
+    <div class="secao">
+      <div class="titulo-secao">🎨 Cor / Tom de Pele</div>
+      <div class="grid-botoes">
+        <button class="btn-opcao ativo" onclick="mudarPele('clara_foto')">Tom da Foto (Clara)</button>
+        <button class="btn-opcao" onclick="mudarPele('bronzeada')">Bronzeada</button>
+        <button class="btn-opcao" onclick="mudarPele('morena')">Morena Dourada</button>
+        <button class="btn-opcao" onclick="mudarPele('negra')">Negra Radiante</button>
+      </div>
+    </div>
+
+    <div class="dica">Arraste com o dedo para girar em 360°</div>
   </div>
 
   <div id="canvas-container"></div>
 
   <script>
     /* ==========================================================================
-       1. CENA, CÂMERA E PALCO AMPLO COM CHÃO SÓLIDO
+       1. CENA SEM CHÃO: ESTÚDIO MODERNO LIMPO
        ========================================================================== */
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x06060c);
-    scene.fog = new THREE.FogExp2(0x06060c, 0.035);
 
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 1.8, 3.6);
+    camera.position.set(0, 1.4, 3.2);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.15;
     container.appendChild(renderer.domElement);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.06;
+    controls.dampingFactor = 0.05;
     controls.target.set(0, 1.0, 0);
-    controls.maxPolarAngle = Math.PI / 2 - 0.02; // Não deixa a câmera entrar no chão
 
-    // Iluminação Profissional
+    // Luzes de Estúdio de Moda
     scene.add(new THREE.AmbientLight(0xffffff, 0.75));
 
-    const spotLight = new THREE.SpotLight(0xffffff, 2.2, 28, Math.PI / 3.5, 0.35, 1);
-    spotLight.position.set(0, 6.5, 2.5);
-    spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
-    spotLight.shadow.bias = -0.001;
-    scene.add(spotLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    keyLight.position.set(1.5, 3, 3);
+    keyLight.castShadow = true;
+    scene.add(keyLight);
 
-    const rimRosa = new THREE.DirectionalLight(0xff2a85, 1.2);
-    rimRosa.position.set(-4, 3, -3);
-    scene.add(rimRosa);
+    const fillLight = new THREE.DirectionalLight(0xddeeff, 0.8);
+    fillLight.position.set(-2, 2, 2);
+    scene.add(fillLight);
 
-    const rimAzul = new THREE.DirectionalLight(0x00d4ff, 1.2);
-    rimAzul.position.set(4, 3, -3);
-    scene.add(rimAzul);
+    const rimLight1 = new THREE.DirectionalLight(0xffffff, 1.3);
+    rimLight1.position.set(-2.5, 2.5, -2.5);
+    scene.add(rimLight1);
 
-    // Palco Amplo com Chão Escuro Espelhado (Piso firme em Y = 0)
-    const raioPalco = 7.0; // 14 metros de diâmetro
-    const palcoGeo = new THREE.CylinderGeometry(raioPalco, raioPalco + 0.4, 0.3, 64);
-    const palcoMat = new THREE.MeshStandardMaterial({
-      color: 0x111118,
-      roughness: 0.15,
-      metalness: 0.55
-    });
-    const palco = new THREE.Mesh(palcoGeo, palcoMat);
-    palco.position.y = -0.15;
-    palco.receiveShadow = true;
-    scene.add(palco);
-
-    // Borda Neon Iluminada
-    const anelGeo = new THREE.TorusGeometry(raioPalco, 0.04, 16, 120);
-    const anelMat = new THREE.MeshBasicMaterial({ color: 0xff0066 });
-    const anel = new THREE.Mesh(anelGeo, anelMat);
-    anel.rotation.x = Math.PI / 2;
-    anel.position.y = 0.002;
-    scene.add(anel);
-
-    // Chão de Fundo Estendido
-    const chaoFundo = new THREE.Mesh(
-      new THREE.PlaneGeometry(60, 60),
-      new THREE.MeshStandardMaterial({ color: 0x030306, roughness: 0.95 })
-    );
-    chaoFundo.rotation.x = -Math.PI / 2;
-    chaoFundo.position.y = -0.16;
-    chaoFundo.receiveShadow = true;
-    scene.add(chaoFundo);
+    const rimLight2 = new THREE.DirectionalLight(0x7090ff, 1.2);
+    rimLight2.position.set(2.5, 2, -2.5);
+    scene.add(rimLight2);
 
 
     /* ==========================================================================
-       2. CARREGAMENTO DO MODELO HUMANO REAL (SKINNED MESH COM OSSOS)
+       2. TEXTURA DO VESTIDO GLITTER / PAETÊ AZUL DA FOTO
        ========================================================================== */
-    let modeloBailarina = null;
-    let bones = {};
-    let malhaCorpo = [];
-    let materialPele = new THREE.MeshStandardMaterial({ color: 0xb97a47, roughness: 0.5, metalness: 0.05 });
-    let materialVestido = new THREE.MeshStandardMaterial({ color: 0xff2a70, roughness: 0.4, metalness: 0.1 });
-    let gluteoTraseiroMesh = null;
+    function criarTexturaGlitter(corBaseHex, corBrilhoHex) {
+      const c = document.createElement('canvas');
+      c.width = 512;
+      c.height = 512;
+      const ctx = c.getContext('2d');
 
-    const gltfLoader = new THREE.GLTFLoader();
+      ctx.fillStyle = corBaseHex;
+      ctx.fillRect(0, 0, 512, 512);
 
-    // Se você tiver o arquivo "bailarina.glb" no seu repositório, ele carrega localmente.
-    // Caso contrário, carrega o avatar feminino humano da nuvem com suporte CORS.
-    const urlLocal = './bailarina.glb';
-    const urlCloud = 'https://models.readyplayer.me/6460d95f9ae10f45bff61a14.glb';
+      for (let i = 0; i < 3500; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const r = Math.random() * 1.8 + 0.5;
+        const alpha = Math.random() * 0.85 + 0.15;
+        
+        ctx.fillStyle = Math.random() > 0.4 ? corBrilhoHex : '#ffffff';
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
-    function carregarModeloGLB(url) {
-      document.getElementById('loading-overlay').style.display = 'flex';
-      document.getElementById('loading-txt').innerText = "Carregando Dançarina Humana 3D...";
+      const texture = new THREE.CanvasTexture(c);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(3, 4);
+      return texture;
+    }
 
-      gltfLoader.load(
-        url,
-        function(gltf) {
-          prepararModeloHumano(gltf.scene);
-        },
-        undefined,
-        function(erro) {
-          console.warn("Tentando carregar modelo feminino da nuvem...", erro);
-          if (url !== urlCloud) {
-            carregarModeloGLB(urlCloud);
-          } else {
-            criarHumanoOrganicoEsculpido();
-            finalizarCarregamento();
-          }
-        }
+    const texturaAzulGlitter = criarTexturaGlitter('#0c1326', '#4a80ff');
+    const texturaPretoGlitter = criarTexturaGlitter('#0d0d12', '#aaaaaa');
+    const texturaVermelhoGlitter = criarTexturaGlitter('#2a050c', '#ff3366');
+
+    // Materiais
+    const matPele = new THREE.MeshStandardMaterial({
+      color: 0xf5d3bd, // Pele Clara da Foto
+      roughness: 0.5,
+      metalness: 0.05
+    });
+
+    const matVestido = new THREE.MeshStandardMaterial({
+      map: texturaAzulGlitter,
+      color: 0x182442,
+      roughness: 0.25,
+      metalness: 0.65
+    });
+
+    const matCabelo = new THREE.MeshStandardMaterial({
+      color: 0xf0dfbc, // Loiro Dourado da Foto
+      roughness: 0.4,
+      metalness: 0.15
+    });
+
+    const matOlhos = new THREE.MeshBasicMaterial({ color: 0x3b759e }); // Olhos azul-esverdeados
+    const matPupila = new THREE.MeshBasicMaterial({ color: 0x050505 });
+    const matLabios = new THREE.MeshStandardMaterial({ color: 0xd96b77, roughness: 0.3 });
+    const matSalto = new THREE.MeshStandardMaterial({ color: 0xead0be, roughness: 0.4 }); // Sandália nude
+
+
+    /* ==========================================================================
+       3. CORPO FEMININO REALISTA (SILHUETA VIOLÃO)
+       ========================================================================== */
+    const mulher = new THREE.Group();
+    scene.add(mulher);
+
+    // 3.1 - Pelve e Quadril
+    const hips = new THREE.Group();
+    hips.position.y = 0.98;
+    mulher.add(hips);
+
+    const pelveGeo = new THREE.SphereGeometry(0.18, 32, 24);
+    pelveGeo.scale(1.15, 0.85, 0.88);
+    const pelveMesh = new THREE.Mesh(pelveGeo, matVestido);
+    hips.add(pelveMesh);
+
+    // 3.2 - BUMBUM SÓ ATRÁS (Eixo Z Negativo)
+    const grupoBumbum = new THREE.Group();
+    const gluteoGeo = new THREE.SphereGeometry(0.13, 28, 20, 0, Math.PI * 2, 0, Math.PI / 2);
+
+    const bumbumEsq = new THREE.Mesh(gluteoGeo, matVestido);
+    bumbumEsq.rotation.x = Math.PI / 2; // Apontado estritamente para trás
+    bumbumEsq.position.set(-0.088, -0.04, -0.085);
+    grupoBumbum.add(bumbumEsq);
+
+    const bumbumDir = new THREE.Mesh(gluteoGeo, matVestido);
+    bumbumDir.rotation.x = Math.PI / 2;
+    bumbumDir.position.set(0.088, -0.04, -0.085);
+    grupoBumbum.add(bumbumDir);
+
+    hips.add(grupoBumbum);
+
+    // 3.3 - Tronco, Cintura e Busto
+    const spine = new THREE.Group();
+    spine.position.y = 0.1;
+    hips.add(spine);
+
+    // Cintura fina
+    const cinturaGeo = new THREE.CylinderGeometry(0.13, 0.17, 0.22, 32);
+    const cinturaMesh = new THREE.Mesh(cinturaGeo, matVestido);
+    cinturaMesh.position.y = 0.11;
+    spine.add(cinturaMesh);
+
+    // Tórax (Vestido Halter Neck)
+    const toraxGeo = new THREE.CylinderGeometry(0.165, 0.13, 0.22, 32);
+    const toraxMesh = new THREE.Mesh(toraxGeo, matVestido);
+    toraxMesh.position.y = 0.31;
+    spine.add(toraxMesh);
+
+    // Busto Modelado
+    const grupoBusto = new THREE.Group();
+    grupoBusto.position.set(0, 0.32, 0.08);
+    spine.add(grupoBusto);
+
+    const seioGeo = new THREE.SphereGeometry(0.085, 24, 20);
+    seioGeo.scale(1.0, 1.0, 1.25);
+    const seioEsq = new THREE.Mesh(seioGeo, matVestido);
+    seioEsq.position.set(-0.075, 0, 0.04);
+    grupoBusto.add(seioEsq);
+
+    const seioDir = new THREE.Mesh(seioGeo, matVestido);
+    seioDir.position.set(0.075, 0, 0.04);
+    grupoBusto.add(seioDir);
+
+    // Saia Mini Justa do Vestido da Foto
+    const saiaGeo = new THREE.CylinderGeometry(0.19, 0.21, 0.24, 32);
+    const saiaMesh = new THREE.Mesh(saiaGeo, matVestido);
+    saiaMesh.position.y = -0.08;
+    hips.add(saiaMesh);
+
+    // Colo e Ombros expostos
+    const coloGeo = new THREE.CylinderGeometry(0.12, 0.16, 0.12, 24);
+    const coloMesh = new THREE.Mesh(coloGeo, matPele);
+    coloMesh.position.y = 0.44;
+    spine.add(coloMesh);
+
+    // Pescoço
+    const pescMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.14, 20), matPele);
+    pescMesh.position.y = 0.54;
+    spine.add(pescMesh);
+
+    // 3.4 - CABEÇA, ROSTO COM OLHOS, LÁBIOS E CABELO LONGO
+    const cabeca = new THREE.Group();
+    cabeca.position.y = 0.72;
+    spine.add(cabeca);
+
+    const cranioGeo = new THREE.SphereGeometry(0.11, 32, 32);
+    cranioGeo.scale(0.92, 1.15, 1.0);
+    const faceMesh = new THREE.Mesh(cranioGeo, matPele);
+    cabeca.add(faceMesh);
+
+    // Olhos Expressivos
+    function criarOlho(lado) {
+      const olhoGroup = new THREE.Group();
+      olhoGroup.position.set(lado * 0.042, 0.02, 0.098);
+
+      const globo = new THREE.Mesh(new THREE.SphereGeometry(0.02, 16, 16), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      olhoGroup.add(globo);
+
+      const iris = new THREE.Mesh(new THREE.SphereGeometry(0.012, 16, 16), matOlhos);
+      iris.position.z = 0.012;
+      olhoGroup.add(iris);
+
+      const pupila = new THREE.Mesh(new THREE.SphereGeometry(0.006, 12, 12), matPupila);
+      pupila.position.z = 0.018;
+      olhoGroup.add(pupila);
+
+      return olhoGroup;
+    }
+    cabeca.add(criarOlho(-1));
+    cabeca.add(criarOlho(1));
+
+    // Lábios
+    const labioSuperior = new THREE.Mesh(new THREE.SphereGeometry(0.015, 16, 12), matLabios);
+    labioSuperior.scale.set(1.9, 0.6, 0.7);
+    labioSuperior.position.set(0, -0.055, 0.104);
+    cabeca.add(labioSuperior);
+
+    const labioInferior = new THREE.Mesh(new THREE.SphereGeometry(0.018, 16, 12), matLabios);
+    labioInferior.scale.set(1.8, 0.8, 0.8);
+    labioInferior.position.set(0, -0.075, 0.10);
+    cabeca.add(labioInferior);
+
+    // Cabelo Loiro Longo Caindo nos Ombros
+    const grupoCabelo = new THREE.Group();
+    cabeca.add(grupoCabelo);
+
+    const topoCabeloGeo = new THREE.SphereGeometry(0.122, 24, 24);
+    topoCabeloGeo.scale(0.96, 1.18, 1.05);
+    const topoCabelo = new THREE.Mesh(topoCabeloGeo, matCabelo);
+    topoCabelo.position.set(0, 0.01, -0.01);
+    grupoCabelo.add(topoCabelo);
+
+    function criarMechaCabelo(lado) {
+      const curve = new THREE.CubicBezierCurve3(
+        new THREE.Vector3(lado * 0.08, 0.05, 0.05),
+        new THREE.Vector3(lado * 0.12, -0.15, 0.08),
+        new THREE.Vector3(lado * 0.11, -0.40, 0.06),
+        new THREE.Vector3(lado * 0.09, -0.65, 0.02)
       );
+      return new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.038, 12, false), matCabelo);
     }
+    grupoCabelo.add(criarMechaCabelo(-1));
+    grupoCabelo.add(criarMechaCabelo(1));
 
-    function prepararModeloHumano(sceneModel) {
-      if (modeloBailarina) scene.remove(modeloBailarina);
-      modeloBailarina = sceneModel;
-      bones = {};
-      malhaCorpo = [];
+    const costasCurve = new THREE.CubicBezierCurve3(
+      new THREE.Vector3(0, 0.06, -0.07),
+      new THREE.Vector3(0, -0.20, -0.14),
+      new THREE.Vector3(0, -0.45, -0.12),
+      new THREE.Vector3(0, -0.70, -0.08)
+    );
+    grupoCabelo.add(new THREE.Mesh(new THREE.TubeGeometry(costasCurve, 24, 0.09, 16, false), matCabelo));
 
-      const box = new THREE.Box3().setFromObject(modeloBailarina);
-      const size = box.getSize(new THREE.Vector3());
-      const escala = 1.75 / (size.y || 1.75); // Altura padronizada de 1.75m
-      modeloBailarina.scale.set(escala, escala, escala);
-      modeloBailarina.position.set(0, 0, 0); // Pés no chão em Y = 0
+    // 3.5 - BRAÇOS DELICADOS
+    function criarBraco(lado) {
+      const ombro = new THREE.Group();
+      ombro.position.set(lado * 0.21, 0.42, 0);
+      spine.add(ombro);
 
-      modeloBailarina.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          malhaCorpo.push(child);
-        }
-        if (child.isBone) {
-          const nome = child.name.toLowerCase();
-          if (nome.includes('hip') || nome.includes('pelvis')) bones.hips = child;
-          if (nome.includes('spine')) bones.spine = bones.spine || child;
-          if (nome.includes('leftupleg') || (nome.includes('thigh') && nome.includes('l'))) bones.leftThigh = child;
-          if (nome.includes('rightupleg') || (nome.includes('thigh') && nome.includes('r'))) bones.rightThigh = child;
-          if (nome.includes('leftleg') || (nome.includes('calf') && nome.includes('l')) || (nome.includes('knee') && nome.includes('l'))) bones.leftKnee = child;
-          if (nome.includes('rightleg') || (nome.includes('calf') && nome.includes('r')) || (nome.includes('knee') && nome.includes('r'))) bones.rightKnee = child;
-          if (nome.includes('leftarm') || (nome.includes('arm') && nome.includes('l'))) bones.leftArm = child;
-          if (nome.includes('rightarm') || (nome.includes('arm') && nome.includes('r'))) bones.rightArm = child;
-        }
-      });
+      const bracoSup = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.032, 0.28, 20), matPele);
+      bracoSup.position.y = -0.14;
+      ombro.add(bracoSup);
 
-      criarVolumeGluteoTraseiro();
-      scene.add(modeloBailarina);
-      finalizarCarregamento();
+      const cotovelo = new THREE.Group();
+      cotovelo.position.y = -0.28;
+      ombro.add(cotovelo);
+
+      const antebraco = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.026, 0.28, 20), matPele);
+      antebraco.position.y = -0.14;
+      cotovelo.add(antebraco);
+
+      const mao = new THREE.Mesh(new THREE.SphereGeometry(0.028, 16, 16), matPele);
+      mao.scale.set(0.6, 1.3, 0.8);
+      mao.position.y = -0.30;
+      cotovelo.add(mao);
+
+      return { ombro, cotovelo };
     }
+    const bracoEsq = criarBraco(-1);
+    const bracoDir = criarBraco(1);
 
-    // Criação anatômica do bumbum exclusivamente atrás
-    function criarVolumeGluteoTraseiro() {
-      if (!bones.hips) return;
-      if (gluteoTraseiroMesh) bones.hips.remove(gluteoTraseiroMesh);
+    // 3.6 - PERNAS FEMININAS TORNEADAS COM SANDÁLIAS DE SALTO
+    function criarPernaFeminina(lado) {
+      const quadrilPivot = new THREE.Group();
+      quadrilPivot.position.set(lado * 0.115, -0.08, 0);
+      hips.add(quadrilPivot);
 
-      const grupoGluteo = new THREE.Group();
-      const geo = new THREE.SphereGeometry(0.12, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-      
-      const nEsq = new THREE.Mesh(geo, materialVestido);
-      nEsq.rotation.x = Math.PI / 2; // Apontado unicamente para as costas (-Z)
-      nEsq.position.set(-0.08, -0.05, -0.09);
-      nEsq.scale.set(1.0, 1.0, 1.6);
-      grupoGluteo.add(nEsq);
+      const coxaMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.052, 0.44, 24), matPele);
+      coxaMesh.position.y = -0.22;
+      quadrilPivot.add(coxaMesh);
 
-      const nDir = new THREE.Mesh(geo, materialVestido);
-      nDir.rotation.x = Math.PI / 2;
-      nDir.position.set(0.08, -0.05, -0.09);
-      nDir.scale.set(1.0, 1.0, 1.6);
-      grupoGluteo.add(nDir);
+      const joelhoPivot = new THREE.Group();
+      joelhoPivot.position.y = -0.44;
+      quadrilPivot.add(joelhoPivot);
 
-      gluteoTraseiroMesh = grupoGluteo;
-      bones.hips.add(gluteoTraseiroMesh);
+      const rotula = new THREE.Mesh(new THREE.SphereGeometry(0.052, 16, 16), matPele);
+      joelhoPivot.add(rotula);
+
+      const canelaMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.051, 0.032, 0.44, 24), matPele);
+      canelaMesh.position.y = -0.22;
+      joelhoPivot.add(canelaMesh);
+
+      const peGroup = new THREE.Group();
+      peGroup.position.y = -0.44;
+      joelhoPivot.add(peGroup);
+
+      const peMesh = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.04, 0.16), matPele);
+      peMesh.position.set(0, 0.02, 0.03);
+      peGroup.add(peMesh);
+
+      const tira1 = new THREE.Mesh(new THREE.TorusGeometry(0.038, 0.005, 8, 20), matSalto);
+      tira1.rotation.x = Math.PI / 2;
+      tira1.position.set(0, 0.03, 0);
+      peGroup.add(tira1);
+
+      const saltoFino = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.004, 0.09, 12), matSalto);
+      saltoFino.position.set(0, -0.015, -0.04);
+      peGroup.add(saltoFino);
+
+      return { quadril: quadrilPivot, joelho: joelhoPivot, coxa: coxaMesh, canela: canelaMesh };
     }
-
-    // Malha orgânica suave (caso esteja offline)
-    function criarHumanoOrganicoEsculpido() {
-      if (modeloBailarina) scene.remove(modeloBailarina);
-      modeloBailarina = new THREE.Group();
-
-      const hips = new THREE.Group();
-      hips.position.y = 0.98;
-      modeloBailarina.add(hips);
-      bones.hips = hips;
-
-      const pelveGeo = new THREE.SphereGeometry(0.18, 32, 24);
-      pelveGeo.scale(1.1, 0.85, 0.9);
-      hips.add(new THREE.Mesh(pelveGeo, materialVestido));
-      criarVolumeGluteoTraseiro();
-
-      const spine = new THREE.Group();
-      spine.position.y = 0.12;
-      hips.add(spine);
-      bones.spine = spine;
-
-      const troncoGeo = new THREE.CylinderGeometry(0.14, 0.17, 0.46, 32);
-      const troncoMesh = new THREE.Mesh(troncoGeo, materialVestido);
-      troncoMesh.position.y = 0.23;
-      spine.add(troncoMesh);
-
-      const cabeca = new THREE.Mesh(new THREE.SphereGeometry(0.12, 24, 24), materialPele);
-      cabeca.position.y = 0.62;
-      spine.add(cabeca);
-
-      function criarPerna(lado) {
-        const coxa = new THREE.Group();
-        coxa.position.set(lado * 0.11, -0.08, 0);
-        hips.add(coxa);
-
-        const coxaMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.05, 0.44, 24), materialPele);
-        coxaMesh.position.y = -0.22;
-        coxa.add(coxaMesh);
-
-        const joelho = new THREE.Group();
-        joelho.position.y = -0.44;
-        coxa.add(joelho);
-
-        const canelaMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.035, 0.44, 24), materialPele);
-        canelaMesh.position.y = -0.22;
-        joelho.add(canelaMesh);
-
-        const pe = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.05, 0.17), materialVestido);
-        pe.position.set(0, -0.42, 0.04);
-        joelho.add(pe);
-
-        return { coxa, joelho };
-      }
-
-      const pEsq = criarPerna(-1);
-      const pDir = criarPerna(1);
-      bones.leftThigh = pEsq.coxa;
-      bones.leftKnee = pEsq.joelho;
-      bones.rightThigh = pDir.coxa;
-      bones.rightKnee = pDir.joelho;
-
-      scene.add(modeloBailarina);
-    }
-
-    function finalizarCarregamento() {
-      const loaderDiv = document.getElementById('loading-overlay');
-      loaderDiv.style.opacity = '0';
-      setTimeout(() => { loaderDiv.style.display = 'none'; }, 400);
-    }
-
-    carregarModeloGLB(urlLocal);
-
-    // Carregamento de arquivo .GLB local direto do celular/computador
-    document.getElementById('input-glb').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
-      carregarModeloGLB(url);
-    });
+    const pernaEsq = criarPernaFeminina(-1);
+    const pernaDir = criarPernaFeminina(1);
 
 
     /* ==========================================================================
-       3. ROBÔ INVISÍVEL DE IA (COR DA PELE REAL, VESTIDO E CORPO PELA FOTO)
+       4. CONTROLE DINÂMICO DE ESTRUTURA CORPÓREA (SLIDERS)
        ========================================================================== */
-    const inputFoto = document.getElementById('input-foto');
-    const compBox = document.getElementById('comparador-box');
-    const fotoPreview = document.getElementById('foto-preview');
-    const statusIA = document.getElementById('status-ia');
+    function atualizarCorpo() {
+      const vBumbum = parseFloat(document.getElementById('range-bumbum').value);
+      const vCintura = parseFloat(document.getElementById('range-cintura').value);
+      const vQuadril = parseFloat(document.getElementById('range-quadril').value);
+      const vBusto = parseFloat(document.getElementById('range-busto').value);
 
-    inputFoto.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      document.getElementById('txt-bumbum').innerText = vBumbum.toFixed(2) + 'x';
+      document.getElementById('txt-cintura').innerText = vCintura.toFixed(2) + 'x';
+      document.getElementById('txt-quadril').innerText = vQuadril.toFixed(2) + 'x';
+      document.getElementById('txt-busto').innerText = vBusto.toFixed(2) + 'x';
 
-      const url = URL.createObjectURL(file);
-      fotoPreview.src = url;
-      compBox.style.display = 'block';
-      statusIA.innerText = '⚙ Robô invisível analisando foto...';
+      // Bumbum SÓ ATRÁS: Expande unicamente no eixo traseiro (-Z)
+      bumbumEsq.scale.set(1.08, 1.05, vBumbum);
+      bumbumDir.scale.set(1.08, 1.05, vBumbum);
+      const recuoTraseiro = -0.085 - (vBumbum - 1.0) * 0.045;
+      bumbumEsq.position.z = recuoTraseiro;
+      bumbumDir.position.z = recuoTraseiro;
 
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = url;
-      img.onload = () => {
-        executarRoboIA(img, url);
-      };
-    });
+      // Cintura fina
+      cinturaMesh.scale.set(vCintura, 1.0, vCintura);
 
-    function executarRoboIA(img, urlImg) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width = img.width;
-      const h = canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+      // Quadril & Coxas
+      pelveMesh.scale.set(1.15 * vQuadril, 0.85, 0.88 * vQuadril);
+      saiaMesh.scale.set(vQuadril, 1.0, vQuadril);
+      pernaEsq.coxa.scale.set(vQuadril, 1.0, vQuadril);
+      pernaDir.coxa.scale.set(vQuadril, 1.0, vQuadril);
 
-      const dados = ctx.getImageData(0, 0, w, h).data;
+      // Busto
+      grupoBusto.scale.set(vBusto, vBusto, vBusto);
+    }
+    atualizarCorpo();
 
-      // Amostragem de cor de pele do rosto
-      let rPele = 0, gPele = 0, bPele = 0, contPele = 0;
-      for (let y = Math.floor(h * 0.15); y < Math.floor(h * 0.32); y += 4) {
-        for (let x = Math.floor(w * 0.4); x < Math.floor(w * 0.6); x += 4) {
-          const idx = (y * w + x) * 4;
-          rPele += dados[idx]; gPele += dados[idx+1]; bPele += dados[idx+2];
-          contPele++;
-        }
+
+    /* ==========================================================================
+       5. MUDANÇAS DE ROUPA, CABELO, TOM DE PELE E MENU
+       ========================================================================== */
+    function mudarRoupa(tipo) {
+      document.querySelectorAll('.secao:nth-child(3) .btn-opcao').forEach(b => b.classList.remove('ativo'));
+      if (event && event.target) event.target.classList.add('ativo');
+
+      saiaMesh.visible = true;
+      if (tipo === 'glitter_azul') {
+        matVestido.map = texturaAzulGlitter;
+        matVestido.color.setHex(0x182442);
+        matVestido.roughness = 0.25;
+        matVestido.metalness = 0.65;
+      } else if (tipo === 'preto_noite') {
+        matVestido.map = texturaPretoGlitter;
+        matVestido.color.setHex(0x0e0e12);
+        matVestido.roughness = 0.3;
+        matVestido.metalness = 0.5;
+      } else if (tipo === 'vermelho_glam') {
+        matVestido.map = texturaVermelhoGlitter;
+        matVestido.color.setHex(0x400812);
+        matVestido.roughness = 0.25;
+        matVestido.metalness = 0.6;
+      } else if (tipo === 'biquini') {
+        saiaMesh.visible = false;
+        matVestido.map = null;
+        matVestido.color.setHex(0xff0066);
+        matVestido.roughness = 0.4;
+        matVestido.metalness = 0.1;
       }
+      matVestido.needsUpdate = true;
+    }
 
-      // Amostragem de cor da roupa/vestido
-      let rRoupa = 0, gRoupa = 0, bRoupa = 0, contRoupa = 0;
-      for (let y = Math.floor(h * 0.45); y < Math.floor(h * 0.65); y += 4) {
-        for (let x = Math.floor(w * 0.35); x < Math.floor(w * 0.65); x += 4) {
-          const idx = (y * w + x) * 4;
-          rRoupa += dados[idx]; gRoupa += dados[idx+1]; bRoupa += dados[idx+2];
-          contRoupa++;
-        }
-      }
+    function mudarCabelo(cor) {
+      document.querySelectorAll('.secao:nth-child(4) .btn-opcao').forEach(b => b.classList.remove('ativo'));
+      if (event && event.target) event.target.classList.add('ativo');
 
-      if (contPele > 0) {
-        materialPele.color.setRGB((rPele/contPele)/255, (gPele/contPele)/255, (bPele/contPele)/255);
+      if (cor === 'loiro') {
+        matCabelo.color.setHex(0xf0dfbc); // Loiro da foto
+      } else if (cor === 'morena') {
+        matCabelo.color.setHex(0x4a2c1d); // Castanho iluminado
+      } else if (cor === 'preto') {
+        matCabelo.color.setHex(0x111115); // Preto
+      } else if (cor === 'ruivo') {
+        matCabelo.color.setHex(0xa83818); // Ruivo
       }
-      if (contRoupa > 0) {
-        materialVestido.color.setRGB((rRoupa/contRoupa)/255, (gRoupa/contRoupa)/255, (bRoupa/contRoupa)/255);
-      }
+      matCabelo.needsUpdate = true;
+    }
 
-      // Aplica a textura da foto na roupa e pele da dançarina
-      const textLoader = new THREE.TextureLoader();
-      textLoader.load(urlImg, function(texture) {
-        texture.flipY = false;
-        malhaCorpo.forEach(mesh => {
-          if (mesh.material) {
-            const mNome = (mesh.name || '').toLowerCase();
-            if (mNome.includes('body') || mNome.includes('outfit') || mNome.includes('top') || mNome.includes('bottom')) {
-              mesh.material.map = texture;
-              mesh.material.needsUpdate = true;
-            }
-          }
-        });
-      });
+    function mudarPele(tom) {
+      document.querySelectorAll('.secao:nth-child(5) .btn-opcao').forEach(b => b.classList.remove('ativo'));
+      if (event && event.target) event.target.classList.add('ativo');
 
-      // Projeção traseira aumentada para trás
-      if (gluteoTraseiroMesh) {
-        gluteoTraseiroMesh.scale.set(1.1, 1.1, 1.85);
+      if (tom === 'clara_foto') {
+        matPele.color.setHex(0xf5d3bd); // Da foto
+      } else if (tom === 'bronzeada') {
+        matPele.color.setHex(0xdba47b);
+      } else if (tom === 'morena') {
+        matPele.color.setHex(0xb5784a);
+      } else if (tom === 'negra') {
+        matPele.color.setHex(0x5c331a);
       }
-      if (bones.spine) {
-        bones.spine.scale.set(0.88, 1.0, 0.88); // Cintura fina
-      }
+      matPele.needsUpdate = true;
+    }
 
-      statusIA.innerText = '✓ Rosto, vestido e proporções aplicados!';
+    let menuVisivel = true;
+    function toggleMenu() {
+      menuVisivel = !menuVisivel;
+      const menu = document.getElementById('menu-container');
+      const btn = document.getElementById('btn-toggle-menu');
+      if (menuVisivel) {
+        menu.classList.remove('oculto');
+        btn.innerText = '👁️ Ocultar Menu';
+      } else {
+        menu.classList.add('oculto');
+        btn.innerText = '☰ Mostrar Menu';
+      }
     }
 
 
     /* ==========================================================================
-       4. ANIMAÇÕES: FUNK COM MÃOS NO JOELHO ATÉ O CHÃO
+       6. DANÇAS E POSIÇÕES FLUIDAS
        ========================================================================== */
     let acaoAtual = 'pose';
     let tempoAnim = 0;
@@ -560,17 +709,8 @@
     function setAcao(nome) {
       acaoAtual = nome;
       tempoAnim = 0;
-      document.querySelectorAll('.btn-acao').forEach(b => b.classList.remove('ativo'));
+      document.querySelectorAll('.secao:nth-child(1) .btn-opcao').forEach(b => b.classList.remove('ativo'));
       if (event && event.target) event.target.classList.add('ativo');
-    }
-
-    function cameraCostas() {
-      camera.position.set(0, 1.6, -3.6);
-      controls.target.set(0, 1.0, 0);
-    }
-    function cameraFrente() {
-      camera.position.set(0, 1.6, 3.6);
-      controls.target.set(0, 1.0, 0);
     }
 
     function animar() {
@@ -578,86 +718,97 @@
       controls.update();
       tempoAnim += 0.045;
 
-      if (!modeloBailarina) {
-        renderer.render(scene, camera);
-        return;
-      }
-
-      if (bones.hips) bones.hips.rotation.set(0, 0, 0);
-      if (bones.spine) bones.spine.rotation.set(0, 0, 0);
-      if (bones.leftThigh && bones.rightThigh) {
-        bones.leftThigh.rotation.set(0, 0, 0);
-        bones.rightThigh.rotation.set(0, 0, 0);
-      }
-      if (bones.leftKnee && bones.rightKnee) {
-        bones.leftKnee.rotation.set(0, 0, 0);
-        bones.rightKnee.rotation.set(0, 0, 0);
-      }
+      hips.rotation.set(0, 0, 0);
+      spine.rotation.set(0, 0, 0);
+      pernaEsq.quadril.rotation.set(0, 0, 0);
+      pernaEsq.joelho.rotation.set(0, 0, 0);
+      pernaDir.quadril.rotation.set(0, 0, 0);
+      pernaDir.joelho.rotation.set(0, 0, 0);
+      bracoEsq.ombro.rotation.set(0, 0, 0);
+      bracoDir.ombro.rotation.set(0, 0, 0);
+      bracoEsq.cotovelo.rotation.set(0, 0, 0);
+      bracoDir.cotovelo.rotation.set(0, 0, 0);
 
       // DANÇA FUNK: MÃOS NO JOELHO E REBOLAR ATÉ O CHÃO
       if (acaoAtual === 'funk') {
-        const descida = (Math.sin(tempoAnim * 0.9) + 1) / 2; // Varia de 0 (em pé) a 1 (no chão)
+        const descida = (Math.sin(tempoAnim * 0.9) + 1) / 2;
+        hips.position.y = THREE.MathUtils.lerp(0.85, 0.35, descida);
+        spine.rotation.x = 0.68; // Tronco inclinado à frente
 
-        if (bones.hips) {
-          bones.hips.position.y = THREE.MathUtils.lerp(0.98, 0.42, descida);
-          bones.hips.rotation.y = Math.sin(tempoAnim * 7.0) * 0.32; // Twerk lateral
-          bones.hips.rotation.z = Math.sin(tempoAnim * 7.0) * 0.18;
-          bones.hips.rotation.x = Math.cos(tempoAnim * 7.0) * 0.22 + 0.15; // Rebolado frente e costas
-        }
+        // Rebolado nos eixos Y, Z e X
+        hips.rotation.y = Math.sin(tempoAnim * 7.0) * 0.32;
+        hips.rotation.z = Math.sin(tempoAnim * 7.0) * 0.18;
+        hips.rotation.x = Math.cos(tempoAnim * 7.0) * 0.22 + 0.15;
 
-        if (bones.spine) bones.spine.rotation.x = 0.65; // Tronco inclinado para frente
-
-        // Pernas flexionam e abrem em agachamento dinâmico
         const flexCoxa = THREE.MathUtils.lerp(0.7, 1.45, descida);
-        if (bones.leftThigh && bones.rightThigh) {
-          bones.leftThigh.rotation.x = -flexCoxa;
-          bones.leftThigh.rotation.z = -0.32;
-          bones.rightThigh.rotation.x = -flexCoxa;
-          bones.rightThigh.rotation.z = 0.32;
-        }
-        if (bones.leftKnee && bones.rightKnee) {
-          bones.leftKnee.rotation.x = flexCoxa * 1.8;
-          bones.rightKnee.rotation.x = flexCoxa * 1.8;
-        }
+        pernaEsq.quadril.rotation.x = -flexCoxa;
+        pernaEsq.quadril.rotation.z = -0.34;
+        pernaEsq.joelho.rotation.x = flexCoxa * 1.85;
 
-        // Mãos fixadas nos joelhos
-        if (bones.leftArm && bones.rightArm) {
-          bones.leftArm.rotation.x = 0.6;
-          bones.leftArm.rotation.z = -0.3;
-          bones.rightArm.rotation.x = 0.6;
-          bones.rightArm.rotation.z = 0.3;
-        }
+        pernaDir.quadril.rotation.x = -flexCoxa;
+        pernaDir.quadril.rotation.z = 0.34;
+        pernaDir.joelho.rotation.x = flexCoxa * 1.85;
 
+        // Mãos nos joelhos
+        bracoEsq.ombro.rotation.x = 0.6;
+        bracoEsq.ombro.rotation.z = -0.3;
+        bracoEsq.cotovelo.rotation.x = -0.7;
+
+        bracoDir.ombro.rotation.x = 0.6;
+        bracoDir.ombro.rotation.z = 0.3;
+        bracoDir.cotovelo.rotation.x = -0.7;
+
+      // REBOLADO POP
+      } else if (acaoAtual === 'rebolado') {
+        hips.position.y = 0.98;
+        hips.rotation.y = Math.sin(tempoAnim * 3.5) * 0.35;
+        hips.rotation.z = Math.cos(tempoAnim * 3.5) * 0.15;
+        spine.rotation.y = -Math.sin(tempoAnim * 3.5) * 0.2;
+
+        bracoEsq.ombro.rotation.z = -0.6 + Math.sin(tempoAnim * 3) * 0.1;
+        bracoDir.ombro.rotation.z = 0.6 - Math.sin(tempoAnim * 3) * 0.1;
+
+      // AGACHAR
       } else if (acaoAtual === 'agachar') {
-        if (bones.hips) bones.hips.position.y = 0.45;
-        if (bones.spine) bones.spine.rotation.x = 0.35;
-        if (bones.leftThigh && bones.rightThigh) {
-          bones.leftThigh.rotation.x = -1.2;
-          bones.rightThigh.rotation.x = -1.2;
-        }
-        if (bones.leftKnee && bones.rightKnee) {
-          bones.leftKnee.rotation.x = 2.1;
-          bones.rightKnee.rotation.x = 2.1;
-        }
+        hips.position.y = 0.44;
+        spine.rotation.x = 0.35;
+        pernaEsq.quadril.rotation.x = -1.25;
+        pernaEsq.joelho.rotation.x = 2.2;
+        pernaDir.quadril.rotation.x = -1.25;
+        pernaDir.joelho.rotation.x = 2.2;
+        bracoEsq.ombro.rotation.x = 1.1;
+        bracoDir.ombro.rotation.x = 1.1;
+
+      // SENTAR
       } else if (acaoAtual === 'sentar') {
-        if (bones.hips) bones.hips.position.y = 0.25;
-        if (bones.leftThigh && bones.rightThigh) {
-          bones.leftThigh.rotation.x = -1.5;
-          bones.rightThigh.rotation.x = -1.5;
-        }
+        hips.position.y = 0.25;
+        pernaEsq.quadril.rotation.x = -1.55;
+        pernaDir.quadril.rotation.x = -1.55;
+        bracoEsq.ombro.rotation.z = -0.3;
+        bracoDir.ombro.rotation.z = 0.3;
+
+      // DEITAR
       } else if (acaoAtual === 'deitar') {
-        if (bones.hips) {
-          bones.hips.position.y = 0.12;
-          bones.hips.rotation.x = -Math.PI / 2;
-        }
-      } else { // Pose da Foto
-        if (bones.hips) {
-          bones.hips.position.y = 0.98;
-          bones.hips.rotation.set(0, 0, 0);
-        }
-        if (bones.spine) {
-          bones.spine.rotation.y = Math.sin(tempoAnim * 1.5) * 0.04;
-        }
+        hips.position.y = 0.15;
+        mulher.rotation.x = -Math.PI / 2;
+        mulher.position.z = -0.6;
+
+      // POSE CLÁSSICA DA FOTO
+      } else {
+        mulher.rotation.set(0, 0, 0);
+        mulher.position.set(0, 0, 0);
+        hips.position.y = 0.98;
+
+        const respiracao = Math.sin(tempoAnim * 1.5) * 0.02;
+        spine.rotation.y = respiracao;
+
+        pernaEsq.quadril.rotation.z = -0.06;
+        pernaDir.quadril.rotation.z = 0.06;
+        pernaDir.quadril.rotation.x = -0.06;
+        pernaDir.joelho.rotation.x = 0.12;
+
+        bracoEsq.ombro.rotation.z = -0.15;
+        bracoDir.ombro.rotation.z = 0.15;
       }
 
       renderer.render(scene, camera);
