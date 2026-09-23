@@ -3,249 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animação de Transição Corporal e Caminhada</title>
+    <title>Estúdio de Animação de Dança</title>
     <style>
         :root {
-            /* Paleta com tons de pele humana (Luz, Base e Sombra) para volume */
-            --pele-luz: #fce5cd;
-            --pele-base: #f1c232; /* Tom base dourado/quente */
-            --pele-corpo: #e6b8af; /* Tom rosado natural */
-            --pele-sombra: #c27ba0; /* Sombra pélvica/glútea */
-            --cabelo: #271c19;
+            /* Paleta inspirada na composição visual */
+            --cabelo-luz: #fff3cb;
+            --cabelo-base: #f1df9c;
+            --cabelo-sombra: #cbb470;
+            --pele-luz: #fde8db;
+            --pele-base: #f5cfba;
+            --pele-sombra: #d99f84;
+            --roupa-top: #eae2d6;
+            --roupa-top-sombra: #cbbfb0;
+            --roupa-calca: #5c5d66;
+            --roupa-calca-sombra: #3d3e45;
+            --calcado: #1a1a1b;
+
+            /* Ritmo da Dança (controlado via JS) */
+            --duracao-danca: 1.4s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #0b0b0d;
-            margin: 0;
+            background: radial-gradient(circle at center, #1e1f29 0%, #0c0d12 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            perspective: 1000px;
         }
 
-        /* Cenário de visualização */
-        .palco-animacao {
+        /* Palco e Iluminação */
+        .palco {
             position: relative;
-            width: 800px;
-            height: 600px;
+            width: 500px;
+            height: 520px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
+            perspective: 800px;
         }
 
-        /* --------------------------------------------------
-           CONJUNTO CORPORAL PRINCIPAL
-           Controla a transição de postura (De quatro -> Em pé)
-           -------------------------------------------------- */
-        .estrutura-corporal {
-            position: relative;
-            width: 200px;
-            height: 400px;
-            transform-style: preserve-3d;
-            animation: mudancaPostura 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes mudancaPostura {
-            /* 0% a 30%: Pose horizontalizada de costas/perspectiva baixa */
-            0%, 30% {
-                transform: translateY(100px) rotateX(60deg) rotateY(180deg);
-            }
-            /* 35% a 60%: Transição levantando o tronco */
-            55%, 60% {
-                transform: translateY(0px) rotateX(0deg) rotateY(180deg);
-            }
-            /* 65% a 100%: Em pé, girando de perfil e iniciando caminhada */
-            75%, 100% {
-                transform: translateY(-20px) rotateX(0deg) rotateY(90deg);
-            }
-        }
-
-        /* --------------------------------------------------
-           ESTILIZAÇÃO DOS SEGMENTOS ANATÔMICOS
-           -------------------------------------------------- */
-        
-        /* Quadril e Glúteos (Foco inicial da perspectiva) */
-        .quadril-gluteos {
+        .luz-chao {
             position: absolute;
-            top: 120px;
-            left: 25px;
-            width: 150px;
+            bottom: 40px;
+            width: 320px;
+            height: 35px;
+            background: radial-gradient(ellipse at center, rgba(255, 235, 200, 0.25) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            transform: rotateX(60deg);
+        }
+
+        .sombra-projetada {
+            position: absolute;
+            bottom: 42px;
+            width: 140px;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 50%;
+            filter: blur(6px);
+            animation: oscilacaoSombra var(--duracao-danca) ease-in-out infinite alternate;
+        }
+
+        /* --------------------------------------------------
+           ESTRUTURA DO CORPO (RIG ARTICULADO)
+           -------------------------------------------------- */
+        .corpo-rig {
+            position: relative;
+            width: 160px;
+            height: 440px;
+            margin-bottom: 50px;
+            transform-origin: bottom center;
+            animation: bounceGeral calc(var(--duracao-danca) / 2) ease-in-out infinite alternate;
+        }
+
+        /* Cabeça e Cabelos */
+        .cabeca-grupo {
+            position: absolute;
+            top: 20px;
+            left: 55px;
+            width: 50px;
+            height: 65px;
+            z-index: 10;
+            transform-origin: bottom center;
+            animation: swayCabeca var(--duracao-danca) ease-in-out infinite alternate;
+        }
+
+        .rosto {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--pele-luz), var(--pele-base));
+            border-radius: 50% 50% 45% 45%;
+            z-index: 2;
+        }
+
+        .cabelo-traseiro {
+            position: absolute;
+            top: 0;
+            left: -15px;
+            width: 80px;
+            height: 180px;
+            background: linear-gradient(to bottom, var(--cabelo-luz), var(--cabelo-base) 40%, var(--cabelo-sombra));
+            border-radius: 40px 40px 25px 25px;
+            z-index: 1;
+            transform-origin: top center;
+            animation: balancoCabelo var(--duracao-danca) ease-in-out infinite alternate;
+        }
+
+        .cabelo-mecha-esq, .cabelo-mecha-dir {
+            position: absolute;
+            top: 10px;
+            width: 16px;
             height: 130px;
+            background: linear-gradient(to bottom, var(--cabelo-luz), var(--cabelo-base));
+            border-radius: 10px;
+            z-index: 3;
+            transform-origin: top center;
+        }
+        .cabelo-mecha-esq { left: -3px; transform: rotate(5deg); }
+        .cabelo-mecha-dir { right: -3px; transform: rotate(-5deg); }
+
+        /* Tronco (Blusa Manga Longa) */
+        .tronco-grupo {
+            position: absolute;
+            top: 80px;
+            left: 45px;
+            width: 70px;
+            height: 105px;
+            z-index: 7;
+            transform-origin: bottom center;
+            animation: swayTronco var(--duracao-danca) ease-in-out infinite alternate;
+        }
+
+        .blusa {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--roupa-top), var(--roupa-top-sombra));
+            border-radius: 20px 20px 10px 10px / 30px 30px 15px 15px;
+            box-shadow: inset 0 4px 8px rgba(255,255,255,0.3);
+        }
+
+        /* Braços Articulados */
+        .braco {
+            position: absolute;
+            top: 85px;
+            width: 22px;
+            height: 120px;
+            transform-origin: top center;
+            z-index: 8;
+        }
+        .braco-esq {
+            left: 28px;
+            animation: dancaBracoEsq var(--duracao-danca) ease-in-out infinite alternate;
+        }
+        .braco-dir {
+            right: 28px;
+            animation: dancaBracoDir var(--duracao-danca) ease-in-out infinite alternate;
+        }
+
+        .braco-manga {
+            width: 100%;
+            height: 85%;
+            background: linear-gradient(to bottom, var(--roupa-top), var(--roupa-top-sombra));
+            border-radius: 12px;
+        }
+
+        .mao {
+            width: 14px;
+            height: 22px;
+            margin: -2px auto 0;
+            background: var(--pele-base);
+            border-radius: 8px;
+        }
+
+        /* Quadril e Pernas (Calça Cinza) */
+        .quadril-grupo {
+            position: absolute;
+            top: 175px;
+            left: 38px;
+            width: 84px;
+            height: 60px;
+            z-index: 6;
+            transform-origin: top center;
+            animation: swayQuadril var(--duracao-danca) ease-in-out infinite alternate;
+        }
+
+        .quadril-forma {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--roupa-calca), var(--roupa-calca-sombra));
+            border-radius: 20px 20px 25px 25px;
+        }
+
+        .pernas-bloco {
+            position: absolute;
+            top: 225px;
+            left: 38px;
+            width: 84px;
+            height: 190px;
             display: flex;
             justify-content: space-between;
             z-index: 5;
         }
 
-        .gluteo-membro {
-            width: 72px;
-            height: 120px;
-            background: linear-gradient(135deg, var(--pele-luz), var(--pele-corpo), var(--pele-sombra));
-            box-shadow: inset -4px -8px 20px rgba(0,0,0,0.3);
-        }
-        .g-esq { border-radius: 70% 30% 40% 75%; }
-        .g-dir { border-radius: 30% 70% 75% 40%; }
-
-        /* Tronco e Linha da Cintura */
-        .tronco-superior {
-            position: absolute;
-            top: 20px;
-            left: 40px;
-            width: 120px;
-            height: 110px;
-            background: linear-gradient(to bottom, var(--pele-luz), var(--pele-corpo));
-            border-radius: 40% 40% 30% 30% / 20% 20% 80% 80%;
-            z-index: 4;
-            transform-origin: bottom center;
-            animation: extensaoTronco 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes extensaoTronco {
-            0%, 30% { transform: rotateX(-70deg) translateY(-30px); }
-            55%, 100% { transform: rotateX(0deg) translateY(0px); }
-        }
-
-        .umbigo {
-            position: absolute;
-            bottom: -15px;
-            left: 57px;
-            width: 6px;
-            height: 8px;
-            background: var(--pele-sombra);
-            border-radius: 50%;
-            opacity: 0.7;
-        }
-
-        /* Membros Inferiores (Coxas e Pernas) */
-        .pernas-container {
-            position: absolute;
-            top: 240px;
-            left: 30px;
-            width: 140px;
-            height: 200px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .perna-articulada {
-            width: 60px;
+        .perna {
+            width: 38px;
             height: 100%;
-            display: flex;
-            flex-direction: column;
             transform-origin: top center;
         }
 
-        /* Animação sincronizada para simular passos quando estiver em pé */
-        .p-esquerda { animation: passoEsq 12s ease-in-out infinite alternate; }
-        .p-direita { animation: passoDir 12s ease-in-out infinite alternate; }
-
-        @keyframes passoEsq {
-            0%, 65% { transform: rotateX(0deg); }
-            75% { transform: rotateX(25deg); }
-            87% { transform: rotateX(-20deg); }
-            100% { transform: rotateX(20deg); }
+        .perna-esq {
+            animation: dancaPernaEsq var(--duracao-danca) ease-in-out infinite alternate;
+        }
+        .perna-dir {
+            animation: dancaPernaDir var(--duracao-danca) ease-in-out infinite alternate;
         }
 
-        @keyframes passoDir {
-            0%, 65% { transform: rotateX(0deg); }
-            75% { transform: rotateX(-25deg); }
-            87% { transform: rotateX(20deg); }
-            100% { transform: rotateX(-20deg); }
-        }
-
-        .coxa-grossa {
+        .coxa {
             width: 100%;
-            height: 110px;
-            background: linear-gradient(to bottom, var(--pele-corpo), var(--pele-sombra));
-            border-radius: 50% 50% 40% 40% / 30% 30% 70% 70%;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--roupa-calca), var(--roupa-calca-sombra));
+            border-radius: 18px 18px 12px 12px;
         }
 
-        .panturrilha-pe {
-            width: 75%;
-            height: 90px;
-            background: linear-gradient(to bottom, var(--pele-sombra), var(--pele-corpo));
-            margin: -5px auto 0 auto;
-            border-radius: 20% 20% 40% 40%;
+        .panturrilha {
+            width: 85%;
+            height: 85px;
+            margin: -6px auto 0;
+            background: linear-gradient(to bottom, var(--roupa-calca-sombra), #2c2d33);
+            border-radius: 10px 10px 8px 8px;
         }
 
-        /* Cabeça e Cabelos Longos */
-        .cabeca-cabelo-bloco {
+        .pe-sandalia {
+            position: relative;
+            width: 24px;
+            height: 16px;
+            margin: 2px auto 0;
+        }
+
+        .salto {
             position: absolute;
-            top: -75px;
-            left: 70px;
-            width: 60px;
-            height: 75px;
-            z-index: 6;
+            right: 2px;
+            bottom: 0;
+            width: 4px;
+            height: 16px;
+            background: var(--calcado);
         }
 
-        .rosto-base {
-            width: 55px;
-            height: 70px;
-            background: var(--pele-luz);
-            border-radius: 50% 50% 45% 45%;
-        }
-
-        .cabelo-balanco {
+        .sola {
             position: absolute;
-            top: -5px;
-            left: -10px;
-            width: 75px;
-            height: 220px;
-            background: linear-gradient(to bottom, var(--cabelo), #110907);
-            border-radius: 40% 40% 20% 20% / 20% 20% 80% 80%;
-            z-index: -1;
-            transform-origin: top center;
-            animation: movimentoCabelo 3s ease-in-out infinite alternate;
+            bottom: 0;
+            width: 26px;
+            height: 4px;
+            background: var(--calcado);
+            border-radius: 2px;
         }
 
-        @keyframes movimentoCabelo {
-            0% { transform: rotate(-3deg) skewX(-2deg); }
-            100% { transform: rotate(3deg) skewX(2deg); }
+        .tornozeleira {
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            width: 20px;
+            height: 3px;
+            background: #111;
+            box-shadow: 0 0 2px #d4af37;
+        }
+
+        /* --------------------------------------------------
+           KEYFRAMES DE MOVIMENTAÇÃO E DANÇA
+           -------------------------------------------------- */
+        @keyframes bounceGeral {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(8px); }
+        }
+
+        @keyframes oscilacaoSombra {
+            0% { transform: scale(1) translateX(0px); opacity: 0.5; }
+            100% { transform: scale(1.1) translateX(12px); opacity: 0.7; }
+        }
+
+        @keyframes swayTronco {
+            0% { transform: rotate(-6deg) translateX(-4px); }
+            100% { transform: rotate(6deg) translateX(4px); }
+        }
+
+        @keyframes swayQuadril {
+            0% { transform: rotate(8deg) translateX(7px); }
+            100% { transform: rotate(-8deg) translateX(-7px); }
+        }
+
+        @keyframes swayCabeca {
+            0% { transform: rotate(-4deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        @keyframes balancoCabelo {
+            0% { transform: rotate(-8deg) skewX(-4deg); }
+            100% { transform: rotate(8deg) skewX(4deg); }
+        }
+
+        @keyframes dancaBracoEsq {
+            0% { transform: rotate(-25deg) translateY(-2px); }
+            100% { transform: rotate(15deg) translateY(4px); }
+        }
+
+        @keyframes dancaBracoDir {
+            0% { transform: rotate(15deg) translateY(4px); }
+            100% { transform: rotate(-25deg) translateY(-2px); }
+        }
+
+        @keyframes dancaPernaEsq {
+            0% { transform: rotate(-5deg) scaleY(1); }
+            100% { transform: rotate(4deg) scaleY(0.96); }
+        }
+
+        @keyframes dancaPernaDir {
+            0% { transform: rotate(4deg) scaleY(0.96); }
+            100% { transform: rotate(-5deg) scaleY(1); }
+        }
+
+        /* --------------------------------------------------
+           PAINEL DE CONTROLES DO APLICATIVO
+           -------------------------------------------------- */
+        .painel-controles {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            padding: 14px 24px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            align-items: center;
+            z-index: 20;
+        }
+
+        .btn {
+            background: #2a2b36;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #3f4152;
+            transform: translateY(-2px);
+        }
+
+        .btn.ativo {
+            background: #e6b8af;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .slider-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+            accent-color: #e6b8af;
         }
     </style>
 </head>
 <body>
 
-    <div class="palco-animacao">
-        
-        <!-- Estrutura Tridimensional Dinâmica -->
-        <div class="estrutura-corporal" aria-label="Modelo de transição postural anatômica">
+    <!-- Cenário Principal -->
+    <div class="palco">
+        <div class="luz-chao"></div>
+        <div class="sombra-projetada"></div>
+
+        <!-- Modelo Articulado da Personagem -->
+        <div class="corpo-rig" id="rig">
             
-            <!-- Parte Superior: Cabeça e Cabelo com Física de Balanço -->
-            <div class="cabeca-cabelo-bloco">
-                <div class="rosto-base"></div>
-                <div class="cabelo-balanco"></div>
+            <!-- Cabeça e Cabelos -->
+            <div class="cabeca-grupo">
+                <div class="cabelo-traseiro"></div>
+                <div class="rosto"></div>
+                <div class="cabelo-mecha-esq"></div>
+                <div class="cabelo-mecha-dir"></div>
             </div>
 
-            <!-- Centro: Linha do Tronco e Detalhe Abdominal -->
-            <div class="tronco-superior">
-                <div class="umbigo"></div>
+            <!-- Tronco com Blusa Off-White -->
+            <div class="tronco-grupo">
+                <div class="blusa"></div>
             </div>
 
-            <!-- Foco da Perspectiva Traseira: Quadril de Proporções Curvilíneas -->
-            <div class="quadril-gluteos">
-                <div class="gluteo-membro g-esq"></div>
-                <div class="gluteo-membro g-dir"></div>
+            <!-- Braços de Manga Longa -->
+            <div class="braco braco-esq">
+                <div class="braco-manga"></div>
+                <div class="mao"></div>
+            </div>
+            <div class="braco braco-dir">
+                <div class="braco-manga"></div>
+                <div class="mao"></div>
             </div>
 
-            <!-- Membros Inferiores com Eixos de Rotação Intercalados -->
-            <div class="pernas-container">
-                <!-- Perna Esquerda -->
-                <div class="perna-articulada p-esquerda">
-                    <div class="coxa-grossa"></div>
-                    <div class="panturrilha-pe"></div>
+            <!-- Quadril em Calça Cinza -->
+            <div class="quadril-grupo">
+                <div class="quadril-forma"></div>
+            </div>
+
+            <!-- Pernas e Sandálias -->
+            <div class="pernas-bloco">
+                <div class="perna perna-esq">
+                    <div class="coxa"></div>
+                    <div class="panturrilha"></div>
+                    <div class="pe-sandalia">
+                        <div class="tornozeleira"></div>
+                        <div class="salto"></div>
+                        <div class="sola"></div>
+                    </div>
                 </div>
-                <!-- Perna Direita -->
-                <div class="perna-articulada p-direita">
-                    <div class="coxa-grossa"></div>
-                    <div class="panturrilha-pe"></div>
+                <div class="perna perna-dir">
+                    <div class="coxa"></div>
+                    <div class="panturrilha"></div>
+                    <div class="pe-sandalia">
+                        <div class="tornozeleira"></div>
+                        <div class="salto"></div>
+                        <div class="sola"></div>
+                    </div>
                 </div>
             </div>
 
         </div>
-
     </div>
 
+    <!-- Controles Interativos -->
+    <div class="painel-controles">
+        <button class="btn ativo" id="btnPlayPause">Pausar</button>
+        
+        <div class="slider-box">
+            <label for="speedRange">Ritmo (BPM):</label>
+            <input type="range" id="speedRange" min="0.6" max="2.4" step="0.1" value="1.4">
+        </div>
+
+        <button class="btn" id="btnEstilo">Modo: Rítmico</button>
+    </div>
+
+    <script>
+        const btnPlayPause = document.getElementById('btnPlayPause');
+        const speedRange = document.getElementById('speedRange');
+        const btnEstilo = document.getElementById('btnEstilo');
+        const root = document.documentElement;
+        const rig = document.getElementById('rig');
+
+        let emExecucao = true;
+        let estiloAtual = 0;
+        const estilos = ['Rítmico', 'Suave', 'Energético'];
+
+        // Alternar Play / Pause
+        btnPlayPause.addEventListener('click', () => {
+            emExecucao = !emExecucao;
+            const elements = document.querySelectorAll('*');
+            elements.forEach(el => {
+                if (window.getComputedStyle(el).animationName !== 'none') {
+                    el.style.animationPlayState = emExecucao ? 'running' : 'paused';
+                }
+            });
+            btnPlayPause.textContent = emExecucao ? 'Pausar' : 'Continuar';
+            btnPlayPause.classList.toggle('ativo', emExecucao);
+        });
+
+        // Ajustar velocidade/tempo da dança
+        speedRange.addEventListener('input', (e) => {
+            const val = e.target.value;
+            root.style.setProperty('--duracao-danca', `${val}s`);
+        });
+
+        // Alternar Estilos de Dança
+        btnEstilo.addEventListener('click', () => {
+            estiloAtual = (estiloAtual + 1) % estilos.length;
+            btnEstilo.textContent = `Modo: ${estilos[estiloAtual]}`;
+            
+            if (estilos[estiloAtual] === 'Suave') {
+                speedRange.value = 2.0;
+                root.style.setProperty('--duracao-danca', '2.0s');
+            } else if (estilos[estiloAtual] === 'Energético') {
+                speedRange.value = 0.8;
+                root.style.setProperty('--duracao-danca', '0.8s');
+            } else {
+                speedRange.value = 1.4;
+                root.style.setProperty('--duracao-danca', '1.4s');
+            }
+        });
+    </script>
 </body>
 </html>
