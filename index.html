@@ -10,28 +10,46 @@
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 30%,#1a0a2e 0%,#08080a 70%);font-family:'Segoe UI',Arial,sans-serif;color:#fff}
 #viewport{position:absolute;inset:0;touch-action:none}
-#menu-btn{position:fixed;top:20px;right:20px;width:52px;height:52px;border:none;border-radius:50%;
-  background:linear-gradient(135deg,#ff44aa,#8800ff);color:#fff;font-size:1.5em;cursor:pointer;z-index:200;
-  box-shadow:0 0 25px rgba(255,68,170,.6);transition:.3s}
-#menu-btn:active{transform:scale(.9)}
-#menu-btn.hidden{opacity:0;pointer-events:none}
-#panel{position:fixed;top:0;right:0;width:360px;max-width:92vw;height:100%;
-  background:linear-gradient(180deg,rgba(20,10,35,.98),rgba(10,5,20,.98));
-  border-left:2px solid #ff44aa;z-index:150;display:flex;flex-direction:column;
-  transform:translateX(100%);transition:transform .35s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(14px)}
+
+/* Botão Menu Flutuante Superior */
+#menu-btn{position:fixed;top:18px;right:18px;width:50px;height:50px;border:none;border-radius:50%;
+  background:linear-gradient(135deg,#ff44aa,#8800ff);color:#fff;font-size:1.4em;cursor:pointer;z-index:100;
+  box-shadow:0 4px 20px rgba(255,68,170,.5);transition:all .25s ease;display:flex;align-items:center;justify-content:center}
+#menu-btn:active{transform:scale(.92)}
+
+/* Painel Flutuante Lateral */
+#panel{position:fixed;top:0;right:0;width:370px;max-width:94vw;height:100%;
+  background:linear-gradient(180deg,rgba(18,8,30,.98),rgba(10,5,18,.98));
+  border-left:2px solid #ff44aa;z-index:200;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .32s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(16px);
+  box-shadow:-10px 0 35px rgba(0,0,0,.7)}
 #panel.open{transform:translateX(0)}
-.tabs{display:flex;background:#0a0515;border-bottom:1px solid #333;flex-shrink:0;overflow-x:auto}
-.tab{flex:1;min-width:65px;padding:12px 6px;background:none;border:none;color:#888;font-weight:700;
+
+/* Cabeçalho do Painel com X para fechar */
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;
+  background:rgba(255,68,170,.08);border-bottom:1px solid rgba(255,68,170,.25)}
+.panel-title{font-size:.95em;font-weight:700;letter-spacing:1px;color:#ff44aa;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px}
+.close-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.close-btn:hover{background:#ff44aa;border-color:#ff44aa;color:#fff}
+.close-btn:active{transform:scale(.9)}
+
+/* Abas */
+.tabs{display:flex;background:#0a0515;border-bottom:1px solid #2a1a3a;flex-shrink:0;overflow-x:auto}
+.tab{flex:1;min-width:65px;padding:11px 6px;background:none;border:none;color:#888;font-weight:700;
   font-size:.68em;text-transform:uppercase;cursor:pointer;letter-spacing:.4px;transition:.2s;white-space:nowrap}
-.tab.active{color:#ff44aa;border-bottom:2px solid #ff44aa;background:rgba(255,68,170,.1)}
+.tab.active{color:#ff44aa;border-bottom:2px solid #ff44aa;background:rgba(255,68,170,.12)}
 .tab-body{flex:1;overflow-y:auto;padding:16px;display:none}
 .tab-body.active{display:block}
+
+/* Elementos de Formulário */
 .section-title{font-size:.76em;color:#ff44aa;text-transform:uppercase;letter-spacing:1.5px;
   margin:12px 0 8px;border-bottom:1px solid rgba(255,68,170,.3);padding-bottom:4px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;max-height:280px;overflow-y:auto}
-.card{background:#1a0a25;border:1px solid #333;border-radius:6px;padding:8px 4px;text-align:center;
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;max-height:260px;overflow-y:auto}
+.card{background:#160924;border:1px solid #332244;border-radius:6px;padding:8px 4px;text-align:center;
   cursor:pointer;font-size:.68em;color:#ccc;transition:.2s}
-.card:hover,.card.sel{border-color:#ff44aa;color:#fff;background:rgba(255,68,170,.22);box-shadow:0 0 12px rgba(255,68,170,.5)}
+.card:hover,.card.sel{border-color:#ff44aa;color:#fff;background:rgba(255,68,170,.25);box-shadow:0 0 10px rgba(255,68,170,.5)}
 .card .ic{font-size:1.3em;display:block;margin-bottom:2px}
 .row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.78em}
 .row label{flex:0 0 110px;color:#ffaadd}
@@ -39,6 +57,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
 .row .val{flex:0 0 55px;text-align:right;color:#00ffff;font-weight:700}
 .color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .color-row input[type=color]{width:44px;height:38px;border:2px solid #333;border-radius:8px;cursor:pointer;background:none}
+
 .action{display:block;width:100%;padding:11px;margin-bottom:8px;background:linear-gradient(135deg,#ff44aa,#8800ff);
   border:none;border-radius:8px;color:#fff;font-weight:700;font-size:.78em;cursor:pointer;text-transform:uppercase;
   letter-spacing:1px;transition:.2s;text-align:center}
@@ -48,87 +67,131 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
 .action.orange{background:linear-gradient(135deg,#ff9900,#ff3300)}
 .action.pink{background:linear-gradient(135deg,#ff1493,#ff69b4)}
 .action.purple{background:linear-gradient(135deg,#b026ff,#5500aa)}
+
+/* Área de Upload */
 #upload-area{border:2px dashed #ff44aa;border-radius:10px;padding:16px;text-align:center;
-  cursor:pointer;margin-bottom:10px;font-size:.8em;background:rgba(255,68,170,.05)}
-#upload-area input{display:none}
+  cursor:pointer;margin-bottom:10px;font-size:.8em;background:rgba(255,68,170,.05);transition:.2s}
+#upload-area:hover{background:rgba(255,68,170,.12);border-color:#00ffff}
 #upload-status{font-size:.75em;color:#00ffff;margin-top:8px;min-height:18px;text-align:center;line-height:1.4}
 #photo-preview{max-width:100%;max-height:160px;border-radius:8px;margin:8px auto;display:none;border:1px solid #ff44aa}
-#hud{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(10,5,25,.88);
-  padding:10px 22px;border-radius:30px;border:1px solid #ff44aa;z-index:10;
-  box-shadow:0 0 25px rgba(255,68,170,.45);font-size:.75em;text-align:center;transition:.3s;cursor:pointer}
-#hud.hidden{opacity:0;pointer-events:none}
-#hud b{color:#ff44aa}
-#hud.invisible-alert{border-color:#00ffff;box-shadow:0 0 25px rgba(0,255,255,.6);animation:pulse-alert 2s infinite}
-@keyframes pulse-alert{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.03)}}
-#materialize-overlay{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(15,5,30,.92);border:2px solid #00ffff;border-radius:16px;padding:18px 24px;
-  text-align:center;z-index:80;box-shadow:0 0 35px rgba(0,255,255,.4);backdrop-filter:blur(10px);
-  max-width:90%;width:380px;transition:opacity .4s ease,transform .4s ease}
-#materialize-overlay.hidden{opacity:0;pointer-events:none;transform:translate(-50%,-45%) scale(.95)}
-#materialize-overlay h3{color:#00ffff;font-size:1.1em;margin-bottom:8px;letter-spacing:1px}
-#materialize-overlay p{font-size:.8em;color:#ccc;line-height:1.4;margin-bottom:14px}
-#bottom{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:100;
-  background:rgba(15,5,25,.92);padding:8px 12px;border-radius:50px;border:1px solid rgba(255,68,170,.4);
-  box-shadow:0 0 25px rgba(255,68,170,.3);backdrop-filter:blur(10px);transition:.3s;flex-wrap:wrap;justify-content:center}
-#bottom.hidden{opacity:0;pointer-events:none}
-.bot-btn{padding:9px 14px;border:none;border-radius:30px;font-weight:700;font-size:.72em;cursor:pointer;
-  text-transform:uppercase;letter-spacing:.4px;transition:.2s;color:#fff}
-.bot-btn:active{transform:scale(.94)}
-#b-twerk{background:linear-gradient(135deg,#ff0066,#ff6600)}
-#b-poses{background:linear-gradient(135deg,#b026ff,#ff1493)}
-#b-dress{background:linear-gradient(135deg,#ff44aa,#cc0066)}
-#b-undress{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000}
-#b-photo{background:linear-gradient(135deg,#00ffcc,#0099ff);color:#000}
-#b-pose{background:linear-gradient(135deg,#44ff88,#00aa44);color:#000}
-.bot-btn.on{box-shadow:0 0 20px currentColor;filter:brightness(1.35)}
-.pose-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
-.pose-card{background:#160924;border:1px solid #442255;border-radius:8px;padding:10px 6px;text-align:center;
-  cursor:pointer;font-size:.75em;color:#ddd;transition:.2s}
-.pose-card:hover,.pose-card.sel{border-color:#ff1493;background:rgba(255,20,147,.25);color:#fff}
-.pose-card .pic{font-size:1.6em;display:block;margin-bottom:4px}
+
+/* Notificação sutil flutuante */
+#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-30px);
+  background:rgba(18,8,30,.92);border:1px solid #ff44aa;color:#fff;padding:8px 18px;border-radius:30px;
+  font-size:.75em;pointer-events:none;opacity:0;transition:all .3s ease;z-index:90;box-shadow:0 4px 18px rgba(255,68,170,.35)}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Barra Inferior Limpa */
+#bottom-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;
+  z-index:100;background:rgba(15,6,26,.85);padding:7px 12px;border-radius:40px;border:1px solid rgba(255,68,170,.35);
+  box-shadow:0 8px 30px rgba(0,0,0,.6);backdrop-filter:blur(12px)}
+.clean-btn{padding:10px 16px;border:none;border-radius:30px;font-weight:700;font-size:.75em;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.5px;transition:.2s;color:#fff}
+.clean-btn:active{transform:scale(.94)}
+#btn-main-photo{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000;box-shadow:0 0 15px rgba(0,255,255,.4)}
+#btn-main-twerk{background:linear-gradient(135deg,#ff0066,#ff6600)}
+#btn-main-menu{background:linear-gradient(135deg,#ff44aa,#8800ff)}
+#btn-main-dress{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25)}
 </style>
 </head>
 <body>
 <div id="viewport"></div>
 
-<div id="hud" onclick="togglePanel(event)">
-  <span id="hud-status-icon">🔒</span> <b id="hud-info">Corpo Invisível • Aguardando Foto IA</b>
-  <div style="font-size:.85em;color:#aaa;margin-top:3px" id="hud-sub">Toque aqui ou envie uma foto para materializar</div>
+<!-- Notificação rápida -->
+<div id="toast"></div>
+
+<!-- Input oculto para selecionar foto -->
+<input type="file" id="direct-photo-input" accept="image/*" style="display:none">
+
+<!-- Barra Limpa Inferior -->
+<div id="bottom-bar">
+  <button class="clean-btn" id="btn-main-photo" onclick="triggerDirectPhotoUpload()">📷 Foto IA</button>
+  <button class="clean-btn" id="btn-main-twerk" onclick="toggleTwerkAction()">🔥 Rebolar</button>
+  <button class="clean-btn" id="btn-main-dress" onclick="toggleDressOutfit()">👗 Roupa</button>
+  <button class="clean-btn" id="btn-main-menu" onclick="togglePanel(event)">⚙️ Menu</button>
 </div>
 
-<div id="materialize-overlay">
-  <h3>📷 PERSONAGEM INVISÍVEL</h3>
-  <p>A cor e o modelo de corpo só aparecerão conforme a <b>foto da IA</b>. Você pode enviar sua foto ou usar um modelo demonstrativo!</p>
-  <button class="action pink" onclick="openPhotoTab()">📸 Enviar Foto Agora</button>
-  <button class="action blue" onclick="loadDemoPhoto(1)">🌟 Modelo 1: Morena Violão</button>
-  <button class="action purple" onclick="loadDemoPhoto(2)">🌸 Modelo 2: Loira Fitness</button>
-  <button class="action green" onclick="forceRevealBody()">👁️ Forçar Visibilidade Manual</button>
-</div>
+<!-- Botão Flutuante Superior -->
+<button id="menu-btn" onclick="togglePanel(event)" title="Abrir Configurações">☰</button>
 
-<button id="menu-btn" onclick="togglePanel(event)">☰</button>
-
+<!-- Painel Flutuante Completo com botão de X -->
 <div id="panel" onclick="event.stopPropagation()">
+  <div class="panel-header">
+    <div class="panel-title"><span>✨</span> Configurações 3D</div>
+    <button class="close-btn" onclick="closePanel()" title="Fechar Menu">✕</button>
+  </div>
+
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('t-poses',event)">💋 Poses</button>
+    <button class="tab active" onclick="switchTab('t-foto',event)">📷 IA Foto</button>
+    <button class="tab" onclick="switchTab('t-poses',event)">💋 Poses</button>
+    <button class="tab" onclick="switchTab('t-bumbum',event)">🍑 Bumbum</button>
+    <button class="tab" onclick="switchTab('t-corpo',event)">🩷 Corpo</button>
+    <button class="tab" onclick="switchTab('t-medidas',event)">📐 Medidas</button>
     <button class="tab" onclick="switchTab('t-rosto',event)">💇 Rosto</button>
     <button class="tab" onclick="switchTab('t-cabelo',event)">💈 Cabelo</button>
-    <button class="tab" onclick="switchTab('t-bumbum',event)">🍑 Bumbum</button>
-    <button class="tab" onclick="switchTab('t-medidas',event)">📐 Medidas</button>
-    <button class="tab" onclick="switchTab('t-corpo',event)">🩷 Corpo</button>
     <button class="tab" onclick="switchTab('t-pernas',event)">📏 Pernas</button>
     <button class="tab" onclick="switchTab('t-cores',event)">🎨 Cores</button>
-    <button class="tab" onclick="switchTab('t-foto',event)">📷 IA Foto</button>
     <button class="tab" onclick="switchTab('t-acao',event)">💃 Ação</button>
   </div>
 
+  <!-- IA FOTO -->
+  <div id="t-foto" class="tab-body active">
+    <div class="section-title">📷 Materialização por Foto IA</div>
+    <div style="font-size:.76em;color:#ccc;margin-bottom:12px;line-height:1.5">
+      Envie uma foto de corpo inteiro. A IA analisa as proporções da silhueta, extrai as cores reais e personaliza a personagem 3D instantaneamente!
+    </div>
+    <div id="upload-area" onclick="triggerDirectPhotoUpload()">
+      <div style="font-size:2.2em">📸</div>
+      <div style="margin-top:6px;font-weight:700">Toque para Enviar Foto</div>
+      <div style="font-size:.85em;color:#aaa">PNG, JPG, JPEG</div>
+    </div>
+    <div class="section-title">Ou Teste Modelos Demonstrativos:</div>
+    <button class="action pink" onclick="loadDemoPhoto(1)">🌟 Modelo 1: Morena Curvilínea</button>
+    <button class="action blue" onclick="loadDemoPhoto(2)">🌸 Modelo 2: Loira Fitness</button>
+    <button class="action purple" onclick="loadDemoPhoto(3)">💎 Modelo 3: Ruiva Glamour</button>
+    <div id="upload-status"></div>
+    <img id="photo-preview" alt="Preview da Foto">
+    <button class="action green" onclick="applyPhotoAnalysis()" id="btn-apply" style="display:none">✨ Aplicar Medidas da Foto</button>
+    <button class="action blue" onclick="forceRevealBody()">👁️ Alternar Visibilidade</button>
+  </div>
+
   <!-- POSES -->
-  <div id="t-poses" class="tab-body active">
+  <div id="t-poses" class="tab-body">
     <div class="section-title">💋 90 Poses Sensuais</div>
     <div class="grid" id="grid-poses"></div>
     <div class="section-title">Ajuste Fino da Pose</div>
     <div class="row"><label>Arqueamento</label><input type="range" id="p-arch" min="0" max="1.5" step="0.05" value="0.8"><span class="val" id="vp-arch">0.8</span></div>
     <div class="row"><label>Projeção pélvica</label><input type="range" id="p-pelvis" min="0" max="1.5" step="0.05" value="1.0"><span class="val" id="vp-pelvis">1.0</span></div>
     <button class="action orange" onclick="startIsolatedTwerk()">🔥 Rebolar Bumbum (Pernas Fixas)</button>
+  </div>
+
+  <!-- BUMBUM -->
+  <div id="t-bumbum" class="tab-body">
+    <div class="section-title">🍑 90 Tipos de Bumbum Coração 💖</div>
+    <div class="grid" id="grid-bumbum"></div>
+    <div class="section-title">Ajustes</div>
+    <div class="row"><label>Formato Coração</label><input type="range" id="b-heart" min="0.5" max="2.0" step="0.05" value="1.3"><span class="val" id="vb-heart">1.3</span></div>
+    <div class="row"><label>Volume</label><input type="range" id="b-vol" min="0.6" max="2.0" step="0.02" value="1.15"><span class="val" id="vb-vol">1.15</span></div>
+    <div class="row"><label>Projeção</label><input type="range" id="b-proj" min="0.6" max="2.0" step="0.02" value="1.25"><span class="val" id="vb-proj">1.25</span></div>
+    <div class="row"><label>Lift</label><input type="range" id="b-lift" min="0" max="1" step="0.02" value="0.45"><span class="val" id="vb-lift">0.45</span></div>
+    <button class="action pink" onclick="focusOnButt()">🔍 Ver Bumbum de Perto</button>
+  </div>
+
+  <!-- CORPO -->
+  <div id="t-corpo" class="tab-body">
+    <div class="section-title">🩷 90 Biotipos Femininos</div>
+    <div class="grid" id="grid-corpo"></div>
+    <button class="action blue" onclick="randomizeAll()">🎲 Aleatório Total</button>
+  </div>
+
+  <!-- MEDIDAS -->
+  <div id="t-medidas" class="tab-body">
+    <div class="section-title">🍑 90 Tipos de Quadril</div>
+    <div class="grid" id="grid-quadril"></div>
+    <div class="section-title">🍒 90 Tipos de Seios</div>
+    <div class="grid" id="grid-seios"></div>
+    <div class="section-title">⏳ 90 Tipos de Cintura</div>
+    <div class="grid" id="grid-cintura"></div>
   </div>
 
   <!-- ROSTO -->
@@ -144,7 +207,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <div class="row"><label>Olhos</label><input type="range" id="f-eye" min="0.7" max="1.5" step="0.05" value="1.05"><span class="val" id="v-eye">1.05</span></div>
   </div>
 
-  <!-- CABELO + FRANJA -->
+  <!-- CABELO -->
   <div id="t-cabelo" class="tab-body">
     <div class="section-title">💈 90 Tipos de Cabelo</div>
     <div class="grid" id="grid-cabelo"></div>
@@ -153,35 +216,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <div class="section-title">Ajuste do Cabelo</div>
     <div class="row"><label>Nº de fios</label><input type="range" id="hair-count" min="200" max="6000" step="100" value="3000"><span class="val" id="vh-count">3000</span></div>
     <div class="row"><label>Comprimento</label><input type="range" id="hair-len" min="0.6" max="1.6" step="0.05" value="1"><span class="val" id="vh-len">1.0</span></div>
-  </div>
-
-  <!-- BUMBUM -->
-  <div id="t-bumbum" class="tab-body">
-    <div class="section-title">🍑 90 Tipos de Bumbum Coração 💖</div>
-    <div class="grid" id="grid-bumbum"></div>
-    <div class="section-title">Ajustes</div>
-    <div class="row"><label>Formato Coração</label><input type="range" id="b-heart" min="0.5" max="2.0" step="0.05" value="1.3"><span class="val" id="vb-heart">1.3</span></div>
-    <div class="row"><label>Volume</label><input type="range" id="b-vol" min="0.6" max="2.0" step="0.02" value="1.15"><span class="val" id="vb-vol">1.15</span></div>
-    <div class="row"><label>Projeção</label><input type="range" id="b-proj" min="0.6" max="2.0" step="0.02" value="1.25"><span class="val" id="vb-proj">1.25</span></div>
-    <div class="row"><label>Lift</label><input type="range" id="b-lift" min="0" max="1" step="0.02" value="0.45"><span class="val" id="vb-lift">0.45</span></div>
-    <button class="action pink" onclick="focusOnButt()">🔍 Ver Bumbum de Perto</button>
-  </div>
-
-  <!-- MEDIDAS (Quadril, Seios, Cintura) -->
-  <div id="t-medidas" class="tab-body">
-    <div class="section-title">🍑 90 Tipos de Quadril</div>
-    <div class="grid" id="grid-quadril"></div>
-    <div class="section-title">🍒 90 Tipos de Seios</div>
-    <div class="grid" id="grid-seios"></div>
-    <div class="section-title">⏳ 90 Tipos de Cintura</div>
-    <div class="grid" id="grid-cintura"></div>
-  </div>
-
-  <!-- CORPO -->
-  <div id="t-corpo" class="tab-body">
-    <div class="section-title">🩷 90 Biotipos Femininos</div>
-    <div class="grid" id="grid-corpo"></div>
-    <button class="action blue" onclick="randomizeAll()">🎲 Aleatório Total</button>
   </div>
 
   <!-- PERNAS -->
@@ -222,31 +256,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <div class="color-row"><input type="color" id="c-eye" value="#00ffff"></div>
   </div>
 
-  <!-- IA FOTO -->
-  <div id="t-foto" class="tab-body">
-    <div class="section-title">📷 Materialização por Foto IA</div>
-    <div style="font-size:.75em;color:#ccc;margin-bottom:10px;line-height:1.5">
-      Envie uma foto de corpo inteiro. A IA analisa as proporções reais e extrai a paleta de cores, materializando a personagem 3D com os 90 tipos aplicados automaticamente!
-    </div>
-    <div id="upload-area" onclick="document.getElementById('photo-input').click()">
-      <div style="font-size:2.2em">📸</div>
-      <div style="margin-top:6px;font-weight:700">Toque para Enviar Foto</div>
-      <div style="font-size:.85em;color:#aaa">PNG, JPG, JPEG</div>
-      <input type="file" id="photo-input" accept="image/*">
-    </div>
-    <div class="section-title">Ou Teste com Modelos IA:</div>
-    <button class="action pink" onclick="loadDemoPhoto(1)">🌟 Modelo 1: Morena Curvilínea</button>
-    <button class="action blue" onclick="loadDemoPhoto(2)">🌸 Modelo 2: Loira Fitness</button>
-    <button class="action purple" onclick="loadDemoPhoto(3)">💎 Modelo 3: Ruiva Glamour</button>
-    <div id="upload-status"></div>
-    <img id="photo-preview">
-    <button class="action green" onclick="applyPhotoAnalysis()" id="btn-apply" style="display:none">✨ Materializar Modelo & Cores da Foto</button>
-    <button class="action blue" onclick="forceRevealBody()">👁️ Revelar / Esconder Corpo</button>
-  </div>
-
   <!-- AÇÃO -->
   <div id="t-acao" class="tab-body">
-    <div class="section-title">💃 Ações</div>
+    <div class="section-title">💃 Ações & Figurino</div>
     <button class="action orange" onclick="startIsolatedTwerk()">🔥 Rebolar Bumbum</button>
     <button class="action blue" onclick="startIdle()">💗 Vitrine Sensual (Idle)</button>
     <button class="action" onclick="stopAnimation()">⏸️ Pausar</button>
@@ -254,15 +266,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <button class="action green" onclick="dressUp()">👗 Vestido Sensual</button>
     <button class="action pink" onclick="undress()">👙 Lingerie</button>
   </div>
-</div>
-
-<div id="bottom">
-  <button class="bot-btn" id="b-twerk" onclick="startIsolatedTwerk()">🔥 Rebolar</button>
-  <button class="bot-btn" id="b-poses" onclick="openPosesTab()">💋 Poses</button>
-  <button class="bot-btn" id="b-dress" onclick="dressUp()">👗 Vestir</button>
-  <button class="bot-btn" id="b-undress" onclick="undress()">👙 Lingerie</button>
-  <button class="bot-btn" id="b-photo" onclick="openPhotoTab()">📷 Foto IA</button>
-  <button class="bot-btn" id="b-pose" onclick="startIdle()">💗 Idle</button>
 </div>
 
 <script>
@@ -281,7 +284,7 @@ let currentPoseIdx = 1;
 let time = 0;
 
 let state = {
-  isMaterialized: false,
+  isMaterialized: true, // Inicia limpo e visível
   bodyIdx: 1, faceIdx: 1, buttIdx: 1,
   hipIdx: 1, breastIdx: 1, waistIdx: 1,
   hairIdx: 1, fringeIdx: 1, legIdx: 1, poseIdx: 1,
@@ -363,7 +366,6 @@ function waistParams(i){
 }
 function hairParams(i){
   const styles = ['long', 'short', 'curly', 'wavy', 'bob', 'ponytail', 'pixie', 'afro'];
-  const seeds = i*6.1;
   const hueBase = (i*7) % 40;
   return {
     style: styles[i % styles.length],
@@ -399,7 +401,6 @@ function legParams(i){
 }
 function poseParams(i){
   const seed = i*7.31;
-  const t = (i-1)/89;
   return {
     hipX: Math.sin(seed*0.7)*0.30,
     hipY: Math.cos(seed*0.9)*0.35,
@@ -425,23 +426,23 @@ function poseParams(i){
    MATERIAIS
 ============================================================ */
 const MAT = {
-  skin:     new THREE.MeshStandardMaterial({ color:0xf4c8b0, roughness:0.45, metalness:0.08, transparent:true, opacity:0.0 }),
-  skin2:    new THREE.MeshStandardMaterial({ color:0xe0a890, roughness:0.50, metalness:0.08, transparent:true, opacity:0.0 }),
-  hair:     new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.35, metalness:0.35, transparent:true, opacity:0.0 }),
-  hair2:    new THREE.MeshStandardMaterial({ color:0x440022, roughness:0.35, metalness:0.35, transparent:true, opacity:0.0 }),
-  fringe:   new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.4, metalness:0.3, transparent:true, opacity:0.0 }),
-  dress:    new THREE.MeshStandardMaterial({ color:0xff44aa, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
-  dress2:   new THREE.MeshStandardMaterial({ color:0xcc0077, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
-  ling:     new THREE.MeshStandardMaterial({ color:0xff0077, roughness:0.3, metalness:0.5, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
-  heel:     new THREE.MeshStandardMaterial({ color:0x111115, roughness:0.2, metalness:0.9, transparent:true, opacity:0.0 }),
-  lip:      new THREE.MeshStandardMaterial({ color:0xff1155, roughness:0.18, metalness:0.15, transparent:true, opacity:0.0 }),
-  teeth:    new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.12, metalness:0.05, transparent:true, opacity:0.0 }),
-  mouthIn:  new THREE.MeshBasicMaterial({ color:0x330810, transparent:true, opacity:0.0 }),
-  eyeWhite: new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.2, transparent:true, opacity:0.0 }),
-  eyeIris:  new THREE.MeshStandardMaterial({ color:0x00ffff, roughness:0.3, transparent:true, opacity:0.0 }),
-  eyePupil: new THREE.MeshBasicMaterial({ color:0x050508, transparent:true, opacity:0.0 }),
-  lash:     new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.0 }),
-  holo:     new THREE.MeshBasicMaterial({ color:0x00ffff, wireframe:true, transparent:true, opacity:0.45 })
+  skin:     new THREE.MeshStandardMaterial({ color:0xf4c8b0, roughness:0.45, metalness:0.08, transparent:true, opacity:1.0 }),
+  skin2:    new THREE.MeshStandardMaterial({ color:0xe0a890, roughness:0.50, metalness:0.08, transparent:true, opacity:1.0 }),
+  hair:     new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.35, metalness:0.35, transparent:true, opacity:1.0 }),
+  hair2:    new THREE.MeshStandardMaterial({ color:0x440022, roughness:0.35, metalness:0.35, transparent:true, opacity:1.0 }),
+  fringe:   new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.4, metalness:0.3, transparent:true, opacity:1.0 }),
+  dress:    new THREE.MeshStandardMaterial({ color:0xff44aa, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:1.0 }),
+  dress2:   new THREE.MeshStandardMaterial({ color:0xcc0077, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:1.0 }),
+  ling:     new THREE.MeshStandardMaterial({ color:0xff0077, roughness:0.3, metalness:0.5, side:THREE.DoubleSide, transparent:true, opacity:1.0 }),
+  heel:     new THREE.MeshStandardMaterial({ color:0x111115, roughness:0.2, metalness:0.9, transparent:true, opacity:1.0 }),
+  lip:      new THREE.MeshStandardMaterial({ color:0xff1155, roughness:0.18, metalness:0.15, transparent:true, opacity:1.0 }),
+  teeth:    new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.12, metalness:0.05, transparent:true, opacity:1.0 }),
+  mouthIn:  new THREE.MeshBasicMaterial({ color:0x330810, transparent:true, opacity:1.0 }),
+  eyeWhite: new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.2, transparent:true, opacity:1.0 }),
+  eyeIris:  new THREE.MeshStandardMaterial({ color:0x00ffff, roughness:0.3, transparent:true, opacity:1.0 }),
+  eyePupil: new THREE.MeshBasicMaterial({ color:0x050508, transparent:true, opacity:1.0 }),
+  lash:     new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:1.0 }),
+  holo:     new THREE.MeshBasicMaterial({ color:0x00ffff, wireframe:true, transparent:true, opacity:0.0 })
 };
 
 /* ============================================================
@@ -486,6 +487,7 @@ function buildCharacter(){
     hologramAura.add(ring);
   }
   bodyParts.hologramAura = hologramAura;
+  hologramAura.visible = false;
   doll.add(hologramAura);
 
   // QUADRIL
@@ -591,7 +593,7 @@ function buildCharacter(){
     shine.position.set(isLeft ? 0.005 : -0.005, 0.005, 0.021);
     g.add(shine);
     const lash = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.006, 0.012), MAT.lash);
-    lash.position.set(0, 0.019, 0.015);
+    lash.position.set(0, 0, 0.019, 0.015);
     lash.rotation.z = (isLeft ? 0.25 : -0.25);
     g.add(lash);
     return g;
@@ -716,7 +718,7 @@ function buildCharacter(){
   handR.scale.set(0.7, 1, 0.5);
   armR.add(handR);
 
-  // PERNAS
+  // PERNAS (Corrigidas)
   const legL = new THREE.Group();
   legL.position.set(-0.13, -0.15, 0);
   hips.add(legL);
@@ -800,7 +802,7 @@ function buildCharacter(){
   applyPosePreset(1);
   setSensualPose('empinada');
   dressUp();
-  setBodyVisibility(false);
+  setBodyVisibility(true);
 }
 
 /* ============================================================
@@ -817,29 +819,14 @@ function setBodyVisibility(visible){
   });
   if(hairStrands) hairStrands.material.opacity = visible ? 0.85 : 0.0;
   if(bodyParts.hologramAura) bodyParts.hologramAura.visible = !visible;
-
-  const overlay = document.getElementById('materialize-overlay');
-  const hud = document.getElementById('hud');
-  if(visible){
-    overlay.classList.add('hidden');
-    hud.classList.remove('invisible-alert');
-    document.getElementById('hud-status-icon').innerText = '✨';
-    document.getElementById('hud-sub').innerText = 'Corpo materializado conforme a foto IA';
-  } else {
-    overlay.classList.remove('hidden');
-    hud.classList.add('invisible-alert');
-    document.getElementById('hud-status-icon').innerText = '🔒';
-    document.getElementById('hud-info').innerText = 'Corpo Invisível • Aguardando Foto IA';
-    document.getElementById('hud-sub').innerText = 'Envie uma foto para materializar';
-  }
 }
 function forceRevealBody(){
   setBodyVisibility(!state.isMaterialized);
-  if(state.isMaterialized) updateHUD();
+  showToast(state.isMaterialized ? '✨ Corpo Visível' : '🔒 Modo Holográfico');
 }
 
 /* ============================================================
-   CABELO
+   CABELO (Corrigido)
 ============================================================ */
 function regenerateHair(){
   if(!bodyParts.hairStrandGroup) return;
@@ -896,7 +883,6 @@ function applyBody(i){
   bodyParts.thighR.scale.set(p.thighW, 1, p.thighW);
   bodyParts.calfL.scale.set(p.calfW, 1, p.calfW);
   bodyParts.calfR.scale.set(p.calfW, 1, p.calfW);
-  updateHUD();
 }
 
 function applyFace(i){
@@ -912,7 +898,6 @@ function applyFace(i){
   bodyParts.mouthGroup.scale.setScalar(state.lipScale);
   if(bodyParts.teethTop) bodyParts.teethTop.scale.setScalar(state.teethSmile);
   if(bodyParts.noseGroup) bodyParts.noseGroup.scale.setScalar(state.noseScale * f.nose);
-  updateHUD();
 }
 
 function applyButt(i){
@@ -935,7 +920,6 @@ function applyButt(i){
     bodyParts.heartDecal.scale.set(0.65 * heartF, 0.65 * heartF, 0.65);
     bodyParts.heartDecal.position.z = -0.21 * proj;
   }
-  updateHUD();
 }
 
 function applyHip(i){
@@ -943,7 +927,6 @@ function applyHip(i){
   const h = hipParams(i);
   bodyParts.hipMesh.scale.set(h.width * 1.15, h.round * 0.85, h.depth * 1.0);
   bodyParts.hips.rotation.z = h.tilt;
-  updateHUD();
 }
 
 function applyBreast(i){
@@ -953,14 +936,12 @@ function applyBreast(i){
   bodyParts.chestR.scale.setScalar(b.size);
   bodyParts.chestL.position.set(-b.sep, b.height, b.forward);
   bodyParts.chestR.position.set(b.sep, b.height, b.forward);
-  updateHUD();
 }
 
 function applyWaist(i){
   state.waistIdx = i;
   const w = waistParams(i);
   bodyParts.waist.scale.set(w.width, w.height, w.depth);
-  updateHUD();
 }
 
 function applyHair(i){
@@ -976,17 +957,12 @@ function applyHair(i){
   bodyParts.hairBack.scale.set(0.85 + v*0.35, 0.8 + f*0.7, 0.85 + v*0.35);
   bodyParts.hairBack.position.y = -0.20 - f*0.15;
   bodyParts.hairTop.scale.set(v, 1.05*v, 1.05*v);
-  if(h.style === 'ponytail'){
-    bodyParts.hairBack.position.z = -0.18;
-  } else if(h.style === 'bob'){
-    bodyParts.hairBack.scale.y *= 0.7;
-  } else if(h.style === 'afro'){
-    bodyParts.hairTop.scale.set(v*1.4, 1.4*v, 1.4*v);
-  }
+  if(h.style === 'ponytail') bodyParts.hairBack.position.z = -0.18;
+  else if(h.style === 'bob') bodyParts.hairBack.scale.y *= 0.7;
+  else if(h.style === 'afro') bodyParts.hairTop.scale.set(v*1.4, 1.4*v, 1.4*v);
   state.hairColor = col.getHex();
   state.hairColor2 = col2.getHex();
   regenerateHair();
-  updateHUD();
 }
 
 function applyFringe(i){
@@ -996,14 +972,9 @@ function applyFringe(i){
   bodyParts.fringe.rotation.x = 0.25 + f.angle;
   bodyParts.fringe.position.y = 0.06 - f.length*0.5;
   bodyParts.fringe.position.z = 0.02;
-  if(f.type === 'side'){
-    bodyParts.fringe.rotation.z = 0.4;
-  } else if(f.type === 'asym'){
-    bodyParts.fringe.rotation.z = -0.35;
-  } else {
-    bodyParts.fringe.rotation.z = 0;
-  }
-  updateHUD();
+  if(f.type === 'side') bodyParts.fringe.rotation.z = 0.4;
+  else if(f.type === 'asym') bodyParts.fringe.rotation.z = -0.35;
+  else bodyParts.fringe.rotation.z = 0;
 }
 
 function applyLegPreset(i){
@@ -1025,7 +996,6 @@ function applyLegPreset(i){
   document.getElementById('vl-calf').innerText = state.leg.calf;
   document.getElementById('vl-ankle').innerText = state.leg.ankle;
   applyLegMeasures();
-  updateHUD();
 }
 
 function applyLegMeasures(){
@@ -1062,11 +1032,10 @@ function applyPosePreset(i){
   bodyParts.legL.rotation.set(0, 0, p.legSpread);
   bodyParts.legR.rotation.set(0, 0, -p.legSpread);
   doll.rotation.y = p.rotY;
-  document.querySelectorAll('.pose-card').forEach(c => c.classList.remove('sel'));
-  const card = document.getElementById('pose-card-' + i);
+  document.querySelectorAll('#grid-poses .card').forEach(c => c.classList.remove('sel'));
+  const card = document.getElementById('card-poses-' + i);
   if(card) card.classList.add('sel');
   animMode = 'custom';
-  updateHUD();
 }
 
 /* ============================================================
@@ -1074,9 +1043,6 @@ function applyPosePreset(i){
 ============================================================ */
 function setSensualPose(poseName){
   currentPose = poseName;
-  document.querySelectorAll('.pose-card').forEach(c => c.classList.remove('sel'));
-  const card = document.getElementById('pose-card-' + poseName);
-  if(card) card.classList.add('sel');
   bodyParts.armL.rotation.set(0,0,0);
   bodyParts.armR.rotation.set(0,0,0);
   bodyParts.head.rotation.set(0,0,0);
@@ -1095,25 +1061,6 @@ function setSensualPose(poseName){
     bodyParts.headG.rotation.x = 0.1;
     bodyParts.head.rotation.y = 0.45; bodyParts.head.rotation.z = 0.08;
     doll.rotation.y = -Math.PI * 0.35;
-  } else if(poseName === 'pinup'){
-    bodyParts.hips.rotation.z = -0.22 * pelvis;
-    bodyParts.hips.rotation.y = 0.15;
-    bodyParts.chest.rotation.z = 0.15 * arch;
-    bodyParts.armL.rotation.z = 2.4; bodyParts.armL.rotation.x = -0.4;
-    bodyParts.armR.rotation.z = -0.55; bodyParts.armR.rotation.x = 0.3;
-    bodyParts.head.rotation.z = -0.15;
-    doll.rotation.y = 0.2;
-  } else if(poseName === 'goddess'){
-    bodyParts.armL.rotation.z = 2.5; bodyParts.armL.rotation.x = -0.3;
-    bodyParts.armR.rotation.z = -2.5; bodyParts.armR.rotation.x = -0.3;
-    bodyParts.chest.rotation.x = -0.12 * arch;
-    bodyParts.hips.rotation.x = 0.15 * pelvis;
-    doll.rotation.y = 0;
-  } else if(poseName === 'rear'){
-    bodyParts.hips.rotation.x = 0.32 * pelvis;
-    bodyParts.chest.rotation.x = -0.18 * arch;
-    bodyParts.headG.rotation.y = 1.1;
-    doll.rotation.y = Math.PI;
   } else if(poseName === 'twerk_stance'){
     bodyParts.hips.rotation.x = 0.35 * pelvis;
     bodyParts.chest.rotation.x = -0.28 * arch;
@@ -1121,32 +1068,33 @@ function setSensualPose(poseName){
     bodyParts.armR.rotation.x = 0.45; bodyParts.armR.rotation.z = -0.25;
     doll.rotation.y = -Math.PI * 0.4;
   }
-  animMode = 'custom';
-  updateHUD();
 }
 
 function focusOnButt(){
   doll.rotation.y = Math.PI * 0.95;
   camera.position.set(0, 0.2, 1.6);
   camera.lookAt(0, 0.05, 0);
+  showToast('🍑 Zoom no Bumbum');
 }
 
 /* ============================================================
-   VESTIR
+   VESTIR / FIGURINO
 ============================================================ */
 function dressUp(){
   isDressed = true;
   outfitParts.forEach(p => p.visible = true);
   underParts.forEach(p => p.visible = false);
-  document.getElementById('b-dress').classList.add('on');
-  document.getElementById('b-undress').classList.remove('on');
+  showToast('👗 Vestido ativado');
 }
 function undress(){
   isDressed = false;
   outfitParts.forEach(p => p.visible = false);
   underParts.forEach(p => p.visible = true);
-  document.getElementById('b-undress').classList.add('on');
-  document.getElementById('b-dress').classList.remove('on');
+  showToast('👙 Lingerie ativada');
+}
+function toggleDressOutfit(){
+  if(isDressed) undress();
+  else dressUp();
 }
 
 /* ============================================================
@@ -1156,20 +1104,19 @@ function startIsolatedTwerk(){
   animMode = 'twerk';
   setSensualPose('twerk_stance');
   animMode = 'twerk';
-  document.getElementById('b-twerk').classList.add('on');
-  document.getElementById('b-pose').classList.remove('on');
-  document.getElementById('hud-sub').innerText = '🔥 Rebolando o bumbum coração';
+  showToast('🔥 Rebolando Bumbum');
 }
 function startIdle(){
   animMode = 'idle';
-  document.getElementById('b-pose').classList.add('on');
-  document.getElementById('b-twerk').classList.remove('on');
-  document.getElementById('hud-sub').innerText = 'Modo Vitrine Sensual (Idle)';
+  showToast('💗 Modo Vitrine (Idle)');
 }
 function stopAnimation(){
   animMode = 'none';
-  document.getElementById('b-twerk').classList.remove('on');
-  document.getElementById('b-pose').classList.remove('on');
+  showToast('⏸️ Pausado');
+}
+function toggleTwerkAction(){
+  if(animMode === 'twerk') startIdle();
+  else startIsolatedTwerk();
 }
 
 function animateIsolatedTwerk(t){
@@ -1210,13 +1157,12 @@ function animateIdle(t){
 }
 
 /* ============================================================
-   LOOP
+   LOOP DE RENDERIZAÇÃO
 ============================================================ */
 function loop(){
   requestAnimationFrame(loop);
   const t = clock.getElapsedTime();
   time = t;
-  if(!state.isMaterialized && hologramAura) hologramAura.rotation.y += 0.02;
   if(animMode === 'twerk') animateIsolatedTwerk(t);
   else if(animMode === 'idle') animateIdle(t);
   if(!isDragging && animMode !== 'twerk') doll.rotation.y += 0.003;
@@ -1224,7 +1170,7 @@ function loop(){
 }
 
 /* ============================================================
-   INTERAÇÃO
+   INTERAÇÃO DE TOQUE E ARRASTE
 ============================================================ */
 let isDragging = false, prevX = 0, prevY = 0, dragMoved = false;
 const el = document.getElementById('viewport');
@@ -1245,7 +1191,12 @@ window.addEventListener('touchmove', e => {
   prevX = e.touches[0].clientX;
 }, { passive:true });
 window.addEventListener('mouseup', () => { isDragging = false; });
-window.addEventListener('touchend', () => { if(!dragMoved) toggleUIVisibility(); isDragging = false; });
+window.addEventListener('touchend', () => { 
+  if(!dragMoved && document.getElementById('panel').classList.contains('open')){
+    closePanel();
+  }
+  isDragging = false; 
+});
 el.addEventListener('wheel', e => {
   e.preventDefault();
   camera.position.z = Math.max(1.0, Math.min(4.5, camera.position.z + e.deltaY * 0.002));
@@ -1264,42 +1215,39 @@ el.addEventListener('touchmove', e => {
 el.addEventListener('touchend', () => pinchDist = 0);
 
 /* ============================================================
-   UI
+   INTERFACE DO USUÁRIO & NOTIFICAÇÕES
 ============================================================ */
-function togglePanel(e){ if(e) e.stopPropagation(); document.getElementById('panel').classList.toggle('open'); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.classList.add('show');
+  clearTimeout(t.timer);
+  t.timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function togglePanel(e){
+  if(e) e.stopPropagation();
+  const panel = document.getElementById('panel');
+  panel.classList.toggle('open');
+}
+function closePanel(){
+  document.getElementById('panel').classList.remove('open');
+}
+
 function switchTab(id, e){
   document.querySelectorAll('.tab-body').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(e && e.currentTarget) e.currentTarget.classList.add('active');
 }
-function openPosesTab(){
-  document.getElementById('panel').classList.add('open');
-  const btn = Array.from(document.querySelectorAll('.tab')).find(b => b.innerText.includes('POSES'));
-  switchTab('t-poses', { currentTarget: btn });
-}
-function openPhotoTab(){
-  document.getElementById('panel').classList.add('open');
-  const btn = Array.from(document.querySelectorAll('.tab')).find(b => b.innerText.includes('FOTO'));
-  switchTab('t-foto', { currentTarget: btn });
-}
-function toggleUIVisibility(){
-  document.getElementById('panel').classList.toggle('open');
-  document.getElementById('hud').classList.toggle('hidden');
-  document.getElementById('bottom').classList.toggle('hidden');
-  document.getElementById('menu-btn').classList.toggle('hidden');
-}
-function updateHUD(){
-  if(!state.isMaterialized){
-    document.getElementById('hud-info').innerText = 'Corpo Invisível • Aguardando Foto IA';
-    return;
-  }
-  document.getElementById('hud-info').innerText =
-    `Biotipo #${state.bodyIdx} • Quadril #${state.hipIdx} • Seios #${state.breastIdx} • Cintura #${state.waistIdx} • Cabelo #${state.hairIdx} • Franja #${state.fringeIdx} • Perna #${state.legIdx} • Pose #${state.poseIdx}`;
+
+function triggerDirectPhotoUpload(){
+  // Abre diretamente a janela do dispositivo para enviar a foto
+  document.getElementById('direct-photo-input').click();
 }
 
 /* ============================================================
-   GRIDS
+   GRIDS DOS 90 TIPOS
 ============================================================ */
 function buildGrids(){
   const makeCards = (gridId, cat, icon, count) => {
@@ -1313,16 +1261,16 @@ function buildGrids(){
       d.onclick = () => {
         document.querySelectorAll(`[id^="card-${cat}-"]`).forEach(x => x.classList.remove('sel'));
         d.classList.add('sel');
-        if(cat === 'corpo')  applyBody(i);
-        if(cat === 'rosto')  applyFace(i);
-        if(cat === 'bumbum') applyButt(i);
-        if(cat === 'quadril')applyHip(i);
-        if(cat === 'seios')  applyBreast(i);
-        if(cat === 'cintura')applyWaist(i);
-        if(cat === 'cabelo') applyHair(i);
-        if(cat === 'franja') applyFringe(i);
-        if(cat === 'pernas') applyLegPreset(i);
-        if(cat === 'poses')  applyPosePreset(i);
+        if(cat === 'corpo')   applyBody(i);
+        if(cat === 'rosto')   applyFace(i);
+        if(cat === 'bumbum')  applyButt(i);
+        if(cat === 'quadril') applyHip(i);
+        if(cat === 'seios')   applyBreast(i);
+        if(cat === 'cintura') applyWaist(i);
+        if(cat === 'cabelo')  applyHair(i);
+        if(cat === 'franja')  applyFringe(i);
+        if(cat === 'pernas')  applyLegPreset(i);
+        if(cat === 'poses')   applyPosePreset(i);
       };
       g.appendChild(d);
     }
@@ -1338,6 +1286,7 @@ function buildGrids(){
   makeCards('grid-pernas',  'pernas',  '🦵', 90);
   makeCards('grid-poses',   'poses',   '💃', 90);
 }
+
 function randomizeAll(){
   applyBody(1 + Math.floor(Math.random()*90));
   applyFace(1 + Math.floor(Math.random()*90));
@@ -1356,10 +1305,11 @@ function randomizeAll(){
     const c = document.getElementById(`card-${cat}-${state[idx]}`);
     if(c) c.classList.add('sel');
   });
+  showToast('🎲 Biotipo Aleatório Aplicado!');
 }
 
 /* ============================================================
-   CONTROLES
+   CONTROLES E BINDINGS
 ============================================================ */
 function bindRange(id, valId, target, path){
   const inp = document.getElementById(id);
@@ -1418,17 +1368,14 @@ function initUI(){
 }
 
 /* ============================================================
-   IA DE FOTO
+   IA DE FOTO & PROCESSAMENTO
 ============================================================ */
 let poseAI = null;
 let lastDetected = null;
 let photoImg = null;
 
 function initPoseAI(){
-  if(typeof Pose === 'undefined'){
-    document.getElementById('upload-status').innerText = '⚠️ MediaPipe offline — extração direta ativa';
-    return;
-  }
+  if(typeof Pose === 'undefined') return;
   poseAI = new Pose({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${file}` });
   poseAI.setOptions({ modelComplexity: 1, smoothLandmarks: true, enableSegmentation: false,
     minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
@@ -1440,14 +1387,16 @@ function onPoseResults(results){
     return;
   }
   lastDetected = results.poseLandmarks;
-  document.getElementById('upload-status').innerText = '✅ Anatomia detectada! Aplicando 90 tipos...';
+  document.getElementById('upload-status').innerText = '✅ Anatomia detectada! Aplicando medidas...';
   applyPhotoAnalysis();
 }
-document.getElementById('photo-input').addEventListener('change', e => {
+
+document.getElementById('direct-photo-input').addEventListener('change', e => {
   const file = e.target.files[0];
   if(!file) return;
   processImageURL(URL.createObjectURL(file));
 });
+
 function processImageURL(url){
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -1455,14 +1404,12 @@ function processImageURL(url){
     photoImg = img;
     const prev = document.getElementById('photo-preview');
     prev.src = url; prev.style.display = 'block';
-    document.getElementById('upload-status').innerText = '⏳ Analisando modelo e cores...';
+    document.getElementById('upload-status').innerText = '⏳ Analisando silhueta e cores...';
+    showToast('📸 Processando foto...');
     extractColorsFromImage(img);
     if(poseAI){
       try { await poseAI.send({ image: img }); }
-      catch(err){
-        document.getElementById('upload-status').innerText = '✨ Proporções extraídas!';
-        applyFallbackSilhouette(img);
-      }
+      catch(err){ applyFallbackSilhouette(img); }
     } else {
       applyFallbackSilhouette(img);
     }
@@ -1488,7 +1435,6 @@ function loadDemoPhoto(type){
   const grad = ctx.createLinearGradient(0,0,0,600);
   grad.addColorStop(0, '#100520'); grad.addColorStop(1, '#05020a');
   ctx.fillStyle = grad; ctx.fillRect(0,0,400,600);
-  // Silhueta do corpo
   ctx.fillStyle = skin;
   ctx.beginPath();
   ctx.arc(200, 120, 40, 0, Math.PI*2);
@@ -1498,36 +1444,26 @@ function loadDemoPhoto(type){
   ctx.quadraticCurveTo(130, 250, 150, 320);
   ctx.quadraticCurveTo(110, 380, 130, 450);
   ctx.quadraticCurveTo(120, 550, 140, 590);
-  ctx.lineTo(175, 590);
-  ctx.lineTo(180, 450);
-  ctx.lineTo(190, 340);
-  ctx.lineTo(210, 340);
-  ctx.lineTo(220, 450);
-  ctx.lineTo(225, 590);
+  ctx.lineTo(175, 590); ctx.lineTo(180, 450); ctx.lineTo(190, 340);
+  ctx.lineTo(210, 340); ctx.lineTo(220, 450); ctx.lineTo(225, 590);
   ctx.lineTo(260, 590);
   ctx.quadraticCurveTo(280, 550, 270, 450);
   ctx.quadraticCurveTo(290, 380, 250, 320);
   ctx.quadraticCurveTo(270, 250, 240, 160);
   ctx.closePath();
   ctx.fill();
-  // Cabelo
   ctx.fillStyle = hair;
   ctx.beginPath();
   ctx.arc(200, 115, 45, Math.PI, Math.PI*2);
   ctx.fill();
   ctx.fillRect(155, 100, 20, 120);
   ctx.fillRect(225, 100, 20, 120);
-  // Vestido
   ctx.fillStyle = dress;
   ctx.beginPath();
-  ctx.moveTo(160, 260);
-  ctx.lineTo(240, 260);
-  ctx.lineTo(260, 400);
-  ctx.lineTo(140, 400);
+  ctx.moveTo(160, 260); ctx.lineTo(240, 260); ctx.lineTo(260, 400); ctx.lineTo(140, 400);
   ctx.closePath();
   ctx.fill();
-  const url = canvas.toDataURL();
-  processImageURL(url);
+  processImageURL(canvas.toDataURL());
 }
 
 function extractColorsFromImage(img){
@@ -1576,10 +1512,7 @@ function applyFallbackSilhouette(img){
 }
 
 function applyPhotoAnalysis(){
-  if(!photoImg){
-    document.getElementById('upload-status').innerText = '⚠️ Nenhuma foto carregada.';
-    return;
-  }
+  if(!photoImg) return;
   if(lastDetected){
     const lm = lastDetected;
     const shoulderW = Math.abs(lm[11].x - lm[12].x);
@@ -1610,8 +1543,8 @@ function applyPhotoAnalysis(){
     setSel('poses', bodyIdx);
   }
   setBodyVisibility(true);
-  updateHUD();
-  document.getElementById('upload-status').innerText = '✨ Personagem materializada conforme a foto IA!';
+  showToast('✨ Materializada com Sucesso!');
+  document.getElementById('upload-status').innerText = '✨ Proporções aplicadas!';
 }
 
 /* ============================================================
