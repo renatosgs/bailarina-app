@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Esqueleto Feminino 3D — 206 Ossos • Praia Tropical</title>
+<title>Esqueleto Feminino 3D — 206 Ossos + IA Óssea • Praia Tropical</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
 <style>
@@ -14,6 +14,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
   border:1px solid #e8ddc5;border-radius:30px;padding:8px 16px;font-size:.82em;font-weight:700;
   color:#e8ddc5;box-shadow:0 6px 22px rgba(232,221,197,.4);letter-spacing:.5px;backdrop-filter:blur(10px)}
 #bone-counter span{color:#00ffff;font-size:1.15em}
+#ai-badge{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:99;
+  background:linear-gradient(135deg,rgba(176,38,255,.85),rgba(85,0,170,.85));
+  border:1px solid #b026ff;border-radius:30px;padding:6px 14px;font-size:.7em;font-weight:700;
+  color:#fff;letter-spacing:1px;backdrop-filter:blur(10px);opacity:0;transition:opacity .3s}
+#ai-badge.show{opacity:1}
 #menu-btn{position:fixed;top:18px;right:18px;width:50px;height:50px;border:none;border-radius:50%;
   background:linear-gradient(135deg,#e8ddc5,#8ea8b8);color:#1a1a1a;font-size:1.4em;cursor:pointer;z-index:100;
   box-shadow:0 6px 22px rgba(232,221,197,.5);transition:all .25s ease;display:flex;align-items:center;justify-content:center}
@@ -64,7 +69,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
 #upload-area:hover{background:rgba(232,221,197,.15);border-color:#00ffff}
 #upload-status{font-size:.75em;color:#00ffff;margin-top:8px;min-height:18px;text-align:center;line-height:1.4}
 #photo-preview{max-width:100%;max-height:160px;border-radius:8px;margin:8px auto;display:none;border:1px solid #e8ddc5}
-#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-30px);
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-30px);
   background:rgba(10,25,38,.92);border:1px solid #e8ddc5;color:#fff;padding:8px 18px;border-radius:30px;
   font-size:.75em;pointer-events:none;opacity:0;transition:all .3s ease;z-index:90;box-shadow:0 4px 18px rgba(232,221,197,.35)}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -89,6 +94,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
 <body>
 <div id="viewport"></div>
 <div id="bone-counter">🦴 Ossos: <span id="bone-count">0</span>/206</div>
+<div id="ai-badge">🧠 IA Óssea Ativa</div>
 <div id="toast"></div>
 <input type="file" id="direct-photo-input" accept="image/*" style="display:none">
 
@@ -122,16 +128,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
   <div id="t-lista" class="tab-body active">
     <div class="section-title">🦴 Todos os 206 Ossos do Corpo Humano</div>
     <div style="font-size:.74em;color:#b0cce3;margin-bottom:10px;line-height:1.5">
-      Cada osso é renderizado individualmente e articulado em cadeia anatômica.
-      Toque em um osso no 3D para destacá-lo.
+      Cada osso é renderizado individualmente, articulado em cadeia anatômica, com
+      <strong style="color:#9ec8dd">cartilagem</strong> e
+      <strong style="color:#ffcc33">nervos</strong> nas uniões.
+      A <strong style="color:#b026ff">IA Óssea</strong> corrige forma e medida automaticamente.
     </div>
+    <button class="action purple" onclick="BoneAI.autoAdjust()">🧠 Forçar Reajuste IA</button>
     <div id="bone-list-container"></div>
   </div>
 
   <div id="t-foto" class="tab-body">
     <div class="section-title">📷 Materialização por Foto IA</div>
     <div style="font-size:.76em;color:#b0cce3;margin-bottom:12px;line-height:1.5">
-      Envie uma foto de corpo inteiro. A IA analisa as proporções da silhueta e adapta as dimensões do esqueleto 3D automaticamente.
+      Envie uma foto de corpo inteiro. A IA analisa as proporções e adapta o esqueleto 3D.
     </div>
     <div id="upload-area" onclick="triggerDirectPhotoUpload()">
       <div style="font-size:2.2em">📸</div>
@@ -202,7 +211,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
     <div class="color-row"><input type="color" id="c-dress" value="#f0a500"><input type="color" id="c-dress2" value="#d48800"></div>
     <div class="section-title">Lingerie Opcional</div>
     <div class="color-row"><input type="color" id="c-ling" value="#f0a500"></div>
-    <div class="section-title">Cavidades (órbita/nasal)</div>
+    <div class="section-title">Cavidades</div>
     <div class="color-row"><input type="color" id="c-lip" value="#1a0e08"></div>
     <div class="section-title">Dentes</div>
     <div class="color-row"><input type="color" id="c-eye" value="#ffffff"></div>
@@ -213,6 +222,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
     <button class="action" onclick="startIsolatedTwerk()">🦴 Articulação Pélvica</button>
     <button class="action blue" onclick="startIdle()">💀 Respiração Torácica</button>
     <button class="action" onclick="stopAnimation()">⏸️ Pausar</button>
+    <div class="section-title">🧠 IA Óssea</div>
+    <button class="action purple" onclick="BoneAI.autoAdjust()">🧠 Reajuste Completo IA</button>
     <div class="section-title">Roupa Opcional</div>
     <button class="action pink" onclick="undress()">🩻 Modo Esqueleto Puro</button>
     <button class="action green" onclick="dressUp()">👗 Modo Vestido</button>
@@ -232,7 +243,7 @@ let animMode = 'idle';
 let currentPose = 'empinada';
 let time = 0;
 
-const boneRegistry = []; // {name, category, mesh}
+const boneRegistry = [];
 let boneCount = 0;
 
 let state = {
@@ -251,7 +262,7 @@ let state = {
 };
 
 /* ============================================================
-   REGISTRO DE OSSOS (todos os 206)
+   REGISTRO DE OSSOS
 ============================================================ */
 function registerBone(name, mesh, category){
   mesh.userData.boneName = name;
@@ -262,7 +273,7 @@ function registerBone(name, mesh, category){
 }
 
 /* ============================================================
-   GEOMETRIA ÓSSEA
+   GEOMETRIA
 ============================================================ */
 function boneGeo(len, rMid, rEnd, segs){
   const N = 12, pts = [];
@@ -285,21 +296,104 @@ function makeBone(name, cat, geometry, mat, parent, pos, rot, scale){
 }
 
 /* ============================================================
+   🧠 TECIDO DE UNIÃO — CARTILAGEM + NERVOS
+   Adiciona em cada articulação uma esfera de cartilagem
+   (translúcida azul-acinzentada) e um pequeno nervo (tubo
+   amarelo fino) que percorre a junta.
+============================================================ */
+const JOINT_MAT = {
+  cartilage: new THREE.MeshStandardMaterial({
+    color: 0x9ec8dd, roughness: 0.25, metalness: 0.05,
+    transparent: true, opacity: 0.72
+  }),
+  cartilageRing: new THREE.MeshStandardMaterial({
+    color: 0x7fa8bd, roughness: 0.35, metalness: 0.10,
+    transparent: true, opacity: 0.85
+  }),
+  nerve: new THREE.MeshStandardMaterial opts({
+    color: 0xffcc33., roughness: 0.4, metalness:ring 0.05,
+    emissive: Rot0x553300,X emissiveIntensity: 0.6
+ :  }),
+  nerveCore: new Math THREE.MeshBasicMaterial({ color.P: 0xffe07a })
+};
+
+Ifunction addJointTissue(parent,* jointName, pos, size, opts){
+  opts = opts || {};
+ 0 const depth = opts.depth || size *. 1.1;
+
+  // 51) Cartilagem principal (disco;
+ achatado entre os ossos)
+   const cart = new THREE.Mesh(
+    ring new THREE.SphereGeometry(size, .10, 8),
+    JOINT_MrotationAT.cartilage
+  );
+  cart.position.set.z(pos[ =0], pos[1], pos[ opts2]);
+  cart.scale.set(opts.w.ide || 1.15, 0.35ring, depth / size * 0.9);
+ Rot parent.add(cart);
+
+  // 2) AnZel || de cartilagem (fibrocartilagem da  cápsula)
+  const ring = new THREE.M0esh(
+    new THREE.TorusGeometry(size * 0;
+.95, size * 0.18,  6, 14),
+    JOINT_MAT parent.cartilageRing
+  );
+ .add ring.position.set(pos[0], pos[1],( pos[2]);
+  ring.rotation.x = optsring.ringRotX !== undefined ?);
+
+  // 3) Nervo principal (feixe amarelo que cruza a articulação)
+  const nerveLen = size * 2.4;
+  const nerveGeo = new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3([
+      new THREE.Vector3(pos[0] - size*0.9, pos[1] - nerveLen*0.3, pos[2]),
+      new THREE.Vector3(pos[0] - size*0.3, pos[1] + size*0.5, pos[2] + size*0.25),
+      new THREE.Vector3(pos[0] + size*0.3, pos[1] + size*0.7, pos[2] + size*0.30),
+      new THREE.Vector3(pos[0] + size*0.9, pos[1] + nerveLen*0.3, pos[2])
+    ]),
+    10, Math.max(0.0010, size * 0.09), 4, false
+  );
+  const nerve = new THREE.Mesh(nerveGeo, JOINT_MAT.nerve);
+  nerve.userData.jointName = jointName;
+  parent.add(nerve);
+
+  // 4) Ramificação secundária (nervo menor)
+  const twigGeo = new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3([
+      new THREE.Vector3(pos[0], pos[1] + size*0.4, pos[2]),
+      new THREE.Vector3(pos[0] + size*0.6, pos[1] - size*0.2, pos[2] - size*0.5),
+      new THREE.Vector3(pos[0] + size*0.9, pos[1] - size*0.6, pos[2] - size*0.9)
+    ]),
+    8, Math.max(0.0008, size * 0.06), 4, false
+  );
+  const twig = new THREE.Mesh(twigGeo, JOINT_MAT.nerve);
+  parent.add(twig);
+
+  // 5) Pontinho luminoso no centro (plexo)
+  const dot = new THREE.Mesh(
+    new THREE.SphereGeometry(Math.max(0.0018, size * 0.22), 8, 6),
+    JOINT_MAT.nerveCore
+  );
+  dot.position.set(pos[0], pos[1] + size*0.35, pos[2]);
+  parent.add(dot);
+
+  return { cart, ring, nerve, twig, dot };
+}
+
+/* ============================================================
    MATERIAIS
 ============================================================ */
 const MAT = {
-  skin:     new THREE.MeshStandardMaterial({ color:0xe8ddc5, roughness:0.55, metalness:0.06 }),
-  skin2:    new THREE.MeshStandardMaterial({ color:0xc9bca0, roughness:0.7,  metalness:0.05 }),
-  cart:     new THREE.MeshStandardMaterial({ color:0x8ea8b8, roughness:0.4,  metalness:0.15, transparent:true, opacity:0.85 }),
-  teeth:    new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.15, metalness:0.05 }),
-  cavity:   new THREE.MeshBasicMaterial({ color:0x1a0e08 }),
-  dress:    new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, metalness:0.2, side:THREE.DoubleSide, transparent:true, opacity:0.35 }),
-  dress2:   new THREE.MeshStandardMaterial({ color:0xd48800, roughness:0.5, metalness:0.2, side:THREE.DoubleSide, transparent:true, opacity:0.35 }),
-  ling:     new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, metalness:0.4, side:THREE.DoubleSide, transparent:true, opacity:0.55 })
+  skin:   new THREE.MeshStandardMaterial({ color:0xe8ddc5, roughness:0.55, metalness:0.06 }),
+  skin2:  new THREE.MeshStandardMaterial({ color:0xc9bca0, roughness:0.7,  metalness:0.05 }),
+  cart:   new THREE.MeshStandardMaterial({ color:0x8ea8b8, roughness:0.4,  metalness:0.15, transparent:true, opacity:0.85 }),
+  teeth:  new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.15, metalness:0.05 }),
+  cavity: new THREE.MeshBasicMaterial({ color:0x1a0e08 }),
+  dress:  new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, metalness:0.2, side:THREE.DoubleSide, transparent:true, opacity:0.35 }),
+  dress2: new THREE.MeshStandardMaterial({ color:0xd48800, roughness:0.5, metalness:0.2, side:THREE.DoubleSide, transparent:true, opacity:0.35 }),
+  ling:   new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, metalness:0.4, side:THREE.DoubleSide, transparent:true, opacity:0.55 })
 };
 
 /* ============================================================
-   PRESETS (mantidos iguais aos originais)
+   PRESETS PARAMÉTRICOS
 ============================================================ */
 function bodyParams(i){
   const t = (i-1)/89;
@@ -320,7 +414,7 @@ function hipParams(i){
 function waistParams(i){
   const t = (i-1)/89; const seed = i*3.9;
   return { width: 0.65 + ((i*5)%9)*0.030 - t*0.15, depth: 0.85 + Math.cos(seed)*0.15 - t*0.18,
-    height: 0.85 + Math Math.sin(seed*0.7)*0.15 };
+    height: 0.85 + Math.sin(seed*0.7)*0.15 };
 }
 function legParams(i){
   const t = (i-1)/89; const seed = i*4.7;
@@ -330,13 +424,186 @@ function legParams(i){
 function poseParams(i){
   const seed = i*7.31;
   return { hipX: Math.sin(seed*0.7)*0.30, hipY: Math.cos(seed*0.9)*0.35, hipZ: Math.sin(seed*1.1)*0.28,
-    chestX: -0.10 - Math.abs(Math.sin(seed*1.3))*0.30, chestY: Math.cos(seed*0.8)*0.25, chestZ:.sin(seed*0.6)*0.22,
+    chestX: -0.10 - Math.abs(Math.sin(seed*1.3))*0.30, chestY: Math.cos(seed*0.8)*0.25, chestZ: Math.sin(seed*0.6)*0.22,
     armLX: Math.sin(seed*1.7)*1.4 - 0.3, armLZ: 0.15 + Math.abs(Math.cos(seed*0.9))*2.3,
     armRX: Math.cos(seed*1.5)*1.4 - 0.3, armRZ: -0.15 - Math.abs(Math.sin(seed*1.0))*2.3,
     headY: Math.sin(seed*2.1)*0.9, headZ: Math.cos(seed*1.9)*0.22, headX: Math.sin(seed*0.4)*0.15,
     rotY: (seed % (Math.PI*2)) - Math.PI, legSpread: 0.03 + Math.abs(Math.sin(seed*1.4))*0.28,
     kneeBend: Math.abs(Math.cos(seed*1.6))*0.35, pelvis: 0.5 + Math.abs(Math.sin(seed*0.5))*0.9 };
 }
+
+/* ============================================================
+   🧠 IA ÓSSEA INVISÍVEL
+============================================================ */
+const BoneAI = (function(){
+  const REF = {
+    'Fêmur':     { shape:'long',  len:0.450, rMin:0.011, rMax:0.028 },
+    'Tíbia':     { shape:'long',  len:0.370, rMin:0.010, rMax:0.024 },
+    'Fíbula':    { shape:'long',  len:0.365, rMin:0.006, rMax:0.014 },
+    'Úmero':     { shape:'long',  len:0.330, rMin:0.010, rMax:0.022 },
+    'Rádio':     { shape:'long',  len:0.260, rMin:0.008, rMax:0.016 },
+    'Ulna':      { shape:'long',  len:0.280, rMin:0.009, rMax:0.017 },
+    'Clavícula': { shape:'long',  len:0.150, rMin:0.005, rMax:0.009 },
+    'Metacarpo': { shape:'small-long', len:0.055, rMin:0.0030, rMax:0.0055 },
+    'Metatarso': { shape:'small-long', len:0.068, rMin:0.0038, rMax:0.0070 },
+    'Falange':   { shape:'small-long', len:0.032, rMin:0.0022, rMax:0.0045 },
+    'Escápula':  { shape:'flat-tri', w:0.150, h:0.100, d:0.014 },
+    'Esterno':   { shape:'flat',     w:0.050, h:0.160, d:0.012 },
+    'Costela':   { shape:'curved',   w:0.200, h:0.008, d:0.010 },
+    'Parietal':  { shape:'flat-arc', w:0.130, h:0.130, d:0.006 },
+    'Occipital': { shape:'flat-arc', w:0.130, h:0.100, d:0.008 },
+    'Frontal':   { shape:'flat-arc', w:0.135, h:0.120, d:0.008 },
+    'Vértebra':  { shape:'irregular', w:0.030, h:0.020, d:0.030 },
+    'Sacro':     { shape:'wedge',     w:0.100, h:0.120, d:0.032 },
+    'Cóccix':    { shape:'wedge',     w:0.020, h:0.042, d:0.014 },
+    'Mandíbula': { shape:'u-shape',   w:0.115, h:0.075, d:0.055 },
+    'Hioide':    { shape:'u-shape',   w:0.045, h:0.025, d:0.015 },
+    'Esfenoide': { shape:'irregular', w:0.085, h:0.040, d:0.055 },
+    'Etmoide':   { shape:'irregular', w:0.045, h:0.028, d:0.070 },
+    'Temporal':  { shape:'irregular', w:0.075, h:0.075, d:0.075 },
+    'Zigomático':{ shape:'arch',      w:0.055, h:0.055, d:0.012 },
+    'Maxila':    { shape:'irregular', w:0.048, h:0.030, d:0.045 },
+    'Nasal':     { shape:'flat',      w:0.011, h:0.028, d:0.008 },
+    'Lacrimal':  { shape:'flat',      w:0.008, h:0.010, d:0.006 },
+    'Palatino':  { shape:'flat',      w:0.014, h:0.008, d:0.022 },
+    'Vômer':     { shape:'flat',      w:0.004, h:0.040, d:0.008 },
+    'Carpo':     { shape:'short', r:0.0075 },
+    'Tarso':     { shape:'short', r:0.0140 },
+    'Patela':    { shape:'sesamoid', w:0.045, h:0.050, d:0.020 },
+    'Martelo':   { shape:'sesamoid', w:0.008, h:0.008, d:0.008 },
+    'Bigorna':   { shape:'sesamoid', w:0.007, h:0.007, d:0.007 },
+    'Estribo':   { shape:'sesamoid', w:0.005, h:0.005, d:0.005 }
+  };
+  function classify(name){
+    const n = name.toLowerCase();
+    if(/f[êe]mur/.test(n))         return REF['Fêmur'];
+    if(/t[íi]bia/.test(n))         return REF['Tíbia'];
+    if(/f[íi]bula/.test(n))        return REF['Fíbula'];
+    if(/[úu]mero/.test(n))         return REF['Úmero'];
+    if(/r[áa]dio/.test(n))         return REF['Rádio'];
+    if(/ulna/.test(n))             return REF['Ulna'];
+    if(/clav[íi]cula/.test(n))     return REF['Clavícula'];
+    if(/metacarpo/.test(n))        return REF['Metacarpo'];
+    if(/metatarso/.test(n))        return REF['Metatarso'];
+    if(/falange/.test(n))          return REF['Falange'];
+    if(/esc[áa]pula/.test(n))      return REF['Escápula'];
+    if(/esterno|man[úu]brio/.test(n)) return REF['Esterno'];
+    if(/costela|cartilagem costal/.test(n)) return REF['Costela'];
+    if(/parietal/.test(n))         return REF['Parietal'];
+    if(/occipital/.test(n))        return REF['Occipital'];
+    if(/frontal/.test(n))          return REF['Frontal'];
+    if(/v[ée]rtebra/.test(n))      return REF['Vértebra'];
+    if(/sacro/.test(n))            return REF['Sacro'];
+    if(/c[óo]ccix/.test(n))        return REF['Cóccix'];
+    if(/mand[íi]bula/.test(n))     return REF['Mandíbula'];
+    if(/hioide/.test(n))           return REF['Hioide'];
+    if(/esfenoide/.test(n))        return REF['Esfenoide'];
+    if(/etmoide/.test(n))          return REF['Etmoide'];
+    if(/temporal/.test(n))         return REF['Temporal'];
+    if(/zigom[áa]tico/.test(n))    return REF['Zigomático'];
+    if(/maxila/.test(n))           return REF['Maxila'];
+    if(/nasal/.test(n))            return REF['Nasal'];
+    if(/lacrimal/.test(n))         return REF['Lacrimal'];
+    if(/palatino/.test(n))         return REF['Palatino'];
+    if(/v[ôo]mer/.test(n))         return REF['Vômer'];
+    if(/escafoide|semilunar|piramidal|pisiforme|trap[ée]zio|trapezoide|capitato|hamato/.test(n)) return REF['Carpo'];
+    if(/calc[âa]neo|t[áa]lus|navicular|cuboide|cuneiforme/.test(n)) return REF['Tarso'];
+    if(/patela/.test(n))           return REF['Patela'];
+    if(/martelo/.test(n))          return REF['Martelo'];
+    if(/bigorna/.test(n))          return REF['Bigorna'];
+    if(/estribo/.test(n))          return REF['Estribo'];
+    return null;
+  }
+  function heightFactor(){
+    return (state.leg.height / 100) / 1.65;
+  }
+  function buildLongGeo(ref, scale){
+    const len = ref.len * scale;
+    const rMin = ref.rMin * scale, rMax = ref.rMax * scale;
+    const N = 14, pts = [];
+    for(let i = 0; i <= N; i++){
+      const t = i/N, y = (t - 0.5) * len;
+      const epi = Math.pow(Math.abs(2*t - 1), 1.4);
+      const r = rMin + (rMax - rMin) * epi;
+      pts.push(new THREE.Vector2(Math.max(0.0006, r), y));
+    }
+    return new THREE.LatheGeometry(pts, 10);
+  }
+  function buildFlatGeo(ref, scale){ return new THREE.BoxGeometry(ref.w*scale, ref.h*scale, ref.d*scale); }
+  function buildShortGeo(ref, scale){ return new THREE.SphereGeometry(ref.r*scale, 10, 8); }
+  function buildSesamoidGeo(ref, scale){
+    const g = new THREE.SphereGeometry(Math.max(ref.w, ref.h)*scale*0.5, 12, 10);
+    g.scale(1, ref.h/Math.max(ref.w, ref.h), ref.d/Math.max(ref.w, ref.h));
+    return g;
+  }
+  function buildWedgesGeo(ref, scale){
+    return new THREE.CylinderGeometry(ref.w*scale*0.5, ref.w*scale*0.15, ref.h*scale, 6);
+  }
+  function buildArchGeo(ref, scale){
+    return new THREE.TorusGeometry(ref.w*scale*0.5, ref.d*scale*0.35, 6, 12, Math.PI*0.75);
+  }
+  function buildUShapeGeo(ref, scale){
+    return new THREE.BoxGeometry(ref.w*scale, ref.h*scale*0.4, ref.d*scale);
+  }
+  function buildIrregularGeo(ref, scale){
+    return new THREE.BoxGeometry(ref.w*scale, ref.h*scale, ref.d*scale);
+  }
+  function buildFlatArcGeo(ref, scale){
+    const g = new THREE.SphereGeometry(ref.w*scale*0.5, 16, 12, 0, Math.PI*2, 0, Math.PI*0.55);
+    g.scale(1, ref.h/ref.w, ref.d/ref.w*4);
+    return g;
+  }
+  function correctOne(entry){
+    const ref = classify(entry.name);
+    if(!ref) return false;
+    const mesh = entry.mesh;
+    if(!mesh || !mesh.geometry) return false;
+    const scale = heightFactor();
+    let newGeo;
+    switch(ref.shape){
+      case 'long':        newGeo = buildLongGeo(ref, scale); break;
+      case 'small-long':  newGeo = buildLongGeo(ref, scale); break;
+      case 'flat':        newGeo = buildFlatGeo(ref, scale); break;
+      case 'flat-tri':    newGeo = buildFlatGeo(ref, scale); break;
+      case 'flat-arc':    newGeo = buildFlatArcGeo(ref, scale); break;
+      case 'curved':      newGeo = buildFlatGeo(ref, scale); break;
+      case 'short':       newGeo = buildShortGeo(ref, scale); break;
+      case 'sesamoid':    newGeo = buildSesamoidGeo(ref, scale); break;
+      case 'wedge':       newGeo = buildWedgesGeo(ref, scale); break;
+      case 'arch':        newGeo = buildArchGeo(ref, scale); break;
+      case 'u-shape':     newGeo = buildUShapeGeo(ref, scale); break;
+      case 'irregular':   newGeo = buildIrregularGeo(ref, scale); break;
+      default: return false;
+    }
+    const oldGeo = mesh.geometry;
+    mesh.geometry = newGeo;
+    if(oldGeo && oldGeo.dispose) oldGeo.dispose();
+    mesh.userData._aiAdjusted = true;
+    return true;
+  }
+  function retargetChain(){
+    const s = heightFactor();
+    if(bodyParts.legL) bodyParts.legL.scale.y = 1 + (s - 1) * 0.65;
+    if(bodyParts.legR) bodyParts.legR.scale.y = 1 + (s - 1) * 0.65;
+  }
+  let runCount = 0;
+  function autoAdjust(silent){
+    let fixed = 0, skipped = 0;
+    boneRegistry.forEach(entry => { if(correctOne(entry)) fixed++; else skipped++; });
+    retargetChain();
+    runCount++;
+    console.log(`🧠 IA Óssea [run ${runCount}]: ${fixed} corrigidos · ${skipped} não classificados · altura ${state.leg.height}cm`);
+    if(!silent){
+      const badge = document.getElementById('ai-badge');
+      if(badge){
+        badge.classList.add('show');
+        clearTimeout(badge._t);
+        badge._t = setTimeout(() => badge.classList.remove('show'), 1500);
+      }
+    }
+  }
+  return { autoAdjust, classify, heightFactor, REF };
+})();
 
 /* ============================================================
    CENÁRIO PRAIA
@@ -368,7 +635,7 @@ function buildBeachEnvironment(){
 }
 
 /* ============================================================
-   ESQUELETO COMPLETO — 206 OSSOS ARTICULADOS
+   ESQUELETO COMPLETO — 206 OSSOS + CARTILAGEM + NERVOS
 ============================================================ */
 function buildSkeleton(){
   doll = new THREE.Group();
@@ -377,22 +644,17 @@ function buildSkeleton(){
 
   const BONE = MAT.skin, BONE2 = MAT.skin2, CART = MAT.cart;
 
-  /* =========================================================
-     CINTURA PÉLVICA (2 ossos: quadril D + E)
-  ========================================================= */
+  /* ===== CINTURA PÉLVICA ===== */
   const hips = new THREE.Group();
   hips.position.y = -0.35;
   rig.add(hips);
   bodyParts.hips = hips;
 
-  // Sacro (parte da coluna - listado lá embaixo)
-  const sacrum = makeBone('Sacro', 'Coluna Vertebral', new THREE.CylinderGeometry(0.052,0.02,0.20,6), BONE,
+  makeBone('Sacro', 'Coluna Vertebral', new THREE.CylinderGeometry(0.052,0.02,0.20,6), BONE,
     hips, [0,-0.01,-0.10], null, [1.35,1,0.7]);
-  // Cóccix
   makeBone('Cóccix', 'Coluna Vertebral', new THREE.ConeGeometry(0.02,0.045,4), BONE2,
     hips, [0,-0.13,-0.115], [Math.PI*0.85,0,0]);
 
-  // Hemipelve (cada lado é um osso do quadril fusionado: ílio+ísquio+púbis)
   function buildHipBone(side, name){
     const g = new THREE.Group();
     const ilium = new THREE.Mesh(new THREE.SphereGeometry(0.11,20,14,0,Math.PI*2,0,Math.PI*0.55), BONE);
@@ -412,59 +674,57 @@ function buildSkeleton(){
     g.add(acetab);
     g.position.set(0,0,-0.02);
     hips.add(g);
-    // Registramos o osso do quadril (1 unidade)
     registerBone(name, ilium, 'Cintura Pélvica');
     return g;
   }
   bodyParts.hipMesh = new THREE.Group();
-  const hipL = buildHipBone(-1, 'Osso do Quadril Esquerdo (Ílio+Ísquio+Púbis)');
-  const hipR = buildHipBone(1, 'Osso do Quadril Direito (Ílio+Ísquio+Púbis)');
+  const hipL = buildHipBone(-1, 'Osso do Quadril Esquerdo');
+  const hipR = buildHipBone(1, 'Osso do Quadril Direito');
   bodyParts.hipMesh.add(hipL, hipR);
   hips.add(bodyParts.hipMesh);
 
-  /* =========================================================
-     MEMBROS INFERIORES (60 ossos — 30 por lado)
-  ========================================================= */
+  // Cartilagem + nervos na sínfise púbica
+  addJointTissue(hips, 'Sínfise Púbica', [0, -0.11, 0.03], 0.022, { wide: 1.6, ringRotX: 0 });
+
+  /* ===== MEMBROS INFERIORES ===== */
   function buildLeg(side, sideName){
     const legG = new THREE.Group();
     legG.position.set(0.09*side, -0.13, 0);
 
-    // 1. Fêmur
     const femur = makeBone(`Fêmur ${sideName}`, 'Membros Inferiores',
       boneGeo(0.36,0.022,0.038), BONE, legG, [0,-0.19,0], [0,0,side*0.045]);
-    // Cabeça do fêmur (visual, já faz parte do fêmur)
     makeBone(`Cabeça do Fêmur ${sideName}`, 'Membros Inferiores',
       new THREE.SphereGeometry(0.032,14,12), BONE, legG, [side*0.02,-0.02,0]);
 
-    // 2. Patela
+    // Cartilagem + nervo na articulação do quadril (coxa)
+    addJointTissue(legG, `Articulação Coxofemoral ${sideName}`, [side*0.02, -0.02, 0], 0.028);
+
     makeBone(`Patela ${sideName}`, 'Membros Inferiores',
       new THREE.SphereGeometry(0.028,12,10), BONE2, legG, [0,-0.38,0.045], null, [1,1.15,0.5]);
-
-    // 3. Tíbia
     const tibia = makeBone(`Tíbia ${sideName}`, 'Membros Inferiores',
       boneGeo(0.32,0.020,0.032), BONE, legG, [-0.008*side,-0.56,0.008]);
-
-    // 4. Fíbula
     makeBone(`Fíbula ${sideName}`, 'Membros Inferiores',
       boneGeo(0.30,0.010,0.017), BONE, legG, [0.035*side,-0.56,-0.005]);
 
-    // 5-11. Tarso (7 ossos por lado)
+    // Cartilagem + nervos no joelho
+    addJointTissue(legG, `Joelho ${sideName}`, [0, -0.38, 0], 0.030, { ringRotX: Math.PI*0.5 });
+
     const tarNames = ['Calcâneo','Tálus','Navicular','Cuboide','Cuneiforme Medial','Cuneiforme Intermédio','Cuneiforme Lateral'];
     tarNames.forEach((nm, i) => {
-      const s = i === 0 ? 0.018 : 0.011;
+      const sz = i === 0 ? 0.018 : 0.011;
       makeBone(`${nm} ${sideName}`, 'Membros Inferiores',
-        new THREE.SphereGeometry(s, 10, 8), BONE2,
+        new THREE.SphereGeometry(sz, 10, 8), BONE2,
         legG, [(i-3)*0.010, -0.755 + (i%2)*0.006, 0.005 + (i%3)*0.012]);
     });
 
-    // 12-16. Metatarsos (5 por lado)
+    // Cartilagem + nervo no tornozelo
+    addJointTissue(legG, `Tornozelo ${sideName}`, [0, -0.740, 0.010], 0.024);
+
     for(let i=0;i<5;i++){
       makeBone(`Metatarso ${i+1} ${sideName}`, 'Membros Inferiores',
         boneGeo(0.062,0.0042,0.0072), BONE, legG,
         [(i-2)*0.017, -0.785, 0.040], [Math.PI*0.5, 0, 0]);
     }
-
-    // 17-30. Falanges dos pés (14 por lado)
     const phNames = ['Proximal','Média','Distal'];
     for(let i=0;i<5;i++){
       const isBig = i === 0;
@@ -478,6 +738,12 @@ function buildSkeleton(){
       });
     }
 
+    // Nervos pequenos entre metatarsos
+    for(let i=0;i<5;i++){
+      addJointTissue(legG, `Metatarsofalângica ${i+1} ${sideName}`,
+        [(i-2)*0.017, -0.785, 0.075], 0.010, { wide: 0.9 });
+    }
+
     return { group: legG, femur, tibia };
   }
   const LgL = buildLeg(-1, 'Esquerdo');
@@ -487,32 +753,35 @@ function buildSkeleton(){
   bodyParts.calfL = LgL.tibia;  bodyParts.calfR = LgR.tibia;
   hips.add(bodyParts.legL, bodyParts.legR);
 
-  /* =========================================================
-     COLUNA VERTEBRAL (26 ossos: 7C + 12T + 5L + Sacro + Cóccix)
-  ========================================================= */
+  /* ===== COLUNA VERTEBRAL ===== */
   const spine = new THREE.Group();
   rig.add(spine);
   bodyParts.waist = spine;
 
-  function makeVertebra(name, y, size){
-    const body = makeBone(name, 'Coluna Vertebral',
+  function makeVertebra(name, y, size, idx){
+    makeBone(name, 'Coluna Vertebral',
       new THREE.CylinderGeometry(size,size,0.016,8), BONE, spine, [0,y,-0.012]);
     makeBone(`${name} - Processo Espinhoso`, 'Coluna Vertebral',
       new THREE.ConeGeometry(size*0.42, 0.032, 4), BONE2, spine, [0,y-0.004,-0.038], [Math.PI*0.5,0,0]);
     makeBone(`${name} - Disco`, 'Coluna Vertebral',
       new THREE.CylinderGeometry(size*0.9,size*0.9,0.006,8), CART, spine, [0,y+0.010,-0.012]);
-    return body;
-  }
-  // 5 Lombares
-  for(let i=0;i<5;i++) makeVertebra(`Vértebra Lombar ${i+1}`, -0.045 + i*0.032, 0.030);
-  // 12 Torácicas
-  for(let i=0;i<12;i++) makeVertebra(`Vértebra Torácica ${i+1}`, 0.115 + i*0.030, 0.024);
-  // 7 Cervicais
-  for(let i=0;i<7;i++) makeVertebra(`Vértebra Cervical ${i+1}`, 0.475 + i*0.020, 0.017);
 
-  /* =========================================================
-     TÓRAX (25 ossos: 1 Esterno + 24 Costelas)
-  ========================================================= */
+    // Nervo espinhal saindo de cada forame
+    const nerveGeo = new THREE.TubeGeometry(
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, y, -0.020),
+        new THREE.Vector3(size*1.3, y+0.005, -0.030),
+        new THREE.Vector3(size*2.0, y+0.010, -0.020)
+      ]), 8, 0.0012, 4, false
+    );
+    const nerve = new THREE.Mesh(nerveGeo, JOINT_MAT.nerve);
+    spine.add(nerve);
+  }
+  for(let i=0;i<5;i++)  makeVertebra(`Vértebra Lombar ${i+1}`, -0.045 + i*0.032, 0.030, i);
+  for(let i=0;i<12;i++) makeVertebra(`Vértebra Torácica ${i+1}`, 0.115 + i*0.030, 0.024, i);
+  for(let i=0;i<7;i++)  makeVertebra(`Vértebra Cervical ${i+1}`, 0.475 + i*0.020, 0.017, i);
+
+  /* ===== TÓRAX ===== */
   const chest = new THREE.Group();
   chest.position.y = 0.30;
   rig.add(chest);
@@ -521,6 +790,9 @@ function buildSkeleton(){
   makeBone('Manúbrio', 'Tórax', new THREE.BoxGeometry(0.050,0.035,0.016), BONE, chest, [0,0.115,0.100]);
   makeBone('Corpo do Esterno', 'Tórax', new THREE.BoxGeometry(0.042,0.140,0.014), BONE, chest, [0,0.020,0.102]);
   makeBone('Processo Xifoide', 'Tórax', new THREE.ConeGeometry(0.016,0.038,4), BONE2, chest, [0,-0.075,0.100], [Math.PI,0,0]);
+
+  // Cartilagem esternal (manúbrio-esternal)
+  addJointTissue(chest, 'Articulação Manúbrio-Esternal', [0, 0.085, 0.100], 0.018, { wide: 1.4, ringRotX: 0 });
 
   for(let i=0;i<12;i++){
     const t = i/11;
@@ -541,12 +813,20 @@ function buildSkeleton(){
       makeBone(`Cartilagem Costal ${i+1} ${sideName}`, 'Tórax',
         new THREE.SphereGeometry(0.008+(1-t)*0.003, 8, 6), CART, chest,
         [pts[3].x, pts[3].y, pts[3].z]);
+
+      // Nervo intercostal
+      const nerveGeo = new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3([
+          new THREE.Vector3(0.022*side, ribY-0.008, -0.075),
+          new THREE.Vector3(width*side*0.55, ribY-0.028, -0.030),
+          new THREE.Vector3(width*side*0.75, ribY-0.058-t*0.020, depth*0.55)
+        ]), 8, 0.0010, 4, false
+      );
+      chest.add(new THREE.Mesh(nerveGeo, JOINT_MAT.nerve));
     });
   }
 
-  /* =========================================================
-     CINTURA ESCAPULAR (4 ossos)
-  ========================================================= */
+  /* ===== CINTURA ESCAPULAR ===== */
   [-1,1].forEach(side => {
     const sideName = side < 0 ? 'Esquerda' : 'Direita';
     makeBone(`Clavícula ${sideName}`, 'Cintura Escapular',
@@ -558,33 +838,37 @@ function buildSkeleton(){
       new THREE.BoxGeometry(0.020,0.075,0.010), BONE2, chest, [side*0.135,0.120,-0.075], [-0.25,0,0]);
     makeBone(`Acrômio ${sideName}`, 'Cintura Escapular',
       new THREE.SphereGeometry(0.016,10,8), BONE2, chest, [side*0.155,0.155,-0.040]);
+
+    // Cartilagem + nervos na articulação esternoclavicular e acromioclavicular
+    addJointTissue(chest, `Esternoclavicular ${sideName}`,
+      [side*0.028, 0.175, 0.075], 0.018);
+    addJointTissue(chest, `Acromioclavicular ${sideName}`,
+      [side*0.155, 0.155, -0.040], 0.016);
   });
 
-  /* =========================================================
-     MEMBROS SUPERIORES (60 ossos — 30 por lado)
-  ========================================================= */
+  /* ===== MEMBROS SUPERIORES ===== */
   function buildArm(side, sideName){
     const armG = new THREE.Group();
     armG.position.set(0.195*side, 0.145, 0);
 
-    // Úmero
     makeBone(`Cabeça do Úmero ${sideName}`, 'Membros Superiores',
       new THREE.SphereGeometry(0.028,14,12), BONE, armG, [0,0.02,0]);
     const humerus = makeBone(`Úmero ${sideName}`, 'Membros Superiores',
       boneGeo(0.20,0.0145,0.024), BONE, armG, [0,-0.10,0]);
 
-    // Olécrano (parte da ulna)
+    // Cartilagem + nervo no ombro (glenoumeral)
+    addJointTissue(armG, `Ombro ${sideName}`, [0, 0.02, 0], 0.028);
+
     makeBone(`Olécrano ${sideName}`, 'Membros Superiores',
       new THREE.SphereGeometry(0.020,12,10), BONE2, armG, [0,-0.225,-0.012]);
-
-    // Rádio
-    const radius = makeBone(`Rádio ${sideName}`, 'Membros Superiores',
+    makeBone(`Rádio ${sideName}`, 'Membros Superiores',
       boneGeo(0.185,0.0105,0.0175), BONE, armG, [side*0.012,-0.315,0.006]);
-    // Ulna
-    const ulna = makeBone(`Ulna ${sideName}`, 'Membros Superiores',
+    makeBone(`Ulna ${sideName}`, 'Membros Superiores',
       boneGeo(0.195,0.0115,0.0185), BONE, armG, [-side*0.010,-0.320,-0.008]);
 
-    // Carpo (8 ossos)
+    // Cartilagem + nervo no cotovelo
+    addJointTissue(armG, `Cotovelo ${sideName}`, [0, -0.225, 0], 0.024, { ringRotX: Math.PI*0.5 });
+
     const carpNames = ['Escafoide','Semilunar','Piramidal','Pisiforme','Trapézio','Trapezoide','Capitato','Hamato'];
     carpNames.forEach((cn, i) => {
       const ang = (i/8)*Math.PI*2;
@@ -593,13 +877,13 @@ function buildSkeleton(){
         [0.014*Math.cos(ang), -0.425+0.008*Math.sin(ang), 0.014*Math.sin(ang)]);
     });
 
-    // Metacarpo (5 ossos)
+    // Cartilagem + nervo no punho
+    addJointTissue(armG, `Punho ${sideName}`, [0, -0.425, 0], 0.018);
+
     for(let i=0;i<5;i++){
       makeBone(`Metacarpo ${i+1} ${sideName}`, 'Membros Superiores',
         boneGeo(0.048,0.0032,0.0055), BONE, armG, [(i-2)*0.0105,-0.470,0]);
     }
-
-    // Falanges das mãos (14 por lado)
     for(let i=0;i<5;i++){
       const base = -0.490;
       const isThumb = i === 0;
@@ -613,18 +897,18 @@ function buildSkeleton(){
           boneGeo(len, 0.0026, 0.0040), BONE, armG,
           [(i-2)*0.0105, base - yOff + 0.010, 0]);
       });
+      // Nervo entre metacarpo e falange
+      addJointTissue(armG, `Metacarpofalângica ${i+1} ${sideName}`,
+        [(i-2)*0.0105, -0.490, 0], 0.008, { wide: 0.8 });
     }
-
-    return { group: armG, humerus, radius, ulna };
+    return { group: armG, humerus };
   }
   const armL = buildArm(-1, 'Esquerdo');
   const armR = buildArm(1, 'Direito');
   bodyParts.armL = armL.group; bodyParts.armR = armR.group;
   chest.add(bodyParts.armL, bodyParts.armR);
 
-  /* =========================================================
-     HIOIDE (1 osso)
-  ========================================================= */
+  /* ===== HIOIDE + CABEÇA ===== */
   const headG = new THREE.Group();
   headG.position.y = 0.56;
   rig.add(headG);
@@ -638,105 +922,92 @@ function buildSkeleton(){
   bodyParts.neck.position.y = 0.03;
   headG.add(bodyParts.neck);
 
-  /* =========================================================
-     CRÂNIO (8 ossos)
-     Frontal, Parietais(2), Temporais(2), Occipital, Esfenoide, Etmoide
-  ========================================================= */
+  // Cartilagem + nervos na articulação atlanto-occipital (crânio-pescoço)
+  addJointTissue(headG, 'Atlanto-Occipital', [0, 0.075, 0], 0.024);
+
   const head = new THREE.Group();
   head.position.y = 0.16;
   headG.add(head);
   bodyParts.head = head;
 
-  // Osso Frontal (metade anterior superior)
   makeBone('Osso Frontal', 'Crânio',
     new THREE.SphereGeometry(0.135, 26, 20, 0, Math.PI*2, 0, Math.PI*0.55), BONE,
     head, [0, 0.020, 0], null, [1, 1.10, 1.06]);
-  // Occipital (metade posterior inferior)
   makeBone('Osso Occipital', 'Crânio',
     new THREE.SphereGeometry(0.134, 24, 20, 0, Math.PI*2, Math.PI*0.45, Math.PI*0.55), BONE2,
     head, [0, -0.005, 0], null, [1, 1.08, 1.05]);
-  // Parietais (2) — abas superiores laterais
   [-1,1].forEach(side => {
     const nm = side<0 ? 'Parietal Esquerdo' : 'Parietal Direito';
     makeBone(nm, 'Crânio',
       new THREE.SphereGeometry(0.100, 18, 14, 0, Math.PI, 0, Math.PI*0.6), BONE,
       head, [side*0.055, 0.045, -0.010], [0, side*Math.PI*0.5, 0], [1, 0.95, 0.95]);
   });
-  // Temporais (2)
   [-1,1].forEach(side => {
     const nm = side<0 ? 'Temporal Esquerdo' : 'Temporal Direito';
     makeBone(nm, 'Crânio',
       new THREE.SphereGeometry(0.075, 14, 12, 0, Math.PI*2, 0, Math.PI*0.7), BONE2,
       head, [side*0.098, -0.010, -0.010], null, [0.75, 0.75, 0.9]);
   });
-  // Esfenoide (centro)
-  makeBone('Esfenoide', 'Crânio',
-    new THREE.BoxGeometry(0.085, 0.040, 0.055), BONE2, head, [0, 0.010, -0.005]);
-  // Etmoide
-  makeBone('Etmoide', 'Crânio',
-    new THREE.BoxGeometry(0.045, 0.028, 0.070), BONE2, head, [0, -0.010, 0.030]);
-  // Sutura coronal (detalhe)
+  makeBone('Esfenoide', 'Crânio', new THREE.BoxGeometry(0.085, 0.040, 0.055), BONE2, head, [0, 0.010, -0.005]);
+  makeBone('Etmoide', 'Crânio', new THREE.BoxGeometry(0.045, 0.028, 0.070), BONE2, head, [0, -0.010, 0.030]);
   makeBone('Sutura Coronal', 'Crânio',
     new THREE.TorusGeometry(0.130, 0.0035, 6, 24, Math.PI), BONE2,
     head, [0, 0.010, 0], [0, Math.PI/2, 0]);
 
-  /* =========================================================
-     FACE (14 ossos)
-  ========================================================= */
-  // Nasais (2)
+  // Cartilagem + nervos nas suturas cranianas (coronal + sagital)
+  addJointTissue(head, 'Sutura Coronal', [0, 0.055, 0.020], 0.014, { wide: 2.4, ringRotX: 0 });
+  addJointTissue(head, 'Sutura Sagital', [0, 0.090, -0.020], 0.012, { wide: 2.0, ringRotX: 0 });
+
+  /* ===== FACE ===== */
   [-1,1].forEach(side => {
     makeBone(side<0 ? 'Osso Nasal Esquerdo' : 'Osso Nasal Direito', 'Face',
       new THREE.BoxGeometry(0.011, 0.028, 0.008), BONE, head, [side*0.010, 0.010, 0.122]);
   });
-  // Maxilas (2)
   [-1,1].forEach(side => {
     makeBone(side<0 ? 'Maxila Esquerda' : 'Maxila Direita', 'Face',
       new THREE.BoxGeometry(0.048, 0.030, 0.045), BONE, head, [side*0.026, -0.058, 0.100]);
   });
-  // Zigomáticos (2)
   [-1,1].forEach(side => {
     makeBone(side<0 ? 'Zigomático Esquerdo' : 'Zigomático Direito', 'Face',
       new THREE.TorusGeometry(0.020, 0.006, 6, 12, Math.PI*0.75), BONE2,
       head, [side*0.085, -0.015, 0.075], [0, 0, -side*Math.PI*0.3]);
   });
-  // Mandíbula (1)
   const jaw = new THREE.Group();
   jaw.position.set(0, -0.098, 0.058);
   head.add(jaw);
   bodyParts.jaw = jaw;
-  makeBone('Mandíbula', 'Face',
-    new THREE.BoxGeometry(0.110, 0.020, 0.038), BONE, jaw, [0, 0, 0.010]);
+  makeBone('Mandíbula', 'Face', new THREE.BoxGeometry(0.110, 0.020, 0.038), BONE, jaw, [0, 0, 0.010]);
   makeBone('Ramo Mandibular Esquerdo', 'Face',
     new THREE.BoxGeometry(0.014, 0.055, 0.018), BONE, jaw, [-0.050, 0.030, -0.012], [-0.15,0,0]);
   makeBone('Ramo Mandibular Direito', 'Face',
     new THREE.BoxGeometry(0.014, 0.055, 0.018), BONE, jaw, [0.050, 0.030, -0.012], [-0.15,0,0]);
-  // Lacrimais (2)
+
+  // Cartilagem + nervos na ATM (articulação temporomandibular)
+  [-1,1].forEach(side => {
+    addJointTissue(jaw, `ATM ${side<0?'Esquerda':'Direita'}`,
+      [side*0.050, 0.030, -0.012], 0.014);
+  });
+
   [-1,1].forEach(side => {
     makeBone(side<0 ? 'Lacrimal Esquerdo' : 'Lacrimal Direito', 'Face',
       new THREE.BoxGeometry(0.008, 0.010, 0.006), BONE2, head, [side*0.062, -0.008, 0.108]);
   });
-  // Palatinos (2)
   [-1,1].forEach(side => {
     makeBone(side<0 ? 'Palatino Esquerdo' : 'Palatino Direito', 'Face',
       new THREE.BoxGeometry(0.014, 0.008, 0.022), BONE2, head, [side*0.020, -0.075, 0.078]);
   });
-  // Conchas Nasais Inferiores (2)
   [-1,1].forEach(side => {
     makeBone(side<0 ? 'Concha Nasal Inferior Esquerda' : 'Concha Nasal Inferior Direita', 'Face',
       new THREE.TorusGeometry(0.010, 0.0035, 6, 10, Math.PI), BONE2,
       head, [side*0.012, -0.030, 0.118], [Math.PI*0.5, 0, 0]);
   });
-  // Vômer (1)
-  makeBone('Vômer', 'Face',
-    new THREE.BoxGeometry(0.004, 0.040, 0.008), BONE2, head, [0, -0.020, 0.115]);
+  makeBone('Vômer', 'Face', new THREE.BoxGeometry(0.004, 0.040, 0.008), BONE2, head, [0, -0.020, 0.115]);
 
-  // Órbitas (cavidades)
   makeBone('Órbita Esquerda', 'Face',
     new THREE.SphereGeometry(0.032,14,12), MAT.cavity, head, [-0.048,0.020,0.108], null, [1.05,0.92,0.55]);
   makeBone('Órbita Direita', 'Face',
     new THREE.SphereGeometry(0.032,14,12), MAT.cavity, head, [0.048,0.020,0.108], null, [1.05,0.92,0.55]);
 
-  // Dentes (não contam como ossos do 206, mas visuais)
   for(let i=0;i<8;i++){
     const t1 = new THREE.Mesh(new THREE.BoxGeometry(0.0085,0.0090,0.0080), MAT.teeth);
     t1.position.set((i-3.5)*0.0108, -0.078, 0.122); head.add(t1);
@@ -744,9 +1015,7 @@ function buildSkeleton(){
     t2.position.set((i-3.5)*0.0108, -0.084, 0.090); jaw.add(t2);
   }
 
-  /* =========================================================
-     OSSÍCULOS DO OUVIDO (6: 2 martelos, 2 bigornas, 2 estribos)
-  ========================================================= */
+  /* ===== OSSÍCULOS DO OUVIDO ===== */
   [-1,1].forEach(side => {
     const sn = side<0 ? 'Esquerdo' : 'Direito';
     makeBone(`Martelo ${sn}`, 'Ouvido Médio',
@@ -755,11 +1024,11 @@ function buildSkeleton(){
       new THREE.SphereGeometry(0.007, 8, 6), BONE2, head, [side*0.128, -0.008, -0.015]);
     makeBone(`Estribo ${sn}`, 'Ouvido Médio',
       new THREE.SphereGeometry(0.005, 6, 5), BONE2, head, [side*0.136, -0.010, -0.018]);
+    // Mini-nervo entre os ossículos
+    addJointTissue(head, `Ossículos ${sn}`, [side*0.125, -0.008, -0.013], 0.006, { wide: 0.7 });
   });
 
-  /* =========================================================
-     PLACEHOLDERS (compatibilidade com funções antigas)
-  ========================================================= */
+  /* ===== PLACEHOLDERS ===== */
   function ph(){ const g = new THREE.Group(); g.visible = false; return g; }
   bodyParts.chestL = ph(); bodyParts.chestR = ph();
   bodyParts.buttL = ph(); bodyParts.buttR = ph();
@@ -771,17 +1040,15 @@ function buildSkeleton(){
   bodyParts.browL = ph(); bodyParts.browR = ph();
   bodyParts.mouthGroup = ph(); bodyParts.lipBottom = ph();
   bodyParts.torso = ph();
-  bodyParts.headMesh = head;  // Compatibilidade
-  bodyParts.noseGroup = head; // Compatibilidade
+  bodyParts.headMesh = head;
+  bodyParts.noseGroup = head;
   bodyParts.earL = ph(); bodyParts.earR = ph();
   bodyParts.teethTop = ph();
 
   chest.add(bodyParts.chestL, bodyParts.chestR);
   hips.add(bodyParts.butt, bodyParts.buttL, bodyParts.buttR, bodyParts.heartDecal);
 
-  /* =========================================================
-     ROUPA (opcional, oculta por padrão)
-  ========================================================= */
+  /* ===== ROUPA OPCIONAL ===== */
   const dressTop = new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.22,0.34,24,1,true), MAT.dress);
   dressTop.position.y = 0.30; chest.add(dressTop); outfitParts.push(dressTop);
   const dressSkirt = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.42,0.55,24,1,true), MAT.dress2);
@@ -798,18 +1065,18 @@ function buildSkeleton(){
   doll.position.y = 0.45;
   scene.add(doll);
 
-  // Atualiza UI
   document.getElementById('bone-count').innerText = boneCount;
   buildBoneList();
 
-  // Aplicar presets iniciais
   applyBody(1); applyFace(1); applyHip(1); applyWaist(1);
   applyLegPreset(1); applyPosePreset(1);
   setSensualPose('empinada');
+
+  BoneAI.autoAdjust();
 }
 
 /* ============================================================
-   LISTA DE OSSOS NO PAINEL
+   LISTA DE OSSOS
 ============================================================ */
 function buildBoneList(){
   const container = document.getElementById('bone-list-container');
@@ -827,13 +1094,16 @@ function buildBoneList(){
     html += `<div class="bone-cat">${cat} <span class="qty" style="color:#00ffff">(${cats[cat].length})</span></div>`;
     html += '<div class="bone-list">';
     cats[cat].forEach(n => {
-      html += `<div class="bone-item">${n}<span class="qty">✓</span></div>`;
+      const ref = BoneAI.classify(n);
+      const tag = ref ? `<span style="color:#b026ff;font-size:.8em">${ref.shape}</span>` : '';
+      html += `<div class="bone-item">${n} ${tag}<span class="qty">✓</span></div>`;
     });
     html += '</div>';
   });
-  const total = boneRegistry.length;
   html += `<div style="margin-top:14px;text-align:center;font-weight:700;color:#e8ddc5;font-size:.8em">
-    TOTAL: <span style="color:#00ffff">${total}</span> ossos renderizados
+    TOTAL: <span style="color:#00ffff">${boneRegistry.length}</span> ossos renderizados<br>
+    <span style="color:#9ec8dd">+ cartilagens em todas as juntas</span><br>
+    <span style="color:#ffcc33">+ nervos em todas as articulações</span>
   </div>`;
   container.innerHTML = html;
 }
@@ -848,10 +1118,10 @@ function applyBody(i){
   bodyParts.chest.scale.set(p.shoulderW, 1, p.shoulderW);
   bodyParts.waist.scale.set(p.waistW, 1, p.waistW);
   bodyParts.hipMesh.scale.set(p.hipW*1.15, 0.85, p.hipW*1.0);
-  bodyParts.thighL.scale.set(p.thighW, 1, p.thighW);
-  bodyParts.thighR.scale.set(p.thighW, 1, p.thighW);
-  bodyParts.calfL.scale.set(p.calfW, 1, p.calfW);
-  bodyParts.calfR.scale.set(p.calfW, 1, p.calfW);
+  if(bodyParts.thighL) bodyParts.thighL.scale.set(p.thighW, 1, p.thighW);
+  if(bodyParts.thighR) bodyParts.thighR.scale.set(p.thighW, 1, p.thighW);
+  if(bodyParts.calfL) bodyParts.calfL.scale.set(p.calfW, 1, p.calfW);
+  if(bodyParts.calfR) bodyParts.calfR.scale.set(p.calfW, 1, p.calfW);
 }
 function applyFace(i){
   state.faceIdx = i;
@@ -865,12 +1135,14 @@ function applyHip(i){
   const h = hipParams(i);
   bodyParts.hipMesh.scale.set(h.width*1.15, h.round*0.85, h.depth*1.0);
   bodyParts.hips.rotation.z = h.tilt;
+  if(typeof BoneAI !== 'undefined') setTimeout(() => BoneAI.autoAdjust(true), 0);
 }
 function applyBreast(i){ state.breastIdx = i; }
 function applyWaist(i){
   state.waistIdx = i;
   const w = waistParams(i);
   bodyParts.waist.scale.set(w.width, w.height, w.depth);
+  if(typeof BoneAI !== 'undefined') setTimeout(() => BoneAI.autoAdjust(true), 0);
 }
 function applyHair(i){ state.hairIdx = i; }
 function applyFringe(i){ state.fringeIdx = i; }
@@ -898,12 +1170,15 @@ function applyLegMeasures(){
     const isL = idx === 0;
     const thigh = isL ? bodyParts.thighL : bodyParts.thighR;
     const calf  = isL ? bodyParts.calfL  : bodyParts.calfR;
-    thigh.scale.set(thighR / 0.022, 1, thighR / 0.022);
-    calf.scale.set(calfR / 0.020, 1, calfR / 0.020);
-    leg.position.x = (isL ? -1 : 1) * 0.09;
-    leg.rotation.z = (isL ? -1 : 1) * state.leg.spread;
-    leg.rotation.x = -state.leg.knee;
+    if(thigh) thigh.scale.set(thighR / 0.022, 1, thighR / 0.022);
+    if(calf)  calf.scale.set(calfR / 0.020, 1, calfR / 0.020);
+    if(leg){
+      leg.position.x = (isL ? -1 : 1) * 0.09;
+      leg.rotation.z = (isL ? -1 : 1) * state.leg.spread;
+      leg.rotation.x = -state.leg.knee;
+    }
   });
+  if(typeof BoneAI !== 'undefined') BoneAI.autoAdjust(true);
 }
 function applyPosePreset(i){
   state.poseIdx = i;
@@ -923,7 +1198,7 @@ function applyPosePreset(i){
 }
 
 /* ============================================================
-   POSES CLÁSSICAS
+   POSES
 ============================================================ */
 function setSensualPose(poseName){
   currentPose = poseName;
@@ -1091,12 +1366,9 @@ function buildGrids(){
         d.classList.add('sel');
         if(cat === 'corpo')   applyBody(i);
         if(cat === 'rosto')   applyFace(i);
-        if(cat === 'bumbum')  applyButt(i);
         if(cat === 'quadril') applyHip(i);
         if(cat === 'seios')   applyBreast(i);
         if(cat === 'cintura') applyWaist(i);
-        if(cat === 'cabelo')  applyHair(i);
-        if(cat === 'franja')  applyFringe(i);
         if(cat === 'pernas')  applyLegPreset(i);
         if(cat === 'poses')   applyPosePreset(i);
       };
