@@ -2,287 +2,279 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio 3D: Customização & Animação (Index Unificado)</title>
-    <!-- Inclusão do Three.js via CDN para processamento de malhas e renderização gráfica em tempo real -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manequim Robô 3D - Provador Virtual & Configuração</title>
+    <!-- Importação do Three.js para renderização e cálculos matemáticos tridimensionais -->
     <script src="https://cloudflare.com"></script>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-user-select: none;
+            user-select: none;
         }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #0d0d0d;
-            color: #ffffff;
-            display: flex;
-            height: 100vh;
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            background-color: #08080a;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-        /* Área de Visualização do Motor Gráfico */
-        #viewport-container {
-            flex: 1;
+        /* Área Principal do Motor Gráfico */
+        #canvas-viewport {
+            width: 100%;
             height: 100%;
-            position: relative;
-        }
-        #ui-overlay {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.85);
-            padding: 15px 20px;
-            border-radius: 8px;
-            border-left: 4px solid #ff007f;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            z-index: 10;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
-        #ui-overlay h1 {
-            font-size: 1.1em;
-            color: #ff007f;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 3px;
-        }
-        #ui-overlay p {
-            font-size: 0.8em;
-            color: #aaaaaa;
-        }
-        /* Painel Lateral Unificado de Configurações */
-        #sidebar {
-            width: 420px;
-            background-color: #161616;
-            border-left: 2px solid #252525;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.7);
-            z-index: 10;
-        }
-        .tabs {
-            display: flex;
-            background: #0f0f0f;
-            border-bottom: 2px solid #252525;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 16px;
-            background: none;
+        /* Botão Flutuante do Menu com Efeito Neon */
+        #floating-menu-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00ffff, #0088ff);
             border: none;
-            color: #888888;
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.8em;
             font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 0.8em;
-            letter-spacing: 0.5px;
-            transition: all 0.2s ease;
-        }
-        .tab-btn.active {
-            color: #ff007f;
-            border-bottom: 3px solid #ff007f;
-            background: #161616;
-        }
-        .tab-content {
-            flex: 1;
-            padding: 22px;
-            overflow-y: auto;
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        /* Estilização dos Controles e Sliders */
-        .control-section-title {
-            font-size: 0.85em;
-            color: #ff007f;
-            text-transform: uppercase;
-            margin: 18px 0 8px 0;
-            display: block;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-        .control-group {
-            margin-bottom: 14px;
-            background: #1e1e1e;
-            padding: 14px;
-            border-radius: 6px;
-            border: 1px solid #2a2a2a;
-        }
-        label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85em;
-            margin-bottom: 8px;
-            color: #dddddd;
-        }
-        .val-badge {
-            color: #00ffcc;
-            font-weight: bold;
-        }
-        input[type="range"] {
-            width: 100%;
-            accent-color: #ff007f;
-            background: #333;
-            height: 6px;
-            border-radius: 3px;
-            outline: none;
-        }
-        /* Seletor do Catálogo de 90 Biquínis */
-        .select-custom {
-            width: 100%;
-            padding: 10px;
-            background: #1e1e1e;
-            color: #fff;
-            border: 1px solid #333;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            outline: none;
-            font-size: 0.9em;
-        }
-        .bikini-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 5px;
-        }
-        .bikini-item {
-            background: #1e1e1e;
-            border: 1px solid #2d2d2d;
-            border-radius: 6px;
-            padding: 12px 8px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.78em;
-            transition: all 0.2s ease;
-        }
-        .bikini-item:hover, .bikini-item.selected {
-            border-color: #ff007f;
-            background: rgba(255, 0, 127, 0.08);
-            transform: translateY(-2px);
-        }
-        .bikini-thumb {
-            height: 35px;
-            margin-bottom: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4em;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.4);
+            z-index: 100;
+            transition: opacity 0.3s ease, transform 0.2s;
         }
-        /* Botões de Movimentos e Coreografias */
-        .dance-selector {
+        #floating-menu-btn:active {
+            transform: scale(0.9);
+        }
+        /* Painel Lateral de Configurações do Robô */
+        #control-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 380px;
+            height: 100%;
+            background: rgba(15, 15, 25, 0.95);
+            border-left: 2px solid #00ffff;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+            z-index: 50;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+            backdrop-filter: blur(10px);
         }
-        .btn-dance {
-            padding: 14px;
-            background: #1e1e1e;
-            border: 1px solid #2d2d2d;
-            color: #ffffff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9em;
-            text-align: left;
+        #control-panel.hidden {
+            transform: translateX(100%);
+        }
+        /* Sistema de Abas */
+        .tab-header {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s ease;
+            background: #0a0a10;
+            border-bottom: 1px solid #222;
         }
-        .btn-dance:hover, .btn-dance.active {
-            background: linear-gradient(135deg, #ff007f, #7f00ff);
-            border-color: transparent;
-            box-shadow: 0 4px 12px rgba(255, 0, 127, 0.3);
-        }
-        /* Botão Gerador de Personagem */
-        .btn-generator {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #00ffcc, #007fff);
+        .tab-btn {
+            flex: 1;
+            padding: 15px 5px;
+            background: none;
             border: none;
-            border-radius: 6px;
-            color: #0b0b0b;
+            color: #888;
             font-weight: bold;
-            font-size: 0.95em;
-            cursor: pointer;
+            font-size: 0.75em;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 18px;
-            transition: opacity 0.2s;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .btn-generator:hover {
-            opacity: 0.9;
+        .tab-btn.active {
+            color: #00ffff;
+            border-bottom: 2px solid #00ffff;
+            background: rgba(0, 255, 255, 0.05);
+        }
+        .tab-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .panel-section-title {
+            font-size: 0.8em;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 10px 0;
+            display: block;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            padding-bottom: 4px;
+        }
+        /* Grades Dinâmicas para os 90 Itens */
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .grid-card {
+            background: #151522;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.75em;
+            color: #ccc;
+            transition: all 0.2s;
+        }
+        .grid-card:hover, .grid-card.selected {
+            border-color: #00ffff;
+            color: #fff;
+            background: rgba(0, 255, 255, 0.1);
+        }
+        .card-icon {
+            font-size: 1.3em;
+            margin-bottom: 4px;
+        }
+        /* Seletores de Poses e Movimentos */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 12px;
+            background: #151522;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .action-btn:hover, .action-btn.active {
+            background: linear-gradient(135deg, #00ffff, #0055aa);
+            border-color: transparent;
+            color: #000;
+        }
+        /* Subtítulo informativo na tela */
+        #hud-display {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(5, 5, 10, 0.85);
+            padding: 12px 18px;
+            border-radius: 6px;
+            border-left: 3px solid #00ffff;
+            z-index: 10;
+            pointer-events: none;
+        }
+        #hud-display h2 {
+            font-size: 1em;
+            color: #00ffff;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        #hud-display p {
+            font-size: 0.75em;
+            color: #888;
         }
     </style>
 </head>
 <body>
 
-    <!-- Módulo de Visualização Espacial (Canvas 3D) -->
-    <div id="viewport-container">
-        <div id="ui-overlay">
-            <h1>Engine de Renderização Real-Time</h1>
-            <p>Arraste na tela para rotacionar o manequim gráfico</p>
+    <!-- Janela Gráfica Principal -->
+    <div id="canvas-viewport"></div>
+
+    <!-- HUD Informativo -->
+    <div id="hud-display">
+        <h2>Manequim Android 3D</h2>
+        <p id="hud-status">Biotipo #1 | Roupa #1 | Calcinha #1</p>
+    </div>
+
+    <!-- Botão Flutuante Interativo -->
+    <button id="floating-menu-btn" onclick="toggleMenuPanel(event)">⚙️</button>
+
+    <!-- Painel de Gerenciamento das Variações -->
+    <div id="control-panel" class="hidden" onclick="event.stopPropagation()">
+        <div class="tabs">
+            <button class="tab-btn active" id="btn-tab-body" onclick="switchActiveTab('tab-body-content')">Biotipos (90)</button>
+            <button class="tab-btn" id="btn-tab-clothes" onclick="switchActiveTab('tab-clothes-content')">Roupas (90)</button>
+            <button class="tab-btn" id="btn-tab-undies" onclick="switchActiveTab('tab-undies-content')">Lingerie (90)</button>
+            <button class="tab-btn" id="btn-tab-motion" onclick="switchActiveTab('tab-motion-content')">Animação</button>
+        </div>
+
+        <!-- CONTEÚDO DA ABA 1: 90 BIOTIPOS MECÂNICOS -->
+        <div id="tab-body-content" class="tab-body" style="display: block;">
+            <span class="panel-section-title">Ajustar Estrutura Corporal</span>
+            <div class="item-grid" id="grid-bodies">
+                <!-- Injetado dinamicamente via JS até completar 90 variações -->
+            </div>
+        </div>
+
+        <!-- CONTEÚDO DA ABA 2: 90 ROUPAS -->
+        <div id="tab-clothes-content" class="tab-body" style="display: none;">
+            <span class="panel-section-title">Coleção Closet Virtual</span>
+            <div class="item-grid" id="grid-clothes">
+                <!-- Injetado dinamicamente via JS -->
+            </div>
+        </div>
+
+        <!-- CONTEÚDO DA ABA 3: 90 CALCINHAS -->
+        <div id="tab-undies-content" class="tab-body" style="display: none;">
+            <span class="panel-section-title">Coleção Lingerie Fina</span>
+            <div class="item-grid" id="grid-undies">
+                <!-- Injetado dinamicamente via JS -->
+            </div>
+        </div>
+
+        <!-- CONTEÚDO DA ABA 4: ANIMAÇÕES E DANCING MOTOR -->
+        <div id="tab-motion-content" class="tab-body" style="display: none;">
+            <span class="panel-section-title">Posições e Coreografias</span>
+            <div class="action-list">
+                <button class="action-btn active" id="anim-0" onclick="setRobotAnimation(0)">Manequim: Pose de Vitrine</button>
+                <button class="action-btn" id="anim-1" onclick="setRobotAnimation(1)">Dança: Balanço de Quadril</button>
+                <button class="action-btn" id="anim-2" onclick="setRobotAnimation(2)">Dança: Até o Chão (Squat)</button>
+                <button class="action-btn" id="anim-3" onclick="setRobotAnimation(3)">Pose: Angulação Lateral 90°</button>
+            </div>
         </div>
     </div>
 
-    <!-- Módulo de Controle Unificado (Sidebar) -->
-    <div id="sidebar">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('body-tab')">Métricas</button>
-            <button class="tab-btn" onclick="switchTab('clothes-tab')">Coleções (90)</button>
-            <button class="tab-btn" onclick="switchTab('dance-tab')">Coreografias</button>
-        </div>
+    <script>
+        // --- COORDENADORES DE ESTADO DA APLICAÇÃO ---
+        let selectedBodyIndex = 1;
+        let selectedClothesIndex = 1;
+        let selectedUndiesIndex = 1;
+        let currentAnimationMode = 0;
 
-        <!-- ABA 1: PARÂMETROS DO BIOTIPO -->
-        <div id="body-tab" class="tab-content active">
-            <button class="btn-generator" onclick="generateRandomCharacter()">Gerar Estrutura Aleatória</button>
-            
-            <span class="control-section-title">Estatura</span>
-            <div class="control-group">
-                <label>Altura Estimada <span class="val-badge" id="lbl-altura">1.75 m</span></label>
-                <input type="range" min="150" max="195" value="175" id="slider-altura">
-            </div>
+        // Gerenciador de visibilidade baseado no toque na tela (Modo Imersivo)
+        const viewport = document.getElementById('canvas-viewport');
+        const menuPanel = document.getElementById('control-panel');
+        const floatBtn = document.getElementById('floating-menu-btn');
 
-            <span class="control-section-title">Busto e Tronco</span>
-            <div class="control-group">
-                <label>Circunferência do Busto <span class="val-badge" id="lbl-busto">92 cm</span></label>
-                <input type="range" min="80" max="115" value="92" id="slider-busto">
-            </div>
-            <div class="control-group">
-                <label>Linha de Cintura <span class="val-badge" id="lbl-cintura">62 cm</span></label>
-                <input type="range" min="55" max="85" value="62" id="slider-cintura">
-            </div>
+        viewport.addEventListener('click', () => {
+            // Se o usuário clicar no espaço 3D, esconde o menu lateral e o botão flutuante
+            if (!menuPanel.classList.contains('hidden')) {
+                menuPanel.classList.add('hidden');
+            } else {
+                floatBtn.style.opacity = floatBtn.style.opacity === '0' ? '1' : '0';
+                floatBtn.style.pointerEvents = floatBtn.style.opacity === '0' ? 'none' : 'auto';
+            }
+        });
 
-            <span class="control-section-title">Quadril e Membros</span>
-            <div class="control-group">
-                <label>Métrica do Quadril <span class="val-badge" id="lbl-quadril">105 cm</span></label>
-                <input type="range" min="85" max="125" value="105" id="slider-quadril">
-            </div>
-            <div class="control-group">
-                <label>Volume de Coxas <span class="val-badge" id="lbl-coxas">58 cm</span></label>
-                <input type="range" min="45" max="75" value="58" id="slider-coxas">
-            </div>
+        function toggleMenuPanel(event) {
+            event.stopPropagation(); // Impede o clique de propagar para o viewport
+            menuPanel.classList.toggle('hidden');
+        }
 
-            <span class="control-section-title">Estética de Extremidades</span>
-            <div class="control-group">
-                <label>Comprimento dos Cabelos <span class="val-badge" id="lbl-cabelo">70 cm</span></label>
-                <input type="range" min="10" max="110" value="70" id="slider-cabelo">
-            </div>
-        </div>
-
-        <!-- ABA 2: INTEGRALIZAÇÃO DE 90 BIQUÍNIS -->
-        <div id="clothes-tab" class="tab-content">
-            <label>Navegar pelo Catálogo (90 Variações):</label>
-            <select id="bikini-category" class="select-custom" onchange="loadBikiniCatalog()">
-                <option value="fita">Coleção Fita Isolante (Peças 1 a 30)</option>
-                <option value="asa">Coleção Asa Delta / Carnaval (Peças 31 a 60)</option>
-                <option value="croche">Coleção Crochê & Resort (Peças 61 a 90)</option>
-            </select>
-            
-            <div class="bikini-grid" id="catalog-container">
-                <!-- Populado dinamicamente por script interno -->
-            </div>
-        </div>
-
-        <!-- ABA 3: EXECUÇÃO DE DINÂMICAS DE FUNK -->
+        function switchActiveTab(tabId) {
+            document.querySelectorAll('.tab-body').forEach(el => el.style.display = 'none');
+Use o código com cuidado.document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));document.getElementById(tabId).style.display = 'block';event.currentTarget.classList.add('active');}// --- GERAÇÃO DOS MENUS DE 90 OPÇÕES ---function generateInterfaceGrids() {const bodiesGrid = document.getElementById('grid-bodies');const clothesGrid = document.getElementById('grid-clothes');const undiesGrid = document.getElementById('grid-undies');for (let i = 1; i <= 90; i++) {// Preencher Biotiposconst bodyCard = document.createElement('div');bodyCard.className = grid-card ${i === 1 ? 'selected' : ''};bodyCard.id = body-card-${i};bodyCard.onclick = () => selectItem('body', i);bodyCard.innerHTML = <div class="card-icon">🤖</div><span>Biotipo #${i}</span>;bodiesGrid.appendChild(bodyCard);// Preencher Roupasconst clothCard = document.createElement('div');clothCard.className = grid-card ${i === 1 ? 'selected' : ''};clothCard.id = cloth-card-${i};clothCard.onclick = () => selectItem('cloth', i);clothCard.innerHTML = <div class="card-icon">👗</div><span>Roupa #${i}</span>;clothesGrid.appendChild(clothCard);// Preencher Calcinhasconst undieCard = document.createElement('div');undieCard.className = grid-card ${i === 1 ? 'selected' : ''};undieCard.id = undie-card-${i};undieCard.onclick = () => selectItem('undie', i);undieCard.innerHTML = <div class="card-icon">👙</div><span>Calcinha #${i}</span>;undiesGrid.appendChild(undieCard);}}function selectItem(category, index) {document.querySelectorAll([id^="${category}-card-"]).forEach(el => el.classList.remove('selected'));document.getElementById(${category}-card-${index}).classList.add('selected');if (category === 'body') { selectedBodyIndex = index; applyBodyMorph(index); }if (category === 'cloth') { selectedClothesIndex = index; applyClothesTexture(index); }if (category === 'undie') { selectedUndiesIndex = index; applyUndiesTexture(index); }document.getElementById('hud-status').innerText = Biotipo #${selectedBodyIndex} | Roupa #${selectedClothesIndex} | Calcinha #${selectedUndiesIndex};}// --- ENGINE GRÁFICA TRIDIMENSIONAL (THREE.JS) ---let scene, camera, renderer;let robotGroup, hipJoint, spineGroup, headNode, hairNode;let legR, legL, calfR, calfL, footR, footL;let breastR, breastL;let meshTopOutfit, meshBottomOutfit, meshUnderwear;let clock = new THREE.Clock();function init3DEngine() {scene = new THREE.Scene();scene.background = new THREE.Color(0x08080a);camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);camera.position.set(0, 0.4, 3.8);renderer = new THREE.WebGLRenderer({ antialias: true });renderer.setSize(window.innerWidth, window.innerHeight);renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));document.getElementById('canvas-viewport').appendChild(renderer.domElement);// Iluminação Avançada de Laboratório / Cyberpunkconst lightAmbient = new THREE.AmbientLight(0xffffff, 0.4);scene.add(lightAmbient);const lightCyan = new THREE.DirectionalLight(0x00ffff, 0.8);lightCyan.position.set(4, 4, 4);scene.add(lightCyan);const lightMagenta = new THREE.DirectionalLight(0xff00ff, 0.6);lightMagenta.position.set(-4, 2, -4);scene.add(lightMagenta);// MONTAGEM DO MANEQUIM ROBÔ (Estrutura Articulada Baseada na Lista do Usuário)robotGroup = new THREE.Group();// Materiais do Robô Androidconst robotChassisMaterial = new THREE.MeshStandardMaterial({ color: 0xd0d5dd, metalness: 0.8, roughness: 0.1 });const robotJointsMaterial = new THREE.MeshStandardMaterial({ color: 0x111115, roughness: 0.5 });const hairMaterial = new THREE.MeshStandardMaterial({ color: 0x221144, roughness: 0.6 });// Vestuário DinâmicomaterialOutfit = new THREE.MeshStandardMaterial({ color: 0x00ffcc, metalness: 0.4, roughness: 0.3 });materialUnderwear = new THREE.MeshStandardMaterial({ color: 0xff00ff, metalness: 0.2, roughness: 0.4 });// 1. Quadril / Pelve (Nó de Orientação Geral)hipJoint = new THREE.Group();hipJoint.position.y = -0.15;robotGroup.add(hipJoint);const hipMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 16), robotChassisMaterial);hipMesh.scale.set(1, 0.75, 1.05);hipJoint.add(hipMesh);// 2. Membros Inferiores Articulados (Coxas, Panturrilhas, Calcanhar e Pés)legR = new THREE.Group(); legR.position.set(0.14, -0.2, 0); hipJoint.add(legR);const mLegR = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.09, 0.45, 16), robotChassisMaterial); mLegR.position.y = -0.22; legR.add(mLegR);legL = new THREE.Group(); legL.position.set(-0.14, -0.2, 0); hipJoint.add(legL);const mLegL = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.09, 0.45, 16), robotChassisMaterial); mLegL.position.y = -0.22; legL.add(mLegL);calfR = new THREE.Group(); calfR.position.set(0, -0.45, 0); legR.add(calfR);const mCalfR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.06, 0.45, 16), robotChassisMaterial); mCalfR.position.y = -0.22; calfR.add(mCalfR);calfL = new THREE.Group(); calfL.position.set(0, -0.45, 0); legL.add(calfL);const mCalfL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.06, 0.45, 16), robotChassisMaterial); mCalfL.position.y = -0.22; calfL.add(mCalfL);// Pés e CalcanharesfootR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.18), robotJointsMaterial); footR.position.set(0, -0.48, 0.04); calfR.add(footR);footL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.18), robotJointsMaterial); footL.position.set(0, -0.48, 0.04); calfL.add(footL);// 3. Tronco e Coluna VertebralspineGroup = new THREE.Group();spineGroup.position.y = 0.2;hipJoint.add(spineGroup);const torsoMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.17, 0.65, 32), robotChassisMaterial);spineGroup.add(torsoMesh);// Tórax / Peito / Seiosconst breastGeo = new THREE.SphereGeometry(0.1, 16, 16);breastR = new THREE.Mesh(breastGeo, robotChassisMaterial); breastR.position.set(0.1, 0.2, 0.16); spineGroup.add(breastR);breastL = new THREE.Mesh(breastGeo, robotChassisMaterial); breastL.position.set(-0.1, 0.2, 0.16); spineGroup.add(breastL);// 4. Cabeça, Orelhas, Olhos e CabeloheadNode = new THREE.Mesh(new THREE.SphereGeometry(0.16, 32, 32), robotChassisMaterial);headNode.position.y = 0.55;spineGroup.add(headNode);const earR = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), robotJointsMaterial); earR.position.set(0.17, 0, 0); headNode.add(earR);const earL = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), robotJointsMaterial); earL.position.set(-0.17, 0, 0); headNode.add(earL);// Sensores Ópticos (Olhos)const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.015, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ffff })); eyeR.position.set(0.05, 0.03, 0.14); headNode.add(eyeR);const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.015, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ffff })); eyeL.position.set(-0.05, 0.03, 0.14); headNode.add(eyeL);// Estrutura do Cabelo RobóticohairNode = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.13, 0.55, 16), hairMaterial);hairNode.position.set(0, -0.1, -0.04);headNode.add(hairNode);// 5. CAMADAS DE TEXTURA E VESTUÁRIO (PROVADOR VIRTUAL)meshTopOutfit = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.18, 32), materialOutfit);meshTopOutfit.position.y = 0.2;spineGroup.add(meshTopOutfit);meshBottomOutfit = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.2, 0.35, 32), materialOutfit);meshBottomOutfit.position.y = -0.15;spineGroup.add(meshBottomOutfit);meshUnderwear = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.08, 0.22, 32), materialUnderwear);meshUnderwear.position.y = -0.06;hipJoint.add(meshUnderwear);scene.add(robotGroup);}// --- SISTEMA DE POLIMORFISMO E ADAPTAÇÃO DO ROBÔ (90 TIPOS) ---function applyBodyMorph(index) {// Fatores de transformação matemática baseados na escolha do ID (1 a 90)const baseScale = 0.85 + (index * 0.003);const waistFactor = 0.8 + ((index % 5) * 0.1);const hipFactor = 0.9 + ((index % 7) * 0.08);const hairFactor = 0.5 + ((index % 4) * 0.25);// Escalonamento de juntas e malhas integradas do AndroiderobotGroup.scale.y = baseScale;torsoMesh.scale.x = waistFactor;// Reajustar Quadril e Calcinhas de forma sincronizadahipMesh.scale.set(hipFactor, 0.75, hipFactor * 1.05);meshUnderwear.scale.set(hipFactor * 1.02, 1, hipFactor * 1.02);// Reajustar Peito e Top de Roupaconst breastScale = 0.8 + ((index % 6) * 0.12);breastR.scale.set(breastScale, breastScale, breastScale);breastL.scale.set(breastScale, breastScale, breastScale);meshTopOutfit.scale.set(breastScale * 1.02, 1, breastScale * 1.02);// Comprimento do CabelohairNode.scale.y = hairFactor;}// --- LÓGICA DO PROVADOR VIRTUAL (ALTERAÇÃO CROMÁTICA DAS 90 ROUPAS) ---function applyClothesTexture(index) {const h = (index * 137.5) % 360; // Algoritmo estável de amostragem de matizmaterialOutfit.color.setHSL(h / 360, 0.85, 0.5);meshTopOutfit.visible = true;meshBottomOutfit.visible = true;}function applyUndiesTexture(index) {const h = (index * 222.5) % 360;materialUnderwear.color.setHSL(h / 360, 0.9, 0.45);}function setRobotAnimation(modeId) {currentAnimationMode = modeId;document.querySelectorAll('.action-btn').forEach(btn => btn.classList.remove('active'));document.getElementById('anim-' + modeId).classList.add('active');// Resetar angulações de segurançahipJoint.position.set(0, -0.15, 0);hipJoint.rotation.set(0, 0, 0);spineGroup.rotation.set(0, 0, 0);legR.rotation.set(0,0,0);legL.rotation.set(0,0,0);}// --- LOOP CONTÍNUO DE RENDERIZAÇÃO E MOTOR DE MOVIMENTOS ---function runGraphicsLoop() {requestAnimationFrame(runGraphicsLoop);const time = clock.getElapsedTime();const tempoBPM = 8.0; // Velocidade de pulso do motor de dançaif (currentAnimationMode === 1) {// Dança: Balanço de QuadrilhipJoint.position.x = Math.sin(time * tempoBPM) * 0.15;hipJoint.rotation.z = Math.sin(time * tempoBPM) * 0.2;spineGroup.rotation.z = -Math.sin(time * tempoBPM) * 0.1;}else if (currentAnimationMode === 2) {// Dança: Até o Chão (Mecânica de Agachamento Articulado)const descerFase = (Math.sin(time * (tempoBPM * 0.5)) + 1) / 2; // Normalizado entre 0 e 1hipJoint.position.y = -0.15 - (descerFase * 0.45); // Desce o nó centralspineGroup.rotation.x = descerFase * 0.4; // Inclina a coluna vertebrallegR.rotation.x = -descerFase * 0.3; // Flexiona conexões de pernalegL.rotation.x = -descerFase * 0.3;}else if (currentAnimationMode === 3) {// Pose: Angulação Lateral Fixo 90 grausrobotGroup.rotation.y = Math.PI / 2;}else {// Modo Estático / Vitrine: Rotação constante automática do cenárioif (!mouseInteractionActive) {robotGroup.rotation.y += 0.005;}}renderer.render(scene, camera);}// --- SISTEMA DE INTERAÇÃO DE ROTATIVIDADE MANUAL ---let mouseInteractionActive = false;let lastCoordinateX = 0;viewport.addEventListener('mousedown', (e) => { mouseInteractionActive = true; lastCoordinateX = e.clientX; });viewport.addEventListener('touchstart', (e) => { mouseInteractionActive = true; lastCoordinateX = e.touches[0].clientX; });window.addEventListener('mousemove', (e) => {if (mouseInteractionActive) {const delta = e.clientX - lastCoordinateX;robotGroup.rotation.y += delta * 0.01;lastCoordinateX = e.clientX;}});window.addEventListener('touchmove', (e) => {if (mouseInteractionActive) {const delta = e.touches[0].clientX - lastCoordinateX;robotGroup.rotation.y += delta * 0.01;lastCoordinateX = e.touches[0].clientX;}});window.addEventListener('mouseup', () => mouseInteractionActive = false);window.addEventListener('touchend', () => mouseInteractionActive = false);// Ajuste de Resolução Automática para Telas Inteiraswindow.addEventListener('resize', () => {camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight);});// --- INICIALIZAÇÃO GERAL DO SISTEMA ---window.onload = () => {generateInterfaceGrids();init3DEngine();applyBodyMorph(1);applyClothesTexture(1);applyUndiesTexture(1);runGraphicsLoop();};
+<FollowUp>
+Deseja ajustar algum parâmetro mecânico do manequim virtual ou quer ajuda para **inserir novas texturas** no provador de roupas?
+</FollowUp>
