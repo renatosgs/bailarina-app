@@ -364,13 +364,13 @@ function waistParams(i){
 function hairParams(i){
   const styles = ['long', 'short', 'curly', 'wavy', 'bob', 'ponytail', 'pixie', 'afro'];
   const seeds = i*6.1;
-  const hueBase = (i*7) % 40; // 0..39
+  const hueBase = (i*7) % 40;
   return {
     style: styles[i % styles.length],
     volume: 0.85 + ((i*3)%8)*0.055,
     fall: 0.5 + ((i*5)%9)*0.09,
     wave: ((i*11)%10)/10,
-    hue: hueBase * 9, // 0..351
+    hue: hueBase * 9,
     sat: 20 + ((i*7)%6)*10,
     lig: 10 + ((i*3)%6)*8
   };
@@ -741,10 +741,10 @@ function buildCharacter(){
   bodyParts.thighR = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.075, 0.42, 20), MAT.skin);
   bodyParts.thighR.position.y = -0.21;
   legR.add(bodyParts.thighR);
-  bodyParts.calfR = new THREE',.Mesh(new THREE.CylinderGeometry(0.07,  new0.045, 0.40, 18), MAT.skin);
+  bodyParts.calfR = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.045, 0.40, 18), MAT.skin);
   bodyParts.calfR.position.y = -0.60;
-  legR.add(bodyParts THREE.calfR);
-  const shoeR = new THREE.Mesh(new.B THREE.BoxGeometry(0.075, 0uffer.05, 0.18), MAT.Attributeheel);
+  legR.add(bodyParts.calfR);
+  const shoeR = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.05, 0.18), MAT.heel);
   shoeR.position.set(0, -0.83, 0.04);
   legR.add(shoeR);
   const heelR = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.09, 0.02), MAT.heel);
@@ -870,7 +870,7 @@ function regenerateHair(){
     colors[i*6+3] = cB.r; colors[i*6+4] = cB.g; colors[i*6+5] = cB.b;
   }
   const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position(positions, 3));
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   const mat = new THREE.LineBasicMaterial({
     vertexColors: true, transparent: true,
@@ -908,7 +908,7 @@ function applyFace(i){
   bodyParts.earR.scale.set(f.ear*0.5*state.earScale, f.ear*state.earScale, f.ear*state.earScale);
   bodyParts.eyeL.scale.setScalar(f.eye * state.eyeScale);
   bodyParts.eyeR.scale.setScalar(f.eye * state.eyeScale);
-  state.lipScale = f.lip * state.lipScale / state.lipScale; // fix
+  state.lipScale = f.lip;
   bodyParts.mouthGroup.scale.setScalar(state.lipScale);
   if(bodyParts.teethTop) bodyParts.teethTop.scale.setScalar(state.teethSmile);
   if(bodyParts.noseGroup) bodyParts.noseGroup.scale.setScalar(state.noseScale * f.nose);
@@ -966,13 +966,11 @@ function applyWaist(i){
 function applyHair(i){
   state.hairIdx = i;
   const h = hairParams(i);
-  // aplica cor HSL
   const col = new THREE.Color().setHSL(h.hue/360, h.sat/100, h.lig/100);
   const col2 = col.clone().multiplyScalar(0.55);
   MAT.hair.color.copy(col);
   MAT.hair2.color.copy(col2);
   MAT.fringe.color.copy(col);
-  // formato do cabelo de trás
   const v = h.volume;
   const f = h.fall;
   bodyParts.hairBack.scale.set(0.85 + v*0.35, 0.8 + f*0.7, 0.85 + v*0.35);
@@ -994,8 +992,6 @@ function applyHair(i){
 function applyFringe(i){
   state.fringeIdx = i;
   const f = fringeParams(i);
-  // Redimensiona e posiciona franja
-  const g = bodyParts.fringe.geometry;
   bodyParts.fringe.scale.set(f.width, 1 + f.length*4, f.width);
   bodyParts.fringe.rotation.x = 0.25 + f.angle;
   bodyParts.fringe.position.y = 0.06 - f.length*0.5;
@@ -1495,12 +1491,12 @@ function loadDemoPhoto(type){
   // Silhueta do corpo
   ctx.fillStyle = skin;
   ctx.beginPath();
-  ctx.arc(200, 120, 40, 0, Math.PI*2); // cabeça
+  ctx.arc(200, 120, 40, 0, Math.PI*2);
   ctx.fill();
   ctx.beginPath();
   ctx.moveTo(160, 160);
-  ctx.quadraticCurveTo(130, 250, 150, 320); // lado esq
-  ctx.quadraticCurveTo(110, 380, 130, 450); // quadril
+  ctx.quadraticCurveTo(130, 250, 150, 320);
+  ctx.quadraticCurveTo(110, 380, 130, 450);
   ctx.quadraticCurveTo(120, 550, 140, 590);
   ctx.lineTo(175, 590);
   ctx.lineTo(180, 450);
@@ -1540,17 +1536,14 @@ function extractColorsFromImage(img){
   c.width = w; c.height = h;
   const ctx = c.getContext('2d');
   ctx.drawImage(img, 0, 0, w, h);
-  // Cabelo (topo)
   const hairData = ctx.getImageData(20, 5, 20, 15).data;
   let rH=0,gH=0,bH=0,nH=0;
   for(let i=0;i<hairData.length;i+=4){ rH+=hairData[i]; gH+=hairData[i+1]; bH+=hairData[i+2]; nH++; }
   const hairCol = (Math.round(rH/nH)<<16) | (Math.round(gH/nH)<<8) | Math.round(bH/nH);
-  // Pele (meio)
   const skinData = ctx.getImageData(25, 30, 10, 15).data;
   let rS=0,gS=0,bS=0,nS=0;
   for(let i=0;i<skinData.length;i+=4){ rS+=skinData[i]; gS+=skinData[i+1]; bS+=skinData[i+2]; nS++; }
   const skinCol = (Math.round(rS/nS)<<16) | (Math.round(gS/nS)<<8) | Math.round(bS/nS);
-  // Roupa
   const dressData = ctx.getImageData(20, 50, 20, 20).data;
   let rD=0,gD=0,bD=0,nD=0;
   for(let i=0;i<dressData.length;i+=4){ rD+=dressData[i]; gD+=dressData[i+1]; bD+=dressData[i+2]; nD++; }
@@ -1568,7 +1561,6 @@ function extractColorsFromImage(img){
 }
 
 function applyFallbackSilhouette(img){
-  // Estima proporções a partir da imagem
   const aspect = img.height / img.width;
   const idx = Math.max(1, Math.min(90, Math.round(aspect * 30)));
   applyBody(idx);
@@ -1588,21 +1580,17 @@ function applyPhotoAnalysis(){
     document.getElementById('upload-status').innerText = '⚠️ Nenhuma foto carregada.';
     return;
   }
-  // Se temos landmarks do MediaPipe, extraímos proporções reais
   if(lastDetected){
     const lm = lastDetected;
-    // Índices MediaPipe: 11 ombro esq, 12 ombro dir, 23 quadril esq, 24 quadril dir, 27/28 tornozelos
     const shoulderW = Math.abs(lm[11].x - lm[12].x);
     const hipW = Math.abs(lm[23].x - lm[24].x);
-    const waistRatio = 0.85; // aproximado
+    const waistRatio = 0.85;
     const shoulderHipRatio = shoulderW / Math.max(hipW, 0.01);
-    // Mapear para índice de 1..90
     const bodyIdx = Math.max(1, Math.min(90, Math.round(shoulderHipRatio * 45)));
     const buttIdx = Math.max(1, Math.min(90, Math.round((hipW / Math.max(shoulderW, 0.01)) * 45)));
     const hipIdx = buttIdx;
     const breastIdx = Math.max(1, Math.min(90, Math.round((1 - shoulderHipRatio) * 60 + 30)));
     const waistIdx = Math.max(1, Math.min(90, Math.round(waistRatio * 45)));
-    // Comprimento das pernas
     const legLen = Math.abs(lm[28].y - lm[24].y);
     const legIdx = Math.max(1, Math.min(90, Math.round((1 - legLen) * 90)));
     applyBody(bodyIdx);
