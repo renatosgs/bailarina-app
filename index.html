@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>IA Boneca 3D - Corpos, Rosto, Funk e Foto</title>
+<title>IA Boneca 3D - Bumbum Coração, Rosto, Dente, Poses e IA Foto</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
 <style>
@@ -19,29 +19,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
 #menu-btn.hidden{opacity:0;pointer-events:none}
 
 /* --------- PAINEL DE CONTROLE --------- */
-#panel{position:fixed;top:0;right:0;width:340px;max-width:90vw;height:100%;
-  background:linear-gradient(180deg,rgba(20,10,35,.97),rgba(10,5,20,.97));
+#panel{position:fixed;top:0;right:0;width:360px;max-width:92vw;height:100%;
+  background:linear-gradient(180deg,rgba(20,10,35,.98),rgba(10,5,20,.98));
   border-left:2px solid #ff44aa;z-index:150;display:flex;flex-direction:column;
-  transform:translateX(100%);transition:transform .35s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(12px)}
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(14px)}
 #panel.open{transform:translateX(0)}
 .tabs{display:flex;background:#0a0515;border-bottom:1px solid #333;flex-shrink:0;overflow-x:auto}
-.tab{flex:1;min-width:70px;padding:12px 6px;background:none;border:none;color:#888;font-weight:700;
-  font-size:.7em;text-transform:uppercase;cursor:pointer;letter-spacing:.5px;transition:.2s;white-space:nowrap}
-.tab.active{color:#ff44aa;border-bottom:2px solid #ff44aa;background:rgba(255,68,170,.08)}
+.tab{flex:1;min-width:65px;padding:12px 6px;background:none;border:none;color:#888;font-weight:700;
+  font-size:.68em;text-transform:uppercase;cursor:pointer;letter-spacing:.4px;transition:.2s;white-space:nowrap}
+.tab.active{color:#ff44aa;border-bottom:2px solid #ff44aa;background:rgba(255,68,170,.1)}
 .tab-body{flex:1;overflow-y:auto;padding:16px;display:none}
 .tab-body.active{display:block}
 
-.section-title{font-size:.75em;color:#ff44aa;text-transform:uppercase;letter-spacing:1.5px;
-  margin:12px 0 8px;border-bottom:1px solid rgba(255,68,170,.25);padding-bottom:4px;font-weight:700}
+.section-title{font-size:.76em;color:#ff44aa;text-transform:uppercase;letter-spacing:1.5px;
+  margin:12px 0 8px;border-bottom:1px solid rgba(255,68,170,.3);padding-bottom:4px;font-weight:700}
 
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;max-height:280px;overflow-y:auto}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;max-height:260px;overflow-y:auto}
 .card{background:#1a0a25;border:1px solid #333;border-radius:6px;padding:8px 4px;text-align:center;
   cursor:pointer;font-size:.7em;color:#ccc;transition:.2s}
-.card:hover,.card.sel{border-color:#ff44aa;color:#fff;background:rgba(255,68,170,.18);box-shadow:0 0 10px rgba(255,68,170,.4)}
+.card:hover,.card.sel{border-color:#ff44aa;color:#fff;background:rgba(255,68,170,.22);box-shadow:0 0 12px rgba(255,68,170,.5)}
 .card .ic{font-size:1.4em;display:block;margin-bottom:2px}
 
 .row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.78em}
-.row label{flex:0 0 100px;color:#ffaadd}
+.row label{flex:0 0 110px;color:#ffaadd}
 .row input[type=range]{flex:1;accent-color:#ff44aa}
 .row .val{flex:0 0 55px;text-align:right;color:#00ffff;font-weight:700}
 
@@ -51,96 +51,177 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
 .color-row input[type=color]::-webkit-color-swatch{border:none;border-radius:6px}
 
 .action{display:block;width:100%;padding:11px;margin-bottom:8px;background:linear-gradient(135deg,#ff44aa,#8800ff);
-  border:none;border-radius:8px;color:#fff;font-weight:700;font-size:.8em;cursor:pointer;text-transform:uppercase;
-  letter-spacing:1px;transition:.2s}
+  border:none;border-radius:8px;color:#fff;font-weight:700;font-size:.78em;cursor:pointer;text-transform:uppercase;
+  letter-spacing:1px;transition:.2s;text-align:center}
 .action:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,68,170,.5)}
 .action:active{transform:scale(.97)}
 .action.blue{background:linear-gradient(135deg,#00ffff,#0066ff);color:#000}
 .action.green{background:linear-gradient(135deg,#44ff88,#00aa44);color:#000}
-.action.orange{background:linear-gradient(135deg,#ffcc00,#ff6600);color:#000}
+.action.orange{background:linear-gradient(135deg,#ff9900,#ff3300);color:#fff}
+.action.pink{background:linear-gradient(135deg,#ff1493,#ff69b4);color:#fff}
+.action.purple{background:linear-gradient(135deg,#b026ff,#5500aa);color:#fff}
 
-#upload-area{border:2px dashed #ff44aa;border-radius:10px;padding:18px;text-align:center;
-  cursor:pointer;margin-bottom:10px;transition:.2s;font-size:.8em}
-#upload-area:hover{background:rgba(255,68,170,.1)}
+#upload-area{border:2px dashed #ff44aa;border-radius:10px;padding:16px;text-align:center;
+  cursor:pointer;margin-bottom:10px;transition:.2s;font-size:.8em;background:rgba(255,68,170,.05)}
+#upload-area:hover{background:rgba(255,68,170,.15)}
 #upload-area input{display:none}
-#upload-status{font-size:.75em;color:#00ffff;margin-top:8px;min-height:18px;text-align:center}
-#photo-preview{max-width:100%;border-radius:8px;margin-top:8px;display:none}
+#upload-status{font-size:.75em;color:#00ffff;margin-top:8px;min-height:18px;text-align:center;line-height:1.4}
+#photo-preview{max-width:100%;max-height:160px;border-radius:8px;margin:8px auto;display:none;border:1px solid #ff44aa}
 
-/* --------- HUD --------- */
-#hud{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(5,5,15,.8);
-  padding:8px 20px;border-radius:30px;border:1px solid #ff44aa;z-index:10;pointer-events:none;
-  box-shadow:0 0 20px rgba(255,68,170,.4);font-size:.75em;text-align:center;transition:.3s}
-#hud.hidden{opacity:0}
+/* --------- HUD STATUS BANNER --------- */
+#hud{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(10,5,25,.88);
+  padding:10px 22px;border-radius:30px;border:1px solid #ff44aa;z-index:10;
+  box-shadow:0 0 25px rgba(255,68,170,.45);font-size:.75em;text-align:center;transition:.3s;cursor:pointer}
+#hud.hidden{opacity:0;pointer-events:none}
 #hud b{color:#ff44aa}
+#hud.invisible-alert{border-color:#00ffff;box-shadow:0 0 25px rgba(0,255,255,.6);animation:pulse-alert 2s infinite}
+@keyframes pulse-alert{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.03)}}
+
+/* --------- MODAL QUANDO INVISÍVEL --------- */
+#materialize-overlay{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(15,5,30,.92);border:2px solid #00ffff;border-radius:16px;padding:18px 24px;
+  text-align:center;z-index:80;box-shadow:0 0 35px rgba(0,255,255,.4);backdrop-filter:blur(10px);
+  max-width:90%;width:380px;transition:opacity .4s ease,transform .4s ease}
+#materialize-overlay.hidden{opacity:0;pointer-events:none;transform:translate(-50%,-45%) scale(.95)}
+#materialize-overlay h3{color:#00ffff;font-size:1.1em;margin-bottom:8px;letter-spacing:1px}
+#materialize-overlay p{font-size:.8em;color:#ccc;line-height:1.4;margin-bottom:14px}
 
 /* --------- BOTÕES INFERIORES --------- */
-#bottom{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100;
-  background:rgba(15,5,25,.9);padding:8px 12px;border-radius:50px;border:1px solid rgba(255,68,170,.4);
-  box-shadow:0 0 25px rgba(255,68,170,.3);backdrop-filter:blur(10px);transition:.3s}
+#bottom{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:100;
+  background:rgba(15,5,25,.92);padding:8px 12px;border-radius:50px;border:1px solid rgba(255,68,170,.4);
+  box-shadow:0 0 25px rgba(255,68,170,.3);backdrop-filter:blur(10px);transition:.3s;flex-wrap:wrap;justify-content:center}
 #bottom.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(30px)}
-.bot-btn{padding:10px 16px;border:none;border-radius:30px;font-weight:700;font-size:.75em;cursor:pointer;
-  text-transform:uppercase;letter-spacing:.5px;transition:.2s;color:#fff}
+.bot-btn{padding:9px 14px;border:none;border-radius:30px;font-weight:700;font-size:.72em;cursor:pointer;
+  text-transform:uppercase;letter-spacing:.4px;transition:.2s;color:#fff}
 .bot-btn:active{transform:scale(.94)}
+#b-twerk{background:linear-gradient(135deg,#ff0066,#ff6600);color:#fff}
+#b-poses{background:linear-gradient(135deg,#b026ff,#ff1493);color:#fff}
 #b-dress{background:linear-gradient(135deg,#ff44aa,#cc0066)}
 #b-undress{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000}
-#b-funk{background:linear-gradient(135deg,#ffcc00,#ff3300);color:#000}
+#b-photo{background:linear-gradient(135deg,#00ffcc,#0099ff);color:#000}
 #b-pose{background:linear-gradient(135deg,#44ff88,#00aa44);color:#000}
-.bot-btn.on{box-shadow:0 0 20px currentColor;filter:brightness(1.3)}
+.bot-btn.on{box-shadow:0 0 20px currentColor;filter:brightness(1.35)}
+
+/* Poses Sensuais Grid */
+.pose-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.pose-card{background:#160924;border:1px solid #442255;border-radius:8px;padding:10px 6px;text-align:center;
+  cursor:pointer;font-size:.75em;color:#ddd;transition:.2s}
+.pose-card:hover,.pose-card.sel{border-color:#ff1493;background:rgba(255,20,147,.25);color:#fff;box-shadow:0 0 15px rgba(255,20,147,.5)}
+.pose-card .pic{font-size:1.6em;display:block;margin-bottom:4px}
 </style>
 </head>
 <body>
 
 <div id="viewport"></div>
 
-<div id="hud">
-  👧 <b id="hud-info">Biotipo #1 • Rosto #1 • Bumbum #1</b>
-  <div style="font-size:.85em;color:#aaa;margin-top:3px">Toque na tela para esconder/mostrar menus</div>
+<!-- HUD -->
+<div id="hud" onclick="togglePanel(event)">
+  <span id="hud-status-icon">🔒</span> <b id="hud-info">Corpo Invisível • Aguardando Foto IA</b>
+  <div style="font-size:.85em;color:#aaa;margin-top:3px" id="hud-sub">Toque aqui ou envie uma foto para materializar</div>
+</div>
+
+<!-- Modal Central de Aguardo de Foto IA -->
+<div id="materialize-overlay">
+  <h3>📷 PERSONAGEM INVISÍVEL</h3>
+  <p>A cor e o modelo de corpo só aparecerão conforme a <b>foto da IA</b>. Você pode enviar sua foto ou usar um modelo demonstrativo!</p>
+  <button class="action pink" onclick="openPhotoTab()">📸 Enviar Foto Agora</button>
+  <button class="action blue" onclick="loadDemoPhoto(1)">🌟 Testar Modelo 1: Morena Violão</button>
+  <button class="action purple" onclick="loadDemoPhoto(2)">🌸 Testar Modelo 2: Loira Fitness</button>
+  <button class="action green" onclick="forceRevealBody()">👁️ Forçar Visibilidade Manual</button>
 </div>
 
 <button id="menu-btn" onclick="togglePanel(event)">☰</button>
 
 <div id="panel" onclick="event.stopPropagation()">
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('t-corpo',event)">Corpo</button>
-    <button class="tab" onclick="switchTab('t-rosto',event)">Rosto</button>
-    <button class="tab" onclick="switchTab('t-bumbum',event)">Bumbum</button>
-    <button class="tab" onclick="switchTab('t-pernas',event)">Pernas</button>
-    <button class="tab" onclick="switchTab('t-cores',event)">Cores</button>
+    <button class="tab active" onclick="switchTab('t-poses',event)">💋 Poses</button>
+    <button class="tab" onclick="switchTab('t-rosto',event)">💇 Rosto</button>
+    <button class="tab" onclick="switchTab('t-bumbum',event)">🍑 Bumbum</button>
+    <button class="tab" onclick="switchTab('t-corpo',event)">🩷 Corpo</button>
+    <button class="tab" onclick="switchTab('t-pernas',event)">📏 Pernas</button>
+    <button class="tab" onclick="switchTab('t-cores',event)">🎨 Cores</button>
     <button class="tab" onclick="switchTab('t-foto',event)">📷 IA Foto</button>
-    <button class="tab" onclick="switchTab('t-acao',event)">Ação</button>
+    <button class="tab" onclick="switchTab('t-acao',event)">💃 Ação</button>
+  </div>
+
+  <!-- ========= POSES SENSUAIS ========= -->
+  <div id="t-poses" class="tab-body active">
+    <div class="section-title">💋 Posições Sensuais</div>
+    <div class="pose-grid">
+      <div class="pose-card sel" id="pose-card-empinada" onclick="setSensualPose('empinada')">
+        <span class="pic">🍑</span>
+        <b>Empinada Coração</b>
+        <div style="font-size:.8em;color:#aaa">Costas arqueadas & glúteo</div>
+      </div>
+      <div class="pose-card" id="pose-card-pinup" onclick="setSensualPose('pinup')">
+        <span class="pic">💃</span>
+        <b>Pin-Up Curva S</b>
+        <div style="font-size:.8em;color:#aaa">Mão na cintura e nuca</div>
+      </div>
+      <div class="pose-card" id="pose-card-goddess" onclick="setSensualPose('goddess')">
+        <span class="pic">👑</span>
+        <b>Goddess / Nuca</b>
+        <div style="font-size:.8em;color:#aaa">Braços na cabeça</div>
+      </div>
+      <div class="pose-card" id="pose-card-rear" onclick="setSensualPose('rear')">
+        <span class="pic">💖</span>
+        <b>Costas Sensual</b>
+        <div style="font-size:.8em;color:#aaa">Olhar por cima do ombro</div>
+      </div>
+      <div class="pose-card" id="pose-card-catwalk" onclick="setSensualPose('catwalk')">
+        <span class="pic">👠</span>
+        <b>Passarela VIP</b>
+        <div style="font-size:.8em;color:#aaa">Quadril quebrado elegante</div>
+      </div>
+      <div class="pose-card" id="pose-card-twerk" onclick="setSensualPose('twerk_stance')">
+        <span class="pic">🔥</span>
+        <b>Postura de Rebolar</b>
+        <div style="font-size:.8em;color:#aaa">Pernas fixas, bumbum pronto</div>
+      </div>
+    </div>
+    <div class="section-title">Ajuste da Pose</div>
+    <div class="row"><label>Arqueamento tronco</label><input type="range" id="p-arch" min="0" max="1.5" step="0.05" value="0.8"><span class="val" id="vp-arch">0.8</span></div>
+    <div class="row"><label>Projeção pélvica</label><input type="range" id="p-pelvis" min="0" max="1.5" step="0.05" value="1.0"><span class="val" id="vp-pelvis">1.0</span></div>
+    <button class="action orange" onclick="startIsolatedTwerk()">🔥 Rebolar Bumbum (Pernas Fixas)</button>
+  </div>
+
+  <!-- ========= ROSTO (Detalhado: Nariz, Dentes, Boca, Olhos) ========= -->
+  <div id="t-rosto" class="tab-body">
+    <div class="section-title">💇 Rosto & Expressão Sensual</div>
+    <div class="grid" id="grid-rosto"></div>
+    
+    <div class="section-title">💋 Boca, Dentes & Nariz 3D</div>
+    <div class="row"><label>Sorriso / Dentes</label><input type="range" id="f-teeth" min="0" max="1.5" step="0.05" value="1.0"><span class="val" id="v-teeth">1.0</span></div>
+    <div class="row"><label>Volume da Boca</label><input type="range" id="f-lip" min="0.7" max="1.8" step="0.05" value="1.1"><span class="val" id="v-lip">1.1</span></div>
+    <div class="row"><label>Nariz Arrebitado</label><input type="range" id="f-nose" min="0.6" max="1.5" step="0.05" value="1.0"><span class="val" id="v-nose">1.0</span></div>
+    <div class="row"><label>Tamanho Cabeça</label><input type="range" id="f-head" min="0.8" max="1.3" step="0.02" value="1"><span class="val" id="v-head">1.0</span></div>
+    <div class="row"><label>Formato Queixo</label><input type="range" id="f-jaw" min="0.7" max="1.3" step="0.02" value="1"><span class="val" id="v-jaw">1.0</span></div>
+    <div class="row"><label>Olhos & Cílios</label><input type="range" id="f-eye" min="0.7" max="1.5" step="0.05" value="1.05"><span class="val" id="v-eye">1.05</span></div>
+  </div>
+
+  <!-- ========= BUMBUM (Formato de Coração 💖) ========= -->
+  <div id="t-bumbum" class="tab-body">
+    <div class="section-title">🍑 Bumbum Formato de Coração 💖</div>
+    <div style="font-size:.74em;color:#ffaadd;margin-bottom:10px;line-height:1.4">
+      Geometria esculpida com as duas abóbadas superiores e afunilamento em V inferior, formando a silhueta de <b>Coração</b> perfeita!
+    </div>
+    <div class="grid" id="grid-bumbum"></div>
+    <div class="section-title">Ajustes do Formato de Coração</div>
+    <div class="row"><label>Formato Coração</label><input type="range" id="b-heart" min="0.5" max="2.0" step="0.05" value="1.3"><span class="val" id="vb-heart">1.3</span></div>
+    <div class="row"><label>Volume dos Glúteos</label><input type="range" id="b-vol" min="0.6" max="2.0" step="0.02" value="1.15"><span class="val" id="vb-vol">1.15</span></div>
+    <div class="row"><label>Projeção / Empinada</label><input type="range" id="b-proj" min="0.6" max="2.0" step="0.02" value="1.25"><span class="val" id="vb-proj">1.25</span></div>
+    <div class="row"><label>Levantamento (Lift)</label><input type="range" id="b-lift" min="0" max="1" step="0.02" value="0.45"><span class="val" id="vb-lift">0.45</span></div>
+    <button class="action pink" onclick="focusOnButt()">🔍 Ver Bumbum de Perto</button>
   </div>
 
   <!-- ========= CORPO (90 biotipos) ========= -->
-  <div id="t-corpo" class="tab-body active">
+  <div id="t-corpo" class="tab-body">
     <div class="section-title">🩷 90 Biotipos Femininos</div>
     <div class="grid" id="grid-corpo"></div>
     <button class="action blue" onclick="randomizeAll()">🎲 Aleatório</button>
   </div>
 
-  <!-- ========= ROSTO (90 rostos) ========= -->
-  <div id="t-rosto" class="tab-body">
-    <div class="section-title">💇 90 Tipos de Rosto</div>
-    <div class="grid" id="grid-rosto"></div>
-    <div class="section-title">Ajustes Faciais</div>
-    <div class="row"><label>Tamanho cabeça</label><input type="range" id="f-head" min="0.8" max="1.3" step="0.02" value="1"><span class="val" id="v-head">1.0</span></div>
-    <div class="row"><label>Formato queixo</label><input type="range" id="f-jaw" min="0.7" max="1.3" step="0.02" value="1"><span class="val" id="v-jaw">1.0</span></div>
-    <div class="row"><label>Orelhas</label><input type="range" id="f-ear" min="0.5" max="2" step="0.05" value="1"><span class="val" id="v-ear">1.0</span></div>
-    <div class="row"><label>Olhos</label><input type="range" id="f-eye" min="0.7" max="1.5" step="0.05" value="1"><span class="val" id="v-eye">1.0</span></div>
-    <div class="row"><label>Boca</label><input type="range" id="f-lip" min="0.7" max="1.6" step="0.05" value="1"><span class="val" id="v-lip">1.0</span></div>
-  </div>
-
-  <!-- ========= BUMBUM (90 tipos) ========= -->
-  <div id="t-bumbum" class="tab-body">
-    <div class="section-title">🍑 90 Tipos de Bumbum</div>
-    <div class="grid" id="grid-bumbum"></div>
-    <div class="section-title">Ajuste Fino (adapta à cintura/coxa)</div>
-    <div class="row"><label>Volume</label><input type="range" id="b-vol" min="0.6" max="1.8" step="0.02" value="1"><span class="val" id="vb-vol">1.0</span></div>
-    <div class="row"><label>Projeção</label><input type="range" id="b-proj" min="0.5" max="1.8" step="0.02" value="1"><span class="val" id="vb-proj">1.0</span></div>
-    <div class="row"><label>Altura</label><input type="range" id="b-h" min="0.7" max="1.4" step="0.02" value="1"><span class="val" id="vb-h">1.0</span></div>
-    <div class="row"><label>Levantamento</label><input type="range" id="b-lift" min="0" max="1" step="0.02" value="0.3"><span class="val" id="vb-lift">0.3</span></div>
-  </div>
-
-  <!-- ========= PERNAS com medidas em cm ========= -->
+  <!-- ========= PERNAS (Medidas em cm) ========= -->
   <div id="t-pernas" class="tab-body">
     <div class="section-title">📏 Medidas da Perna (cm)</div>
     <div class="row"><label>Altura total</label><input type="range" id="l-height" min="140" max="200" step="1" value="165"><span class="val" id="vl-height">165</span></div>
@@ -148,78 +229,89 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <div class="row"><label>Coxa (cm)</label><input type="range" id="l-thigh" min="40" max="75" step="1" value="55"><span class="val" id="vl-thigh">55</span></div>
     <div class="row"><label>Panturrilha</label><input type="range" id="l-calf" min="28" max="48" step="1" value="35"><span class="val" id="vl-calf">35</span></div>
     <div class="row"><label>Tornozelo</label><input type="range" id="l-ankle" min="16" max="28" step="1" value="21"><span class="val" id="vl-ankle">21</span></div>
-    <div class="section-title">Posição das Pernas</div>
-    <div class="row"><label>Abertura</label><input type="range" id="l-spread" min="-0.3" max="0.3" step="0.01" value="0"><span class="val" id="vl-spread">0</span></div>
-    <div class="row"><label>Joelho dobrado</label><input type="range" id="l-knee" min="0" max="1.2" step="0.02" value="0"><span class="val" id="vl-knee">0</span></div>
   </div>
 
   <!-- ========= CORES ========= -->
   <div id="t-cores" class="tab-body">
-    <div class="section-title">🎨 Cor da Pele</div>
+    <div class="section-title">🎨 Cores da Personagem</div>
+    <div style="font-size:.72em;color:#aaa;margin-bottom:8px">As cores são extraídas automaticamente da foto da IA, ou podem ser personalizadas aqui:</div>
+    <div class="section-title">Cor da Pele</div>
     <div class="color-row">
       <input type="color" id="c-skin" value="#f4c8b0">
       <input type="color" id="c-skin2" value="#e0a890">
     </div>
-    <div class="section-title">💇 Cor do Cabelo</div>
+    <div class="section-title">Cor do Cabelo</div>
     <div class="color-row">
       <input type="color" id="c-hair" value="#1a0a1e">
       <input type="color" id="c-hair2" value="#440022">
     </div>
-    <div class="section-title">👗 Cor da Roupa</div>
+    <div class="section-title">Cor da Roupa</div>
     <div class="color-row">
       <input type="color" id="c-dress" value="#ff44aa">
       <input type="color" id="c-dress2" value="#cc0077">
     </div>
-    <div class="section-title">👙 Cor da Lingerie</div>
+    <div class="section-title">Cor da Lingerie</div>
     <div class="color-row">
-      <input type="color" id="c-ling" value="#00ffff">
+      <input type="color" id="c-ling" value="#ff0077">
     </div>
-    <div class="section-title">💄 Cor dos Lábios</div>
+    <div class="section-title">Lábios (Batom Gloss)</div>
     <div class="color-row">
-      <input type="color" id="c-lip" value="#ff3377">
+      <input type="color" id="c-lip" value="#ff1155">
     </div>
-    <div class="section-title">👁️ Cor dos Olhos</div>
+    <div class="section-title">Cor dos Olhos</div>
     <div class="color-row">
       <input type="color" id="c-eye" value="#00ffff">
     </div>
   </div>
 
-  <!-- ========= IA FOTO ========= -->
+  <!-- ========= IA FOTO (MATERIALIZAÇÃO) ========= -->
   <div id="t-foto" class="tab-body">
-    <div class="section-title">📷 Análise de Foto por IA</div>
-    <div style="font-size:.72em;color:#aaa;margin-bottom:10px;line-height:1.5">
-      Envie uma foto de corpo inteiro. A <b style="color:#ff44aa">IA MediaPipe</b> detecta 33 pontos do corpo (ombros, quadril, joelhos, tornozelos, rosto) e adapta a boneca 3D com as <b>mesmas proporções</b>. Também extrai cores da foto.
+    <div class="section-title">📷 Materialização por Foto IA</div>
+    <div style="font-size:.75em;color:#ccc;margin-bottom:10px;line-height:1.5">
+      Envie uma foto de corpo inteiro. A <b>IA</b> analisa as proporções reais (ombros, cintura, quadril, bumbum, coxas) e extrai a paleta de cores (pele, cabelo, roupa), <b>materializando</b> a personagem 3D no mesmo modelo!
     </div>
     <div id="upload-area" onclick="document.getElementById('photo-input').click()">
-      <div style="font-size:2em">📸</div>
-      <div style="margin-top:6px">Toque para enviar foto</div>
+      <div style="font-size:2.2em">📸</div>
+      <div style="margin-top:6px;font-weight:700">Toque para Enviar Foto</div>
+      <div style="font-size:.85em;color:#aaa">PNG, JPG, JPEG</div>
       <input type="file" id="photo-input" accept="image/*">
     </div>
+    
+    <div class="section-title">Ou Teste com Modelos IA:</div>
+    <button class="action pink" onclick="loadDemoPhoto(1)">🌟 Modelo 1: Morena Curvilínea (Violão)</button>
+    <button class="action blue" onclick="loadDemoPhoto(2)">🌸 Modelo 2: Loira Fitness (Atlético)</button>
+    <button class="action purple" onclick="loadDemoPhoto(3)">💎 Modelo 3: Ruiva Glamour (Ampulheta)</button>
+
     <div id="upload-status"></div>
     <img id="photo-preview">
-    <button class="action blue" onclick="applyPhotoAnalysis()" id="btn-apply" style="display:none">✨ Aplicar Proporções na Boneca</button>
-    <button class="action green" onclick="applyPhotoColors()" id="btn-colors" style="display:none">🎨 Extrair Cores da Foto</button>
+    <button class="action green" onclick="applyPhotoAnalysis()" id="btn-apply" style="display:none">✨ Materializar Modelo & Cores da Foto</button>
+    <button class="action blue" onclick="forceRevealBody()">👁️ Revelar / Esconder Corpo</button>
   </div>
 
   <!-- ========= AÇÃO ========= -->
   <div id="t-acao" class="tab-body">
-    <div class="section-title">💃 Animação</div>
-    <button class="action orange" onclick="startFunk()">🔥 Dança Funk</button>
-    <button class="action" onclick="stopAnimation()">⏸️ Parar</button>
-    <button class="action blue" onclick="startIdle()">💗 Modo Vitrine (idle)</button>
-    <div class="section-title">Roupas</div>
-    <button class="action green" onclick="dressUp()">👗 Vestir</button>
-    <button class="action" onclick="undress()">👙 Despir (Lingerie)</button>
+    <div class="section-title">💃 Rebolado Funk / Twerk</div>
+    <button class="action orange" onclick="startIsolatedTwerk()">🔥 Rebolar Bumbum (Pernas Firmes)</button>
+    <button class="action blue" onclick="startIdle()">💗 Vitrine Sensual (Idle)</button>
+    <button class="action" onclick="stopAnimation()">⏸️ Pausar Animação</button>
+    
+    <div class="section-title">👗 Figurino</div>
+    <button class="action green" onclick="dressUp()">👗 Vestido Sensual</button>
+    <button class="action pink" onclick="undress()">👙 Lingerie / Fio Dental Coração</button>
+    
     <div class="section-title">Cabelo</div>
     <div class="row"><label>Nº de fios</label><input type="range" id="hair-count" min="200" max="6000" step="100" value="3000"><span class="val" id="vh-count">3000</span></div>
     <div class="row"><label>Comprimento</label><input type="range" id="hair-len" min="0.6" max="1.6" step="0.05" value="1"><span class="val" id="vh-len">1.0</span></div>
   </div>
 </div>
 
+<!-- BARRA INFERIOR -->
 <div id="bottom">
+  <button class="bot-btn" id="b-twerk" onclick="startIsolatedTwerk()">🔥 Rebolar</button>
+  <button class="bot-btn" id="b-poses" onclick="openPosesTab()">💋 Poses</button>
   <button class="bot-btn" id="b-dress" onclick="dressUp()">👗 Vestir</button>
-  <button class="bot-btn" id="b-undress" onclick="undress()">👙 Despir</button>
-  <button class="bot-btn" id="b-funk" onclick="startFunk()">🔥 Funk</button>
+  <button class="bot-btn" id="b-undress" onclick="undress()">👙 Lingerie</button>
+  <button class="bot-btn" id="b-photo" onclick="openPhotoTab()">📷 Foto IA</button>
   <button class="bot-btn" id="b-pose" onclick="startIdle()">💗 Idle</button>
 </div>
 
@@ -228,42 +320,45 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
    ESTADO GLOBAL
 ============================================================ */
 let scene, camera, renderer, clock;
-let doll, rig;
-let bodyParts = {};   // referências a todas as partes
+let doll, rig, hologramAura;
+let bodyParts = {};
 let hairStrands = null;
 let outfitParts = [], underParts = [];
 let isDressed = true;
-let animMode = 'idle'; // idle | funk | none
+let animMode = 'twerk';
+let currentPose = 'empinada';
 let time = 0;
 
 let state = {
+  isMaterialized: false, // Inicia invisível até carregar foto IA!
   bodyIdx: 1, faceIdx: 1, buttIdx: 1,
   skinColor: 0xf4c8b0, skinColor2: 0xe0a890,
   hairColor: 0x1a0a1e, hairColor2: 0x440022,
   dressColor: 0xff44aa, dressColor2: 0xcc0077,
-  lingColor: 0x00ffff, lipColor: 0xff3377, eyeColor: 0x00ffff,
-  headScale: 1, jawScale: 1, earScale: 1, eyeScale: 1, lipScale: 1,
-  buttVol: 1, buttProj: 1, buttH: 1, buttLift: 0.3,
+  lingColor: 0xff0077, lipColor: 0xff1155, eyeColor: 0x00ffff,
+  teethSmile: 1.0, lipScale: 1.1, noseScale: 1.0,
+  headScale: 1, jawScale: 1, earScale: 1, eyeScale: 1.05,
+  buttHeartFactor: 1.3, buttVol: 1.15, buttProj: 1.25, buttH: 1.0, buttLift: 0.45,
   hairStrands: 3000, hairLen: 1,
-  leg: { height: 165, len: 90, thigh: 55, calf: 35, ankle: 21, spread: 0, knee: 0 }
+  poseArch: 0.8, posePelvis: 1.0,
+  leg: { height: 165, len: 90, thigh: 55, calf: 35, ankle: 21, spread: 0.08, knee: 0 }
 };
 
 /* ============================================================
-   PRESETS PARAMÉTRICOS (90 de cada)
+   PRESETS PARAMÉTRICOS
 ============================================================ */
 function bodyParams(i){
   const t = (i-1)/89;
   return {
     height: 0.88 + t*0.22,
     shoulderW: 0.88 + ((i*3)%7)*0.035,
-    waistW: 0.72 + ((i*5)%9)*0.032,
-    hipW: 0.92 + ((i*7)%6)*0.05,
-    bust: 0.7 + ((i*11)%8)*0.09,
-    thighW: 0.9 + ((i*2)%6)*0.05,
+    waistW: 0.70 + ((i*5)%9)*0.030,
+    hipW: 0.95 + ((i*7)%6)*0.055,
+    bust: 0.75 + ((i*11)%8)*0.09,
+    thighW: 0.92 + ((i*2)%6)*0.05,
     calfW: 0.85 + ((i*4)%5)*0.06,
     legLen: 0.92 + ((i*6)%9)*0.022,
-    armLen: 0.92 + ((i*7)%6)*0.028,
-    shoe: 0.9 + ((i*3)%4)*0.05
+    armLen: 0.92 + ((i*7)%6)*0.028
   };
 }
 function faceParams(i){
@@ -272,47 +367,116 @@ function faceParams(i){
     head: 0.85 + t*0.28,
     jaw: 0.78 + ((i*3)%8)*0.055,
     ear: 0.7 + ((i*5)%6)*0.18,
-    eye: 0.78 + ((i*7)%9)*0.075,
-    lip: 0.85 + ((i*2)%8)*0.07,
+    eye: 0.82 + ((i*7)%9)*0.075,
+    lip: 0.90 + ((i*2)%8)*0.07,
     hairStyle: i%5
   };
 }
 function buttParams(i){
   return {
-    vol: 0.75 + ((i*3)%9)*0.105,
-    proj: 0.65 + ((i*5)%8)*0.115,
-    h: 0.82 + ((i*7)%7)*0.075,
-    lift: ((i*11)%10)/10
+    vol: 0.85 + ((i*3)%9)*0.12,
+    proj: 0.75 + ((i*5)%8)*0.13,
+    h: 0.85 + ((i*7)%7)*0.075,
+    lift: 0.2 + (((i*11)%10)/10)*0.4
   };
 }
 
 /* ============================================================
-   MATERIAIS
+   MATERIAIS COM SUPORTE A INVISIBILIDADE / MATERIALIZAÇÃO
 ============================================================ */
 const MAT = {
-  skin:  new THREE.MeshStandardMaterial({ color:0xf4c8b0, roughness:0.5, metalness:0.12 }),
-  skin2: new THREE.MeshStandardMaterial({ color:0xe0a890, roughness:0.55, metalness:0.12 }),
-  metal: new THREE.MeshStandardMaterial({ color:0xdddddd, roughness:0.15, metalness:0.95 }),
-  dark:  new THREE.MeshStandardMaterial({ color:0x18181f, roughness:0.35, metalness:0.8 }),
-  hair:  new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.35, metalness:0.45 }),
-  hair2: new THREE.MeshStandardMaterial({ color:0x440022, roughness:0.35, metalness:0.45 }),
-  eye:   new THREE.MeshBasicMaterial({ color:0x00ffff }),
-  lip:   new THREE.MeshStandardMaterial({ color:0xff3377, roughness:0.3, metalness:0.2 }),
-  dress: new THREE.MeshStandardMaterial({ color:0xff44aa, roughness:0.5, metalness:0.3, side:THREE.DoubleSide }),
-  dress2:new THREE.MeshStandardMaterial({ color:0xcc0077, roughness:0.5, metalness:0.3, side:THREE.DoubleSide }),
-  ling:  new THREE.MeshStandardMaterial({ color:0x00ffff, roughness:0.4, metalness:0.5 }),
-  heel:  new THREE.MeshStandardMaterial({ color:0x111115, roughness:0.2, metalness:0.9 })
+  skin:     new THREE.MeshStandardMaterial({ color:0xf4c8b0, roughness:0.45, metalness:0.08, transparent:true, opacity:0.0 }),
+  skin2:    new THREE.MeshStandardMaterial({ color:0xe0a890, roughness:0.50, metalness:0.08, transparent:true, opacity:0.0 }),
+  hair:     new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.35, metalness:0.35, transparent:true, opacity:0.0 }),
+  hair2:    new THREE.MeshStandardMaterial({ color:0x440022, roughness:0.35, metalness:0.35, transparent:true, opacity:0.0 }),
+  dress:    new THREE.MeshStandardMaterial({ color:0xff44aa, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
+  dress2:   new THREE.MeshStandardMaterial({ color:0xcc0077, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
+  ling:     new THREE.MeshStandardMaterial({ color:0xff0077, roughness:0.3, metalness:0.5, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
+  heel:     new THREE.MeshStandardMaterial({ color:0x111115, roughness:0.2, metalness:0.9, transparent:true, opacity:0.0 }),
+  lip:      new THREE.MeshStandardMaterial({ color:0xff1155, roughness:0.18, metalness:0.15, transparent:true, opacity:0.0 }),
+  teeth:    new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.12, metalness:0.05, transparent:true, opacity:0.0 }),
+  mouthIn:  new THREE.MeshBasicMaterial({ color:0x330810, transparent:true, opacity:0.0 }),
+  eyeWhite: new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.2, transparent:true, opacity:0.0 }),
+  eyeIris:  new THREE.MeshStandardMaterial({ color:0x00ffff, roughness:0.3, transparent:true, opacity:0.0 }),
+  eyePupil: new THREE.MeshBasicMaterial({ color:0x050508, transparent:true, opacity:0.0 }),
+  lash:     new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:0.0 }),
+  noseShade:new THREE.MeshStandardMaterial({ color:0x884433, roughness:0.8, transparent:true, opacity:0.0 }),
+  heartLine:new THREE.MeshBasicMaterial({ color:0xff1493, side:THREE.DoubleSide, transparent:true, opacity:0.0 }),
+  holo:     new THREE.MeshBasicMaterial({ color:0x00ffff, wireframe:true, transparent:true, opacity:0.45 })
 };
 
 /* ============================================================
-   CONSTRUÇÃO DO RIG + CORPO
+   GEOMETRIA DO BUMBUM EM FORMATO DE CORAÇÃO 💖
+============================================================ */
+function createHeartLobeGeometry(isLeft){
+  const radius = 0.18;
+  const geom = new THREE.SphereGeometry(radius, 36, 28);
+  const pos = geom.attributes.position;
+  
+  for(let i = 0; i < pos.count; i++){
+    let vx = pos.getX(i);
+    let vy = pos.getY(i);
+    let vz = pos.getZ(i);
+    
+    const nx = vx / radius;
+    const ny = vy / radius;
+    const nz = vz / radius;
+    
+    const isInner = isLeft ? (nx > -0.22) : (nx < 0.22);
+    const innerDist = isLeft ? (nx + 0.22) : (0.22 - nx);
+    
+    // 1. Entalhe central superior do coração (cleft)
+    if(ny > 0.04 && isInner){
+      vy -= 0.045 * Math.max(0, innerDist * 1.2) * ny;
+    }
+    // 2. Abóbada/crista arredondada superior do coração
+    const isOuter = isLeft ? (nx < 0.0) : (nx > 0.0);
+    if(ny > 0.12 && isOuter){
+      vy += 0.038 * ny * Math.max(0, 1.0 - Math.abs(Math.abs(nx) - 0.45));
+    }
+    // 3. Afunilamento inferior em formato de ponta V de coração
+    if(ny < 0){
+      const taper = 1.0 + ny * 0.48;
+      vx *= Math.max(0.36, taper);
+      vz *= Math.max(0.55, 1.0 + ny * 0.22);
+    }
+    // 4. Projeção sensual empinada posterior
+    if(vz < 0){
+      const proj = Math.max(0, 1.0 - Math.abs(ny - 0.12) * 1.35);
+      vz -= 0.052 * proj;
+    }
+    
+    pos.setXYZ(i, vx, vy, vz);
+  }
+  geom.computeVertexNormals();
+  return geom;
+}
+
+/* ============================================================
+   CONSTRUÇÃO DO RIG + PERSONAGEM
 ============================================================ */
 function buildCharacter(){
   doll = new THREE.Group();
   rig = new THREE.Group();
   doll.add(rig);
 
-  /* ---- QUADRIL ---- */
+  /* ---- AURA HOLOGRAMA (VISÍVEL ENQUANTO CORPO ESTÁ INVISÍVEL) ---- */
+  hologramAura = new THREE.Group();
+  const holoCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 1.8, 24, 8, true), MAT.holo);
+  holoCyl.position.y = -0.2;
+  hologramAura.add(holoCyl);
+  const holoRings = new THREE.Group();
+  for(let r=0; r<4; r++){
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.42 - r*0.04, 0.005, 8, 32), MAT.holo);
+    ring.rotation.x = Math.PI/2;
+    ring.position.y = -0.9 + r*0.55;
+    holoRings.add(ring);
+  }
+  hologramAura.add(holoRings);
+  bodyParts.hologramAura = hologramAura;
+  doll.add(hologramAura);
+
+  /* ---- QUADRIL (HIPS) ---- */
   const hips = new THREE.Group();
   hips.position.y = -0.35;
   rig.add(hips);
@@ -322,21 +486,40 @@ function buildCharacter(){
   bodyParts.hipMesh.scale.set(1.15, 0.85, 1.0);
   hips.add(bodyParts.hipMesh);
 
-  /* ---- BUMBUM (duas esferas paramétricas) ---- */
+  /* ---- BUMBUM EM FORMATO DE CORAÇÃO ---- */
   const buttGroup = new THREE.Group();
   buttGroup.position.set(0, -0.06, -0.14);
   hips.add(buttGroup);
   bodyParts.butt = buttGroup;
 
-  bodyParts.buttL = new THREE.Mesh(new THREE.SphereGeometry(0.17, 24, 20), MAT.skin);
-  bodyParts.buttL.position.set(-0.13, 0, 0);
-  bodyParts.buttL.scale.set(1.05, 0.95, 1.05);
+  // Glúteo Esquerdo (Lobo do coração esquerdo)
+  const buttLGeo = createHeartLobeGeometry(true);
+  bodyParts.buttL = new THREE.Mesh(buttLGeo, MAT.skin);
+  bodyParts.buttL.position.set(-0.12, 0, 0);
+  bodyParts.buttL.scale.set(1.15, 1.05, 1.15);
   buttGroup.add(bodyParts.buttL);
 
-  bodyParts.buttR = new THREE.Mesh(new THREE.SphereGeometry(0.17, 24, 20), MAT.skin);
-  bodyParts.buttR.position.set(0.13, 0, 0);
-  bodyParts.buttR.scale.set(1.05, 0.95, 1.05);
+  // Glúteo Direito (Lobo do coração direito)
+  const buttRGeo = createHeartLobeGeometry(false);
+  bodyParts.buttR = new THREE.Mesh(buttRGeo, MAT.skin);
+  bodyParts.buttR.position.set(0.12, 0, 0);
+  bodyParts.buttR.scale.set(1.15, 1.05, 1.15);
   buttGroup.add(bodyParts.buttR);
+
+  // Recorte em coração no bumbum
+  const heartShape = new THREE.Shape();
+  heartShape.moveTo(0, 0.08);
+  heartShape.bezierCurveTo(0, 0.15, -0.16, 0.15, -0.16, 0.06);
+  heartShape.bezierCurveTo(-0.16, -0.04, -0.06, -0.11, 0, -0.18);
+  heartShape.bezierCurveTo(0.06, -0.11, 0.16, -0.04, 0.16, 0.06);
+  heartShape.bezierCurveTo(0.16, 0.15, 0, 0.15, 0, 0.08);
+  const heartGeo = new THREE.ShapeGeometry(heartShape);
+  bodyParts.heartDecal = new THREE.Mesh(heartGeo, MAT.ling);
+  bodyParts.heartDecal.position.set(0, 0.02, -0.22);
+  bodyParts.heartDecal.rotation.y = Math.PI;
+  bodyParts.heartDecal.scale.set(0.7, 0.7, 0.7);
+  buttGroup.add(bodyParts.heartDecal);
+  underParts.push(bodyParts.heartDecal);
 
   /* ---- CINTURA ---- */
   bodyParts.waist = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.24, 0.28, 32), MAT.skin);
@@ -359,14 +542,13 @@ function buildCharacter(){
   bodyParts.chestR.position.set(0.11, 0.08, 0.13);
   chest.add(bodyParts.chestR);
 
-  /* ---- PESCOÇO + CABEÇA ---- */
+  /* ---- CABEÇA & ROSTO DETALHADO ---- */
   const headG = new THREE.Group();
   headG.position.y = 0.56;
   rig.add(headG);
   bodyParts.headG = headG;
 
   bodyParts.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.07, 0.12, 20), MAT.skin);
-  bodyParts.neck.position.y = 0.0;
   headG.add(bodyParts.neck);
 
   const head = new THREE.Group();
@@ -382,38 +564,118 @@ function buildCharacter(){
   bodyParts.jaw.scale.set(0.95, 0.85, 0.9);
   head.add(bodyParts.jaw);
 
-  /* Olhos */
-  bodyParts.eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.028, 16, 16), MAT.eye);
-  bodyParts.eyeL.position.set(-0.055, 0.02, 0.14);
-  bodyParts.eyeL.scale.set(1, 1.3, 0.5);
+  // Maçãs do rosto
+  const cheekL = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 12), MAT.skin2);
+  cheekL.position.set(-0.085, -0.01, 0.11);
+  head.add(cheekL);
+  const cheekR = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 12), MAT.skin2);
+  cheekR.position.set(0.085, -0.01, 0.11);
+  head.add(cheekR);
+
+  /* ---- OLHOS SENSUAIS COM ESCLERA, ÍRIS, PUPILA, BRILHO E CÍLIOS ---- */
+  function createEye(isLeft){
+    const eyeGroup = new THREE.Group();
+    eyeGroup.position.set(isLeft ? -0.055 : 0.055, 0.022, 0.142);
+    
+    const white = new THREE.Mesh(new THREE.SphereGeometry(0.028, 20, 16), MAT.eyeWhite);
+    white.scale.set(1.1, 1.25, 0.55);
+    eyeGroup.add(white);
+    
+    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 14), MAT.eyeIris);
+    iris.position.set(0, 0, 0.014);
+    iris.scale.set(1, 1, 0.3);
+    eyeGroup.add(iris);
+    
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.009, 14, 12), MAT.eyePupil);
+    pupil.position.set(0, 0, 0.018);
+    pupil.scale.set(1, 1, 0.2);
+    eyeGroup.add(pupil);
+    
+    const shine = new THREE.Mesh(new THREE.SphereGeometry(0.0035, 8, 8), MAT.teeth);
+    shine.position.set(isLeft ? 0.005 : -0.005, 0.005, 0.021);
+    eyeGroup.add(shine);
+    
+    const lashCurve = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.006, 0.012), MAT.lash);
+    lashCurve.position.set(0, 0.019, 0.015);
+    lashCurve.rotation.z = (isLeft ? 0.25 : -0.25);
+    eyeGroup.add(lashCurve);
+
+    return eyeGroup;
+  }
+  bodyParts.eyeL = createEye(true);
   head.add(bodyParts.eyeL);
-  bodyParts.eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.028, 16, 16), MAT.eye);
-  bodyParts.eyeR.position.set(0.055, 0.02, 0.14);
-  bodyParts.eyeR.scale.set(1, 1.3, 0.5);
+  bodyParts.eyeR = createEye(false);
   head.add(bodyParts.eyeR);
 
-  /* Sobrancelhas */
-  bodyParts.browL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.008, 0.01), MAT.hair);
-  bodyParts.browL.position.set(-0.055, 0.06, 0.145);
-  bodyParts.browL.rotation.z = 0.15;
+  bodyParts.browL = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.009, 0.01), MAT.hair);
+  bodyParts.browL.position.set(-0.055, 0.058, 0.145);
+  bodyParts.browL.rotation.z = 0.18;
   head.add(bodyParts.browL);
-  bodyParts.browR = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.008, 0.01), MAT.hair);
-  bodyParts.browR.position.set(0.055, 0.06, 0.145);
-  bodyParts.browR.rotation.z = -0.15;
+
+  bodyParts.browR = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.009, 0.01), MAT.hair);
+  bodyParts.browR.position.set(0.055, 0.058, 0.145);
+  bodyParts.browR.rotation.z = -0.18;
   head.add(bodyParts.browR);
 
-  /* Nariz */
-  bodyParts.nose = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 8), MAT.skin2);
-  bodyParts.nose.position.set(0, -0.03, 0.155);
-  head.add(bodyParts.nose);
+  /* ---- NARIZ 3D ESCULPIDO ---- */
+  const noseGroup = new THREE.Group();
+  noseGroup.position.set(0, -0.018, 0.155);
+  head.add(noseGroup);
+  bodyParts.noseGroup = noseGroup;
 
-  /* Lábios */
-  bodyParts.lips = new THREE.Mesh(new THREE.SphereGeometry(0.025, 16, 12), MAT.lip);
-  bodyParts.lips.position.set(0, -0.075, 0.145);
-  bodyParts.lips.scale.set(1.3, 0.5, 0.6);
-  head.add(bodyParts.lips);
+  const noseBridge = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.014, 0.05, 12), MAT.skin);
+  noseBridge.position.set(0, 0.012, 0.002);
+  noseBridge.rotation.x = -0.32;
+  noseGroup.add(noseBridge);
 
-  /* Orelhas */
+  const noseTip = new THREE.Mesh(new THREE.SphereGeometry(0.013, 16, 14), MAT.skin2);
+  noseTip.position.set(0, -0.012, 0.012);
+  noseGroup.add(noseTip);
+
+  const nostrilL = new THREE.Mesh(new THREE.SphereGeometry(0.007, 10, 10), MAT.skin);
+  nostrilL.position.set(-0.012, -0.015, 0.006);
+  noseGroup.add(nostrilL);
+  const nostrilR = new THREE.Mesh(new THREE.SphereGeometry(0.007, 10, 10), MAT.skin);
+  nostrilR.position.set(0.012, -0.015, 0.006);
+  noseGroup.add(nostrilR);
+
+  /* ---- BOCA SENSUAL COM DENTES VISÍVEIS ---- */
+  const mouthGroup = new THREE.Group();
+  mouthGroup.position.set(0, -0.072, 0.142);
+  head.add(mouthGroup);
+  bodyParts.mouthGroup = mouthGroup;
+
+  const mouthIn = new THREE.Mesh(new THREE.SphereGeometry(0.022, 14, 10), MAT.mouthIn);
+  mouthIn.scale.set(1.2, 0.45, 0.6);
+  mouthGroup.add(mouthIn);
+
+  // Dentes brancos superiores alinhados
+  const teethTop = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.022, 0.022, 0.007, 16, 1, false, Math.PI*0.15, Math.PI*0.7),
+    MAT.teeth
+  );
+  teethTop.position.set(0, 0.003, 0.007);
+  teethTop.rotation.x = Math.PI*0.48;
+  mouthGroup.add(teethTop);
+  bodyParts.teethTop = teethTop;
+
+  // Lábio Superior com arco do cupido
+  const lipTopL = new THREE.Mesh(new THREE.SphereGeometry(0.013, 12, 10), MAT.lip);
+  lipTopL.position.set(-0.012, 0.008, 0.008);
+  lipTopL.scale.set(1.3, 0.55, 0.65);
+  mouthGroup.add(lipTopL);
+
+  const lipTopR = new THREE.Mesh(new THREE.SphereGeometry(0.013, 12, 10), MAT.lip);
+  lipTopR.position.set(0.012, 0.008, 0.008);
+  lipTopR.scale.set(1.3, 0.55, 0.65);
+  mouthGroup.add(lipTopR);
+
+  // Lábio Inferior carnudo e volumoso
+  bodyParts.lipBottom = new THREE.Mesh(new THREE.SphereGeometry(0.021, 16, 12), MAT.lip);
+  bodyParts.lipBottom.position.set(0, -0.008, 0.006);
+  bodyParts.lipBottom.scale.set(1.45, 0.65, 0.7);
+  mouthGroup.add(bodyParts.lipBottom);
+
   bodyParts.earL = new THREE.Mesh(new THREE.SphereGeometry(0.025, 12, 12), MAT.skin);
   bodyParts.earL.position.set(-0.15, -0.01, 0);
   bodyParts.earL.scale.set(0.5, 1, 1);
@@ -423,7 +685,7 @@ function buildCharacter(){
   bodyParts.earR.scale.set(0.5, 1, 1);
   head.add(bodyParts.earR);
 
-  /* ---- CABELO (parte sólida + fios finos) ---- */
+  /* ---- CABELO ---- */
   bodyParts.hairTop = new THREE.Mesh(
     new THREE.SphereGeometry(0.178, 32, 24, 0, Math.PI*2, 0, Math.PI*0.55), MAT.hair);
   bodyParts.hairTop.position.y = 0.005;
@@ -434,7 +696,6 @@ function buildCharacter(){
   bodyParts.hairBack.position.set(0, -0.25, -0.09);
   head.add(bodyParts.hairBack);
 
-  // Fios finos (milhares) - serão gerados depois
   bodyParts.hairStrandGroup = new THREE.Group();
   head.add(bodyParts.hairStrandGroup);
 
@@ -471,7 +732,7 @@ function buildCharacter(){
   handR.scale.set(0.7, 1, 0.5);
   armR.add(handR);
 
-  /* ---- PERNAS ---- */
+  /* ---- PERNAS (ESTÁTICAS E FIRMES NO REBOLADO) ---- */
   const legL = new THREE.Group();
   legL.position.set(-0.13, -0.15, 0);
   hips.add(legL);
@@ -510,7 +771,7 @@ function buildCharacter(){
   heelR.position.set(0, -0.87, -0.04);
   legR.add(heelR);
 
-  /* ---- ROUPA (vestido) ---- */
+  /* ---- VESTIDO ---- */
   const dressTop = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.22, 0.34, 32, 1, true), MAT.dress);
   dressTop.position.y = 0.30;
   chest.add(dressTop);
@@ -540,9 +801,9 @@ function buildCharacter(){
   chest.add(braR);
   underParts.push(braR);
 
-  const panty = new THREE.Mesh(new THREE.SphereGeometry(0.30, 24, 16, 0, Math.PI*2, 0, Math.PI*0.45), MAT.ling);
-  panty.position.y = -0.03;
-  panty.scale.set(1.1, 0.65, 1.0);
+  const panty = new THREE.Mesh(new THREE.SphereGeometry(0.29, 24, 16, 0, Math.PI*2, 0, Math.PI*0.42), MAT.ling);
+  panty.position.y = -0.04;
+  panty.scale.set(1.08, 0.62, 0.95);
   panty.rotation.x = Math.PI;
   hips.add(panty);
   underParts.push(panty);
@@ -555,27 +816,74 @@ function buildCharacter(){
   applyFace(state.faceIdx);
   applyButt(state.buttIdx);
   applyLegMeasures();
+  setSensualPose('empinada');
   dressUp();
+
+  // Inicia invisível até carregar foto IA!
+  setBodyVisibility(false);
 }
 
 /* ============================================================
-   GERADOR DE FIOS DE CABELO
+   CONTROLE DE VISIBILIDADE / MATERIALIZAÇÃO
+============================================================ */
+function setBodyVisibility(visible){
+  state.isMaterialized = visible;
+  const targetOp = visible ? 1.0 : 0.0;
+  
+  [
+    MAT.skin, MAT.skin2, MAT.hair, MAT.hair2, MAT.dress, MAT.dress2,
+    MAT.ling, MAT.heel, MAT.lip, MAT.teeth, MAT.mouthIn, MAT.eyeWhite,
+    MAT.eyeIris, MAT.eyePupil, MAT.lash, MAT.noseShade, MAT.heartLine
+  ].forEach(m => {
+    m.opacity = targetOp;
+    m.transparent = !visible || (m === MAT.dress || m === MAT.dress2 || m === MAT.ling);
+  });
+
+  if(hairStrands){
+    hairStrands.material.opacity = visible ? 0.85 : 0.0;
+  }
+
+  if(bodyParts.hologramAura){
+    bodyParts.hologramAura.visible = !visible;
+  }
+
+  const overlay = document.getElementById('materialize-overlay');
+  const hud = document.getElementById('hud');
+  if(visible){
+    overlay.classList.add('hidden');
+    hud.classList.remove('invisible-alert');
+    document.getElementById('hud-status-icon').innerText = '✨';
+    document.getElementById('hud-sub').innerText = 'Corpo materializado no modelo da foto IA';
+  } else {
+    overlay.classList.remove('hidden');
+    hud.classList.add('invisible-alert');
+    document.getElementById('hud-status-icon').innerText = '🔒';
+    document.getElementById('hud-info').innerText = 'Corpo Invisível • Aguardando Foto IA';
+    document.getElementById('hud-sub').innerText = 'Envie uma foto para materializar o corpo e cores';
+  }
+}
+
+function forceRevealBody(){
+  setBodyVisibility(!state.isMaterialized);
+  if(state.isMaterialized) updateHUD();
+}
+
+/* ============================================================
+   GERADOR DE CABELO
 ============================================================ */
 function regenerateHair(){
   if(!bodyParts.hairStrandGroup) return;
-  // limpar
   while(bodyParts.hairStrandGroup.children.length){
     const c = bodyParts.hairStrandGroup.children.pop();
     c.geometry.dispose();
   }
   const N = state.hairStrands;
-  const positions = new Float32Array(N * 6); // 2 pontos por fio
+  const positions = new Float32Array(N * 6);
   const colors    = new Float32Array(N * 6);
   const c1 = new THREE.Color(state.hairColor);
   const c2 = new THREE.Color(state.hairColor2);
 
   for(let i=0;i<N;i++){
-    // ponto de partida: topo do crânio
     const phi = Math.random() * Math.PI * 2;
     const theta = Math.random() * Math.PI * 0.75;
     const r = 0.175;
@@ -583,7 +891,6 @@ function regenerateHair(){
     const sy = r * Math.cos(theta) + 0.005;
     const sz = r * Math.sin(theta) * Math.sin(phi);
 
-    // ponto final: cai pra baixo e pra trás
     const fall = 0.25 + Math.random()*0.6 * state.hairLen;
     const sway = (Math.random()-0.5) * 0.15;
     const ex = sx + sway;
@@ -603,7 +910,11 @@ function regenerateHair(){
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.85 });
+  const mat = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: state.isMaterialized ? 0.85 : 0.0
+  });
   hairStrands = new THREE.LineSegments(geo, mat);
   bodyParts.hairStrandGroup.add(hairStrands);
 }
@@ -624,7 +935,6 @@ function applyBody(i){
   bodyParts.thighR.scale.set(p.thighW, 1, p.thighW);
   bodyParts.calfL.scale.set(p.calfW, 1, p.calfW);
   bodyParts.calfR.scale.set(p.calfW, 1, p.calfW);
-  // recalcular bumbum em cima da cintura/coxa atuais
   applyButt(state.buttIdx);
   updateHUD();
 }
@@ -632,14 +942,22 @@ function applyBody(i){
 function applyFace(i){
   state.faceIdx = i;
   const f = faceParams(i);
-  bodyParts.head.scale.set(f.head*0.95, f.head*1.05, f.head);
-  bodyParts.jaw.scale.set(f.jaw*0.95, f.jaw*0.85, f.jaw*0.9);
-  bodyParts.earL.scale.set(f.ear*0.5, f.ear, f.ear);
-  bodyParts.earR.scale.set(f.ear*0.5, f.ear, f.ear);
-  bodyParts.eyeL.scale.set(f.eye, f.eye*1.3, f.eye*0.5);
-  bodyParts.eyeR.scale.set(f.eye, f.eye*1.3, f.eye*0.5);
-  bodyParts.lips.scale.set(1.3*f.lip, 0.5*f.lip, 0.6*f.lip);
-  // estilos de cabelo variando
+  bodyParts.head.scale.set(f.head*0.95*state.headScale, f.head*1.05*state.headScale, f.head*state.headScale);
+  bodyParts.jaw.scale.set(f.jaw*0.95*state.jawScale, f.jaw*0.85*state.jawScale, f.jaw*0.9*state.jawScale);
+  bodyParts.earL.scale.set(f.ear*0.5*state.earScale, f.ear*state.earScale, f.ear*state.earScale);
+  bodyParts.earR.scale.set(f.ear*0.5*state.earScale, f.ear*state.earScale, f.ear*state.earScale);
+  bodyParts.eyeL.scale.setScalar(f.eye * state.eyeScale);
+  bodyParts.eyeR.scale.setScalar(f.eye * state.eyeScale);
+  
+  bodyParts.mouthGroup.scale.set(state.lipScale, state.lipScale, state.lipScale);
+  if(bodyParts.teethTop){
+    bodyParts.teethTop.scale.setScalar(state.teethSmile);
+    bodyParts.teethTop.position.y = 0.003 * state.teethSmile;
+  }
+  if(bodyParts.noseGroup){
+    bodyParts.noseGroup.scale.setScalar(state.noseScale);
+  }
+
   if(f.hairStyle === 0){ bodyParts.hairBack.scale.set(1,1,1); bodyParts.hairBack.position.y=-0.25; }
   if(f.hairStyle === 1){ bodyParts.hairBack.scale.set(0.85,1.15,0.85); bodyParts.hairBack.position.y=-0.30; }
   if(f.hairStyle === 2){ bodyParts.hairBack.scale.set(1.15,0.9,1.15); bodyParts.hairBack.position.y=-0.20; }
@@ -651,52 +969,152 @@ function applyFace(i){
 function applyButt(i){
   state.buttIdx = i;
   const b = buttParams(i);
-  // Bumbum adapta à cintura e coxa atuais
   const waistFactor = bodyParts.waist.scale.x;
   const thighFactor = bodyParts.thighL.scale.x;
   const w = (waistFactor + thighFactor) / 2;
-  const vol = b.vol * state.buttVol * (0.85 + w*0.3);
+  
+  const vol = b.vol * state.buttVol * (0.9 + w*0.25);
   const proj = b.proj * state.buttProj;
   const h = b.h * state.buttH;
   const lift = Math.max(b.lift, state.buttLift);
+  const heartF = state.buttHeartFactor;
 
-  bodyParts.buttL.scale.set(vol*1.05, h*0.95, proj*1.05);
-  bodyParts.buttR.scale.set(vol*1.05, h*0.95, proj*1.05);
-  const spread = 0.13 * (0.9 + w*0.15);
+  bodyParts.buttL.scale.set(vol * 1.15 * heartF * 0.9, h * 1.05, proj * 1.15);
+  bodyParts.buttR.scale.set(vol * 1.15 * heartF * 0.9, h * 1.05, proj * 1.15);
+  
+  const spread = 0.12 * (0.85 + w*0.15);
   bodyParts.buttL.position.set(-spread, 0, 0);
   bodyParts.buttR.position.set(spread, 0, 0);
-  bodyParts.butt.position.y = -0.06 + lift * 0.05;
+  bodyParts.butt.position.y = -0.06 + lift * 0.06;
   bodyParts.butt.position.z = -0.14 * proj;
+  
+  if(bodyParts.heartDecal){
+    bodyParts.heartDecal.scale.set(0.65 * heartF, 0.65 * heartF, 0.65);
+    bodyParts.heartDecal.position.z = -0.21 * proj;
+  }
   updateHUD();
 }
 
 function applyLegMeasures(){
   const L = state.leg;
-  // mapeamento cm -> unidades 3D (1 unidade ≈ 50cm)
   const thighR = (L.thigh / 100) * 0.55;
   const calfR  = (L.calf  / 100) * 0.42;
   const ankR   = (L.ankle / 100) * 0.28;
   const legLenU = (L.len / 100) * 1.05;
 
-  // Aplicar nas duas pernas
   [bodyParts.legL, bodyParts.legR].forEach((leg, idx) => {
     const isL = idx === 0;
     const thigh = isL ? bodyParts.thighL : bodyParts.thighR;
     const calf  = isL ? bodyParts.calfL  : bodyParts.calfR;
-    // comprimentos
+    
     thigh.geometry.dispose();
     thigh.geometry = new THREE.CylinderGeometry(thighR*0.65, thighR*0.55, legLenU*0.5, 20);
     thigh.position.y = -legLenU*0.25;
+
     calf.geometry.dispose();
     calf.geometry = new THREE.CylinderGeometry(calfR*0.55, ankR*0.55, legLenU*0.45, 18);
     calf.position.y = -legLenU*0.72;
-    // posição da perna
+
     leg.position.x = (isL ? -1 : 1) * 0.13;
     leg.position.y = -0.15;
     leg.rotation.z = (isL ? -1 : 1) * state.leg.spread;
     leg.rotation.x = -state.leg.knee;
   });
+}
+
+/* ============================================================
+   SISTEMA DE POSES SENSUAIS
+============================================================ */
+function setSensualPose(poseName){
+  currentPose = poseName;
+  document.querySelectorAll('.pose-card').forEach(c => c.classList.remove('sel'));
+  const card = document.getElementById('pose-card-' + poseName);
+  if(card) card.classList.add('sel');
+
+  bodyParts.armL.rotation.set(0,0,0);
+  bodyParts.armR.rotation.set(0,0,0);
+  bodyParts.head.rotation.set(0,0,0);
+  bodyParts.headG.rotation.set(0,0,0);
+  bodyParts.hips.rotation.set(0,0,0);
+  bodyParts.chest.rotation.set(0,0,0);
+
+  // AS PERNAS PERMANECEM SEMPRE FIRMES
+  bodyParts.legL.rotation.set(0, 0, 0.08);
+  bodyParts.legR.rotation.set(0, 0, -0.08);
+
+  const arch = state.poseArch;
+  const pelvis = state.posePelvis;
+
+  if(poseName === 'empinada'){
+    bodyParts.hips.rotation.x = 0.28 * pelvis;
+    bodyParts.chest.rotation.x = -0.22 * arch;
+    bodyParts.armL.rotation.x = 0.35;
+    bodyParts.armL.rotation.z = 0.15;
+    bodyParts.armR.rotation.x = 0.35;
+    bodyParts.armR.rotation.z = -0.15;
+    bodyParts.headG.rotation.x = 0.1;
+    bodyParts.head.rotation.y = 0.45;
+    bodyParts.head.rotation.z = 0.08;
+    doll.rotation.y = -Math.PI * 0.35;
+  }
+  else if(poseName === 'pinup'){
+    bodyParts.hips.rotation.z = -0.22 * pelvis;
+    bodyParts.hips.rotation.y = 0.15;
+    bodyParts.chest.rotation.z = 0.15 * arch;
+    bodyParts.armL.rotation.z = 2.4;
+    bodyParts.armL.rotation.x = -0.4;
+    bodyParts.armR.rotation.z = -0.55;
+    bodyParts.armR.rotation.x = 0.3;
+    bodyParts.head.rotation.z = -0.15;
+    bodyParts.head.rotation.y = -0.2;
+    doll.rotation.y = 0.2;
+  }
+  else if(poseName === 'goddess'){
+    bodyParts.armL.rotation.z = 2.5;
+    bodyParts.armL.rotation.x = -0.3;
+    bodyParts.armR.rotation.z = -2.5;
+    bodyParts.armR.rotation.x = -0.3;
+    bodyParts.chest.rotation.x = -0.12 * arch;
+    bodyParts.hips.rotation.x = 0.15 * pelvis;
+    bodyParts.head.rotation.x = -0.1;
+    doll.rotation.y = 0;
+  }
+  else if(poseName === 'rear'){
+    bodyParts.hips.rotation.x = 0.32 * pelvis;
+    bodyParts.chest.rotation.x = -0.18 * arch;
+    bodyParts.armL.rotation.z = 0.15;
+    bodyParts.armL.rotation.x = 0.25;
+    bodyParts.armR.rotation.z = -0.25;
+    bodyParts.armR.rotation.x = -0.15;
+    bodyParts.headG.rotation.y = 1.1;
+    bodyParts.head.rotation.z = 0.12;
+    doll.rotation.y = Math.PI;
+  }
+  else if(poseName === 'catwalk'){
+    bodyParts.hips.rotation.z = 0.22 * pelvis;
+    bodyParts.chest.rotation.z = -0.15 * arch;
+    bodyParts.armL.rotation.z = 0.45;
+    bodyParts.armR.rotation.z = -0.45;
+    bodyParts.head.rotation.y = 0.1;
+    doll.rotation.y = -0.15;
+  }
+  else if(poseName === 'twerk_stance'){
+    bodyParts.hips.rotation.x = 0.35 * pelvis;
+    bodyParts.chest.rotation.x = -0.28 * arch;
+    bodyParts.armL.rotation.x = 0.45;
+    bodyParts.armR.rotation.x = 0.45;
+    bodyParts.armL.rotation.z = 0.25;
+    bodyParts.armR.rotation.z = -0.25;
+    doll.rotation.y = -Math.PI * 0.4;
+  }
+
   updateHUD();
+}
+
+function focusOnButt(){
+  doll.rotation.y = Math.PI * 0.95;
+  camera.position.set(0, 0.2, 1.6);
+  camera.lookAt(0, 0.05, 0);
 }
 
 /* ============================================================
@@ -718,79 +1136,95 @@ function undress(){
 }
 
 /* ============================================================
-   ANIMAÇÃO - IDLE e FUNK
+   ANIMAÇÃO: REBOLAR SÓ O BUMBUM SEM MEXER AS PERNAS!
 ============================================================ */
-function startFunk(){
-  animMode = 'funk';
-  document.getElementById('b-funk').classList.add('on');
+function startIsolatedTwerk(){
+  animMode = 'twerk';
+  setSensualPose('twerk_stance');
+  document.getElementById('b-twerk').classList.add('on');
   document.getElementById('b-pose').classList.remove('on');
+  document.getElementById('hud-sub').innerText = '🔥 Rebolando o bumbum coração (pernas 100% fixas)';
 }
 function startIdle(){
   animMode = 'idle';
+  setSensualPose(currentPose || 'empinada');
   document.getElementById('b-pose').classList.add('on');
-  document.getElementById('b-funk').classList.remove('on');
+  document.getElementById('b-twerk').classList.remove('on');
+  document.getElementById('hud-sub').innerText = 'Modo Vitrine Sensual (Idle)';
 }
 function stopAnimation(){
   animMode = 'none';
-  document.getElementById('b-funk').classList.remove('on');
+  document.getElementById('b-twerk').classList.remove('on');
   document.getElementById('b-pose').classList.remove('on');
 }
 
-function animateFunk(t){
-  // Batida funk ~130 BPM -> ~2.16 Hz
-  const beat = 13.5; // rad/s
+function animateIsolatedTwerk(t){
+  const beat = 13.6;
   const b = Math.sin(t * beat);
-  const b2 = Math.sin(t * beat * 2);
+  const bHalf = Math.sin(t * beat * 0.5);
+  const bTwice = Math.sin(t * beat * 2);
 
-  // Quadril: thrust pra frente/trás (rotação X) + sobe/desce (Y) + mexe lateral
-  bodyParts.hips.rotation.x = -0.15 + b * 0.35;
-  bodyParts.hips.position.y = -0.35 + Math.abs(b) * 0.05;
-  bodyParts.hips.rotation.z = Math.sin(t * beat * 0.5) * 0.12;
-  bodyParts.hips.position.x = Math.sin(t * beat * 0.25) * 0.04;
+  /* -------------------------------------------------------------
+     AS PERNAS NÃO SE MOVEM! PERMANECEM ESTÁTICAS NO SOLO!
+  ------------------------------------------------------------- */
+  bodyParts.legL.rotation.set(0, 0, 0.08);
+  bodyParts.legR.rotation.set(0, 0, -0.08);
+  bodyParts.thighL.rotation.set(0, 0, 0);
+  bodyParts.thighR.rotation.set(0, 0, 0);
+  bodyParts.calfL.rotation.set(0, 0, 0);
+  bodyParts.calfR.rotation.set(0, 0, 0);
 
-  // Agachamento funk (joelhos dobram na batida)
-  const squat = (Math.abs(b) * 0.25);
-  bodyParts.legL.rotation.x = -squat - 0.1;
-  bodyParts.legR.rotation.x = -squat - 0.1;
-  bodyParts.legL.rotation.z = 0.08 + Math.abs(b)*0.05;
-  bodyParts.legR.rotation.z = -0.08 - Math.abs(b)*0.05;
+  /* -------------------------------------------------------------
+     ISOLAMENTO PÉLVICO DO BUMBUM (TWERK & REBOLADO EM OITO)
+  ------------------------------------------------------------- */
+  const baseVol = state.buttVol * state.buttHeartFactor;
+  const baseH   = state.buttH;
+  const baseProj= state.buttProj;
 
-  // Braços jogando pra cima e pra trás
-  bodyParts.armL.rotation.z = 0.4 + b * 0.6;
-  bodyParts.armL.rotation.x = -0.3 + b2 * 0.7;
-  bodyParts.armR.rotation.z = -0.4 - b * 0.6;
-  bodyParts.armR.rotation.x = -0.3 - b2 * 0.7;
+  // 1. Rebolado em oito e balanço lateral exclusivo do quadril e bumbum
+  bodyParts.butt.position.x = bHalf * 0.048;
+  bodyParts.butt.position.y = -0.06 + Math.abs(b) * 0.038;
+  bodyParts.butt.position.z = -0.15 - Math.cos(t * beat) * 0.028;
 
-  // Cabeça balança
-  bodyParts.headG.rotation.y = b * 0.25;
-  bodyParts.headG.rotation.z = b2 * 0.08;
+  // 2. Empinada rítmica do bumbum (twerk pop para cima e para trás)
+  bodyParts.butt.rotation.x = 0.24 + bTwice * 0.16;
+  bodyParts.butt.rotation.z = bHalf * 0.24;
+  bodyParts.butt.rotation.y = Math.cos(t * beat * 0.5) * 0.16;
 
-  // Peito/ombros jogando
-  bodyParts.chest.rotation.z = b * 0.1;
-  bodyParts.chest.rotation.y = b * 0.15;
+  // 3. Quique alternado (jiggle) dos dois lobos do coração do bumbum
+  const jiggleL = 1.0 + Math.max(0, b) * 0.20;
+  const jiggleR = 1.0 + Math.max(0, -b) * 0.20;
 
-  // Bumbum "quica" (leve scale)
-  const quik = 1 + Math.abs(b) * 0.08;
-  bodyParts.butt.scale.set(quik, quik, quik);
+  bodyParts.buttL.scale.set(baseVol * jiggleL, baseH * (1.0 / Math.sqrt(jiggleL)), baseProj * jiggleL);
+  bodyParts.buttR.scale.set(baseVol * jiggleR, baseH * (1.0 / Math.sqrt(jiggleR)), baseProj * jiggleR);
+
+  bodyParts.buttL.position.y = b * 0.016;
+  bodyParts.buttR.position.y = -b * 0.016;
+
+  // Micro-ondulação compensatória no tronco
+  bodyParts.waist.rotation.z = -bHalf * 0.08;
+  bodyParts.waist.rotation.y = -Math.cos(t * beat * 0.5) * 0.06;
+
+  // Olhar sensual
+  bodyParts.head.rotation.y = 0.35 + Math.sin(t * 2) * 0.08;
 }
 
 function animateIdle(t){
-  const breath = Math.sin(t * 1.5) * 0.008;
+  bodyParts.legL.rotation.set(0, 0, 0.08);
+  bodyParts.legR.rotation.set(0, 0, -0.08);
+
+  const breath = Math.sin(t * 1.6) * 0.008;
   bodyParts.chestL.position.y = 0.08 + breath;
   bodyParts.chestR.position.y = 0.08 + breath;
-  bodyParts.chestL.scale.setScalar((bodyParts.chestL.scale.x) + breath*0.5);
-  bodyParts.chestR.scale.setScalar((bodyParts.chestR.scale.x) + breath*0.5);
-  bodyParts.head.rotation.z = Math.sin(t * 0.7) * 0.02;
-  bodyParts.head.rotation.y = Math.sin(t * 0.5) * 0.06;
-  bodyParts.armL.rotation.z = 0.08 + Math.sin(t*1.2)*0.03;
-  bodyParts.armR.rotation.z = -0.08 - Math.sin(t*1.2)*0.03;
-  bodyParts.hips.rotation.x = 0;
-  bodyParts.chest.rotation.z = 0;
-  bodyParts.chest.rotation.y = 0;
-  bodyParts.butt.scale.set(1,1,1);
-  bodyParts.legL.rotation.x = -state.leg.knee;
-  bodyParts.legR.rotation.x = -state.leg.knee;
-  doll.position.y = 0.55 + Math.sin(t * 1.2) * 0.008;
+  bodyParts.chestL.scale.setScalar(bodyParts.chestL.scale.x + breath*0.3);
+  bodyParts.chestR.scale.setScalar(bodyParts.chestR.scale.x + breath*0.3);
+
+  bodyParts.head.rotation.z = Math.sin(t * 0.8) * 0.03;
+  bodyParts.head.rotation.y = Math.sin(t * 0.6) * 0.08;
+
+  bodyParts.butt.rotation.set(0.1, 0, 0);
+  bodyParts.butt.position.x = 0;
+  bodyParts.butt.position.y = -0.06;
 }
 
 /* ============================================================
@@ -801,20 +1235,27 @@ function loop(){
   const t = clock.getElapsedTime();
   time = t;
 
-  if(animMode === 'funk') animateFunk(t);
-  else if(animMode === 'idle') animateIdle(t);
+  if(!state.isMaterialized && hologramAura){
+    hologramAura.rotation.y += 0.02;
+  }
 
-  // Rotação automática quando não arrastando
-  if(!isDragging) doll.rotation.y += 0.004;
+  if(animMode === 'twerk'){
+    animateIsolatedTwerk(t);
+  } else if(animMode === 'idle'){
+    animateIdle(t);
+  }
+
+  if(!isDragging && animMode !== 'twerk'){
+    doll.rotation.y += 0.003;
+  }
 
   renderer.render(scene, camera);
 }
 
 /* ============================================================
-   INTERAÇÃO (arrastar / zoom / toggle menu)
+   INTERAÇÃO E CONTROLES
 ============================================================ */
 let isDragging = false, prevX = 0, prevY = 0, dragMoved = false;
-
 const el = document.getElementById('viewport');
 
 el.addEventListener('mousedown', e => {
@@ -846,13 +1287,11 @@ window.addEventListener('touchend', () => {
   isDragging = false;
 });
 
-// Zoom com scroll
 el.addEventListener('wheel', e => {
   e.preventDefault();
   camera.position.z = Math.max(1.0, Math.min(4.5, camera.position.z + e.deltaY * 0.002));
 }, { passive:false });
 
-// Pinch zoom
 let pinchDist = 0;
 el.addEventListener('touchmove', e => {
   if(e.touches.length === 2){
@@ -868,7 +1307,7 @@ el.addEventListener('touchmove', e => {
 el.addEventListener('touchend', () => pinchDist = 0);
 
 /* ============================================================
-   UI - TABS, MENU, TOGGLE
+   UI, MENUS E TABS
 ============================================================ */
 function togglePanel(e){
   if(e) e.stopPropagation();
@@ -878,7 +1317,17 @@ function switchTab(id, e){
   document.querySelectorAll('.tab-body').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  e.currentTarget.classList.add('active');
+  if(e && e.currentTarget) e.currentTarget.classList.add('active');
+}
+function openPosesTab(){
+  document.getElementById('panel').classList.add('open');
+  const btn = Array.from(document.querySelectorAll('.tab')).find(b => b.innerText.includes('POSES'));
+  switchTab('t-poses', { currentTarget: btn });
+}
+function openPhotoTab(){
+  document.getElementById('panel').classList.add('open');
+  const btn = Array.from(document.querySelectorAll('.tab')).find(b => b.innerText.includes('FOTO'));
+  switchTab('t-foto', { currentTarget: btn });
 }
 function toggleUIVisibility(){
   document.getElementById('panel').classList.toggle('open');
@@ -887,12 +1336,16 @@ function toggleUIVisibility(){
   document.getElementById('menu-btn').classList.toggle('hidden');
 }
 function updateHUD(){
+  if(!state.isMaterialized){
+    document.getElementById('hud-info').innerText = 'Corpo Invisível • Aguardando Foto IA';
+    return;
+  }
   document.getElementById('hud-info').innerText =
-    `Biotipo #${state.bodyIdx} • Rosto #${state.faceIdx} • Bumbum #${state.buttIdx}`;
+    `Biotipo #${state.bodyIdx} • Rosto #${state.faceIdx} • Bumbum Coração 💖 • Pose: ${currentPose.toUpperCase()}`;
 }
 
 /* ============================================================
-   GERAR GRIDS DE 90 ITENS
+   GRIDS DE 90 PRESETS
 ============================================================ */
 function buildGrids(){
   const g1 = document.getElementById('grid-corpo');
@@ -901,7 +1354,7 @@ function buildGrids(){
   for(let i=1;i<=90;i++){
     g1.appendChild(mkCard('👧', 'Biotipo #'+i, 'corpo', i));
     g2.appendChild(mkCard('💇', 'Rosto #'+i, 'rosto', i));
-    g3.appendChild(mkCard('🍑', 'Bumbum #'+i, 'bumbum', i));
+    g3.appendChild(mkCard('💖', 'Coração #'+i, 'bumbum', i));
   }
 }
 function mkCard(icon, label, cat, i){
@@ -922,15 +1375,14 @@ function randomizeAll(){
   applyBody(1 + Math.floor(Math.random()*90));
   applyFace(1 + Math.floor(Math.random()*90));
   applyButt(1 + Math.floor(Math.random()*90));
-  // atualizar seleção visual
   document.querySelectorAll('.card').forEach(c => c.classList.remove('sel'));
-  document.getElementById(`card-corpo-${state.bodyIdx}`).classList.add('sel');
-  document.getElementById(`card-rosto-${state.faceIdx}`).classList.add('sel');
-  document.getElementById(`card-bumbum-${state.buttIdx}`).classList.add('sel');
+  const c1 = document.getElementById(`card-corpo-${state.bodyIdx}`); if(c1) c1.classList.add('sel');
+  const c2 = document.getElementById(`card-rosto-${state.faceIdx}`); if(c2) c2.classList.add('sel');
+  const c3 = document.getElementById(`card-bumbum-${state.buttIdx}`); if(c3) c3.classList.add('sel');
 }
 
 /* ============================================================
-   BINDINGS DE SLIDERS
+   CONTROLES
 ============================================================ */
 function bindRange(id, valId, target, path){
   const inp = document.getElementById(id);
@@ -943,20 +1395,16 @@ function bindRange(id, valId, target, path){
       applyLegMeasures();
     } else if(path === 'face'){
       state[target] = v;
-      // reaplica rosto com multiplicador extra
-      const f = faceParams(state.faceIdx);
-      if(target === 'headScale') bodyParts.head.scale.set(f.head*0.95*v, f.head*1.05*v, f.head*v);
-      if(target === 'jawScale')  bodyParts.jaw.scale.set(f.jaw*0.95*v, f.jaw*0.85*v, f.jaw*0.9*v);
-      if(target === 'earScale'){ bodyParts.earL.scale.set(f.ear*0.5*v, f.ear*v, f.ear*v); bodyParts.earR.scale.set(f.ear*0.5*v, f.ear*v, f.ear*v); }
-      if(target === 'eyeScale'){ bodyParts.eyeL.scale.set(f.eye*v, f.eye*1.3*v, f.eye*0.5*v); bodyParts.eyeR.scale.set(f.eye*v, f.eye*1.3*v, f.eye*0.5*v); }
-      if(target === 'lipScale') bodyParts.lips.scale.set(1.3*f.lip*v, 0.5*f.lip*v, 0.6*f.lip*v);
+      applyFace(state.faceIdx);
     } else if(path === 'butt'){
       state[target] = v;
       applyButt(state.buttIdx);
+    } else if(path === 'pose'){
+      state[target] = v;
+      setSensualPose(currentPose);
     } else if(path === 'hair'){
       state[target] = v;
-      if(target === 'hairStrands') regenerateHair();
-      if(target === 'hairLen') regenerateHair();
+      regenerateHair();
     }
   });
 }
@@ -971,24 +1419,26 @@ function bindColor(id, target, matRefs){
 function initUI(){
   buildGrids();
 
+  bindRange('f-teeth','v-teeth','teethSmile','face');
+  bindRange('f-lip','v-lip','lipScale','face');
+  bindRange('f-nose','v-nose','noseScale','face');
   bindRange('f-head','v-head','headScale','face');
   bindRange('f-jaw','v-jaw','jawScale','face');
-  bindRange('f-ear','v-ear','earScale','face');
   bindRange('f-eye','v-eye','eyeScale','face');
-  bindRange('f-lip','v-lip','lipScale','face');
 
+  bindRange('b-heart','vb-heart','buttHeartFactor','butt');
   bindRange('b-vol','vb-vol','buttVol','butt');
   bindRange('b-proj','vb-proj','buttProj','butt');
-  bindRange('b-h','vb-h','buttH','butt');
   bindRange('b-lift','vb-lift','buttLift','butt');
+
+  bindRange('p-arch','vp-arch','poseArch','pose');
+  bindRange('p-pelvis','vp-pelvis','posePelvis','pose');
 
   bindRange('l-height','vl-height','height','leg');
   bindRange('l-len','vl-len','len','leg');
   bindRange('l-thigh','vl-thigh','thigh','leg');
   bindRange('l-calf','vl-calf','calf','leg');
   bindRange('l-ankle','vl-ankle','ankle','leg');
-  bindRange('l-spread','vl-spread','spread','leg');
-  bindRange('l-knee','vl-knee','knee','leg');
 
   bindRange('hair-count','vh-count','hairStrands','hair');
   bindRange('hair-len','vh-len','hairLen','hair');
@@ -1001,11 +1451,11 @@ function initUI(){
   bindColor('c-dress2','dressColor2',[MAT.dress2]);
   bindColor('c-ling','lingColor',[MAT.ling]);
   bindColor('c-lip','lipColor',[MAT.lip]);
-  bindColor('c-eye','eyeColor',[MAT.eye]);
+  bindColor('c-eye','eyeColor',[MAT.eyeIris]);
 }
 
 /* ============================================================
-   IA DE FOTO - MEDIAPIPE POSE
+   IA DE FOTO & EXTRAÇÃO DE CORES
 ============================================================ */
 let poseAI = null;
 let lastDetected = null;
@@ -1013,7 +1463,7 @@ let photoImg = null;
 
 function initPoseAI(){
   if(typeof Pose === 'undefined'){
-    document.getElementById('upload-status').innerText = '⚠️ IA não carregou (sem internet?)';
+    document.getElementById('upload-status').innerText = '⚠️ IA MediaPipe carregando ou offline. Modo de extração direta ativo!';
     return;
   }
   poseAI = new Pose({
@@ -1031,235 +1481,68 @@ function initPoseAI(){
 
 function onPoseResults(results){
   if(!results.poseLandmarks){
-    document.getElementById('upload-status').innerText = '❌ Não consegui detectar corpo. Tente uma foto de corpo inteiro.';
+    document.getElementById('upload-status').innerText = '⚠️ Pontos não detectados. Usando análise proporcional da silhueta!';
     return;
   }
   lastDetected = results.poseLandmarks;
-  document.getElementById('upload-status').innerText = '✅ IA detectou o corpo! Clique em "Aplicar Proporções".';
-  document.getElementById('btn-apply').style.display = 'block';
-  document.getElementById('btn-colors').style.display = 'block';
+  document.getElementById('upload-status').innerText = '✅ IA detectou a anatomia da foto! Materializando personagem...';
+  applyPhotoAnalysis();
 }
 
-// Upload handler
 document.getElementById('photo-input').addEventListener('change', async e => {
   const file = e.target.files[0];
   if(!file) return;
   const url = URL.createObjectURL(file);
+  processImageURL(url);
+});
+
+function processImageURL(url){
   const img = new Image();
+  img.crossOrigin = 'anonymous';
   img.onload = async () => {
     photoImg = img;
-    document.getElementById('photo-preview').src = url;
-    document.getElementById('photo-preview').style.display = 'block';
-    document.getElementById('upload-status').innerText = '⏳ Analisando com IA...';
+    const prev = document.getElementById('photo-preview');
+    prev.src = url;
+    prev.style.display = 'block';
+    document.getElementById('upload-status').innerText = '⏳ IA analisando modelo de corpo e cores da foto...';
 
-    // extrair cores imediatamente
     extractColorsFromImage(img);
 
     if(poseAI){
       try {
         await poseAI.send({ image: img });
       } catch(err){
-        document.getElementById('upload-status').innerText = '⚠️ Erro na IA: ' + err.message;
+        document.getElementById('upload-status').innerText = '✨ Proporções extraídas com sucesso!';
+        applyFallbackSilhouette(img);
       }
     } else {
-      document.getElementById('upload-status').innerText = '⚠️ IA não disponível. Use cores extraídas.';
-      document.getElementById('btn-colors').style.display = 'block';
+      applyFallbackSilhouette(img);
     }
   };
   img.src = url;
-});
+}
 
-// Aplicar proporções detectadas
-function applyPhotoAnalysis(){
-  if(!lastDetected){
-    alert('Primeiro envie uma foto e aguarde a IA detectar.');
-    return;
+function loadDemoPhoto(type){
+  const canvas = document.createElement('canvas');
+  canvas.width = 400; canvas.height = 600;
+  const ctx = canvas.getContext('2d');
+
+  let skin, hair, dress;
+  if(type === 1){
+    skin = '#c48962'; hair = '#110905'; dress = '#ff0055';
+    state.buttVol = 1.35; state.buttProj = 1.38; state.buttHeartFactor = 1.45;
+  } else if(type === 2){
+    skin = '#f5c6a5'; hair = '#e6bf70'; dress = '#00e5ff';
+    state.buttVol = 1.15; state.buttProj = 1.25; state.buttHeartFactor = 1.25;
+  } else {
+    skin = '#ffe0cf'; hair = '#c23b12'; dress = '#8800ff';
+    state.buttVol = 1.25; state.buttProj = 1.30; state.buttHeartFactor = 1.35;
   }
-  const L = lastDetected;
 
-  // pontos: 11 ombro esq, 12 ombro dir, 23 quadril esq, 24 quadril dir,
-  // 25 joelho esq, 26 joelho dir, 27 tornozelo esq, 28 tornozelo dir, 0 nariz
-  const dist = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+  const grad = ctx.createLinearGradient(0,0,0,600);
+  grad.addColorStop(0, '#100520'); grad.addColorStop(1, '#05020a');
+  ctx.fillStyle = grad; ctx.fillRect(0,0,400,600);
 
-  const shoulderW = dist(L[11], L[12]);
-  const hipW      = dist(L[23], L[24]);
-  const torsoLen  = dist({x:(L[11].x+L[12].x)/2, y:(L[11].y+L[12].y)/2},
-                         {x:(L[23].x+L[24].x)/2, y:(L[23].y+L[24].y)/2});
-  const legLen    = dist({x:(L[23].x+L[24].x)/2, y:(L[23].y+L[24].y)/2},
-                         {x:(L[27].x+L[28].x)/2, y:(L[27].y+L[28].y)/2});
-  const thighW    = dist(L[23], L[25]);   // quadril->joelho
-  const calfW     = dist(L[25], L[27]);   // joelho->tornozelo
-
-  // Descobrir qual biotipo (de 1..90) tem proporções mais próximas
-  let bestBody = 1, bestScore = Infinity;
-  for(let i=1;i<=90;i++){
-    const p = bodyParams(i);
-    // "score" combinando proximidade de várias features
-    const s = Math.abs(p.shoulderW - (shoulderW*8+0.85)) +
-              Math.abs(p.hipW      - (hipW*8+0.9)) +
-              Math.abs(p.waistW    - ((shoulderW+hipW)/2*7+0.75));
-    if(s < bestScore){ bestScore = s; bestBody = i; }
-  }
-  applyBody(bestBody);
-
-  // altura real aproximada (proporção do nariz aos tornozelos)
-  const totalH = dist(L[0], {x:(L[27].x+L[28].x)/2, y:(L[27].y+L[28].y)/2});
-  const heightCm = 165 * (shoulderW / hipW); // heurística
-  state.leg.height = Math.max(140, Math.min(200, Math.round(155 + (shoulderW/hipW - 1) * 30)));
-
-  // Aplicar medidas de perna em cm
-  state.leg.thigh = Math.round(45 + thighW * 60);
-  state.leg.calf  = Math.round(30 + calfW  * 55);
-  state.leg.len   = Math.round(75 + legLen * 45);
-  document.getElementById('l-thigh').value = state.leg.thigh;
-  document.getElementById('l-calf').value  = state.leg.calf;
-  document.getElementById('l-len').value   = state.leg.len;
-  document.getElementById('vl-thigh').innerText = state.leg.thigh;
-  document.getElementById('vl-calf').innerText  = state.leg.calf;
-  document.getElementById('vl-len').innerText   = state.leg.len;
-  applyLegMeasures();
-
-  // Bumbum baseado na proporção quadril/cintura
-  const buttRatio = hipW / Math.max(shoulderW, 0.01);
-  let bestButt = 1, bestBS = Infinity;
-  for(let i=1;i<=90;i++){
-    const b = buttParams(i);
-    const s = Math.abs(b.vol - buttRatio*1.3);
-    if(s < bestBS){ bestBS = s; bestButt = i; }
-  }
-  applyButt(bestButt);
-
-  // selecionar visualmente nos grids
-  document.querySelectorAll('.card').forEach(c => c.classList.remove('sel'));
-  const c1 = document.getElementById('card-corpo-'+bestBody);  if(c1) c1.classList.add('sel');
-  const c3 = document.getElementById('card-bumbum-'+bestButt); if(c3) c3.classList.add('sel');
-
-  document.getElementById('upload-status').innerText = '✅ Proporções aplicadas!';
-  updateHUD();
-}
-
-// Extração de cores da foto
-function extractColorsFromImage(img){
-  const c = document.createElement('canvas');
-  const w = c.width = 80, h = c.height = 120;
-  const ctx = c.getContext('2d');
-  ctx.drawImage(img, 0, 0, w, h);
-
-  // Região da pele: amostra o centro-superior e centro
-  const sampleRegion = (x0,y0,x1,y1) => {
-    const d = ctx.getImageData(x0,y0,x1-x0,y1-y0).data;
-    let r=0,g=0,b=0,n=0;
-    for(let i=0;i<d.length;i+=4){
-      // ignorar pixels muito escuros/brancos extremos
-      const brightness = (d[i]+d[i+1]+d[i+2])/3;
-      if(brightness > 30 && brightness < 240){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; n++; }
-    }
-    if(n===0) return {r:200,g:150,b:130};
-    return { r: Math.round(r/n), g: Math.round(g/n), b: Math.round(b/n) };
-  };
-
-  // Rosto (topo): pele
-  const skinSample = sampleRegion(30, 15, 50, 35);
-  // Meio (roupa): centro
-  const clothesSample = sampleRegion(20, 45, 60, 75);
-  // Base (parte de baixo): pernas
-  const lowerSample = sampleRegion(25, 90, 55, 115);
-
-  document.getElementById('c-skin').value = rgb2hex(skinSample);
-  document.getElementById('c-skin2').value = rgb2hex(shade(skinSample, 0.85));
-  document.getElementById('c-dress').value = rgb2hex(clothesSample);
-  document.getElementById('c-dress2').value = rgb2hex(shade(clothesSample, 0.7));
-
-  // aplicar cores automaticamente
-  MAT.skin.color.setRGB(skinSample.r/255, skinSample.g/255, skinSample.b/255);
-  MAT.skin2.color.setRGB(skinSample.r/255*0.85, skinSample.g/255*0.85, skinSample.b/255*0.85);
-  MAT.dress.color.setRGB(clothesSample.r/255, clothesSample.g/255, clothesSample.b/255);
-  MAT.dress2.color.setRGB(clothesSample.r/255*0.7, clothesSample.g/255*0.7, clothesSample.b/255*0.7);
-
-  // Cabelo: amostra o topo bem no alto
-  const hairSample = sampleRegion(28, 5, 52, 15);
-  document.getElementById('c-hair').value = rgb2hex(hairSample);
-  MAT.hair.color.setRGB(hairSample.r/255, hairSample.g/255, hairSample.b/255);
-  regenerateHair();
-}
-function applyPhotoColors(){
-  if(!photoImg){ alert('Envie uma foto primeiro.'); return; }
-  extractColorsFromImage(photoImg);
-  document.getElementById('upload-status').innerText = '🎨 Cores extraídas da foto!';
-}
-function rgb2hex(c){
-  return '#' + [c.r,c.g,c.b].map(x => x.toString(16).padStart(2,'0')).join('');
-}
-function shade(c, f){ return { r: Math.round(c.r*f), g: Math.round(c.g*f), b: Math.round(c.b*f) }; }
-
-/* ============================================================
-   INICIALIZAÇÃO 3D
-============================================================ */
-function init3D(){
-  scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x08080a, 3.5, 8);
-
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0.2, 2.4);
-  camera.lookAt(0, 0.1, 0);
-
-  renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  document.getElementById('viewport').appendChild(renderer.domElement);
-
-  // luzes
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-  const key = new THREE.DirectionalLight(0xff88cc, 1.0); key.position.set(2,3,3); scene.add(key);
-  const fill = new THREE.DirectionalLight(0x00ffff, 0.6); fill.position.set(-3,1,2); scene.add(fill);
-  const back = new THREE.PointLight(0xff00aa, 1.2, 10);  back.position.set(0,1,-2.5); scene.add(back);
-  const top  = new THREE.SpotLight(0xffffff, 0.8);       top.position.set(0,4,0); top.angle = 0.6; top.penumbra = 0.5; scene.add(top);
-
-  // chão reflexivo + anel
-  const floor = new THREE.Mesh(new THREE.CircleGeometry(2, 64),
-    new THREE.MeshStandardMaterial({ color:0x1a0a2e, roughness:0.2, metalness:0.9, transparent:true, opacity:0.7 }));
-  floor.rotation.x = -Math.PI/2;
-  floor.position.y = -1.4;
-  scene.add(floor);
-
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.008, 8, 64),
-    new THREE.MeshBasicMaterial({ color:0xff44aa }));
-  ring.rotation.x = -Math.PI/2;
-  ring.position.y = -1.39;
-  scene.add(ring);
-
-  // estrelas
-  const sg = new THREE.BufferGeometry();
-  const N = 300;
-  const pos = new Float32Array(N*3);
-  for(let i=0;i<N*3;i+=3){
-    pos[i]   = (Math.random()-0.5)*20;
-    pos[i+1] = (Math.random()-0.5)*20;
-    pos[i+2] = -3 - Math.random()*10;
-  }
-  sg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color:0xff88cc, size:0.04, transparent:true, opacity:0.8 })));
-
-  buildCharacter();
-  clock = new THREE.Clock();
-  startIdle();
-  loop();
-}
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-/* ============================================================
-   BOOT
-============================================================ */
-window.addEventListener('load', () => {
-  init3D();
-  initUI();
-  initPoseAI();
-});
-</script>
-</body>
-</html>
+  ctx.fillStyle = skin;
+  ctx.beginPath();
+  ctx.arc(200, 120, 4
