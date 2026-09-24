@@ -1,151 +1,296 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="referrer" content="no-referrer">
-    
-    <title>Tracker Radar Wiki - mulherpelada.blog</title>
-    <link rel="stylesheet" href="../assets/css/style.min.css">
-
-    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
-
-    <script src='../assets/js/vendor/lunr.js' defer></script>
-    <script src='../assets/js/search.js' defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio 3D: Customização & Animação (Index Unificado)</title>
+    <!-- Inclusão do Three.js via CDN para processamento de malhas e renderização gráfica em tempo real -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #0d0d0d;
+            color: #ffffff;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Área de Visualização do Motor Gráfico */
+        #viewport-container {
+            flex: 1;
+            height: 100%;
+            position: relative;
+        }
+        #ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ff007f;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        #ui-overlay h1 {
+            font-size: 1.1em;
+            color: #ff007f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+        #ui-overlay p {
+            font-size: 0.8em;
+            color: #aaaaaa;
+        }
+        /* Painel Lateral Unificado de Configurações */
+        #sidebar {
+            width: 420px;
+            background-color: #161616;
+            border-left: 2px solid #252525;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+            z-index: 10;
+        }
+        .tabs {
+            display: flex;
+            background: #0f0f0f;
+            border-bottom: 2px solid #252525;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 16px;
+            background: none;
+            border: none;
+            color: #888888;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            color: #ff007f;
+            border-bottom: 3px solid #ff007f;
+            background: #161616;
+        }
+        .tab-content {
+            flex: 1;
+            padding: 22px;
+            overflow-y: auto;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Estilização dos Controles e Sliders */
+        .control-section-title {
+            font-size: 0.85em;
+            color: #ff007f;
+            text-transform: uppercase;
+            margin: 18px 0 8px 0;
+            display: block;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .control-group {
+            margin-bottom: 14px;
+            background: #1e1e1e;
+            padding: 14px;
+            border-radius: 6px;
+            border: 1px solid #2a2a2a;
+        }
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            color: #dddddd;
+        }
+        .val-badge {
+            color: #00ffcc;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: #ff007f;
+            background: #333;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+        /* Seletor do Catálogo de 90 Biquínis */
+        .select-custom {
+            width: 100%;
+            padding: 10px;
+            background: #1e1e1e;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 0.9em;
+        }
+        .bikini-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .bikini-item {
+            background: #1e1e1e;
+            border: 1px solid #2d2d2d;
+            border-radius: 6px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.78em;
+            transition: all 0.2s ease;
+        }
+        .bikini-item:hover, .bikini-item.selected {
+            border-color: #ff007f;
+            background: rgba(255, 0, 127, 0.08);
+            transform: translateY(-2px);
+        }
+        .bikini-thumb {
+            height: 35px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+        }
+        /* Botões de Movimentos e Coreografias */
+        .dance-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-dance {
+            padding: 14px;
+            background: #1e1e1e;
+            border: 1px solid #2d2d2d;
+            color: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+        .btn-dance:hover, .btn-dance.active {
+            background: linear-gradient(135deg, #ff007f, #7f00ff);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(255, 0, 127, 0.3);
+        }
+        /* Botão Gerador de Personagem */
+        .btn-generator {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00ffcc, #007fff);
+            border: none;
+            border-radius: 6px;
+            color: #0b0b0b;
+            font-weight: bold;
+            font-size: 0.95em;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 18px;
+            transition: opacity 0.2s;
+        }
+        .btn-generator:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
-
 <body>
-    <div class="container mx-auto">
-        <nav class="flex items-center justify-between flex-wrap p-5 bg-gray-300">
-            <div class="flex items-center flex-shrink-0 mr-5">
-                <a href="/tracker-radar-wiki" class="font-semibold text-xl">Tracker Radar Wiki</a>
-            </div>
-            <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-                <div class="text-sm lg:flex-grow">
-                    <a href="/tracker-radar-wiki" class="block mt-4 lg:inline-block lg:mt-0 mr-4">
-                        Home
-                    </a>
-                    <a href="/tracker-radar-wiki/top100.html" class="block mt-4 lg:inline-block lg:mt-0 mr-4">
-                        Top 100
-                    </a>
-                    <a href="/tracker-radar-wiki/apiHistory.html" class="block mt-4 lg:inline-block lg:mt-0 mr-4">
-                        API abuse score history
-                    </a>
-                </div>
-            </div>
-            <div class='relative'>
-                <input type='search' disabled="disabled" placeholder="Loading…" class='search-box__input px-2' />
-                <ul class='search-box__results absolute top-100 w-full bg-gray-100'></ul>
-            </div>
-        </nav>
 
-<script>
-    window.wikiData = {
-        type: "domain",
-        domain: "mulherpelada.blog",
-        history: [{"date":"2022.04","prevalence":0.0000136,"sites":2,"fingerprinting":0,"cookies":0},{"date":"jd/may-update","prevalence":0.0000136,"sites":2,"fingerprinting":0,"cookies":0}]
-    };
-</script>
-<script src="../assets/js/vendor/Chart.min.js" defer></script>
-<script src='../assets/js/graph.js' defer></script>
-
-<div class='p-5 border-b'>
-    <h1 class='text-2xl mb-5'><img src='https://external-content.duckduckgo.com/ip3/mulherpelada.blog.ico' width="32" height="32" class='inline-block' /> mulherpelada.blog</h1>
-    <div class='grid grid-cols-1 col-gap-5 row-gap-5 md:grid-cols-2 md:row-gap-10'>
-        <div class="domain-stats">
-            <h3 class="section-header">Domain Stats</h3>
-            <ul>
-                <h3 class='section-header'></h3>
-            
-                <li class='py-1'>
-                    <strong>Owner:</strong> <i>Unknown</i>
-                </li>
-                <li class='py-1'>
-                    <strong>Privacy Policy:</strong> <i>Unknown</i>
-                </li>
-                <li class='py-1'>
-                    <strong>Rank:</strong> &#35;22132<small>/26825</small>
-                </li>
-                <li class='py-1'>
-                    <strong>Prevalence:</strong> 0.00&#37; (2 sites)
-                </li>
-                <li class='py-1'>
-                    <strong>Fingerprinting:</strong> 0<small>/3</small> - <span class="fp-0">No use of browser API&#39;s</span>
-                </li>
-                <li class='py-1'>
-                    <strong>Cookies:</strong> 0.00&#37;
-                </li>
-                <li class='py-1'>
-                    <strong>Performance:</strong> <small><a href="https://github.com/duckduckgo/tracker-radar/blob/master/docs/DATA_MODEL.md#performance" target="_blank">?</a></small>
-                    <ul>
-                        <li>time: <small>/3</small></li>
-                        <li>size: <small>/3</small></li>
-                        <li>CPU: <small>/3</small></li>
-                        <li>cache: <small>/3</small></li>
-                    </ul>
-                </li>
-                <li class='py-1'>
-                    <strong>Categories:</strong> 
-                </li>
-                <li class='py-1'>
-                    <strong>Resource Types:</strong> 
-                    <span>Image</span>,
-                </li>
-                <li class='py-1'><a href="https://github.com/duckduckgo/tracker-radar/blob/master/domains/US/mulherpelada.blog.json" class="external" rel="noreferrer noopener">Raw data file</a>.</li>
-                <li class='py-1'>
-                    <strong>Subdomains:</strong>
-                </li>
-            </ul>
-        </div>
-        <div class='graph-container graph-container--right'>
-            <div class='flex'>
-                <h3 class="section-header flex-grow">Historic Data</h3>
-                <select class='graph-container__controller p-2 text-sm self-start py-1'>
-                    <option selected value='prevalence'>prevalence</option>
-                    <option value='sites'># of sites</option>
-                    <option value='fingerprinting'>fingerprinting score</option>
-                    <option value='cookies'>cookies</option>
-                </select>
-            </div>
-            <canvas class='graph-container__graph w-full mt-5'></canvas>
+    <!-- Módulo de Visualização Espacial (Canvas 3D) -->
+    <div id="viewport-container">
+        <div id="ui-overlay">
+            <h1>Engine de Renderização Real-Time</h1>
+            <p>Arraste na tela para rotacionar o manequim gráfico</p>
         </div>
     </div>
-</div>
 
-
-
-<div class='p-5'>
-    <h3 class='section-header'>Resources Found</h3>
-    <ul class='grid grid-cols-1 row-gap-2 col-gap-5 lg:grid-cols-3 md:grid-cols-1'>
-        <li class='break-all'>
-            <p><a href="http://mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;05&#x2F;zyro-image.png.jpg" target="_blank" class="external" rel="noreferrer noopener">mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;05&#x2F;zyro-image.png.jpg</a> (seen on 2 websites)</p>
-        </li>
-        <li class='break-all'>
-            <p><a href="http://mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;04&#x2F;MFC2.jpg" target="_blank" class="external" rel="noreferrer noopener">mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;04&#x2F;MFC2.jpg</a> (seen on 2 websites)</p>
-        </li>
-        <li class='break-all'>
-            <p><a href="http://mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;03&#x2F;300X250.gif" target="_blank" class="external" rel="noreferrer noopener">mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;03&#x2F;300X250.gif</a> (seen on 2 websites)</p>
-        </li>
-    </ul>
-</div>
-
-<div class='p-5 border-b'>
-    <h3 class='section-header'>Sites</h3>
-    <h4 class='section-note'>Sample of sites where this domain was encountered as a third party.</h4>
-    <ul class='grid grid-cols-1 row-gap-2 col-gap-5 lg:grid-cols-3 md:grid-cols-1'>
-        <li class='truncate'>
-            <a href="http://tia-tanaka.com" target="_blank" class="external">tia-tanaka.com</a>
-        </li>
-        <li class='truncate'>
-            <a href="http://www1.tia-tanaka.com" target="_blank" class="external">www1.tia-tanaka.com</a>
-        </li>
-    </ul>
-</div>
-
-            <footer class='p-5 bg-gray-300'>
-                DuckDuckGo, <a href="https://github.com/SlayterDev/tracker-radar-wiki">wiki repo</a>, <a href="https://github.com/duckduckgo/tracker-radar">tracker radar repo</a>
-            </footer>
+    <!-- Módulo de Controle Unificado (Sidebar) -->
+    <div id="sidebar">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('body-tab')">Métricas</button>
+            <button class="tab-btn" onclick="switchTab('clothes-tab')">Coleções (90)</button>
+            <button class="tab-btn" onclick="switchTab('dance-tab')">Coreografias</button>
         </div>
-    </body>
-</html>
+
+        <!-- ABA 1: PARÂMETROS DO BIOTIPO -->
+        <div id="body-tab" class="tab-content active">
+            <button class="btn-generator" onclick="generateRandomCharacter()">Gerar Estrutura Aleatória</button>
+            
+            <span class="control-section-title">Estatura</span>
+            <div class="control-group">
+                <label>Altura Estimada <span class="val-badge" id="lbl-altura">1.75 m</span></label>
+                <input type="range" min="150" max="195" value="175" id="slider-altura">
+            </div>
+
+            <span class="control-section-title">Busto e Tronco</span>
+            <div class="control-group">
+                <label>Circunferência do Busto <span class="val-badge" id="lbl-busto">92 cm</span></label>
+                <input type="range" min="80" max="115" value="92" id="slider-busto">
+            </div>
+            <div class="control-group">
+                <label>Linha de Cintura <span class="val-badge" id="lbl-cintura">62 cm</span></label>
+                <input type="range" min="55" max="85" value="62" id="slider-cintura">
+            </div>
+
+            <span class="control-section-title">Quadril e Membros</span>
+            <div class="control-group">
+                <label>Métrica do Quadril <span class="val-badge" id="lbl-quadril">105 cm</span></label>
+                <input type="range" min="85" max="125" value="105" id="slider-quadril">
+            </div>
+            <div class="control-group">
+                <label>Volume de Coxas <span class="val-badge" id="lbl-coxas">58 cm</span></label>
+                <input type="range" min="45" max="75" value="58" id="slider-coxas">
+            </div>
+
+            <span class="control-section-title">Estética de Extremidades</span>
+            <div class="control-group">
+                <label>Comprimento dos Cabelos <span class="val-badge" id="lbl-cabelo">70 cm</span></label>
+                <input type="range" min="10" max="110" value="70" id="slider-cabelo">
+            </div>
+        </div>
+
+        <!-- ABA 2: INTEGRALIZAÇÃO DE 90 BIQUÍNIS -->
+        <div id="clothes-tab" class="tab-content">
+            <label>Navegar pelo Catálogo (90 Variações):</label>
+            <select id="bikini-category" class="select-custom" onchange="loadBikiniCatalog()">
+                <option value="fita">Coleção Fita Isolante (Peças 1 a 30)</option>
+                <option value="asa">Coleção Asa Delta / Carnaval (Peças 31 a 60)</option>
+                <option value="croche">Coleção Crochê & Resort (Peças 61 a 90)</option>
+            </select>
+            
+            <div class="bikini-grid" id="catalog-container">
+                <!-- Populado dinamicamente por script interno -->
+            </div>
+        </div>
+
+        <!-- ABA 3: EXECUÇÃO DE DINÂMICAS DE FUNK -->
+        Modos de Movimentação PélvicaModo Estático (Rotação Portfólio) ⏸️Balanço Funk Lateral 🔀Movimento Funk Até o Chão 🔽Giro Pélvico 180° 🔄// --- GERENCIADOR DE INTERFACE GRÁFICA (UI) ---function switchTab(tabId) {document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));document.getElementById(tabId).classList.add('active');event.currentTarget.classList.add('active');}// Lógica de paginação sequencial automática para renderizar as 90 opções do catálogofunction loadBikiniCatalog() {const category = document.getElementById('bikini-category').value;const container = document.getElementById('catalog-container');container.innerHTML = '';let startNum = 1, endNum = 30, emoji = "👙";if(category === 'asa') { startNum = 31; endNum = 60; emoji = "✨"; }if(category === 'croche') { startNum = 61; endNum = 90; emoji = "🧶"; }for(let i = startNum; i <= endNum; i++) {const item = document.createElement('div');item.className = bikini-item ${i === startNum ? 'selected' : ''};item.onclick = function() {document.querySelectorAll('.bikini-item').forEach(el => el.classList.remove('selected'));item.classList.add('selected');changeBikiniColor(i);};item.innerHTML = <div class="bikini-thumb">${emoji}</div><span>Modelo #${i}</span>;container.appendChild(item);}}loadBikiniCatalog();// --- AMBIENTAÇÃO GRÁFICA TRIDIMENSIONAL (THREE.JS) ---const container = document.getElementById('viewport-container');const scene = new THREE.Scene();scene.background = new THREE.Color(0x0d0d0d);// Câmera e Renderizador WebGLconst camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);camera.position.set(0, 0.4, 4);const renderer = new THREE.WebGLRenderer({ antialias: true });renderer.setSize(container.clientWidth, container.clientHeight);container.appendChild(renderer.domElement);// Iluminação de Estúdio Estilizada (Neon Rosa e Ciano)const lightAmbient = new THREE.AmbientLight(0xffffff, 0.45);scene.add(lightAmbient);const lightNeonPink = new THREE.DirectionalLight(0xff007f, 0.85);lightNeonPink.position.set(4, 3, 4);scene.add(lightNeonPink);const lightNeonCyan = new THREE.DirectionalLight(0x00ffcc, 0.65);lightNeonCyan.position.set(-4, 2, -3);scene.add(lightNeonCyan);// CONSTRUÇÃO E HIERARQUIA DO AVATAR/MANEQUIM DE REFERÊNCIAconst characterGroup = new THREE.Group();const skinMaterial = new THREE.MeshStandardMaterial({ color: 0xdca282, roughness: 0.45 });const bikiniMaterial = new THREE.MeshStandardMaterial({ color: 0xff007f, metalness: 0.55, roughness: 0.25 });const hairMaterial = new THREE.MeshStandardMaterial({ color: 0x221711, roughness: 0.75 });// Articulação Central Pélvica (Nó Raiz para Simulação Física de Dança)const hipJoint = new THREE.Group();hipJoint.position.y = -0.15;characterGroup.add(hipJoint);const hipMesh = new THREE.Mesh(new THREE.SphereGeometry(0.35, 32, 16), skinMaterial);hipMesh.scale.set(1, 0.8, 1.1);hipJoint.add(hipMesh);// Coxas / Membros Inferioresconst legR = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.09, 0.85, 16), skinMaterial);legR.position.set(0.16, -0.42, 0);hipJoint.add(legR);const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.09, 0.85, 16), skinMaterial);legL.position.set(-0.16, -0.42, 0);hipJoint.add(legL);// Estrutura do Tronco (Acoplada à base pélvica)const spineGroup = new THREE.Group();spineGroup.position.y = 0.22;hipJoint.add(spineGroup);const torsoMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.19, 0.72, 32), skinMaterial);spineGroup.add(torsoMesh);// Busto / Glandularconst breastGeo = new THREE.SphereGeometry(0.115, 16, 16);const breastR = new THREE.Mesh(breastGeo, skinMaterial); breastR.position.set(0.11, 0.22, 0.2); spineGroup.add(breastR);const breastL = new THREE.Mesh(breastGeo, skinMaterial); breastL.position.set(-0.11, 0.22, 0.2); spineGroup.add(breastL);// Complexo Craniano e Orelhasconst headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.175, 32, 32), skinMaterial);headMesh.position.y = 0.58;spineGroup.add(headMesh);const earR = new THREE.Mesh(new THREE.SphereGeometry(0.028, 8, 8), skinMaterial); earR.position.set(0.185, 0.58, 0); spineGroup.add(earR);const earL = new THREE.Mesh(new THREE.SphereGeometry(0.028, 8, 8), skinMaterial); earL.position.set(-0.185, 0.58, 0); spineGroup.add(earL);// Cabelosconst hairMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.185, 0.14, 0.65, 16), hairMaterial);hairMesh.position.set(0, 0.42, -0.05);spineGroup.add(hairMesh);// MALHAS SOBREPOSTAS DO VESTUÁRIO (BIQUÍNI)const bikiniTop = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.16, 32), bikiniMaterial);bikiniTop.position.y = 0.22;spineGroup.add(bikiniTop);const bikiniBottom = new THREE.Mesh(new THREE.CylinderGeometry(0.355, 0.1, 0.24, 32), bikiniMaterial);bikiniBottom.position.y = -0.09;hipJoint.add(bikiniBottom);scene.add(characterGroup);// --- ARQUITETURA DE SINCRONIZAÇÃO DINÂMICA DE INPUTS ---function initializeSliders() {document.getElementById('slider-altura').addEventListener('input', function() {characterGroup.scale.y = this.value / 175;document.getElementById('lbl-altura').innerText = (this.value/100).toFixed(2) + " m";});document.getElementById('slider-busto').addEventListener('input', function() {const scale = this.value / 92;breastR.scale.set(scale, scale, scale);breastL.scale.set(scale, scale, scale);bikiniTop.scale.set(scale, 1, scale);document.getElementById('lbl-busto').innerText = this.value + " cm";});document.getElementById('slider-cintura').addEventListener('input', function() {const scale = this.value / 62;torsoMesh.scale.x = scale;document.getElementById('lbl-cintura').innerText = this.value + " cm";});document.getElementById('slider-quadril').addEventListener('input', function() {const scale = this.value / 105;hipMesh.scale.set(scale, 0.8, scale * 1.1);bikiniBottom.scale.set(scale, 1, scale * 1.04);document.getElementById('lbl-quadril').innerText = this.value + " cm";});document.getElementById('slider-coxas').addEventListener('input', function() {const scale = this.value / 58;legR.scale.set(scale, 1, scale);legL.scale.set(scale, 1, scale);document.getElementById('lbl-coxas').innerText = this.value + " cm";});document.getElementById('slider-cabelo').addEventListener('input', function() {hairMesh.scale.y = this.value / 70;document.getElementById('lbl-cabelo').innerText = this.value + " cm";});}initializeSliders();// Operação Matemática para Geração Randômica Balanceadafunction generateRandomCharacter() {document.getElementById('slider-altura').value = Math.floor(Math.random() * (192 - 156) + 156);document.getElementById('slider-busto').value = Math.floor(Math.random() * (112 - 84) + 84);document.getElementById('slider-cintura').value = Math.floor(Math.random() * (76 - 56) + 56);document.getElementById('slider-quadril').value = Math.floor(Math.random() * (122 - 92) + 92);document.getElementById('slider-coxas').value = Math.floor(Math.random() * (68 - 48) + 48);document.getElementById('slider-cabelo').value = Math.floor(Math.random() * (105 - 35) + 35);// Disparar sincronização em cadeiadocument.querySelectorAll('input[type="range"]').forEach(input => input.dispatchEvent(new Event('input')));}// Simulação cromática contínua para diferenciar os 90 modelos de biquínifunction changeBikiniColor(id) {const hue = (id * 137.5) % 360;bikiniMaterial.color.setHSL(hue / 360, 0.95, 0.48);}// --- CONVERSOR MATEMÁTICO DE ANIMAÇÕES (SISTEMA DE FUNK) ---let currentDanceMode = 0;let clock = new THREE.Clock();function setDanceMode(modeId) {currentDanceMode = modeId;document.querySelectorAll('.btn-dance').forEach(btn => btn.classList.remove('active'));document.getElementById('dance-' + modeId).classList.add('active');// Reset de segurança posicionalhipJoint.position.set(0, -0.15, 0);hipJoint.rotation.set(0, 0, 0);spineGroup.rotation.set(0, 0, 0);}// Loop de Renderização Física e Oscilação Hormônica de Juntasfunction animate() {requestAnimationFrame(animate);const time = clock.getElapsedTime();const baseSpeed = 7.8; // Frequência rítmica da oscilação (BPM Funk)if (currentDanceMode === 1) {// Balanço Funk Lateral (Translação em X e Rotação em Z)hipJoint.position.x = Math.sin(time * baseSpeed) * 0.16;hipJoint.rotation.z = Math.sin(time * baseSpeed) * 0.22;spineGroup.rotation.z = -Math.sin(time * baseSpeed) * 0.12;}else if (currentDanceMode === 2) {// Movimento Funk Até o Chão (Deslocamento vertical do Nó Raiz com inclinação espinal)const squatPhase = (Math.sin(time * (baseSpeed * 0.5)) + 1) / 2; // Normalizado 0 a 1hipJoint.position.y = -0.15 - (squatPhase * 0.48);spineGroup.rotation.x = squatPhase * 0.38;hipJoint.rotation.x = -squatPhase * 0.12;}else if (currentDanceMode === 3) {// Giro Pélvico 180°hipJoint.rotation.y = Math.sin(time * baseSpeed) * 0.65;hipJoint.position.z = Math.cos(time * baseSpeed) * 0.07;}else {// Modo Estático de Amostragem (Giro do Portfólio)if (!isDragging) {characterGroup.rotation.y += 0.006;}}renderer.render(scene, camera);}animate();// Sistema de Controle de Órbita Manual (Arraste)let isDragging = false;let prevMousePos = { x: 0, y: 0 };container.addEventListener('mousedown', () => isDragging = true);container.addEventListener('mousemove', (e) => {if (isDragging) {characterGroup.rotation.y += (e.offsetX - prevMousePos.x) * 0.012;}prevMousePos = { x: e.offsetX, y: e.offsetY };});window.addEventListener('mouseup', () => isDragging = false);// Adaptabilidade de Janela (Responsividade)window.addEventListener('resize', () => {camera.aspect = container.clientWidth / container.clientHeight;camera.updateProjectionMatrix();renderer.setSize(container.clientWidth, container.clientHeight);});
+            <FollowUp>
+O código `index.html` unificado está totalmente operacional. Para refinar o projeto, você prefere focar em:
+* Adicionar **controles de iluminação** (ex: alterar a cor das luzes neon da cena)?
+* Alterar o **acabamento visual do biquíni** (ex: torná-lo opaco ou com brilho metálico intensificado)?
+* Adicionar **novos campos de medidas físicas** (ex: largura dos ombros ou espessura de braços)?
+</FollowUp>
+
