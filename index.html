@@ -3,95 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>IA Boneca 3D - 90 Tipos de Tudo</title>
+<title>IA Boneca 3D - Praia Tropical & 90 Tipos</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 30%,#1a0a2e 0%,#08080a 70%);font-family:'Segoe UI',Arial,sans-serif;color:#fff}
+html,body{width:100%;height:100%;overflow:hidden;background:#87ceeb;font-family:'Segoe UI',Arial,sans-serif;color:#fff}
 #viewport{position:absolute;inset:0;touch-action:none}
 
-/* Botão Menu Flutuante Superior */
+/* Botão Menu Flutuante */
 #menu-btn{position:fixed;top:18px;right:18px;width:50px;height:50px;border:none;border-radius:50%;
-  background:linear-gradient(135deg,#ff44aa,#8800ff);color:#fff;font-size:1.4em;cursor:pointer;z-index:100;
-  box-shadow:0 4px 20px rgba(255,68,170,.5);transition:all .25s ease;display:flex;align-items:center;justify-content:center}
+  background:linear-gradient(135deg,#f0a500,#ff44aa);color:#fff;font-size:1.4em;cursor:pointer;z-index:100;
+  box-shadow:0 6px 22px rgba(240,165,0,.5);transition:all .25s ease;display:flex;align-items:center;justify-content:center}
 #menu-btn:active{transform:scale(.92)}
 
 /* Painel Flutuante Lateral */
-#panel{position:fixed;top:0;right:0;width:370px;max-width:94vw;height:100%;
-  background:linear-gradient(180deg,rgba(18,8,30,.98),rgba(10,5,18,.98));
-  border-left:2px solid #ff44aa;z-index:200;display:flex;flex-direction:column;
-  transform:translateX(100%);transition:transform .32s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(16px);
-  box-shadow:-10px 0 35px rgba(0,0,0,.7)}
+#panel{position:fixed;top:0;right:0;width:375px;max-width:94vw;height:100%;
+  background:linear-gradient(180deg,rgba(10,25,38,.98),rgba(6,16,25,.98));
+  border-left:2px solid #f0a500;z-index:200;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .32s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(18px);
+  box-shadow:-12px 0 40px rgba(0,0,0,.6)}
 #panel.open{transform:translateX(0)}
 
-/* Cabeçalho do Painel com X para fechar */
+/* Cabeçalho com botão X */
 .panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;
-  background:rgba(255,68,170,.08);border-bottom:1px solid rgba(255,68,170,.25)}
-.panel-title{font-size:.95em;font-weight:700;letter-spacing:1px;color:#ff44aa;text-transform:uppercase;
+  background:rgba(240,165,0,.1);border-bottom:1px solid rgba(240,165,0,.25)}
+.panel-title{font-size:.95em;font-weight:700;letter-spacing:1px;color:#f0a500;text-transform:uppercase;
   display:flex;align-items:center;gap:8px}
 .close-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
   color:#fff;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-.close-btn:hover{background:#ff44aa;border-color:#ff44aa;color:#fff}
+.close-btn:hover{background:#f0a500;border-color:#f0a500;color:#000}
 .close-btn:active{transform:scale(.9)}
 
 /* Abas */
-.tabs{display:flex;background:#0a0515;border-bottom:1px solid #2a1a3a;flex-shrink:0;overflow-x:auto}
-.tab{flex:1;min-width:65px;padding:11px 6px;background:none;border:none;color:#888;font-weight:700;
+.tabs{display:flex;background:#05121c;border-bottom:1px solid #1a3344;flex-shrink:0;overflow-x:auto}
+.tab{flex:1;min-width:65px;padding:11px 6px;background:none;border:none;color:#8fa7bf;font-weight:700;
   font-size:.68em;text-transform:uppercase;cursor:pointer;letter-spacing:.4px;transition:.2s;white-space:nowrap}
-.tab.active{color:#ff44aa;border-bottom:2px solid #ff44aa;background:rgba(255,68,170,.12)}
+.tab.active{color:#f0a500;border-bottom:2px solid #f0a500;background:rgba(240,165,0,.14)}
 .tab-body{flex:1;overflow-y:auto;padding:16px;display:none}
 .tab-body.active{display:block}
 
-/* Elementos de Formulário */
-.section-title{font-size:.76em;color:#ff44aa;text-transform:uppercase;letter-spacing:1.5px;
-  margin:12px 0 8px;border-bottom:1px solid rgba(255,68,170,.3);padding-bottom:4px;font-weight:700}
+/* Elementos do Painel */
+.section-title{font-size:.76em;color:#f0a500;text-transform:uppercase;letter-spacing:1.5px;
+  margin:12px 0 8px;border-bottom:1px solid rgba(240,165,0,.3);padding-bottom:4px;font-weight:700}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;max-height:260px;overflow-y:auto}
-.card{background:#160924;border:1px solid #332244;border-radius:6px;padding:8px 4px;text-align:center;
-  cursor:pointer;font-size:.68em;color:#ccc;transition:.2s}
-.card:hover,.card.sel{border-color:#ff44aa;color:#fff;background:rgba(255,68,170,.25);box-shadow:0 0 10px rgba(255,68,170,.5)}
+.card{background:#0d2030;border:1px solid #1c3d54;border-radius:6px;padding:8px 4px;text-align:center;
+  cursor:pointer;font-size:.68em;color:#b0cce3;transition:.2s}
+.card:hover,.card.sel{border-color:#f0a500;color:#fff;background:rgba(240,165,0,.22);box-shadow:0 0 10px rgba(240,165,0,.5)}
 .card .ic{font-size:1.3em;display:block;margin-bottom:2px}
 .row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.78em}
-.row label{flex:0 0 110px;color:#ffaadd}
-.row input[type=range]{flex:1;accent-color:#ff44aa}
+.row label{flex:0 0 110px;color:#ffe099}
+.row input[type=range]{flex:1;accent-color:#f0a500}
 .row .val{flex:0 0 55px;text-align:right;color:#00ffff;font-weight:700}
 .color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.color-row input[type=color]{width:44px;height:38px;border:2px solid #333;border-radius:8px;cursor:pointer;background:none}
+.color-row input[type=color]{width:44px;height:38px;border:2px solid #1c3d54;border-radius:8px;cursor:pointer;background:none}
 
-.action{display:block;width:100%;padding:11px;margin-bottom:8px;background:linear-gradient(135deg,#ff44aa,#8800ff);
-  border:none;border-radius:8px;color:#fff;font-weight:700;font-size:.78em;cursor:pointer;text-transform:uppercase;
+.action{display:block;width:100%;padding:11px;margin-bottom:8px;background:linear-gradient(135deg,#f0a500,#ff6600);
+  border:none;border-radius:8px;color:#000;font-weight:700;font-size:.78em;cursor:pointer;text-transform:uppercase;
   letter-spacing:1px;transition:.2s;text-align:center}
 .action:active{transform:scale(.97)}
-.action.blue{background:linear-gradient(135deg,#00ffff,#0066ff);color:#000}
+.action.blue{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000}
 .action.green{background:linear-gradient(135deg,#44ff88,#00aa44);color:#000}
-.action.orange{background:linear-gradient(135deg,#ff9900,#ff3300)}
-.action.pink{background:linear-gradient(135deg,#ff1493,#ff69b4)}
-.action.purple{background:linear-gradient(135deg,#b026ff,#5500aa)}
+.action.pink{background:linear-gradient(135deg,#ff44aa,#ff1493);color:#fff}
+.action.purple{background:linear-gradient(135deg,#b026ff,#5500aa);color:#fff}
 
-/* Área de Upload */
-#upload-area{border:2px dashed #ff44aa;border-radius:10px;padding:16px;text-align:center;
-  cursor:pointer;margin-bottom:10px;font-size:.8em;background:rgba(255,68,170,.05);transition:.2s}
-#upload-area:hover{background:rgba(255,68,170,.12);border-color:#00ffff}
+/* Upload */
+#upload-area{border:2px dashed #f0a500;border-radius:10px;padding:16px;text-align:center;
+  cursor:pointer;margin-bottom:10px;font-size:.8em;background:rgba(240,165,0,.06);transition:.2s}
+#upload-area:hover{background:rgba(240,165,0,.15);border-color:#00ffff}
 #upload-status{font-size:.75em;color:#00ffff;margin-top:8px;min-height:18px;text-align:center;line-height:1.4}
-#photo-preview{max-width:100%;max-height:160px;border-radius:8px;margin:8px auto;display:none;border:1px solid #ff44aa}
+#photo-preview{max-width:100%;max-height:160px;border-radius:8px;margin:8px auto;display:none;border:1px solid #f0a500}
 
-/* Notificação sutil flutuante */
+/* Notificação flutuante */
 #toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-30px);
-  background:rgba(18,8,30,.92);border:1px solid #ff44aa;color:#fff;padding:8px 18px;border-radius:30px;
-  font-size:.75em;pointer-events:none;opacity:0;transition:all .3s ease;z-index:90;box-shadow:0 4px 18px rgba(255,68,170,.35)}
+  background:rgba(10,25,38,.92);border:1px solid #f0a500;color:#fff;padding:8px 18px;border-radius:30px;
+  font-size:.75em;pointer-events:none;opacity:0;transition:all .3s ease;z-index:90;box-shadow:0 4px 18px rgba(240,165,0,.35)}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* Barra Inferior Limpa */
 #bottom-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;
-  z-index:100;background:rgba(15,6,26,.85);padding:7px 12px;border-radius:40px;border:1px solid rgba(255,68,170,.35);
-  box-shadow:0 8px 30px rgba(0,0,0,.6);backdrop-filter:blur(12px)}
+  z-index:100;background:rgba(8,20,32,.85);padding:7px 12px;border-radius:40px;border:1px solid rgba(240,165,0,.35);
+  box-shadow:0 8px 30px rgba(0,0,0,.5);backdrop-filter:blur(14px)}
 .clean-btn{padding:10px 16px;border:none;border-radius:30px;font-weight:700;font-size:.75em;cursor:pointer;
   display:inline-flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.5px;transition:.2s;color:#fff}
 .clean-btn:active{transform:scale(.94)}
 #btn-main-photo{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000;box-shadow:0 0 15px rgba(0,255,255,.4)}
 #btn-main-twerk{background:linear-gradient(135deg,#ff0066,#ff6600)}
-#btn-main-menu{background:linear-gradient(135deg,#ff44aa,#8800ff)}
-#btn-main-dress{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25)}
+#btn-main-dress{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+#btn-main-menu{background:linear-gradient(135deg,#f0a500,#ff8800);color:#000}
 </style>
 </head>
 <body>
@@ -107,17 +106,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
 <div id="bottom-bar">
   <button class="clean-btn" id="btn-main-photo" onclick="triggerDirectPhotoUpload()">📷 Foto IA</button>
   <button class="clean-btn" id="btn-main-twerk" onclick="toggleTwerkAction()">🔥 Rebolar</button>
-  <button class="clean-btn" id="btn-main-dress" onclick="toggleDressOutfit()">👗 Roupa</button>
+  <button class="clean-btn" id="btn-main-dress" onclick="toggleDressOutfit()">👙 Biquíni/Roupa</button>
   <button class="clean-btn" id="btn-main-menu" onclick="togglePanel(event)">⚙️ Menu</button>
 </div>
 
 <!-- Botão Flutuante Superior -->
 <button id="menu-btn" onclick="togglePanel(event)" title="Abrir Configurações">☰</button>
 
-<!-- Painel Flutuante Completo com botão de X -->
+<!-- Painel Flutuante com botão X -->
 <div id="panel" onclick="event.stopPropagation()">
   <div class="panel-header">
-    <div class="panel-title"><span>✨</span> Configurações 3D</div>
+    <div class="panel-title"><span>🏖️</span> Praia 3D • 90 Tipos</div>
     <button class="close-btn" onclick="closePanel()" title="Fechar Menu">✕</button>
   </div>
 
@@ -137,17 +136,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
   <!-- IA FOTO -->
   <div id="t-foto" class="tab-body active">
     <div class="section-title">📷 Materialização por Foto IA</div>
-    <div style="font-size:.76em;color:#ccc;margin-bottom:12px;line-height:1.5">
-      Envie uma foto de corpo inteiro. A IA analisa as proporções da silhueta, extrai as cores reais e personaliza a personagem 3D instantaneamente!
+    <div style="font-size:.76em;color:#b0cce3;margin-bottom:12px;line-height:1.5">
+      Envie uma foto de corpo inteiro. A IA analisa as proporções da silhueta, extrai as cores reais e personaliza a mulher na praia 3D instantaneamente!
     </div>
     <div id="upload-area" onclick="triggerDirectPhotoUpload()">
       <div style="font-size:2.2em">📸</div>
       <div style="margin-top:6px;font-weight:700">Toque para Enviar Foto</div>
-      <div style="font-size:.85em;color:#aaa">PNG, JPG, JPEG</div>
+      <div style="font-size:.85em;color:#8fa7bf">PNG, JPG, JPEG</div>
     </div>
     <div class="section-title">Ou Teste Modelos Demonstrativos:</div>
     <button class="action pink" onclick="loadDemoPhoto(1)">🌟 Modelo 1: Morena Curvilínea</button>
-    <button class="action blue" onclick="loadDemoPhoto(2)">🌸 Modelo 2: Loira Fitness</button>
+    <button class="action blue" onclick="loadDemoPhoto(2)">🌸 Modelo 2: Loira Fitness Praia</button>
     <button class="action purple" onclick="loadDemoPhoto(3)">💎 Modelo 3: Ruiva Glamour</button>
     <div id="upload-status"></div>
     <img id="photo-preview" alt="Preview da Foto">
@@ -235,25 +234,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <div class="section-title">🎨 Cores da Personagem</div>
     <div class="section-title">Cor da Pele</div>
     <div class="color-row">
-      <input type="color" id="c-skin" value="#f4c8b0">
-      <input type="color" id="c-skin2" value="#e0a890">
+      <input type="color" id="c-skin" value="#faf0e6">
+      <input type="color" id="c-skin2" value="#f5dcc8">
     </div>
     <div class="section-title">Cor do Cabelo</div>
     <div class="color-row">
-      <input type="color" id="c-hair" value="#1a0a1e">
-      <input type="color" id="c-hair2" value="#440022">
+      <input type="color" id="c-hair" value="#ffe4b5">
+      <input type="color" id="c-hair2" value="#f4d38c">
     </div>
-    <div class="section-title">Roupa</div>
+    <div class="section-title">Roupa / Biquíni</div>
     <div class="color-row">
-      <input type="color" id="c-dress" value="#ff44aa">
-      <input type="color" id="c-dress2" value="#cc0077">
+      <input type="color" id="c-dress" value="#f0a500">
+      <input type="color" id="c-dress2" value="#d48800">
     </div>
-    <div class="section-title">Lingerie</div>
-    <div class="color-row"><input type="color" id="c-ling" value="#ff0077"></div>
+    <div class="section-title">Lingerie de Praia</div>
+    <div class="color-row"><input type="color" id="c-ling" value="#f0a500"></div>
     <div class="section-title">Lábios</div>
-    <div class="color-row"><input type="color" id="c-lip" value="#ff1155"></div>
+    <div class="color-row"><input type="color" id="c-lip" value="#ff5577"></div>
     <div class="section-title">Olhos</div>
-    <div class="color-row"><input type="color" id="c-eye" value="#00ffff"></div>
+    <div class="color-row"><input type="color" id="c-eye" value="#1e90ff"></div>
   </div>
 
   <!-- AÇÃO -->
@@ -262,9 +261,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
     <button class="action orange" onclick="startIsolatedTwerk()">🔥 Rebolar Bumbum</button>
     <button class="action blue" onclick="startIdle()">💗 Vitrine Sensual (Idle)</button>
     <button class="action" onclick="stopAnimation()">⏸️ Pausar</button>
-    <div class="section-title">👗 Figurino</div>
-    <button class="action green" onclick="dressUp()">👗 Vestido Sensual</button>
-    <button class="action pink" onclick="undress()">👙 Lingerie</button>
+    <div class="section-title">👙 Figurino de Praia</div>
+    <button class="action pink" onclick="undress()">👙 Biquíni Tropical</button>
+    <button class="action green" onclick="dressUp()">👗 Saída de Praia</button>
   </div>
 </div>
 
@@ -273,31 +272,32 @@ html,body{width:100%;height:100%;overflow:hidden;background:radial-gradient(circ
    ESTADO GLOBAL
 ============================================================ */
 let scene, camera, renderer, clock;
-let doll, rig, hologramAura;
+let doll, rig, oceanMesh;
 let bodyParts = {};
 let hairStrands = null;
 let outfitParts = [], underParts = [];
-let isDressed = true;
-let animMode = 'twerk';
+let isDressed = false; // Inicia em biquíni praia
+let animMode = 'idle';
 let currentPose = 'empinada';
 let currentPoseIdx = 1;
 let time = 0;
 
 let state = {
-  isMaterialized: true, // Inicia limpo e visível
+  isMaterialized: true,
   bodyIdx: 1, faceIdx: 1, buttIdx: 1,
   hipIdx: 1, breastIdx: 1, waistIdx: 1,
   hairIdx: 1, fringeIdx: 1, legIdx: 1, poseIdx: 1,
-  skinColor: 0xf4c8b0, skinColor2: 0xe0a890,
-  hairColor: 0x1a0a1e, hairColor2: 0x440022,
-  dressColor: 0xff44aa, dressColor2: 0xcc0077,
-  lingColor: 0xff0077, lipColor: 0xff1155, eyeColor: 0x00ffff,
-  teethSmile: 1.0, lipScale: 1.1, noseScale: 1.0,
-  headScale: 1, jawScale: 1, earScale: 1, eyeScale: 1.05,
-  buttHeartFactor: 1.3, buttVol: 1.15, buttProj: 1.25, buttH: 1.0, buttLift: 0.45,
-  hairStrands: 3000, hairLen: 1,
-  poseArch: 0.8, posePelvis: 1.0,
-  leg: { height: 165, len: 90, thigh: 55, calf: 35, ankle: 21, spread: 0.08, knee: 0 }
+  // Especificações da mulher: Pele Clara/Porcelana, Cabelo Loiro Claro Longo, Olhos Azul Celeste
+  skinColor: 0xfaf0e6, skinColor2: 0xf5dcc8,
+  hairColor: 0xffe4b5, hairColor2: 0xf4d38c,
+  dressColor: 0xf0a500, dressColor2: 0xd48800,
+  lingColor: 0xf0a500, lipColor: 0xff5577, eyeColor: 0x1e90ff,
+  teethSmile: 1.0, lipScale: 1.15, noseScale: 1.0,
+  headScale: 1, jawScale: 0.95, earScale: 1, eyeScale: 1.1,
+  buttHeartFactor: 1.35, buttVol: 1.25, buttProj: 1.30, buttH: 1.0, buttLift: 0.48,
+  hairStrands: 3500, hairLen: 1.25,
+  poseArch: 0.85, posePelvis: 1.05,
+  leg: { height: 168, len: 92, thigh: 56, calf: 35, ankle: 21, spread: 0.08, knee: 0 }
 };
 
 /* ============================================================
@@ -310,7 +310,7 @@ function bodyParams(i){
     shoulderW: 0.88 + ((i*3)%7)*0.035,
     waistW: 0.70 + ((i*5)%9)*0.030,
     hipW: 0.95 + ((i*7)%6)*0.055,
-    bust: 0.75 + ((i*11)%8)*0.09,
+    bust: 0.78 + ((i*11)%8)*0.09,
     thighW: 0.92 + ((i*2)%6)*0.05,
     calfW: 0.85 + ((i*4)%5)*0.06
   };
@@ -349,7 +349,7 @@ function breastParams(i){
   const t = (i-1)/89;
   const seed = i*4.3;
   return {
-    size: 0.65 + t*1.15 + Math.sin(seed)*0.08,
+    size: 0.68 + t*1.15 + Math.sin(seed)*0.08,
     sep: 0.08 + Math.abs(Math.cos(seed*1.1))*0.08,
     height: 0.04 + Math.sin(seed*0.8)*0.06 + t*0.04,
     forward: 0.09 + Math.cos(seed*1.4)*0.04 + t*0.05
@@ -365,16 +365,13 @@ function waistParams(i){
   };
 }
 function hairParams(i){
-  const styles = ['long', 'short', 'curly', 'wavy', 'bob', 'ponytail', 'pixie', 'afro'];
-  const hueBase = (i*7) % 40;
+  const styles = ['long', 'wavy', 'curly', 'bob', 'ponytail', 'pixie', 'afro', 'short'];
   return {
     style: styles[i % styles.length],
     volume: 0.85 + ((i*3)%8)*0.055,
-    fall: 0.5 + ((i*5)%9)*0.09,
+    fall: 0.6 + ((i*5)%9)*0.09,
     wave: ((i*11)%10)/10,
-    hue: hueBase * 9,
-    sat: 20 + ((i*7)%6)*10,
-    lig: 10 + ((i*3)%6)*8
+    hue: 45, sat: 55, lig: 82
   };
 }
 function fringeParams(i){
@@ -391,11 +388,11 @@ function legParams(i){
   const t = (i-1)/89;
   const seed = i*4.7;
   return {
-    height: 145 + t*55,
-    len: 75 + t*40,
-    thigh: 42 + Math.abs(Math.sin(seed))*30,
-    calf: 30 + Math.abs(Math.cos(seed*1.2))*17,
-    ankle: 17 + Math.abs(Math.sin(seed*0.9))*10,
+    height: 148 + t*52,
+    len: 78 + t*38,
+    thigh: 44 + Math.abs(Math.sin(seed))*28,
+    calf: 30 + Math.abs(Math.cos(seed*1.2))*16,
+    ankle: 18 + Math.abs(Math.sin(seed*0.9))*9,
     tone: t
   };
 }
@@ -423,30 +420,29 @@ function poseParams(i){
 }
 
 /* ============================================================
-   MATERIAIS
+   MATERIAIS ESTÉTICOS
 ============================================================ */
 const MAT = {
-  skin:     new THREE.MeshStandardMaterial({ color:0xf4c8b0, roughness:0.45, metalness:0.08, transparent:true, opacity:1.0 }),
-  skin2:    new THREE.MeshStandardMaterial({ color:0xe0a890, roughness:0.50, metalness:0.08, transparent:true, opacity:1.0 }),
-  hair:     new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.35, metalness:0.35, transparent:true, opacity:1.0 }),
-  hair2:    new THREE.MeshStandardMaterial({ color:0x440022, roughness:0.35, metalness:0.35, transparent:true, opacity:1.0 }),
-  fringe:   new THREE.MeshStandardMaterial({ color:0x1a0a1e, roughness:0.4, metalness:0.3, transparent:true, opacity:1.0 }),
-  dress:    new THREE.MeshStandardMaterial({ color:0xff44aa, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:1.0 }),
-  dress2:   new THREE.MeshStandardMaterial({ color:0xcc0077, roughness:0.4, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:1.0 }),
-  ling:     new THREE.MeshStandardMaterial({ color:0xff0077, roughness:0.3, metalness:0.5, side:THREE.DoubleSide, transparent:true, opacity:1.0 }),
-  heel:     new THREE.MeshStandardMaterial({ color:0x111115, roughness:0.2, metalness:0.9, transparent:true, opacity:1.0 }),
-  lip:      new THREE.MeshStandardMaterial({ color:0xff1155, roughness:0.18, metalness:0.15, transparent:true, opacity:1.0 }),
-  teeth:    new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.12, metalness:0.05, transparent:true, opacity:1.0 }),
-  mouthIn:  new THREE.MeshBasicMaterial({ color:0x330810, transparent:true, opacity:1.0 }),
-  eyeWhite: new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.2, transparent:true, opacity:1.0 }),
-  eyeIris:  new THREE.MeshStandardMaterial({ color:0x00ffff, roughness:0.3, transparent:true, opacity:1.0 }),
-  eyePupil: new THREE.MeshBasicMaterial({ color:0x050508, transparent:true, opacity:1.0 }),
-  lash:     new THREE.MeshBasicMaterial({ color:0x000000, transparent:true, opacity:1.0 }),
-  holo:     new THREE.MeshBasicMaterial({ color:0x00ffff, wireframe:true, transparent:true, opacity:0.0 })
+  skin:     new THREE.MeshStandardMaterial({ color:0xfaf0e6, roughness:0.35, metalness:0.04 }),
+  skin2:    new THREE.MeshStandardMaterial({ color:0xf5dcc8, roughness:0.42, metalness:0.04 }),
+  hair:     new THREE.MeshStandardMaterial({ color:0xffe4b5, roughness:0.45, metalness:0.2 }),
+  hair2:    new THREE.MeshStandardMaterial({ color:0xf4d38c, roughness:0.45, metalness:0.2 }),
+  fringe:   new THREE.MeshStandardMaterial({ color:0xffe4b5, roughness:0.45, metalness:0.2 }),
+  dress:    new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.3, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:0.9 }),
+  dress2:   new THREE.MeshStandardMaterial({ color:0xd48800, roughness:0.3, metalness:0.3, side:THREE.DoubleSide, transparent:true, opacity:0.9 }),
+  ling:     new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.35, metalness:0.45, side:THREE.DoubleSide }),
+  heel:     new THREE.MeshStandardMaterial({ color:0xd4a373, roughness:0.3, metalness:0.6 }),
+  lip:      new THREE.MeshStandardMaterial({ color:0xff5577, roughness:0.18, metalness:0.15 }),
+  teeth:    new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.12, metalness:0.05 }),
+  mouthIn:  new THREE.MeshBasicMaterial({ color:0x330810 }),
+  eyeWhite: new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.2 }),
+  eyeIris:  new THREE.MeshStandardMaterial({ color:0x1e90ff, roughness:0.25 }),
+  eyePupil: new THREE.MeshBasicMaterial({ color:0x050508 }),
+  lash:     new THREE.MeshBasicMaterial({ color:0x331a00 })
 };
 
 /* ============================================================
-   GEOMETRIA DO BUMBUM CORAÇÃO
+   GEOMETRIA DO BUMBUM CORAÇÃO ESCULPIDO
 ============================================================ */
 function createHeartLobeGeometry(isLeft){
   const radius = 0.18;
@@ -469,28 +465,77 @@ function createHeartLobeGeometry(isLeft){
 }
 
 /* ============================================================
-   CONSTRUÇÃO DO PERSONAGEM
+   CONSTRUÇÃO DO CENÁRIO DE PRAIA 3D
+============================================================ */
+function buildBeachEnvironment(){
+  const envGroup = new THREE.Group();
+
+  // Céu Costeiro
+  scene.background = new THREE.Color(0x8cd3ff);
+  scene.fog = new THREE.FogExp2(0xaaccff, 0.035);
+
+  // Areia Dourada
+  const sandGeo = new THREE.PlaneGeometry(60, 60, 32, 32);
+  const sandMat = new THREE.MeshStandardMaterial({ color: 0xedd6ad, roughness: 0.95, metalness: 0.05 });
+  const sand = new THREE.Mesh(sandGeo, sandMat);
+  sand.rotation.x = -Math.PI / 2;
+  sand.position.set(0, -1.15, 0);
+  envGroup.add(sand);
+
+  // Mar Tropical / Oceano
+  const oceanGeo = new THREE.PlaneGeometry(60, 30, 32, 16);
+  const oceanMat = new THREE.MeshStandardMaterial({
+    color: 0x0099cc, roughness: 0.1, metalness: 0.4, transparent: true, opacity: 0.85
+  });
+  oceanMesh = new THREE.Mesh(oceanGeo, oceanMat);
+  oceanMesh.rotation.x = -Math.PI / 2;
+  oceanMesh.position.set(0, -1.12, -18);
+  envGroup.add(oceanMesh);
+
+  // Sol no horizonte
+  const sunGeo = new THREE.SphereGeometry(2.5, 24, 24);
+  const sunMat = new THREE.MeshBasicMaterial({ color: 0xfff6cf });
+  const sun = new THREE.Mesh(sunGeo, sunMat);
+  sun.position.set(6, 12, -28);
+  envGroup.add(sun);
+
+  // Coqueiros Tropicais Estilizados na orla
+  function createPalmTree(x, z, scale){
+    const tree = new THREE.Group();
+    tree.position.set(x, -1.15, z);
+    tree.scale.setScalar(scale);
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.9 });
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 4, 12), trunkMat);
+    trunk.position.y = 2;
+    trunk.rotation.z = (Math.random() - 0.5) * 0.15;
+    tree.add(trunk);
+    const leavesMat = new THREE.MeshStandardMaterial({ color: 0x2e8b57, roughness: 0.6, side: THREE.DoubleSide });
+    for(let l = 0; l < 6; l++){
+      const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.5, 5), leavesMat);
+      leaf.position.set(0, 3.9, 0);
+      leaf.rotation.z = 1.1;
+      leaf.rotation.y = (l / 6) * Math.PI * 2;
+      tree.add(leaf);
+    }
+    return tree;
+  }
+  envGroup.add(createPalmTree(-5, -6, 1.1));
+  envGroup.add(createPalmTree(6, -8, 1.3));
+  envGroup.add(createPalmTree(-9, -12, 1.4));
+  envGroup.add(createPalmTree(10, -14, 1.5));
+
+  scene.add(envGroup);
+}
+
+/* ============================================================
+   CONSTRUÇÃO DO AVATAR ESCULPIDO
 ============================================================ */
 function buildCharacter(){
   doll = new THREE.Group();
   rig = new THREE.Group();
   doll.add(rig);
 
-  hologramAura = new THREE.Group();
-  const holoCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 1.8, 24, 8, true), MAT.holo);
-  holoCyl.position.y = -0.2;
-  hologramAura.add(holoCyl);
-  for(let r=0; r<4; r++){
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.42 - r*0.04, 0.005, 8, 32), MAT.holo);
-    ring.rotation.x = Math.PI/2;
-    ring.position.y = -0.9 + r*0.55;
-    hologramAura.add(ring);
-  }
-  bodyParts.hologramAura = hologramAura;
-  hologramAura.visible = false;
-  doll.add(hologramAura);
-
-  // QUADRIL
+  // QUADRIL ESCULPIDO
   const hips = new THREE.Group();
   hips.position.y = -0.35;
   rig.add(hips);
@@ -548,7 +593,7 @@ function buildCharacter(){
   bodyParts.chestR.position.set(0.11, 0.08, 0.13);
   chest.add(bodyParts.chestR);
 
-  // CABEÇA
+  // CABEÇA & ROSTO DESENHADO
   const headG = new THREE.Group();
   headG.position.y = 0.56;
   rig.add(headG);
@@ -574,7 +619,7 @@ function buildCharacter(){
   cheekR.position.set(0.085, -0.01, 0.11);
   head.add(cheekR);
 
-  // OLHOS
+  // OLHOS AZUL CELESTE
   function createEye(isLeft){
     const g = new THREE.Group();
     g.position.set(isLeft ? -0.055 : 0.055, 0.022, 0.142);
@@ -593,7 +638,7 @@ function buildCharacter(){
     shine.position.set(isLeft ? 0.005 : -0.005, 0.005, 0.021);
     g.add(shine);
     const lash = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.006, 0.012), MAT.lash);
-    lash.position.set(0, 0, 0.019, 0.015);
+    lash.position.set(0, 0.019, 0.015);
     lash.rotation.z = (isLeft ? 0.25 : -0.25);
     g.add(lash);
     return g;
@@ -601,16 +646,17 @@ function buildCharacter(){
   bodyParts.eyeL = createEye(true); head.add(bodyParts.eyeL);
   bodyParts.eyeR = createEye(false); head.add(bodyParts.eyeR);
 
-  bodyParts.browL = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.009, 0.01), MAT.hair);
+  // SOBRANCELHAS DOURADAS
+  bodyParts.browL = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.009, 0.01), MAT.hair2);
   bodyParts.browL.position.set(-0.055, 0.058, 0.145);
   bodyParts.browL.rotation.z = 0.18;
   head.add(bodyParts.browL);
-  bodyParts.browR = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.009, 0.01), MAT.hair);
+  bodyParts.browR = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.009, 0.01), MAT.hair2);
   bodyParts.browR.position.set(0.055, 0.058, 0.145);
   bodyParts.browR.rotation.z = -0.18;
   head.add(bodyParts.browR);
 
-  // NARIZ
+  // NARIZ DELICADO
   const noseGroup = new THREE.Group();
   noseGroup.position.set(0, -0.018, 0.155);
   head.add(noseGroup);
@@ -622,14 +668,8 @@ function buildCharacter(){
   const noseTip = new THREE.Mesh(new THREE.SphereGeometry(0.013, 16, 14), MAT.skin2);
   noseTip.position.set(0, -0.012, 0.012);
   noseGroup.add(noseTip);
-  const nostrilL = new THREE.Mesh(new THREE.SphereGeometry(0.007, 10, 10), MAT.skin);
-  nostrilL.position.set(-0.012, -0.015, 0.006);
-  noseGroup.add(nostrilL);
-  const nostrilR = new THREE.Mesh(new THREE.SphereGeometry(0.007, 10, 10), MAT.skin);
-  nostrilR.position.set(0.012, -0.015, 0.006);
-  noseGroup.add(nostrilR);
 
-  // BOCA
+  // BOCA & LÁBIOS ROSADOS
   const mouthGroup = new THREE.Group();
   mouthGroup.position.set(0, -0.072, 0.142);
   head.add(mouthGroup);
@@ -658,27 +698,17 @@ function buildCharacter(){
   bodyParts.lipBottom.scale.set(1.45, 0.65, 0.7);
   mouthGroup.add(bodyParts.lipBottom);
 
-  bodyParts.earL = new THREE.Mesh(new THREE.SphereGeometry(0.025, 12, 12), MAT.skin);
-  bodyParts.earL.position.set(-0.15, -0.01, 0);
-  bodyParts.earL.scale.set(0.5, 1, 1);
-  head.add(bodyParts.earL);
-  bodyParts.earR = new THREE.Mesh(new THREE.SphereGeometry(0.025, 12, 12), MAT.skin);
-  bodyParts.earR.position.set(0.15, -0.01, 0);
-  bodyParts.earR.scale.set(0.5, 1, 1);
-  head.add(bodyParts.earR);
-
-  // CABELO BASE
+  // CABELO LOIRO CLARO LONGO
   bodyParts.hairTop = new THREE.Mesh(
     new THREE.SphereGeometry(0.178, 32, 24, 0, Math.PI*2, 0, Math.PI*0.55), MAT.hair);
   bodyParts.hairTop.position.y = 0.005;
   bodyParts.hairTop.scale.set(1, 1.06, 1.06);
   head.add(bodyParts.hairTop);
 
-  bodyParts.hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.24, 0.6, 24), MAT.hair);
-  bodyParts.hairBack.position.set(0, -0.25, -0.09);
+  bodyParts.hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.26, 0.75, 24), MAT.hair);
+  bodyParts.hairBack.position.set(0, -0.32, -0.09);
   head.add(bodyParts.hairBack);
 
-  // FRANJA
   bodyParts.fringe = new THREE.Mesh(new THREE.SphereGeometry(0.175, 24, 12, 0, Math.PI*2, 0, Math.PI*0.32), MAT.fringe);
   bodyParts.fringe.position.set(0, 0.06, 0.02);
   bodyParts.fringe.rotation.x = 0.35;
@@ -718,7 +748,7 @@ function buildCharacter(){
   handR.scale.set(0.7, 1, 0.5);
   armR.add(handR);
 
-  // PERNAS (Corrigidas)
+  // PERNAS ESCULPIDAS
   const legL = new THREE.Group();
   legL.position.set(-0.13, -0.15, 0);
   hips.add(legL);
@@ -732,9 +762,6 @@ function buildCharacter(){
   const shoeL = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.05, 0.18), MAT.heel);
   shoeL.position.set(0, -0.83, 0.04);
   legL.add(shoeL);
-  const heelL = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.09, 0.02), MAT.heel);
-  heelL.position.set(0, -0.87, -0.04);
-  legL.add(heelL);
 
   const legR = new THREE.Group();
   legR.position.set(0.13, -0.15, 0);
@@ -749,11 +776,8 @@ function buildCharacter(){
   const shoeR = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.05, 0.18), MAT.heel);
   shoeR.position.set(0, -0.83, 0.04);
   legR.add(shoeR);
-  const heelR = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.09, 0.02), MAT.heel);
-  heelR.position.set(0, -0.87, -0.04);
-  legR.add(heelR);
 
-  // VESTIDO
+  // ROUPA DE PRAIA / SAÍDA DE PRAIA
   const dressTop = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.22, 0.34, 32, 1, true), MAT.dress);
   dressTop.position.y = 0.30;
   chest.add(dressTop);
@@ -768,7 +792,7 @@ function buildCharacter(){
   rig.add(belt);
   outfitParts.push(belt);
 
-  // LINGERIE
+  // BIQUÍNI PRAIA ESCULPIDO
   const braL = new THREE.Mesh(new THREE.SphereGeometry(0.115, 20, 16, 0, Math.PI*2, 0, Math.PI*0.6), MAT.ling);
   braL.position.set(-0.11, 0.10, 0.10);
   braL.rotation.x = Math.PI*0.5;
@@ -786,7 +810,7 @@ function buildCharacter(){
   hips.add(panty);
   underParts.push(panty);
 
-  doll.position.y = 0.55;
+  doll.position.y = 0.45;
   scene.add(doll);
 
   regenerateHair();
@@ -801,32 +825,11 @@ function buildCharacter(){
   applyLegPreset(1);
   applyPosePreset(1);
   setSensualPose('empinada');
-  dressUp();
-  setBodyVisibility(true);
+  undress(); // Inicia em biquíni de praia
 }
 
 /* ============================================================
-   VISIBILIDADE
-============================================================ */
-function setBodyVisibility(visible){
-  state.isMaterialized = visible;
-  const targetOp = visible ? 1.0 : 0.0;
-  [MAT.skin, MAT.skin2, MAT.hair, MAT.hair2, MAT.fringe, MAT.dress, MAT.dress2,
-   MAT.ling, MAT.heel, MAT.lip, MAT.teeth, MAT.mouthIn, MAT.eyeWhite,
-   MAT.eyeIris, MAT.eyePupil, MAT.lash].forEach(m => {
-    m.opacity = targetOp;
-    m.transparent = !visible || (m === MAT.dress || m === MAT.dress2 || m === MAT.ling);
-  });
-  if(hairStrands) hairStrands.material.opacity = visible ? 0.85 : 0.0;
-  if(bodyParts.hologramAura) bodyParts.hologramAura.visible = !visible;
-}
-function forceRevealBody(){
-  setBodyVisibility(!state.isMaterialized);
-  showToast(state.isMaterialized ? '✨ Corpo Visível' : '🔒 Modo Holográfico');
-}
-
-/* ============================================================
-   CABELO (Corrigido)
+   CABELO PROCEDURAL COM FIOS DOURADOS
 ============================================================ */
 function regenerateHair(){
   if(!bodyParts.hairStrandGroup) return;
@@ -846,13 +849,13 @@ function regenerateHair(){
     const sx = r * Math.sin(theta) * Math.cos(phi);
     const sy = r * Math.cos(theta) + 0.005;
     const sz = r * Math.sin(theta) * Math.sin(phi);
-    const fall = 0.25 + Math.random()*0.6 * state.hairLen;
-    const sway = (Math.random()-0.5) * 0.15;
+    const fall = 0.35 + Math.random()*0.75 * state.hairLen;
+    const sway = (Math.random()-0.5) * 0.16;
     positions[i*6]   = sx; positions[i*6+1] = sy; positions[i*6+2] = sz;
     positions[i*6+3] = sx + sway; positions[i*6+4] = sy - fall; positions[i*6+5] = sz - 0.08 - Math.random()*0.15;
     const mix = Math.random();
     const cA = c1.clone().lerp(c2, mix);
-    const cB = c1.clone().lerp(c2, mix*0.7).multiplyScalar(0.6);
+    const cB = c1.clone().lerp(c2, mix*0.7).multiplyScalar(0.7);
     colors[i*6]   = cA.r; colors[i*6+1] = cA.g; colors[i*6+2] = cA.b;
     colors[i*6+3] = cB.r; colors[i*6+4] = cB.g; colors[i*6+5] = cB.b;
   }
@@ -860,8 +863,7 @@ function regenerateHair(){
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   const mat = new THREE.LineBasicMaterial({
-    vertexColors: true, transparent: true,
-    opacity: state.isMaterialized ? 0.85 : 0.0
+    vertexColors: true, transparent: true, opacity: 0.9
   });
   hairStrands = new THREE.LineSegments(geo, mat);
   bodyParts.hairStrandGroup.add(hairStrands);
@@ -947,11 +949,6 @@ function applyWaist(i){
 function applyHair(i){
   state.hairIdx = i;
   const h = hairParams(i);
-  const col = new THREE.Color().setHSL(h.hue/360, h.sat/100, h.lig/100);
-  const col2 = col.clone().multiplyScalar(0.55);
-  MAT.hair.color.copy(col);
-  MAT.hair2.color.copy(col2);
-  MAT.fringe.color.copy(col);
   const v = h.volume;
   const f = h.fall;
   bodyParts.hairBack.scale.set(0.85 + v*0.35, 0.8 + f*0.7, 0.85 + v*0.35);
@@ -960,8 +957,6 @@ function applyHair(i){
   if(h.style === 'ponytail') bodyParts.hairBack.position.z = -0.18;
   else if(h.style === 'bob') bodyParts.hairBack.scale.y *= 0.7;
   else if(h.style === 'afro') bodyParts.hairTop.scale.set(v*1.4, 1.4*v, 1.4*v);
-  state.hairColor = col.getHex();
-  state.hairColor2 = col2.getHex();
   regenerateHair();
 }
 
@@ -1074,23 +1069,23 @@ function focusOnButt(){
   doll.rotation.y = Math.PI * 0.95;
   camera.position.set(0, 0.2, 1.6);
   camera.lookAt(0, 0.05, 0);
-  showToast('🍑 Zoom no Bumbum');
+  showToast('🍑 Foco no Bumbum');
 }
 
 /* ============================================================
-   VESTIR / FIGURINO
+   VESTIR / BIQUÍNI
 ============================================================ */
 function dressUp(){
   isDressed = true;
   outfitParts.forEach(p => p.visible = true);
   underParts.forEach(p => p.visible = false);
-  showToast('👗 Vestido ativado');
+  showToast('👗 Saída de Praia ativada');
 }
 function undress(){
   isDressed = false;
   outfitParts.forEach(p => p.visible = false);
   underParts.forEach(p => p.visible = true);
-  showToast('👙 Lingerie ativada');
+  showToast('👙 Biquíni Tropical ativado');
 }
 function toggleDressOutfit(){
   if(isDressed) undress();
@@ -1108,7 +1103,7 @@ function startIsolatedTwerk(){
 }
 function startIdle(){
   animMode = 'idle';
-  showToast('💗 Modo Vitrine (Idle)');
+  showToast('💗 Modo Praia (Idle)');
 }
 function stopAnimation(){
   animMode = 'none';
@@ -1163,6 +1158,10 @@ function loop(){
   requestAnimationFrame(loop);
   const t = clock.getElapsedTime();
   time = t;
+  // Ondulação suave do oceano
+  if(oceanMesh) {
+    oceanMesh.position.y = -1.12 + Math.sin(t * 1.5) * 0.03;
+  }
   if(animMode === 'twerk') animateIsolatedTwerk(t);
   else if(animMode === 'idle') animateIdle(t);
   if(!isDragging && animMode !== 'twerk') doll.rotation.y += 0.003;
@@ -1215,7 +1214,7 @@ el.addEventListener('touchmove', e => {
 el.addEventListener('touchend', () => pinchDist = 0);
 
 /* ============================================================
-   INTERFACE DO USUÁRIO & NOTIFICAÇÕES
+   INTERFACE DO USUÁRIO
 ============================================================ */
 function showToast(msg){
   const t = document.getElementById('toast');
@@ -1242,8 +1241,11 @@ function switchTab(id, e){
 }
 
 function triggerDirectPhotoUpload(){
-  // Abre diretamente a janela do dispositivo para enviar a foto
   document.getElementById('direct-photo-input').click();
+}
+
+function forceRevealBody(){
+  showToast('👁️ Modelo Visível na Praia');
 }
 
 /* ============================================================
@@ -1309,7 +1311,7 @@ function randomizeAll(){
 }
 
 /* ============================================================
-   CONTROLES E BINDINGS
+   CONTROLES
 ============================================================ */
 function bindRange(id, valId, target, path){
   const inp = document.getElementById(id);
@@ -1426,14 +1428,14 @@ function loadDemoPhoto(type){
     skin = '#c48962'; hair = '#110905'; dress = '#ff0055';
     state.buttVol = 1.35; state.buttProj = 1.38; state.buttHeartFactor = 1.45;
   } else if(type === 2){
-    skin = '#f5c6a5'; hair = '#e6bf70'; dress = '#00e5ff';
-    state.buttVol = 1.15; state.buttProj = 1.25; state.buttHeartFactor = 1.25;
+    skin = '#faf0e6'; hair = '#ffe4b5'; dress = '#f0a500';
+    state.buttVol = 1.25; state.buttProj = 1.30; state.buttHeartFactor = 1.35;
   } else {
     skin = '#ffe0cf'; hair = '#c23b12'; dress = '#8800ff';
     state.buttVol = 1.25; state.buttProj = 1.30; state.buttHeartFactor = 1.35;
   }
   const grad = ctx.createLinearGradient(0,0,0,600);
-  grad.addColorStop(0, '#100520'); grad.addColorStop(1, '#05020a');
+  grad.addColorStop(0, '#87ceeb'); grad.addColorStop(1, '#e0f7fa');
   ctx.fillStyle = grad; ctx.fillRect(0,0,400,600);
   ctx.fillStyle = skin;
   ctx.beginPath();
@@ -1484,8 +1486,8 @@ function extractColorsFromImage(img){
   let rD=0,gD=0,bD=0,nD=0;
   for(let i=0;i<dressData.length;i+=4){ rD+=dressData[i]; gD+=dressData[i+1]; bD+=dressData[i+2]; nD++; }
   const dressCol = (Math.round(rD/nD)<<16) | (Math.round(gD/nD)<<8) | Math.round(bD/nD);
-  state.hairColor = hairCol; state.hairColor2 = new THREE.Color(hairCol).multiplyScalar(0.6).getHex();
-  state.skinColor = skinCol; state.skinColor2 = new THREE.Color(skinCol).multiplyScalar(0.85).getHex();
+  state.hairColor = hairCol; state.hairColor2 = new THREE.Color(hairCol).multiplyScalar(0.75).getHex();
+  state.skinColor = skinCol; state.skinColor2 = new THREE.Color(skinCol).multiplyScalar(0.88).getHex();
   state.dressColor = dressCol; state.dressColor2 = new THREE.Color(dressCol).multiplyScalar(0.75).getHex();
   MAT.hair.color.setHex(hairCol); MAT.hair2.color.setHex(state.hairColor2); MAT.fringe.color.setHex(hairCol);
   MAT.skin.color.setHex(skinCol); MAT.skin2.color.setHex(state.skinColor2);
@@ -1542,59 +1544,46 @@ function applyPhotoAnalysis(){
     setSel('cabelo', bodyIdx); setSel('franja', Math.max(1, Math.min(90, bodyIdx+5)));
     setSel('poses', bodyIdx);
   }
-  setBodyVisibility(true);
-  showToast('✨ Materializada com Sucesso!');
-  document.getElementById('upload-status').innerText = '✨ Proporções aplicadas!';
+  showToast('✨ Silhueta da Foto Materializada na Praia!');
+  document.getElementById('upload-status').innerText = '✨ Proporções aplicadas na mulher 3D!';
 }
 
 /* ============================================================
-   INICIALIZAÇÃO
+   INICIALIZAÇÃO DA CENA TROPICAL
 ============================================================ */
 function init(){
   scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0a0515, 0.14);
 
   camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0.5, 2.6);
+  camera.position.set(0, 0.45, 3.2);
   camera.lookAt(0, 0.2, 0);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x000000, 0);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
   document.getElementById('viewport').appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-  const key = new THREE.DirectionalLight(0xffaadd, 1.1);
-  key.position.set(2, 4, 3);
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0x44aaff, 0.6);
-  fill.position.set(-3, 2, -2);
-  scene.add(fill);
-  const rim = new THREE.PointLight(0xff44aa, 0.9, 10);
-  rim.position.set(0, 1.5, -2.5);
-  scene.add(rim);
-  const bottom = new THREE.PointLight(0x00ffff, 0.5, 6);
-  bottom.position.set(0, -0.5, 1.5);
-  scene.add(bottom);
+  // Luz Solar e Ambiente de Praia
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+  scene.add(ambientLight);
 
-  const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(3, 48),
-    new THREE.MeshStandardMaterial({ color: 0x0a0010, roughness: 0.9, metalness: 0.4 })
-  );
-  floor.rotation.x = -Math.PI/2;
-  floor.position.y = -1.15;
-  scene.add(floor);
-  const glowRing = new THREE.Mesh(
-    new THREE.RingGeometry(0.9, 1.05, 48),
-    new THREE.MeshBasicMaterial({ color: 0xff44aa, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
-  );
-  glowRing.rotation.x = -Math.PI/2;
-  glowRing.position.y = -1.14;
-  scene.add(glowRing);
+  const sunLight = new THREE.DirectionalLight(0xfffaed, 1.25);
+  sunLight.position.set(5, 8, 4);
+  scene.add(sunLight);
+
+  const waterReflectLight = new THREE.DirectionalLight(0x70d6ff, 0.4);
+  waterReflectLight.position.set(-4, -2, -3);
+  scene.add(waterReflectLight);
+
+  const beachWarmLight = new THREE.PointLight(0xffaa55, 0.6, 12);
+  beachWarmLight.position.set(0, 1.5, 3);
+  scene.add(beachWarmLight);
 
   clock = new THREE.Clock();
 
+  buildBeachEnvironment();
   buildCharacter();
   initUI();
   initPoseAI();
@@ -1605,7 +1594,6 @@ function init(){
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  startIsolatedTwerk();
   loop();
 }
 
