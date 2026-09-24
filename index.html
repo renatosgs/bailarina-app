@@ -1,255 +1,151 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurador de Biotipo 3D - Avançado</title>
-    <!-- Importação da biblioteca Three.js para renderização 3D -->
-    <script src="https://cloudflare.com"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a;
-            color: #fff;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-        /* Área do Canvas 3D */
-        #canvas-container {
-            flex: 1;
-            height: 100%;
-            position: relative;
-        }
-        #canvas-caption {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 15px;
-            border-radius: 5px;
-            border-left: 3px solid #d4af37;
-        }
-        /* Painel Lateral de Controle de Medidas */
-        #control-panel {
-            width: 400px;
-            background-color: #262626;
-            padding: 25px;
-            overflow-y: auto;
-            border-left: 2px solid #333;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-        }
-        h2 {
-            color: #d4af37;
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
-        }
-        .section-title {
-            font-size: 1em;
-            color: #b3b3b3;
-            margin: 20px 0 10px 0;
-            display: block;
-            font-weight: bold;
-        }
-        .control-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-            color: #ddd;
-        }
-        .value-display {
-            color: #d4af37;
-            font-weight: bold;
-        }
-        input[type="range"] {
-            width: 100%;
-            accent-color: #d4af37;
-            background: #444;
-            height: 6px;
-            border-radius: 3px;
-            outline: none;
-        }
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #b8860b, #d4af37);
-            border: none;
-            border-radius: 5px;
-            color: #1a1a1a;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            text-transform: uppercase;
-            transition: transform 0.2s;
-        }
-        .btn-action:hover {
-            transform: scale(1.02);
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    
+    <title>Tracker Radar Wiki - mulherpelada.blog</title>
+    <link rel="stylesheet" href="../assets/css/style.min.css">
+
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+
+    <script src='../assets/js/vendor/lunr.js' defer></script>
+    <script src='../assets/js/search.js' defer></script>
 </head>
+
 <body>
+    <div class="container mx-auto">
+        <nav class="flex items-center justify-between flex-wrap p-5 bg-gray-300">
+            <div class="flex items-center flex-shrink-0 mr-5">
+                <a href="/tracker-radar-wiki" class="font-semibold text-xl">Tracker Radar Wiki</a>
+            </div>
+            <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                <div class="text-sm lg:flex-grow">
+                    <a href="/tracker-radar-wiki" class="block mt-4 lg:inline-block lg:mt-0 mr-4">
+                        Home
+                    </a>
+                    <a href="/tracker-radar-wiki/top100.html" class="block mt-4 lg:inline-block lg:mt-0 mr-4">
+                        Top 100
+                    </a>
+                    <a href="/tracker-radar-wiki/apiHistory.html" class="block mt-4 lg:inline-block lg:mt-0 mr-4">
+                        API abuse score history
+                    </a>
+                </div>
+            </div>
+            <div class='relative'>
+                <input type='search' disabled="disabled" placeholder="Loading…" class='search-box__input px-2' />
+                <ul class='search-box__results absolute top-100 w-full bg-gray-100'></ul>
+            </div>
+        </nav>
 
-    <!-- Visualizador do Modelo 3D -->
-    <div id="canvas-container">
-        <div id="canvas-caption">
-            <h3>Visualização do Avatar</h3>
-            <p style="font-size: 0.85em; color: #aaa;">Use o mouse para rotacionar o cenário</p>
+<script>
+    window.wikiData = {
+        type: "domain",
+        domain: "mulherpelada.blog",
+        history: [{"date":"2022.04","prevalence":0.0000136,"sites":2,"fingerprinting":0,"cookies":0},{"date":"jd/may-update","prevalence":0.0000136,"sites":2,"fingerprinting":0,"cookies":0}]
+    };
+</script>
+<script src="../assets/js/vendor/Chart.min.js" defer></script>
+<script src='../assets/js/graph.js' defer></script>
+
+<div class='p-5 border-b'>
+    <h1 class='text-2xl mb-5'><img src='https://external-content.duckduckgo.com/ip3/mulherpelada.blog.ico' width="32" height="32" class='inline-block' /> mulherpelada.blog</h1>
+    <div class='grid grid-cols-1 col-gap-5 row-gap-5 md:grid-cols-2 md:row-gap-10'>
+        <div class="domain-stats">
+            <h3 class="section-header">Domain Stats</h3>
+            <ul>
+                <h3 class='section-header'></h3>
+            
+                <li class='py-1'>
+                    <strong>Owner:</strong> <i>Unknown</i>
+                </li>
+                <li class='py-1'>
+                    <strong>Privacy Policy:</strong> <i>Unknown</i>
+                </li>
+                <li class='py-1'>
+                    <strong>Rank:</strong> &#35;22132<small>/26825</small>
+                </li>
+                <li class='py-1'>
+                    <strong>Prevalence:</strong> 0.00&#37; (2 sites)
+                </li>
+                <li class='py-1'>
+                    <strong>Fingerprinting:</strong> 0<small>/3</small> - <span class="fp-0">No use of browser API&#39;s</span>
+                </li>
+                <li class='py-1'>
+                    <strong>Cookies:</strong> 0.00&#37;
+                </li>
+                <li class='py-1'>
+                    <strong>Performance:</strong> <small><a href="https://github.com/duckduckgo/tracker-radar/blob/master/docs/DATA_MODEL.md#performance" target="_blank">?</a></small>
+                    <ul>
+                        <li>time: <small>/3</small></li>
+                        <li>size: <small>/3</small></li>
+                        <li>CPU: <small>/3</small></li>
+                        <li>cache: <small>/3</small></li>
+                    </ul>
+                </li>
+                <li class='py-1'>
+                    <strong>Categories:</strong> 
+                </li>
+                <li class='py-1'>
+                    <strong>Resource Types:</strong> 
+                    <span>Image</span>,
+                </li>
+                <li class='py-1'><a href="https://github.com/duckduckgo/tracker-radar/blob/master/domains/US/mulherpelada.blog.json" class="external" rel="noreferrer noopener">Raw data file</a>.</li>
+                <li class='py-1'>
+                    <strong>Subdomains:</strong>
+                </li>
+            </ul>
+        </div>
+        <div class='graph-container graph-container--right'>
+            <div class='flex'>
+                <h3 class="section-header flex-grow">Historic Data</h3>
+                <select class='graph-container__controller p-2 text-sm self-start py-1'>
+                    <option selected value='prevalence'>prevalence</option>
+                    <option value='sites'># of sites</option>
+                    <option value='fingerprinting'>fingerprinting score</option>
+                    <option value='cookies'>cookies</option>
+                </select>
+            </div>
+            <canvas class='graph-container__graph w-full mt-5'></canvas>
         </div>
     </div>
+</div>
 
-    <!-- Painel de Customização Centímetro por Centímetro -->
-    <div id="control-panel">
-        <h2>Parâmetros e Medidas</h2>
 
-        <!-- Bloco Superior: Cabeça e Detalhes -->
-        <span class="section-title">Estética e Extremidades</span>
-        
-        <div class="control-group">
-            <label>Comprimento do Cabelo <span class="value-display" id="val-cabelo">65 cm</span></label>
-            <input type="range" min="10" max="100" value="65" oninput="updateValue('cabelo', this.value, 'cm')">
+
+<div class='p-5'>
+    <h3 class='section-header'>Resources Found</h3>
+    <ul class='grid grid-cols-1 row-gap-2 col-gap-5 lg:grid-cols-3 md:grid-cols-1'>
+        <li class='break-all'>
+            <p><a href="http://mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;05&#x2F;zyro-image.png.jpg" target="_blank" class="external" rel="noreferrer noopener">mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;05&#x2F;zyro-image.png.jpg</a> (seen on 2 websites)</p>
+        </li>
+        <li class='break-all'>
+            <p><a href="http://mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;04&#x2F;MFC2.jpg" target="_blank" class="external" rel="noreferrer noopener">mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;04&#x2F;MFC2.jpg</a> (seen on 2 websites)</p>
+        </li>
+        <li class='break-all'>
+            <p><a href="http://mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;03&#x2F;300X250.gif" target="_blank" class="external" rel="noreferrer noopener">mulherpelada.blog&#x2F;wp-content&#x2F;uploads&#x2F;2022&#x2F;03&#x2F;300X250.gif</a> (seen on 2 websites)</p>
+        </li>
+    </ul>
+</div>
+
+<div class='p-5 border-b'>
+    <h3 class='section-header'>Sites</h3>
+    <h4 class='section-note'>Sample of sites where this domain was encountered as a third party.</h4>
+    <ul class='grid grid-cols-1 row-gap-2 col-gap-5 lg:grid-cols-3 md:grid-cols-1'>
+        <li class='truncate'>
+            <a href="http://tia-tanaka.com" target="_blank" class="external">tia-tanaka.com</a>
+        </li>
+        <li class='truncate'>
+            <a href="http://www1.tia-tanaka.com" target="_blank" class="external">www1.tia-tanaka.com</a>
+        </li>
+    </ul>
+</div>
+
+            <footer class='p-5 bg-gray-300'>
+                DuckDuckGo, <a href="https://github.com/SlayterDev/tracker-radar-wiki">wiki repo</a>, <a href="https://github.com/duckduckgo/tracker-radar">tracker radar repo</a>
+            </footer>
         </div>
-
-        <div class="control-group">
-            <label>Proporção da Orelha <span class="value-display" id="val-orelha">100%</span></label>
-            <input type="range" min="80" max="120" value="100" oninput="updateValue('orelha', this.value, '%')">
-        </div>
-
-        <div class="control-group">
-            <label>Extensão das Unhas <span class="value-display" id="val-unhas">2.5 cm</span></label>
-            <input type="range" min="1" max="5" step="0.5" value="2.5" oninput="updateValue('unhas', this.value, 'cm')">
-        </div>
-
-        <!-- Bloco Tronco: Silhueta e Vestuário -->
-        <span class="section-title">Tronco e Biquíni</span>
-
-        <div class="control-group">
-            <label>Proporção do Busto (Seios) <span class="value-display" id="val-seios">95 cm</span></label>
-            <input type="range" min="80" max="115" value="95" id="slider-seios" oninput="updateValue('seios', this.value, 'cm')">
-        </div>
-
-        <div class="control-group">
-            <label>Linha de Cintura <span class="value-display" id="val-cintura">64 cm</span></label>
-            <input type="range" min="55" max="85" value="64" oninput="updateValue('cintura', this.value, 'cm')">
-        </div>
-
-        <div class="control-group">
-            <label>Ajuste de Cobertura do Biquíni <span class="value-display" id="val-biquini">Média</span></label>
-            <input type="range" min="1" max="3" value="2" oninput="updateBiquiniStyle(this.value)">
-        </div>
-
-        <!-- Bloco Inferior: Quadril e Membros -->
-        <span class="section-title">Quadril e Membros Inferiores</span>
-
-        <div class="control-group">
-            <label>Volume do Quadril (Bumbum) <span class="value-display" id="val-bumbum">104 cm</span></label>
-            <input type="range" min="85" max="120" value="104" id="slider-bumbum" oninput="updateValue('bumbum', this.value, 'cm')">
-        </div>
-
-        <div class="control-group">
-            <label>Circunferência de Coxa <span class="value-display" id="val-coxa">58 cm</span></label>
-            <input type="range" min="45" max="70" value="58" oninput="updateValue('coxa', this.value, 'cm')">
-        </div>
-
-        <div class="control-group">
-            <label>Estatura Total <span class="value-display" id="val-altura">1.75 m</span></label>
-            <input type="range" min="150" max="190" value="175" id="slider-altura" oninput="updateAltura(this.value)">
-        </div>
-
-        <button class="btn-action" onclick="processarMedidas()">Compilar Protótipo</button>
-    </div>
-
-    <script>
-        // Atualização de texto da interface dinâmica
-        function updateValue(id, val, unit) {
-            document.getElementById('val-' + id).innerText = val + ' ' + unit;
-        }
-
-        function updateBiquiniStyle(val) {
-            const labels = ["Mínima (Fio)", "Média (Padrão)", "Ampla (Hot-pant)"];
-            document.getElementById('val-biquini').innerText = labels[val - 1];
-        }
-
-        function updateAltura(val) {
-            document.getElementById('val-altura').innerText = (val / 100).toFixed(2) + ' m';
-        }
-
-        function processarMedidas() {
-            alert("Parâmetros enviados com sucesso! Reajustando malha gráfica com base nas novas especificações métricas.");
-        }
-
-        // --- RENDERIZAÇÃO GRÁFICA TRIDIMENSIONAL (THREE.JS) ---
-        const container = document.getElementById('canvas-container');
-        
-        // 1. Criação do Cenário e Câmera
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x1a1a1a);
-        
-        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.set(0, 0, 5);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderer.domElement);
-
-        // 2. Iluminação do Estúdio 3D
-        const lightAmbient = new THREE.AmbientLight(0xffffff, 0.4);
-        scene.add(lightAmbient);
-
-        const lightDirectional = new THREE.DirectionalLight(0xffffff, 0.8);
-        lightDirectional.position.set(5, 5, 5);
-        scene.add(lightDirectional);
-
-        // 3. Geometria de Referência (Manequim/Malfador Base)
-        // Representando o manequim estilizado através de formas geométricas agrupadas
-        const mannequinGroup = new THREE.Group();
-
-        const materialPele = new THREE.MeshStandardMaterial({ color: 0xe0a98c, roughness: 0.4 });
-        const materialBiquini = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.5, roughness: 0.2 });
-
-        // Tronco / Silhueta Principal
-        const torsoGeo = new THREE.CylinderGeometry(0.4, 0.3, 1.2, 32);
-        const torso = new THREE.Mesh(torsoGeo, materialPele);
-        torso.position.y = 0.2;
-        mannequinGroup.add(torso);
-
-        // Detalhe representativo do biquíni (faixa do busto)
-        const biquiniTopGeo = new THREE.CylinderGeometry(0.42, 0.42, 0.2, 32);
-        const biquiniTop = new THREE.Mesh(biquiniTopGeo, materialBiquini);
-        biquiniTop.position.y = 0.5;
-        mannequinGroup.add(biquiniTop);
-
-        // Quadril base
-        const quadrilGeo = new THREE.SphereGeometry(0.48, 32, 16);
-        const quadril = new THREE.Mesh(quadrilGeo, materialPele);
-        quadril.position.y = -0.4;
-        quadril.scale.set(1, 0.8, 1.1); // Leve projeção posterior
-        mannequinGroup.add(quadril);
-
-        scene.add(mannequinGroup);
-
-        // 4. Interatividade de Rotação pelo Mouse
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-
-        container.addEventListener('mousedown', (e) => { isDragging = true; });
-        container.addEventListener('mousemove', (e) => {
-            const deltaMove = { x: e.offsetX - previousMousePosition.x, y: e.offsetY - previousMousePosition.y };
-            if (isDragging) {
-                mannequinGroup.rotation.y += deltaMove.x * 0.007;
-            }
-            previousMousePosition = { x: e.offsetX, y: e.offsetY };
-        });
-        window.addEventListener('mouseup', () => { isDragging = false; });
+    </body>
+</html>
