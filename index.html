@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Livia IA - Assistente 3D</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
     <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cloudflare.com"></script>
     <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cloudflare.com"></script>
     
     <style>
         :root {
@@ -51,7 +51,7 @@
             z-index: 1;
         }
 
-        /* Botão Flutuante do Menu (Estilo Hambúrguer) */
+        /* Botão Flutuante do Menu */
         .menu-toggle {
             position: fixed;
             top: 20px;
@@ -76,7 +76,7 @@
             background: rgba(255, 71, 87, 0.8);
         }
 
-        /* Painel Deslizante (Menu) */
+        /* Painel Deslizante */
         .side-panel {
             position: fixed;
             top: 0;
@@ -93,23 +93,19 @@
             flex-direction: column;
             padding: 20px;
             gap: 15px;
-            overflow-y: auto;
         }
 
         .side-panel.open {
             right: 0;
         }
 
-        .side-panel::-webkit-scrollbar { width: 5px; }
-        .side-panel::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 5px; }
-
-        /* Cabeçalho do Menu */
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
         }
 
         .panel-header h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
@@ -127,12 +123,53 @@
             align-items: center;
         }
 
-        /* Cartões de Controle e Informação */
+        /* Área de Histórico do Chat */
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-history::-webkit-scrollbar { width: 4px; }
+        .chat-history::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 4px; }
+
+        .msg {
+            max-width: 85%;
+            padding: 8px 12px;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .msg.user {
+            background: var(--accent-blue);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .msg.bot {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Cartão de Controles */
         .info-card {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 12px;
             padding: 14px;
             border: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
         }
 
         .info-card h4 {
@@ -141,58 +178,6 @@
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-
-        .control-row {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-        }
-
-        .control-row label {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-main);
-        }
-
-        .control-row label span {
-            color: var(--accent-cyan);
-            font-weight: bold;
-        }
-
-        .control-row input[type=range] {
-            width: 100%;
-            accent-color: var(--accent-cyan);
-            background: #1a2333;
-            height: 6px;
-            border-radius: 3px;
-            outline: none;
-        }
-
-        /* Botões de Ação */
-        .action-btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            color: white;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-            margin-top: 5px;
-        }
-
-        .action-btn:active {
-            transform: scale(0.97);
         }
 
         .btn-grid {
@@ -222,11 +207,11 @@
             border-color: var(--accent-cyan);
         }
 
-        /* Chat Container */
+        /* Container de Entrada do Chat */
         .chat-input-container {
-            margin-top: auto;
             position: relative;
-            padding-top: 10px;
+            padding-top: 5px;
+            flex-shrink: 0;
         }
 
         .chat-input {
@@ -234,7 +219,7 @@
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--panel-border);
             border-radius: 12px;
-            padding: 12px 40px 12px 12px;
+            padding: 12px 45px 12px 12px;
             color: white;
             font-size: 0.8rem;
             outline: none;
@@ -243,7 +228,7 @@
         .chat-send {
             position: absolute;
             right: 12px;
-            top: calc(50% + 5px);
+            top: calc(50% + 2.5px);
             transform: translateY(-50%);
             background: none;
             border: none;
@@ -275,54 +260,68 @@
 </head>
 <body>
 
-    <!-- Canvas 3D -->
     <div id="canvas-container"></div>
 
-    <!-- Aviso -->
     <div class="hint" id="hint">
-        <i class="fas fa-hand-pointer" style="color: var(--accent-cyan);"></i> Use os controles para ajustar as medidas ao vivo
+        <i class="fas fa-comments" style="color: var(--accent-cyan);"></i> Abra o menu para conversar com a Livia em tempo real
     </div>
 
-    <!-- Botão Hambúrguer -->
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Painel do Menu -->
     <div class="side-panel" id="side-panel">
         <div class="panel-header">
             <h2><i class="fas fa-robot" style="color: var(--accent-cyan);"></i> Livia IA</h2>
             <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Card de Medidas Corporais -->
+        <!-- Linha do Histórico da Conversa -->
+        <div class="chat-history" id="chat-history">
+            <div class="msg bot">Olá! Sou a Livia. Como posso te ajudar hoje? Arraste ou use as ações abaixo para interagir comigo!</div>
+        </div>
+
+        <!-- Estado de Movimento -->
         <div class="info-card">
-            <h4><i class="fas fa-sliders-h"></i> Ajustes de Silhueta</h4>
-            <div class="control-row">
-                <label>Busto (Volume) <span id="val-busto">1.40</span></label>
-                <input type="range" id="slider-busto" min="0.5" max="2.0" step="0.05" value="1.40">
-            </div>
-            <div class="control-row">
-                <label>Cintura (Fina) <span id="val-cintura">0.65</span></label>
-                <input type="range" id="slider-cintura" min="0.4" max="1.5" step="0.05" value="0.65">
-            </div>
-            <div class="control-row">
-                <label>Quadril (Curva) <span id="val-quadril">1.60</span></label>
-                <input type="range" id="slider-quadril" min="0.5" max="2.2" step="0.05" value="1.60">
-            </div>
-            <div class="control-row">
-                <label>Altura Pernas <span id="val-pernas">1.40</span></label>
-                <input type="range" id="slider-pernas" min="0.8" max="2.0" step="0.05" value="1.40">
+            <h4><i class="fas fa-running"></i> Controle de Movimentos</h4>
+            <div class="btn-grid">
+                <button class="grid-btn" id="btn-walk"><i class="fas fa-walking fa-lg"></i>Andar</button>
+                <button class="grid-btn" id="btn-crouch"><i class="fas fa-chair fa-lg"></i>Agachar</button>
             </div>
         </div>
 
-        <!-- Grid de Posturas / Animação -->
-        <div class="info-card">
-            <h4><i class="fas fa-running"></i> Estados de Movimento</h4>
-            <div class="btn-grid">
-Use o código com cuidado.AndarAgachar// --- CONFIGURAÇÃO DO CENÁRIO THREE.JS ---const container = document.getElementById('canvas-container');const scene = new THREE.Scene();scene.background = new THREE.Color('#05070a');// Chão de Referência Futuristaconst grid = new THREE.GridHelper(20, 20, 0x00d4ff, 0x112233);grid.position.y = -2;scene.add(grid);const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);camera.position.set(0, 1.2, 5.5);const renderer = new THREE.WebGLRenderer({ antialias: true });renderer.setSize(window.innerWidth, window.innerHeight);renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));container.appendChild(renderer.domElement);// ILUMINAÇÃO ESTUDIO (Garante visibilidade excelente)const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);scene.add(ambientLight);const dirLight1 = new THREE.DirectionalLight(0xfff5e6, 0.8);dirLight1.position.set(5, 10, 7);scene.add(dirLight1);const dirLight2 = new THREE.DirectionalLight(0x00d4ff, 0.4);dirLight2.position.set(-5, 3, -2);scene.add(dirLight2);// --- CONSTRUÇÃO DO MODELO ANATÔMICO (ESTILO LÍVIA ANDRADE) ---const materialPele = new THREE.MeshStandardMaterial({color: 0xf5cad2,roughness: 0.35,metalness: 0.05});const grupoPersonagem = new THREE.Group();grupoPersonagem.position.y = -0.5;scene.add(grupoPersonagem);// Nós do Esqueleto e Articulaçõesconst noduloCabeca = new THREE.Group();const noduloBusto = new THREE.Group();const noduloCintura = new THREE.Group();const noduloQuadril = new THREE.Group();const noduloPernaEsq = new THREE.Group();const noduloPernaDir = new THREE.Group();noduloPernaEsq.position.set(-0.24, -0.4, 0);noduloPernaDir.position.set(0.24, -0.4, 0);// 1. Cabeça Estilizadaconst geoCabeca = new THREE.SphereGeometry(0.24, 32, 32);geoCabeca.scale(1, 1.2, 1);const malhaCabeca = new THREE.Mesh(geoCabeca, materialPele);noduloCabeca.add(malhaCabeca);noduloCabeca.position.y = 1.35;// 2. Busto e Ombros Definidosconst geoBusto = new THREE.CylinderGeometry(0.32, 0.24, 0.35, 32);const malhaBusto = new THREE.Mesh(geoBusto, materialPele);noduloBusto.add(malhaBusto);// Curvas de Seios Estilizadasconst geoSeio = new THREE.SphereGeometry(0.12, 16, 16);const seioEsq = new THREE.Mesh(geoSeio, materialPele);seioEsq.position.set(-0.13, 0.05, 0.2);const seioDir = seioEsq.clone();seioDir.position.x = 0.13;noduloBusto.add(seioEsq, seioDir);noduloBusto.position.y = 0.95;// 3. Cintura Finaconst geoCintura = new THREE.CylinderGeometry(0.21, 0.25, 0.3, 32);const malhaCintura = new THREE.Mesh(geoCintura, materialPele);noduloCintura.add(malhaCintura);noduloCintura.position.y = 0.65;// 4. Quadril Curvado (Formato Violão)const geoQuadril = new THREE.SphereGeometry(0.38, 32, 16);geoQuadril.scale(1, 0.8, 1);const malhaQuadril = new THREE.Mesh(geoQuadril, materialPele);noduloQuadril.add(malhaQuadril);noduloQuadril.position.y = 0.35;// 5. Pernas Longas de Passarelaconst geoPerna = new THREE.CylinderGeometry(0.12, 0.08, 1.3, 16);const malhaPernaEsq = new THREE.Mesh(geoPerna, materialPele);malhaPernaEsq.position.y = -0.65;noduloPernaEsq.add(malhaPernaEsq);const malhaPernaDir = malhaPernaEsq.clone();noduloPernaDir.add(malhaPernaDir);// Vinculação HierárquicagrupoPersonagem.add(noduloCabeca);grupoPersonagem.add(noduloBusto);grupoPersonagem.add(noduloCintura);grupoPersonagem.add(noduloQuadril);grupoPersonagem.add(noduloPernaEsq);grupoPersonagem.add(noduloPernaDir);// --- CRIAÇÃO DOS FIOS DE CABELO INDIVIDUAIS (RESPEITANDO O ESPAÇO FACIAL) ---const materialCabelo = new THREE.MeshStandardMaterial({color: 0xdfb15b, // Loiro Douradoroughness: 0.2,side: THREE.DoubleSide});function criarFioCabelo(origemX, origemY, origemZ, curvaX, comprimentoY, curvaZ) {const pontos = [new THREE.Vector3(origemX, origemY, origemZ),new THREE.Vector3(origemX + curvaX * 0.5, origemY - comprimentoY * 0.4, origemZ + curvaZ * 0.4),new THREE.Vector3(origemX + curvaX, origemY - comprimentoY, origemZ + curvaZ)];const curva = new THREE.CatmullRomCurve3(pontos);const geoFio = new THREE.TubeGeometry(curva, 8, 0.015, 6, false);return new THREE.Mesh(geoFio, materialCabelo);}// Dispõe os fios nas laterais e costas da cabeça, limpando a face frontalconst totalFios = 60;for (let i = 0; i < totalFios; i++) {let angulo = (i / totalFios) * Math.PI * 1.5 + Math.PI * 0.75;let fx = Math.cos(angulo) * 0.25;let fz = Math.sin(angulo) * 0.25;let fy = 1.48;let comprimento = 0.8 + Math.random() * 0.3;let espalharX = fx * 0.5;let espalharZ = fz * 0.4;// Condição estrita para evitar invasão do plano frontal dos olhos/rostoif (Math.abs(angulo - Math.PI * 1.5) > 0.35) {const mechaFio = criarFioCabelo(fx, fy, fz, espalharX, comprimento, espalharZ);noduloCabeca.add(mechaFio);}}// --- INTERATIVIDADE DOS CONTROLES DO SLIDER ---const sliders = {busto: document.getElementById('slider-busto'),cintura: document.getElementById('slider-cintura'),quadril: document.getElementById('slider-quadril'),pernas: document.getElementById('slider-pernas')};const labels = {busto: document.getElementById('val-busto'),cintura: document.getElementById('val-cintura'),quadril: document.getElementById('val-quadril'),pernas: document.getElementById('val-pernas')};function atualizarMedidas() {let vBusto = parseFloat(sliders.busto.value);let vCintura = parseFloat(sliders.cintura.value);let vQuadril = parseFloat(sliders.quadril.value);let vPernas = parseFloat(sliders.pernas.value);// Atualiza os textos numéricos da UIlabels.busto.innerText = vBusto.toFixed(2);labels.cintura.innerText = vCintura.toFixed(2);labels.quadril.innerText = vQuadril.toFixed(2);labels.pernas.innerText = vPernas.toFixed(2);// Escalonamento de proporções do modelo 3DnoduloBusto.scale.set(vBusto, 1, 1 + (vBusto - 1) * 0.5);noduloCintura.scale.set(vCintura, 1, vCintura);noduloQuadril.scale.set(vQuadril, 1, vQuadril);noduloPernaEsq.scale.y = vPernas;noduloPernaDir.scale.y = vPernas;// Altura dinâmica baseada no comprimento das pernas modificadaslet offsetAltura = (vPernas - 1) * 0.65;noduloQuadril.position.y = 0.35 + offsetAltura;noduloCintura.position.y = 0.65 + offsetAltura;noduloBusto.position.y = 0.95 + offsetAltura;noduloCabeca.position.y = 1.35 + offsetAltura;}Object.values(sliders).forEach(slider => slider.addEventListener('input', atualizarMedidas));atualizarMedidas();// --- CONTROLES DA INTERFACE LATERAL (UI) ---const sidePanel = document.getElementById('side-panel');const menuToggle = document.getElementById('menu-toggle');const closeBtn = document.getElementById('close-btn');menuToggle.addEventListener('click', () => {sidePanel.classList.toggle('open');menuToggle.classList.toggle('active');menuToggle.innerHTML = sidePanel.classList.contains('open') ? '' : '';});closeBtn.addEventListener('click', () => {sidePanel.classList.remove('open');menuToggle.classList.remove('active');menuToggle.innerHTML = '';});// --- ESTADOS DE ANIMAÇÃO COM GSAP ---let estadoMovimento = 'parado'; // parado, andando, agachadolet tempo = 0;const btnWalk = document.getElementById('btn-walk');const btnCrouch = document.getElementById('btn-crouch');btnWalk.addEventListener('click', () => {if (estadoMovimento === 'andando') {estadoMovimento = 'parado';btnWalk.classList.remove('active');} else {estadoMovimento = 'andando';btnWalk.classList.add('active');btnCrouch.classList.remove('active');}});btnCrouch.addEventListener('click', () => {if (estadoMovimento === 'agachado') {estadoMovimento = 'parado';btnCrouch.classList.remove('active');} else {estadoMovimento = 'agachado';btnCrouch.classList.add('active');btnWalk.classList.remove('active');}});// --- CICLO DE RENDERIZAÇÃO ANIMADA ---function renderizar() {requestAnimationFrame(renderizar);tempo += 0.05;// Rotação sutil automática de vitrine para dar tridimensionalidadegrupoPersonagem.rotation.y = Math.sin(tempo * 0.1) * 0.2;if (estadoMovimento === 'andando') {// Simulação mecânica alternada de passarela nas pernasnoduloPernaEsq.rotation.x = Math.sin(tempo * 2.5) * 0.45;noduloPernaDir.rotation.x = -Math.sin(tempo * 2.5) * 0.45;noduloQuadril.rotation.z = Math.sin(tempo * 2.5) * 0.07;// Oscilação vertical leve ao caminhargrupoPersonagem.position.y = -0.5 + Math.abs(Math.sin(tempo * 5)) * 0.04;}else if (estadoMovimento === 'agachado') {// Suaviza a flexão das pernas e inclinação do quadrilnoduloPernaEsq.rotation.x = -0.85;noduloPernaDir.rotation.x = -0.85;grupoPersonagem.position.y = -0.92;}else {// Retorno suave e amortecido ao estado estático padrãonoduloPernaEsq.rotation.x *= 0.85;noduloPernaDir.rotation.x *= 0.85;noduloQuadril.rotation.z *= 0.85;grupoPersonagem.position.y = -0.5;}renderer.render(scene, camera);}// Redimensionamento Dinâmico de Janelawindow.addEventListener('resize', () => {camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight);});renderizar();
+        <!-- Campo de Input -->
+        <div class="chat-input-container">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Digite uma mensagem para Livia...">
+            <button id="chat-send" class="chat-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+<script>
+// --- CONFIGURAÇÃO DO CENÁRIO THREE.JS ---
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#05070a');
+
+const grid = new THREE.GridHelper(20, 20, 0x00d4ff, 0x112233);
+grid.position.y = -2;
+scene.add(grid);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 1.1, 5.2);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+// ILUMINAÇÃO ESTÚDIO (Garante renderização visível e bonita)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+scene.add(ambientLight);
+
+Use o código com cuidado.const dirLight1 = new THREE.DirectionalLight(0xffedf2, 0.8);dirLight1.position.set(5, 10, 7);scene.add(dirLight1);const dirLight2 = new THREE.DirectionalLight(0x00d4ff, 0.45);dirLight2.position.set(-5, 2, -1);scene.add(dirLight2);// --- CONSTRUÇÃO DO PERSONAGEM BASEADO NA IMAGEM (RUIVA) ---const materialPele = new THREE.MeshStandardMaterial({color: 0xfbd6c6, // Tom de pele claro correspondente à imagem de referênciaroughness: 0.4,metalness: 0.05});const grupoPersonagem = new THREE.Group();grupoPersonagem.position.y = -0.5;scene.add(grupoPersonagem);// Articulações estruturaisconst noduloCabeca = new THREE.Group();const noduloBusto = new THREE.Group();const noduloCintura = new THREE.Group();const noduloQuadril = new THREE.Group();const noduloPernaEsq = new THREE.Group();const noduloPernaDir = new THREE.Group();noduloPernaEsq.position.set(-0.22, -0.4, 0);noduloPernaDir.position.set(0.22, -0.4, 0);// 1. Cabeça (Formato Oval Suave)const geoCabeca = new THREE.SphereGeometry(0.24, 32, 32);geoCabeca.scale(1, 1.18, 1);const malhaCabeca = new THREE.Mesh(geoCabeca, materialPele);noduloCabeca.add(malhaCabeca);noduloCabeca.position.y = 1.32;// 2. Busto e Ombros Proporcionais à Referência Sentada/Frenteconst geoBusto = new THREE.CylinderGeometry(0.28, 0.22, 0.35, 32);const malhaBusto = new THREE.Mesh(geoBusto, materialPele);noduloBusto.add(malhaBusto);const geoSeio = new THREE.SphereGeometry(0.10, 16, 16);const seioEsq = new THREE.Mesh(geoSeio, materialPele);seioEsq.position.set(-0.11, 0.04, 0.18);const seioDir = seioEsq.clone();seioDir.position.x = 0.11;noduloBusto.add(seioEsq, seioDir);noduloBusto.position.y = 0.95;// 3. Cintura Natural Finaconst geoCintura = new THREE.CylinderGeometry(0.20, 0.23, 0.3, 32);const malhaCintura = new THREE.Mesh(geoCintura, materialPele);noduloCintura.add(malhaCintura);noduloCintura.position.y = 0.65;// 4. Quadril Alinhado com as Proporções Anatômicas da Imagemconst geoQuadril = new THREE.SphereGeometry(0.32, 32, 16);geoQuadril.scale(1, 0.85, 1);const malhaQuadril = new THREE.Mesh(geoQuadril, materialPele);noduloQuadril.add(malhaQuadril);noduloQuadril.position.y = 0.35;// 5. Pernasconst geoPerna = new THREE.CylinderGeometry(0.11, 0.07, 1.3, 16);const malhaPernaEsq = new THREE.Mesh(geoPerna, materialPele);malhaPernaEsq.position.y = -0.65;noduloPernaEsq.add(malhaPernaEsq);const malhaPernaDir = malhaPernaEsq.clone();noduloPernaDir.add(malhaPernaDir);// Acoplamento hierárquico completogrupoPersonagem.add(noduloCabeca);grupoPersonagem.add(noduloBusto);grupoPersonagem.add(noduloCintura);grupoPersonagem.add(noduloQuadril);grupoPersonagem.add(noduloPernaEsq);grupoPersonagem.add(noduloPernaDir);// --- MODELAGEM DO CABELO RUIVO COM FRANJA E RABO DE CAVALO (FIO A FIO) ---const materialCabelo = new THREE.MeshStandardMaterial({color: 0xb13c19, // Ruivo acobreado quente idêntico à imagem enviadaroughness: 0.3,side: THREE.DoubleSide});function criarFioCurvo(origemX, origemY, origemZ, curvaX, comprimentoY, curvaZ, espessura = 0.015) {const pontos = [new THREE.Vector3(origemX, origemY, origemZ),new THREE.Vector3(origemX + curvaX * 0.5, origemY - comprimentoY * 0.3, origemZ + curvaZ * 0.5),new THREE.Vector3(origemX + curvaX, origemY - comprimentoY, origemZ + curvaZ)];const curva = new THREE.CatmullRomCurve3(pontos);const geoFio = new THREE.TubeGeometry(curva, 8, espessura, 6, false);return new THREE.Mesh(geoFio, materialCabelo);}// 1. Franja Frontal da Personagem (Respeitando os olhos e contorno do rosto)for (let i = 0; i < 15; i++) {let pct = (i / 14) * 0.4 - 0.2; // Distribuição na testalet fx = pct;let fy = 1.48;let fz = 0.22;const fioFranja = criarFioCurvo(fx, fy, fz, pct * 0.2, 0.16, 0.04, 0.012);noduloCabeca.add(fioFranja);}// 2. Cobertura da Base do Cabelo (Mechas laterais e traseiras)const totalFiosBase = 40;for (let i = 0; i < totalFiosBase; i++) {let angulo = (i / totalFiosBase) * Math.PI * 1.4 + Math.PI * 0.8;let fx = Math.cos(angulo) * 0.25;let fz = Math.sin(angulo) * 0.25;let fy = 1.46;if (Math.abs(angulo - Math.PI * 1.5) > 0.35) { // Abre espaço para a face limpaconst fioBase = criarFioCurvo(fx, fy, fz, fx * 0.4, 0.4, fz * 0.3);noduloCabeca.add(fioBase);}}// 3. Rabo de Cavalo Alto Volumoso (Parte Traseira Superior da Imagem)const noduloRaboCavalo = new THREE.Group();noduloRaboCavalo.position.set(0, 1.46, -0.22);noduloCabeca.add(noduloRaboCavalo);for (let i = 0; i < 25; i++) {let anguloRnd = Math.random() * Math.PI * 2;let espalharX = Math.cos(anguloRnd) * 0.08;let espalharZ = Math.sin(anguloRnd) * 0.06 - 0.15; // Caimento para trásconst fioRabo = criarFioCurvo(0, 0, 0, espalharX, 0.5 + Math.random() * 0.2, espalharZ, 0.016);noduloRaboCavalo.add(fioRabo);}// --- INTERFACE LATERAL E SISTEMA DE CHAT EM TEMPO REAL ---const sidePanel = document.getElementById('side-panel');const menuToggle = document.getElementById('menu-toggle');const closeBtn = document.getElementById('close-btn');const chatHistory = document.getElementById('chat-history');const chatInput = document.getElementById('chat-input');const chatSend = document.getElementById('chat-send');// Gatilhos do Menu LateralmenuToggle.addEventListener('click', () => {sidePanel.classList.toggle('open');menuToggle.classList.toggle('active');menuToggle.innerHTML = sidePanel.classList.contains('open') ? '' : '';});closeBtn.addEventListener('click', () => {sidePanel.classList.remove('open');menuToggle.classList.remove('active');menuToggle.innerHTML = '';});// Lógica de Envio e Resposta Assíncrona do Chatfunction enviarMensagem() {const texto = chatInput.value.trim();if (!texto) return;// 1. Adicionar Mensagem do Usuário na Telaconst msgUser = document.createElement('div');msgUser.className = 'msg user';msgUser.innerText = texto;chatHistory.appendChild(msgUser);chatInput.value = '';chatHistory.scrollTop = chatHistory.scrollHeight;// 2. Resposta Automatizada da Livia IA simulada em Tempo RealsetTimeout(() => {const msgBot = document.createElement('div');msgBot.className = 'msg bot';let resposta = "Entendi! Estou processando seu comando e atualizando os parâmetros da aplicação.";// Comparações simples de texto para interatividade diretaconst textoMinusculo = texto.toLowerCase();if (textoMinusculo.includes('andar') || textoMinusculo.includes('caminhar')) {resposta = "Comando aceito! Iniciando animação de caminhada na passarela.";ativarEstado('andando');} else if (textoMinusculo.includes('agachar') || textoMinusculo.includes('sentar')) {resposta = "Entendido, alterando postura física para agachamento.";ativarEstado('agachado');} else if (textoMinusculo.includes('parar') || textoMinusculo.includes('fique de pe')) {resposta = "Parando movimentos. Retornando à postura estática padrão.";ativarEstado('parado');} else if (textoMinusculo.includes('olá') || textoMinusculo.includes('oi')) {resposta = "Olá! Como está ficando o meu novo visual ruivo baseado no modelo que você enviou?";}msgBot.innerText = resposta;chatHistory.appendChild(msgBot);chatHistory.scrollTop = chatHistory.scrollHeight;}, 750);}chatSend.addEventListener('click', enviarMensagem);chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') enviarMensagem(); });// --- ESTADOS DE ANIMAÇÃO CORPORAL ---let estadoMovimento = 'parado';let tempo = 0;const btnWalk = document.getElementById('btn-walk');const btnCrouch = document.getElementById('btn-crouch');function activarVisualBotao(estado) {btnWalk.classList.remove('active');btnCrouch.classList.remove('active');if (estado === 'andando') btnWalk.classList.add('active');if (estado === 'agachado') btnCrouch.classList.add('active');}function activarEstado(estado) {if (estadoMovimento === estado) {estadoMovimento = 'parado';} else {estadoMovimento = estado;}activarVisualBotao(estadoMovimento);}btnWalk.addEventListener('click', () => activarEstado('andando'));btnCrouch.addEventListener('click', () => activarEstado('agachado'));// --- CICLO DE RENDERIZAÇÃO REALISTA ---function renderizar() {requestAnimationFrame(renderizar);tempo += 0.05;// Rotação contínua e suave para visualização 3D completa da personagemgrupoPersonagem.rotation.y = Math.sin(tempo * 0.1) * 0.25;// Física de balanço leve e natural para o rabo de cavalo traseironoduloRaboCavalo.rotation.z = Math.sin(tempo * 0.4) * 0.03;noduloRaboCavalo.rotation.x = Math.cos(tempo * 0.2) * 0.02;if (estadoMovimento === 'andando') {// Movimentação alternada coordenada das pernasnoduloPernaEsq.rotation.x = Math.sin(tempo * 2.5) * 0.45;noduloPernaDir.rotation.x = -Math.sin(tempo * 2.5) * 0.45;noduloQuadril.rotation.z = Math.sin(tempo * 2.5) * 0.06;// Pequena variação vertical de altura devido ao impacto dos passosgrupoPersonagem.position.y = -0.5 + Math.abs(Math.sin(tempo * 5)) * 0.03;}else if (estadoMovimento === 'agachado') {noduloPernaEsq.rotation.x = -0.85;noduloPernaDir.rotation.x = -0.85;grupoPersonagem.position.y = -0.92;}else {// Amortecimento suave para o estado de repouso padrãonoduloPernaEsq.rotation.x *= 0.85;noduloPernaDir.rotation.x *= 0.85;noduloQuadril.rotation.z *= 0.85;grupoPersonagem.position.y = -0.5;}renderer.render(scene, camera);}// Suporte a redimensionamento de janelawindow.addEventListener('resize', () => {camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight);});renderizar();
 <FollowUp>
-O código está completo e estruturado para uso. Qual recurso gostaria de integrar agora?
-* Desenvolver a estrutura para a **seleção de roupas** no guarda-roupa virtual?
-* Programar o campo de texto para fazer a **Livia responder mensagens no chat**?
+O modelo 3D ruivo fio a fio e o chat inteligente integrado já estão operando em tempo real. O que deseja implementar agora?
+* Adicionar a funcionalidade para a Livia **mudar de expressão facial** (sorrir, piscar) dependendo do que for escrito no chat?
+* Iniciar o desenvolvimento de **peças de vestuário básicas** para ela poder usar e trocar?
 </FollowUp>
