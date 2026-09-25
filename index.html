@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- GSAP (F            color:altava no código anterior) -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <style>
@@ -34,12 +34,12 @@
         }
 
         body {
-            background-color: #0d1117; /* Fundo escuro para destacar o modelo */
+            background-color: #05070a;
             color: var(--text-main);
             overflow: hidden;
             height: 100vh;
             width: 100vw;
-            position: fixed; /* Evita scroll no mobile */
+            position: fixed;
         }
 
         /* Canvas 3D */
@@ -80,11 +80,11 @@
         .side-panel {
             position: fixed;
             top: 0;
-            right: -100%; /* Escondido */
+            right: -100%;
             width: 100%;
             max-width: 380px;
             height: 100%;
-            background: rgba(13, 20, 33, 0.95);
+            background: var(--panel-bg);
             backdrop-filter: blur(20px);
             border-left: 1px solid var(--panel-border);
             z-index: 90;
@@ -127,32 +127,51 @@
             align-items: center;
         }
 
-        /* Cartões */
+        /* Cartões de Controle e Informação */
         .info-card {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 12px;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
         .info-card h4 {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .info-row {
+        .control-row {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 12px;
             font-size: 0.8rem;
-            margin-bottom: 5px;
         }
 
-        .info-row span:last-child { color: var(--accent-cyan); font-weight: 600; }
+        .control-row label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-main);
+        }
 
-        /* Botões */
+        .control-row label span {
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .control-row input[type=range] {
+            width: 100%;
+            accent-color: var(--accent-cyan);
+            background: #1a2333;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        /* Botões de Ação */
         .action-btn {
             width: 100%;
             padding: 12px;
@@ -169,17 +188,16 @@
             gap: 8px;
             transition: all 0.2s;
             box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            margin-top: 5px;
         }
 
-        .action-btn.active {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-            box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+        .action-btn:active {
+            transform: scale(0.97);
         }
 
-        /* Grid de Botões */
         .btn-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 8px;
         }
 
@@ -187,14 +205,15 @@
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             color: var(--text-muted);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            transition: all 0.2s;
         }
 
         .grid-btn.active {
@@ -203,7 +222,7 @@
             border-color: var(--accent-cyan);
         }
 
-        /* Chat */
+        /* Chat Container */
         .chat-input-container {
             margin-top: auto;
             position: relative;
@@ -223,15 +242,14 @@
 
         .chat-send {
             position: absolute;
-            right: 10px;
-            top: 50%;
+            right: 12px;
+            top: calc(50% + 5px);
             transform: translateY(-50%);
             background: none;
             border: none;
- var(--accent-cyan);
+            color: var(--accent-cyan);
             cursor: pointer;
             font-size: 1rem;
-            margin-top: 5px;
         }
 
         /* Aviso Flutuante */
@@ -240,16 +258,19 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             padding: 8px 16px;
             border-radius: 20px;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.8);
             z-index: 10;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
         }
-
     </style>
 </head>
 <body>
@@ -259,7 +280,7 @@
 
     <!-- Aviso -->
     <div class="hint" id="hint">
-        <i class="fas fa-hand-pointer"></i> Toque nas partes para trocar
+        <i class="fas fa-hand-pointer" style="color: var(--accent-cyan);"></i> Use os controles para ajustar as medidas ao vivo
     </div>
 
     <!-- Botão Hambúrguer -->
@@ -274,285 +295,34 @@
             <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
         </div>
 
+        <!-- Card de Medidas Corporais -->
         <div class="info-card">
-            <h4>Status Vital</h4>
-            <div class="info-row"><span>🦴 Ossos</span><span>200</span></div>
-            <div class="info-row"><span>❤️ Vida</span><span>14</span></div>
-            <div class="info-row"><span>Energia</span><span>100%</span></div>
-        </div>
-
-        <button class="action-btn" id="btn-dar-vida">
-            <i class="fas fa-heart"></i> Vida
-        </button>
-
-        <div class="info-card">
-            <h4>Modos de Visualização</h4>
-            <div class="btn-grid">
-                <div class="grid-btn active" data-mode="normal"><i class="fas fa-user"></i> Normal</div>
-                <div class="grid-btn" data-mode="skeleton"><i class="fas fa-bone"></i> Esqueleto</div>
-                <div class="grid-btn" data-mode="robot"><i class="fas fa-robot"></i> Robô</div>
+            <h4><i class="fas fa-sliders-h"></i> Ajustes de Silhueta</h4>
+            <div class="control-row">
+                <label>Busto (Volume) <span id="val-busto">1.40</span></label>
+                <input type="range" id="slider-busto" min="0.5" max="2.0" step="0.05" value="1.40">
+            </div>
+            <div class="control-row">
+                <label>Cintura (Fina) <span id="val-cintura">0.65</span></label>
+                <input type="range" id="slider-cintura" min="0.4" max="1.5" step="0.05" value="0.65">
+            </div>
+            <div class="control-row">
+                <label>Quadril (Curva) <span id="val-quadril">1.60</span></label>
+                <input type="range" id="slider-quadril" min="0.5" max="2.2" step="0.05" value="1.60">
+            </div>
+            <div class="control-row">
+                <label>Altura Pernas <span id="val-pernas">1.40</span></label>
+                <input type="range" id="slider-pernas" min="0.8" max="2.0" step="0.05" value="1.40">
             </div>
         </div>
 
+        <!-- Grid de Posturas / Animação -->
         <div class="info-card">
-            <h4>Ações</h4>
+            <h4><i class="fas fa-running"></i> Estados de Movimento</h4>
             <div class="btn-grid">
-                <div class="grid-btn"><i class="fas fa-walking"></i> Andar</div>
-                <div class="grid-btn"><i class="fas fa-running"></i> Correr</div>
-                <div class="grid-btn"><i class="fas fa-tshirt"></i> Guarda-Roupa</div>
-                <div class="grid-btn"><i class="fas fa-camera"></i> Foto</div>
-            </div>
-        </div>
-
-        <div class="chat-input-container">
-            <input type="text" class="chat-input" placeholder="Fale com a Livia..." id="chat-input">
-            <button class="chat-send" id="chat-send"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <script>
-        // ==========================================
-        // 1. AMBIENTE 3D (THREE.JS)
-        // ==========================================
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        
-        // Câmera ajustada para mobile (mais afastada para caber o corpo inteiro)
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.0, 5.5); // Ajustado para ver o corpo todo no celular
-        camera.lookAt(0, 1, 0);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limita o pixel ratio para performance mobile
-        container.appendChild(renderer.domElement);
-
-        // Iluminação Forte para o modelo aparecer bem
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Mais luz ambiente
-        scene.add(ambientLight);
-
-        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
-        dirLight.position.set(2, 5, 3);
-        scene.add(dirLight);
-
-        const fillLight = new THREE.PointLight(0x00d4ff, 2.0);
-        fillLight.position.set(-3, 2, 3);
-        scene.add(fillLight);
-
-        // ==========================================
-        // 2. MODELO 3D (CORPO SÓLIDO E VISÍVEL)
-        // ==========================================
-        const characterGroup = new THREE.Group();
-        
-        // Cores dos Materiais
-        const skinColor = 0xffd1b3; // Cor de pele clara
-        const hairColor = 0x4a2c17; // Castanho
-        const eyeColor = 0x2b1a0f;  // Castanho escuro
-        const clothColor = 0x000000; // Preto (Biquíni)
-
-        // Material da Pele
-        const skinMat = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.4, metalness: 0.1 });
-        // Material do Cabelo
-        const hairMat = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.8 });
-        // Material dos Olhos
-        const eyeMat = new THREE.MeshStandardMaterial({ color: eyeColor, roughness: 0.1 });
-        // Material da Roupa
-        const clothMat = new THREE.MeshStandardMaterial({ color: clothColor, roughness: 0.6 });
-
-        // --- CABEÇA ---
-        const headGeo = new THREE.SphereGeometry(0.22, 32, 32);
-        const head = new THREE.Mesh(headGeo, skinMat);
-        head.position.y = 1.65;
-        characterGroup.add(head);
-
-        // Cabelo (Meia esfera em cima da cabeça)
-        const hairGeo = new THREE.SphereGeometry(0.24, 32, 16, 0, Math.PI * 2, 0, Math.PI / 1.8);
-        const hair = new THREE.Mesh(hairGeo, hairMat);
-        hair.position.y = 1.68;
-        hair.rotation.x = -0.1;
-        characterGroup.add(hair);
-
-        // Olhos (Esferas pequenas)
-        const eyeGeo = new THREE.SphereGeometry(0.03, 16, 16);
-        const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
-        leftEye.position.set(-0.07, 1.68, 0.2);
-        characterGroup.add(leftEye);
-        
-        const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
-        rightEye.position.set(0.07, 1.68, 0.2);
-        characterGroup.add(rightEye);
-
-        // --- PESCOÇO ---
-        const neckGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.15, 16);
-        const neck = new THREE.Mesh(neckGeo, skinMat);
-        neck.position.y = 1.42;
-        characterGroup.add(neck);
-
-        // --- TRONCO ---
-        const torsoGeo = new THREE.CylinderGeometry(0.25, 0.22, 0.9, 16);
-        const torso = new THREE.Mesh(torsoGeo, skinMat);
-        torso.position.y = 1.0;
-        characterGroup.add(torso);
-
-        // Biquíni (Parte de cima)
-        const topGeo = new THREE.CylinderGeometry(0.26, 0.25, 0.15, 16);
-        const top = new THREE.Mesh(topGeo, clothMat);
-        top.position.y = 1.15;
-        characterGroup.add(top);
-
-        // --- QUADRIL ---
-        const hipGeo = new THREE.CylinderGeometry(0.22, 0.25, 0.3, 16);
-        const hip = new THREE.Mesh(hipGeo, skinMat);
-        hip.position.y = 0.5;
-        characterGroup.add(hip);
-
-        // Biquíni (Parte de baixo)
-        const bottomGeo = new THREE.CylinderGeometry(0.23, 0.23, 0.1, 16);
-        const bottom = new THREE.Mesh(bottomGeo, clothMat);
-        bottom.position.y = 0.55;
-        characterGroup.add(bottom);
-
-        // --- BRAÇOS ---
-        const armGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.8, 16);
-        
-        const leftArm = new THREE.Mesh(armGeo, skinMat);
-        leftArm.position.set(-0.38, 1.1, 0);
-        leftArm.rotation.z = 0.15;
-        characterGroup.add(leftArm);
-
-        const rightArm = new THREE.Mesh(armGeo, skinMat);
-        rightArm.position.set(0.38, 1.1, 0);
-        rightArm.rotation.z = -0.15;
-        characterGroup.add(rightArm);
-
-        // --- PERNAS ---
-        const legGeo = new THREE.CylinderGeometry(0.09, 0.07, 1.0, 16);
-        
-        const leftLeg = new THREE.Mesh(legGeo, skinMat);
-        leftLeg.position.set(-0.13, -0.1, 0);
-        characterGroup.add(leftLeg);
-
-        const rightLeg = new THREE.Mesh(legGeo, skinMat);
-        rightLeg.position.set(0.13, -0.1, 0);
-        characterGroup.add(rightLeg);
-
-        // Adiciona o grupo à cena
-        scene.add(characterGroup);
-
-        // ==========================================
-        // 3. LÓGICA DE INTERFACE
-        // ==========================================
-        
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidePanel = document.getElementById('side-panel');
-        const closeBtn = document.getElementById('close-btn');
-        const btnVida = document.getElementById('btn-dar-vida');
-        const hint = document.getElementById('hint');
-        
-        let isAlive = false;
-        let isRotating = true;
-
-        // Abrir/Fechar Menu
-        menuToggle.addEventListener('click', () => {
-            sidePanel.classList.toggle('open');
-            menuToggle.classList.toggle('active');
-            hint.style.opacity = '0'; // Esconde a dica ao abrir o menu
-        });
-
-        closeBtn.addEventListener('click', () => {
-            sidePanel.classList.remove('open');
-            menuToggle.classList.remove('active');
-        });
-
-        // Botão "Vida"
-        btnVida.addEventListener('click', () => {
-            isAlive = !isAlive;
-            if(isAlive) {
-                btnVida.classList.add('active');
-                btnVida.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
-                gsap.to(characterGroup.scale, { x: 1.05, y: 1.05, z: 1.05, duration: 0.5, yoyo: true, repeat: -1 });
-            } else {
-                btnVida.classList.remove('active');
-                btnVida.innerHTML = '<i class="fas fa-heart"></i> Vida';
-                gsap.killTweensOf(characterGroup.scale);
-                characterGroup.scale.set(1, 1, 1);
-            }
-        });
-
-        // Modos de Visualização
-        const modeBtns = document.querySelectorAll('[data-mode]');
-        modeBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                modeBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                const mode = this.getAttribute('data-mode');
-                
-                if(mode === 'skeleton') {
-                    skinMat.color.setHex(0xffffff);
-                    skinMat.wireframe = true;
-                    clothMat.color.setHex(0xffffff);
-                    clothMat.wireframe = true;
-                } else if(mode === 'robot') {
-                    skinMat.color.setHex(0x00ff88);
-                    skinMat.wireframe = false;
-                    clothMat.color.setHex(0x007bff);
-                    clothMat.wireframe = false;
-                } else {
-                    skinMat.color.setHex(skinColor);
-                    skinMat.wireframe = false;
-                    clothMat.color.setHex(clothColor);
-                    clothMat.wireframe = false;
-                }
-            });
-        });
-
-        // Chat
-        const chatInput = document.getElementById('chat-input');
-        const chatSend = document.getElementById('chat-send');
-        
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if(!text) return;
-            chatInput.value = '';
-            chatInput.placeholder = "Livia está pensando...";
-            
-            setTimeout(() => {
-                chatInput.placeholder = `Livia: "Entendi! Você disse: ${text}"`;
-            }, 1000);
-        }
-
-        chatSend.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') sendMessage();
-        });
-
-        // ==========================================
-        // 4. ANIMAÇÃO
-        // ==========================================
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Rotação suave (Frente e Costas)
-            if(!isAlive) {
-                characterGroup.rotation.y += 0.008; // Gira devagar
-            } else {
-                // Balança levemente
-                characterGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.4;
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        // Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        animate();
-
-    </script>
-</body>
-</html>
+Use o código com cuidado.AndarAgachar// --- CONFIGURAÇÃO DO CENÁRIO THREE.JS ---const container = document.getElementById('canvas-container');const scene = new THREE.Scene();scene.background = new THREE.Color('#05070a');// Chão de Referência Futuristaconst grid = new THREE.GridHelper(20, 20, 0x00d4ff, 0x112233);grid.position.y = -2;scene.add(grid);const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);camera.position.set(0, 1.2, 5.5);const renderer = new THREE.WebGLRenderer({ antialias: true });renderer.setSize(window.innerWidth, window.innerHeight);renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));container.appendChild(renderer.domElement);// ILUMINAÇÃO ESTUDIO (Garante visibilidade excelente)const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);scene.add(ambientLight);const dirLight1 = new THREE.DirectionalLight(0xfff5e6, 0.8);dirLight1.position.set(5, 10, 7);scene.add(dirLight1);const dirLight2 = new THREE.DirectionalLight(0x00d4ff, 0.4);dirLight2.position.set(-5, 3, -2);scene.add(dirLight2);// --- CONSTRUÇÃO DO MODELO ANATÔMICO (ESTILO LÍVIA ANDRADE) ---const materialPele = new THREE.MeshStandardMaterial({color: 0xf5cad2,roughness: 0.35,metalness: 0.05});const grupoPersonagem = new THREE.Group();grupoPersonagem.position.y = -0.5;scene.add(grupoPersonagem);// Nós do Esqueleto e Articulaçõesconst noduloCabeca = new THREE.Group();const noduloBusto = new THREE.Group();const noduloCintura = new THREE.Group();const noduloQuadril = new THREE.Group();const noduloPernaEsq = new THREE.Group();const noduloPernaDir = new THREE.Group();noduloPernaEsq.position.set(-0.24, -0.4, 0);noduloPernaDir.position.set(0.24, -0.4, 0);// 1. Cabeça Estilizadaconst geoCabeca = new THREE.SphereGeometry(0.24, 32, 32);geoCabeca.scale(1, 1.2, 1);const malhaCabeca = new THREE.Mesh(geoCabeca, materialPele);noduloCabeca.add(malhaCabeca);noduloCabeca.position.y = 1.35;// 2. Busto e Ombros Definidosconst geoBusto = new THREE.CylinderGeometry(0.32, 0.24, 0.35, 32);const malhaBusto = new THREE.Mesh(geoBusto, materialPele);noduloBusto.add(malhaBusto);// Curvas de Seios Estilizadasconst geoSeio = new THREE.SphereGeometry(0.12, 16, 16);const seioEsq = new THREE.Mesh(geoSeio, materialPele);seioEsq.position.set(-0.13, 0.05, 0.2);const seioDir = seioEsq.clone();seioDir.position.x = 0.13;noduloBusto.add(seioEsq, seioDir);noduloBusto.position.y = 0.95;// 3. Cintura Finaconst geoCintura = new THREE.CylinderGeometry(0.21, 0.25, 0.3, 32);const malhaCintura = new THREE.Mesh(geoCintura, materialPele);noduloCintura.add(malhaCintura);noduloCintura.position.y = 0.65;// 4. Quadril Curvado (Formato Violão)const geoQuadril = new THREE.SphereGeometry(0.38, 32, 16);geoQuadril.scale(1, 0.8, 1);const malhaQuadril = new THREE.Mesh(geoQuadril, materialPele);noduloQuadril.add(malhaQuadril);noduloQuadril.position.y = 0.35;// 5. Pernas Longas de Passarelaconst geoPerna = new THREE.CylinderGeometry(0.12, 0.08, 1.3, 16);const malhaPernaEsq = new THREE.Mesh(geoPerna, materialPele);malhaPernaEsq.position.y = -0.65;noduloPernaEsq.add(malhaPernaEsq);const malhaPernaDir = malhaPernaEsq.clone();noduloPernaDir.add(malhaPernaDir);// Vinculação HierárquicagrupoPersonagem.add(noduloCabeca);grupoPersonagem.add(noduloBusto);grupoPersonagem.add(noduloCintura);grupoPersonagem.add(noduloQuadril);grupoPersonagem.add(noduloPernaEsq);grupoPersonagem.add(noduloPernaDir);// --- CRIAÇÃO DOS FIOS DE CABELO INDIVIDUAIS (RESPEITANDO O ESPAÇO FACIAL) ---const materialCabelo = new THREE.MeshStandardMaterial({color: 0xdfb15b, // Loiro Douradoroughness: 0.2,side: THREE.DoubleSide});function criarFioCabelo(origemX, origemY, origemZ, curvaX, comprimentoY, curvaZ) {const pontos = [new THREE.Vector3(origemX, origemY, origemZ),new THREE.Vector3(origemX + curvaX * 0.5, origemY - comprimentoY * 0.4, origemZ + curvaZ * 0.4),new THREE.Vector3(origemX + curvaX, origemY - comprimentoY, origemZ + curvaZ)];const curva = new THREE.CatmullRomCurve3(pontos);const geoFio = new THREE.TubeGeometry(curva, 8, 0.015, 6, false);return new THREE.Mesh(geoFio, materialCabelo);}// Dispõe os fios nas laterais e costas da cabeça, limpando a face frontalconst totalFios = 60;for (let i = 0; i < totalFios; i++) {let angulo = (i / totalFios) * Math.PI * 1.5 + Math.PI * 0.75;let fx = Math.cos(angulo) * 0.25;let fz = Math.sin(angulo) * 0.25;let fy = 1.48;let comprimento = 0.8 + Math.random() * 0.3;let espalharX = fx * 0.5;let espalharZ = fz * 0.4;// Condição estrita para evitar invasão do plano frontal dos olhos/rostoif (Math.abs(angulo - Math.PI * 1.5) > 0.35) {const mechaFio = criarFioCabelo(fx, fy, fz, espalharX, comprimento, espalharZ);noduloCabeca.add(mechaFio);}}// --- INTERATIVIDADE DOS CONTROLES DO SLIDER ---const sliders = {busto: document.getElementById('slider-busto'),cintura: document.getElementById('slider-cintura'),quadril: document.getElementById('slider-quadril'),pernas: document.getElementById('slider-pernas')};const labels = {busto: document.getElementById('val-busto'),cintura: document.getElementById('val-cintura'),quadril: document.getElementById('val-quadril'),pernas: document.getElementById('val-pernas')};function atualizarMedidas() {let vBusto = parseFloat(sliders.busto.value);let vCintura = parseFloat(sliders.cintura.value);let vQuadril = parseFloat(sliders.quadril.value);let vPernas = parseFloat(sliders.pernas.value);// Atualiza os textos numéricos da UIlabels.busto.innerText = vBusto.toFixed(2);labels.cintura.innerText = vCintura.toFixed(2);labels.quadril.innerText = vQuadril.toFixed(2);labels.pernas.innerText = vPernas.toFixed(2);// Escalonamento de proporções do modelo 3DnoduloBusto.scale.set(vBusto, 1, 1 + (vBusto - 1) * 0.5);noduloCintura.scale.set(vCintura, 1, vCintura);noduloQuadril.scale.set(vQuadril, 1, vQuadril);noduloPernaEsq.scale.y = vPernas;noduloPernaDir.scale.y = vPernas;// Altura dinâmica baseada no comprimento das pernas modificadaslet offsetAltura = (vPernas - 1) * 0.65;noduloQuadril.position.y = 0.35 + offsetAltura;noduloCintura.position.y = 0.65 + offsetAltura;noduloBusto.position.y = 0.95 + offsetAltura;noduloCabeca.position.y = 1.35 + offsetAltura;}Object.values(sliders).forEach(slider => slider.addEventListener('input', atualizarMedidas));atualizarMedidas();// --- CONTROLES DA INTERFACE LATERAL (UI) ---const sidePanel = document.getElementById('side-panel');const menuToggle = document.getElementById('menu-toggle');const closeBtn = document.getElementById('close-btn');menuToggle.addEventListener('click', () => {sidePanel.classList.toggle('open');menuToggle.classList.toggle('active');menuToggle.innerHTML = sidePanel.classList.contains('open') ? '' : '';});closeBtn.addEventListener('click', () => {sidePanel.classList.remove('open');menuToggle.classList.remove('active');menuToggle.innerHTML = '';});// --- ESTADOS DE ANIMAÇÃO COM GSAP ---let estadoMovimento = 'parado'; // parado, andando, agachadolet tempo = 0;const btnWalk = document.getElementById('btn-walk');const btnCrouch = document.getElementById('btn-crouch');btnWalk.addEventListener('click', () => {if (estadoMovimento === 'andando') {estadoMovimento = 'parado';btnWalk.classList.remove('active');} else {estadoMovimento = 'andando';btnWalk.classList.add('active');btnCrouch.classList.remove('active');}});btnCrouch.addEventListener('click', () => {if (estadoMovimento === 'agachado') {estadoMovimento = 'parado';btnCrouch.classList.remove('active');} else {estadoMovimento = 'agachado';btnCrouch.classList.add('active');btnWalk.classList.remove('active');}});// --- CICLO DE RENDERIZAÇÃO ANIMADA ---function renderizar() {requestAnimationFrame(renderizar);tempo += 0.05;// Rotação sutil automática de vitrine para dar tridimensionalidadegrupoPersonagem.rotation.y = Math.sin(tempo * 0.1) * 0.2;if (estadoMovimento === 'andando') {// Simulação mecânica alternada de passarela nas pernasnoduloPernaEsq.rotation.x = Math.sin(tempo * 2.5) * 0.45;noduloPernaDir.rotation.x = -Math.sin(tempo * 2.5) * 0.45;noduloQuadril.rotation.z = Math.sin(tempo * 2.5) * 0.07;// Oscilação vertical leve ao caminhargrupoPersonagem.position.y = -0.5 + Math.abs(Math.sin(tempo * 5)) * 0.04;}else if (estadoMovimento === 'agachado') {// Suaviza a flexão das pernas e inclinação do quadrilnoduloPernaEsq.rotation.x = -0.85;noduloPernaDir.rotation.x = -0.85;grupoPersonagem.position.y = -0.92;}else {// Retorno suave e amortecido ao estado estático padrãonoduloPernaEsq.rotation.x *= 0.85;noduloPernaDir.rotation.x *= 0.85;noduloQuadril.rotation.z *= 0.85;grupoPersonagem.position.y = -0.5;}renderer.render(scene, camera);}// Redimensionamento Dinâmico de Janelawindow.addEventListener('resize', () => {camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight);});renderizar();
+<FollowUp>
+O código está completo e estruturado para uso. Qual recurso gostaria de integrar agora?
+* Desenvolver a estrutura para a **seleção de roupas** no guarda-roupa virtual?
+* Programar o campo de texto para fazer a **Livia responder mensagens no chat**?
+</FollowUp>
