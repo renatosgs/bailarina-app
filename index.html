@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Livia IA - Assistente 3D</title>
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
-    <!-- Three.js -->
-    <script src="https://cloudflare.com"></script>
-    <!-- GSAP -->
-    <script src="https://cloudflare.com"></script>
+    <title>Livia IA - Anatomia 3D Ajustável</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <style>
         :root {
             --bg-dark: #05070a;
+            --bg-gradient: radial-gradient(circle at center, #0a1428 0%, #05070a 100%);
             --panel-bg: rgba(13, 20, 33, 0.95);
-            --panel-border: rgba(0, 150, 255, 0.4);
+            --panel-border: rgba(0, 150, 255, 0.3);
             --accent-blue: #007bff;
             --accent-cyan: #00d4ff;
             --accent-green: #00ff88;
+            --accent-red: #ff4757;
             --text-main: #ffffff;
             --text-muted: #8ba0b8;
             --danger: #ff4757;
@@ -34,7 +36,7 @@
         }
 
         body {
-            background-color: #05070a;
+            background: var(--bg-gradient);
             color: var(--text-main);
             overflow: hidden;
             height: 100vh;
@@ -42,7 +44,6 @@
             position: fixed;
         }
 
-        /* Canvas 3D */
         #canvas-container {
             position: absolute;
             top: 0; left: 0;
@@ -56,27 +57,30 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 55px;
-            height: 55px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
             z-index: 100;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
+        .menu-toggle:hover { transform: scale(1.05); }
         .menu-toggle.active {
-            background: rgba(255, 71, 87, 0.8);
+            background: rgba(255, 71, 87, 0.9);
+            border-color: rgba(255, 71, 87, 0.5);
         }
 
-        /* Painel Deslizante */
+        /* Painel Lateral */
         .side-panel {
             position: fixed;
             top: 0;
@@ -85,7 +89,7 @@
             max-width: 380px;
             height: 100%;
             background: var(--panel-bg);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
             border-left: 1px solid var(--panel-border);
             z-index: 90;
             transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -93,25 +97,34 @@
             flex-direction: column;
             padding: 20px;
             gap: 15px;
+            overflow-y: auto;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.8);
         }
 
-        .side-panel.open {
-            right: 0;
-        }
+        .side-panel.open { right: 0; }
+        .side-panel::-webkit-scrollbar { width: 4px; }
+        .side-panel::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 4px; }
 
+        /* Cabeçalho */
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
-        .panel-header h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .panel-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-cyan);
+        }
 
         .close-btn {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
             border: none;
             color: white;
             width: 35px;
@@ -121,149 +134,263 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 0.2s;
         }
 
-        /* Área de Histórico do Chat */
-        .chat-history {
-            flex: 1;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+        .close-btn:hover { background: var(--danger); }
 
-        .chat-history::-webkit-scrollbar { width: 4px; }
-        .chat-history::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 4px; }
-
-        .msg {
-            max-width: 85%;
-            padding: 8px 12px;
-            border-radius: 14px;
-            font-size: 0.8rem;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-
-        .msg.user {
-            background: var(--accent-blue);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-
-        .msg.bot {
-            background: rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Cartão de Controles */
+        /* Cartões */
         .info-card {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
             padding: 14px;
             border: 1px solid rgba(255,255,255,0.05);
-            flex-shrink: 0;
         }
 
         .info-card h4 {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        /* Sliders */
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #ccd6e0;
+            font-weight: 500;
+        }
+
+        .slider-label span:last-child {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 0.7rem;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+        }
+
+        /* Botões de Ação */
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .action-btn.active {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .action-btn.reset {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+            font-size: 0.8rem;
+            padding: 10px;
+        }
+
+        /* Grid de Botões */
         .btn-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
 
         .grid-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
             color: var(--text-muted);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
+            padding: 10px 5px;
+            border-radius: 10px;
+            font-size: 0.7rem;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
             transition: all 0.2s;
+            font-weight: 500;
         }
 
-        .grid-btn.active {
-            background: rgba(0, 212, 255, 0.2);
-            color: var(--accent-cyan);
+        .grid-btn:hover {
+            background: rgba(0, 123, 255, 0.15);
+            color: white;
             border-color: var(--accent-cyan);
         }
 
-        /* Container de Entrada do Chat */
+        .grid-btn.active {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .grid-btn i { font-size: 1.1rem; }
+
+        /* Chat */
         .chat-input-container {
+            margin-top: auto;
             position: relative;
-            padding-top: 5px;
-            flex-shrink: 0;
+            padding-top: 10px;
         }
 
         .chat-input {
             width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--panel-border);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
-            padding: 12px 45px 12px 12px;
+            padding: 14px 45px 14px 14px;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             outline: none;
         }
+
+        .chat-input:focus { border-color: var(--accent-cyan); }
+        .chat-input::placeholder { color: rgba(255,255,255,0.3); }
 
         .chat-send {
             position: absolute;
             right: 12px;
-            top: calc(50% + 2.5px);
+            top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--accent-cyan);
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            margin-top: 5px;
         }
 
-        /* Aviso Flutuante */
+        /* Aviso */
         .hint {
             position: absolute;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.6);
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
             font-size: 0.75rem;
             color: rgba(255,255,255,0.8);
             z-index: 10;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
-            gap: 6px;
-            pointer-events: none;
+            gap: 8px;
+            animation: pulse 2.5s infinite;
+            white-space: nowrap;
         }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .quick-stats {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .stat-badge {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--accent-cyan);
+        }
+
+        .stat-badge.red { color: var(--accent-red); }
+
     </style>
 </head>
 <body>
 
     <div id="canvas-container"></div>
 
+    <div class="quick-stats">
+        <div class="stat-badge"><i class="fas fa-bone"></i> 200</div>
+        <div class="stat-badge red"><i class="fas fa-heart"></i> 14</div>
+    </div>
+
     <div class="hint" id="hint">
-        <i class="fas fa-comments" style="color: var(--accent-cyan);"></i> Abra o menu para conversar com a Livia em tempo real
+        <i class="fas fa-hand-pointer"></i> Toque nas partes para trocar
     </div>
 
     <button class="menu-toggle" id="menu-toggle">
@@ -272,57 +399,696 @@
 
     <div class="side-panel" id="side-panel">
         <div class="panel-header">
-            <h2><i class="fas fa-robot" style="color: var(--accent-cyan);"></i> Livia IA</h2>
+            <h2><i class="fas fa-robot"></i> Livia IA</h2>
             <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Linha do Histórico da Conversa -->
-        <div class="chat-history" id="chat-history">
-            <div class="msg bot">Olá! Sou a Livia. Como posso te ajudar hoje? Arraste ou use as ações abaixo para interagir comigo!</div>
+        <div class="info-card">
+            <h4><i class="fas fa-heartbeat"></i> Status Vital</h4>
+            <div class="info-row"><span>🦴 Ossos</span><span>200</span></div>
+            <div class="info-row"><span>❤️ Vida</span><span>14</span></div>
+            <div class="info-row"><span>⚡ Energia</span><span>100%</span></div>
         </div>
 
-        <!-- Estado de Movimento -->
+        <button class="action-btn" id="btn-dar-vida">
+            <i class="fas fa-heart"></i> Dar Vida
+        </button>
+
+        <!-- AJUSTES CORPORAIS -->
         <div class="info-card">
-            <h4><i class="fas fa-running"></i> Controle de Movimentos</h4>
+            <h4><i class="fas fa-sliders-h"></i> Ajustes Corporais</h4>
+            
+            <div class="slider-group">
+                <div class="slider-label"><span>Altura Total</span><span id="val-height">1.00</span></div>
+                <input type="range" id="slider-height" min="0.7" max="1.3" step="0.01" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Largura do Corpo</span><span id="val-width">1.00</span></div>
+                <input type="range" id="slider-width" min="0.6" max="1.5" step="0.01" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Tamanho da Cabeça</span><span id="val-head">1.00</span></div>
+                <input type="range" id="slider-head" min="0.7" max="1.4" step="0.01" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Tamanho dos Seios</span><span id="val-breast">1.00</span></div>
+                <input type="range" id="slider-breast" min="0.5" max="2.0" step="0.05" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Largura do Quadril</span><span id="val-hip">1.00</span></div>
+                <input type="range" id="slider-hip" min="0.7" max="1.5" step="0.01" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Grossura dos Braços</span><span id="val-arm">1.00</span></div>
+                <input type="range" id="slider-arm" min="0.6" max="1.8" step="0.01" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Grossura das Pernas</span><span id="val-leg">1.00</span></div>
+                <input type="range" id="slider-leg" min="0.6" max="1.8" step="0.01" value="1.00">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Comprimento do Cabelo</span><span id="val-hair">1.00</span></div>
+                <input type="range" id="slider-hair" min="0.5" max="2.0" step="0.05" value="1.00">
+            </div>
+
+            <button class="action-btn reset" id="btn-reset">
+                <i class="fas fa-undo"></i> Resetar Ajustes
+            </button>
+        </div>
+
+        <div class="info-card">
+            <h4><i class="fas fa-x-ray"></i> Modos Anatômicos</h4>
             <div class="btn-grid">
-                <button class="grid-btn" id="btn-walk"><i class="fas fa-walking fa-lg"></i>Andar</button>
-                <button class="grid-btn" id="btn-crouch"><i class="fas fa-chair fa-lg"></i>Agachar</button>
+                <div class="grid-btn active" data-mode="normal"><i class="fas fa-user"></i> Normal</div>
+                <div class="grid-btn" data-mode="skeleton"><i class="fas fa-bone"></i> Esqueleto</div>
+                <div class="grid-btn" data-mode="muscular"><i class="fas fa-dumbbell"></i> Muscular</div>
+                <div class="grid-btn" data-mode="organs"><i class="fas fa-lungs"></i> Órgãos</div>
+                <div class="grid-btn" data-mode="robot"><i class="fas fa-robot"></i> Robô</div>
+                <div class="grid-btn" data-mode="xray"><i class="fas fa-x-ray"></i> Raio-X</div>
             </div>
         </div>
 
-        <!-- Campo de Input -->
+        <div class="info-card">
+            <h4><i class="fas fa-running"></i> Ações</h4>
+            <div class="btn-grid">
+                <div class="grid-btn"><i class="fas fa-walking"></i> Andar</div>
+                <div class="grid-btn"><i class="fas fa-running"></i> Correr</div>
+                <div class="grid-btn"><i class="fas fa-chair"></i> Agachar</div>
+                <div class="grid-btn"><i class="fas fa-tshirt"></i> Roupa</div>
+                <div class="grid-btn"><i class="fas fa-camera"></i> Foto</div>
+                <div class="grid-btn"><i class="fas fa-music"></i> Dançar</div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h4><i class="fas fa-id-card"></i> Ficha Técnica</h4>
+            <div class="info-row"><span>Nome</span><span>Livia Andrade</span></div>
+            <div class="info-row"><span>Idade</span><span>28 anos</span></div>
+            <div class="info-row"><span>Altura</span><span>1.68 m</span></div>
+            <div class="info-row"><span>Peso</span><span>58.7 kg</span></div>
+        </div>
+
         <div class="chat-input-container">
-            <input type="text" id="chat-input" class="chat-input" placeholder="Digite uma mensagem para Livia...">
-            <button id="chat-send" class="chat-send"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" class="chat-input" placeholder="Fale com a Livia..." id="chat-input">
+            <button class="chat-send" id="chat-send"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-<script>
-// --- CONFIGURAÇÃO DO CENÁRIO THREE.JS ---
-const container = document.getElementById('canvas-container');
-const scene = new THREE.Scene();
-scene.background = new THREE.Color('#05070a');
+    <script>
+        // ==========================================
+        // 1. AMBIENTE 3D
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.0, 5.0);
+        camera.lookAt(0, 0.8, 0);
 
-const grid = new THREE.GridHelper(20, 20, 0x00d4ff, 0x112233);
-grid.position.y = -2;
-scene.add(grid);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.1, 5.2);
+        // Iluminação
+        scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+        
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        keyLight.position.set(2, 5, 4);
+        scene.add(keyLight);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-container.appendChild(renderer.domElement);
+        const fillLight = new THREE.DirectionalLight(0x00d4ff, 1.2);
+        fillLight.position.set(-4, 2, 3);
+        scene.add(fillLight);
 
-// ILUMINAÇÃO ESTÚDIO
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
-scene.add(ambientLight);
+        const rimLight = new THREE.PointLight(0x007bff, 2.0);
+        rimLight.position.set(0, 3, -5);
+        scene.add(rimLight);
 
-const dirLight1 = new THREE.DirectionalLight(0xffedf2, 0.8);
-Use o código com cuidado.dirLight1.position.set(5, 10, 7);scene.add(dirLight1);const dirLight2 = new THREE.DirectionalLight(0x00d4ff, 0.45);dirLight2.position.set(-5, 2, -1);scene.add(dirLight2);// --- CONSTRUÇÃO DO PERSONAGEM BASEADO NA IMAGEM (RUIVA) ---const materialPele = new THREE.MeshStandardMaterial({color: 0xfbd6c6,roughness: 0.4,metalness: 0.05});const grupoPersonagem = new THREE.Group();grupoPersonagem.position.y = -0.5;scene.add(grupoPersonagem);const noduloCabeca = new THREE.Group();const noduloBusto = new THREE.Group();const noduloCintura = new THREE.Group();const noduloQuadril = new THREE.Group();const noduloPernaEsq = new THREE.Group();const noduloPernaDir = new THREE.Group();noduloPernaEsq.position.set(-0.22, -0.4, 0);noduloPernaDir.position.set(0.22, -0.4, 0);// 1. Cabeçaconst geoCabeca = new THREE.SphereGeometry(0.24, 32, 32);geoCabeca.scale(1, 1.18, 1);const malhaCabeca = new THREE.Mesh(geoCabeca, materialPele);noduloCabeca.add(malhaCabeca);noduloCabeca.position.y = 1.32;// 2. Bustoconst geoBusto = new THREE.CylinderGeometry(0.28, 0.22, 0.35, 32);const malhaBusto = new THREE.Mesh(geoBusto, materialPele);noduloBusto.add(malhaBusto);const geoSeio = new THREE.SphereGeometry(0.10, 16, 16);const seioEsq = new THREE.Mesh(geoSeio, materialPele);seioEsq.position.set(-0.11, 0.04, 0.18);const seioDir = seioEsq.clone();seioDir.position.x = 0.11;noduloBusto.add(seioEsq, seioDir);noduloBusto.position.y = 0.95;// 3. Cinturaconst geoCintura = new THREE.CylinderGeometry(0.20, 0.23, 0.3, 32);const malhaCintura = new THREE.Mesh(geoCintura, materialPele);noduloCintura.add(malhaCintura);noduloCintura.position.y = 0.65;// 4. Quadrilconst geoQuadril = new THREE.SphereGeometry(0.32, 32, 16);geoQuadril.scale(1, 0.85, 1);const malhaQuadril = new THREE.Mesh(geoQuadril, materialPele);noduloQuadril.add(malhaQuadril);noduloQuadril.position.y = 0.35;// 5. Pernasconst geoPerna = new THREE.CylinderGeometry(0.11, 0.07, 1.3, 16);const malhaPernaEsq = new THREE.Mesh(geoPerna, materialPele);malhaPernaEsq.position.y = -0.65;noduloPernaEsq.add(malhaPernaEsq);const malhaPernaDir = malhaPernaEsq.clone();noduloPernaDir.add(malhaPernaDir);grupoPersonagem.add(noduloCabeca);grupoPersonagem.add(noduloBusto);grupoPersonagem.add(noduloCintura);grupoPersonagem.add(noduloQuadril);grupoPersonagem.add(noduloPernaEsq);grupoPersonagem.add(noduloPernaDir);// --- MODELAGEM DO CABELO RUIVO ---const materialCabelo = new THREE.MeshStandardMaterial({color: 0xb13c19,roughness: 0.3,side: THREE.DoubleSide});function criarFioCurvo(origemX, origemY, origemZ, curvaX, comprimentoY, curvaZ, espessura = 0.015) {const pontos = [new THREE.Vector3(origemX, origemY, origemZ),new THREE.Vector3(origemX + curvaX * 0.5, origemY - comprimentoY * 0.3, origemZ + curvaZ * 0.5),new THREE.Vector3(origemX + curvaX, origemY - comprimentoY, origemZ + curvaZ)];const curva = new THREE.CatmullRomCurve3(pontos);const geoFio = new THREE.TubeGeometry(curva, 8, espessura, 6, false);return new THREE.Mesh(geoFio, materialCabelo);}// Franjafor (let i = 0; i < 15; i++) {let pct = (i / 14) * 0.4 - 0.2;let fx = pct;let fy = 1.48;let fz = 0.22;const fioFranja = criarFioCurvo(fx, fy, fz, pct * 0.2, 0.16, 0.04, 0.012);noduloCabeca.add(fioFranja);}// Cabelo Baseconst totalFiosBase = 40;for (let i = 0; i < totalFiosBase; i++) {let angulo = (i / totalFiosBase) * Math.PI * 1.4 + Math.PI * 0.8;let fx = Math.cos(angulo) * 0.25;let fz = Math.sin(angulo) * 0.25;let fy = 1.46;if (Math.abs(angulo - Math.PI * 1.5) > 0.35) {const fioBase = criarFioCurvo(fx, fy, fz, fx * 0.4, 0.4, fz * 0.3);noduloCabeca.add(fioBase);}}// Rabo de Cavaloconst noduloRaboCavalo = new THREE.Group();noduloRaboCavalo.position.set(0, 1.46, -0.22);noduloCabeca.add(noduloRaboCavalo);for (let i = 0; i < 25; i++) {let anguloRnd = Math.random() * Math.PI * 2;let espalharX = Math.cos(anguloRnd) * 0.08;let espalharZ = Math.sin(anguloRnd) * 0.06 - 0.15;const fioRabo = criarFioCurvo(0, 0, 0, espalharX, 0.5 + Math.random() * 0.2, espalharZ, 0.016);noduloRaboCavalo.add(fioRabo);}// --- INTERFACE LATERAL E SISTEMA DE CHAT ---const sidePanel = document.getElementById('side-panel');const menuToggle = document.getElementById('menu-toggle');const closeBtn = document.getElementById('close-btn');const chatHistory = document.getElementById('chat-history');const chatInput = document.getElementById('chat-input');const chatSend = document.getElementById('chat-send');menuToggle.addEventListener('click', () => {sidePanel.classList.toggle('open');menuToggle.classList.toggle('active');menuToggle.innerHTML = sidePanel.classList.contains('open') ? '' : '';});closeBtn.addEventListener('click', () => {sidePanel.classList.remove('open');menuToggle.classList.remove('active');menuToggle.innerHTML = '';});function enviarMensagem() {const texto = chatInput.value.trim();if (!texto) return;const msgUser = document.createElement('div');msgUser.className = 'msg user';msgUser.innerText = texto;chatHistory.appendChild(msgUser);chatInput.value = '';chatHistory.scrollTop = chatHistory.scrollHeight;setTimeout(() => {const msgBot = document.createElement('div');msgBot.className = 'msg bot';let resposta = "Entendi! Estou processando seu comando e atualizando a simulação.";const textoMinusculo = texto.toLowerCase();if (textoMinusculo.includes('andar') || textoMinusculo.includes('caminhar')) {resposta = "Comando aceito! Iniciando a animação de caminhada.";ativarEstado('andando');} else if (textoMinusculo.includes('agachar') || textoMinusculo.includes('sentar')) {resposta = "Entendido, alterando postura física para agachamento.";ativarEstado('agachado');} else if (textoMinusculo.includes('parar') || textoMinusculo.includes('fique de pe')) {resposta = "Parando movimentos. Retornando à postura estática padrão.";ativarEstado('parado');} else if (textoMinusculo.includes('olá') || textoMinusculo.includes('oi')) {resposta = "Olá! Como está ficando meu visual baseado na imagem de referência ruiva?";}msgBot.innerText = resposta;chatHistory.appendChild(msgBot);chatHistory.scrollTop = chatHistory.scrollHeight;}, 750);}chatSend.addEventListener('click', enviarMensagem);chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') enviarMensagem(); });// --- ESTADOS DE ANIMAÇÃO CORPORAL ---let estadoMovimento = 'parado';let tempo = 0;const btnWalk = document.getElementById('btn-walk');const btnCrouch = document.getElementById('btn-crouch');function activarVisualBotao(estado) {btnWalk.classList.remove('active');btnCrouch.classList.remove('active');if (estado === 'andando') btnWalk.classList.add('active');if (estado === 'agachado') btnCrouch.classList.add('active');}// Modificado o nome da função para corresponder à chamada interna sem dar erro de undefinedfunction ativarEstado(estado) {if (estadoMovimento === estado) {estadoMovimento = 'parado';} else {estadoMovimento = estado;}activarVisualBotao(estadoMovimento);}btnWalk.addEventListener('click', () => activationWrapper('andando'));btnCrouch.addEventListener('click', () => activationWrapper('agachado'));function activationWrapper(estado) {ativarEstado(estado);}// --- CICLO DE RENDERIZAÇÃO ANIMADA ---function renderizar() {requestAnimationFrame(renderizar);tempo += 0.05;grupoPersonagem.rotation.y = Math.sin(tempo * 0.1) * 0.25;noduloRaboCavalo.rotation.z = Math.sin(tempo * 0.4) * 0.03;noduloRaboCavalo.rotation.x = Math.cos(tempo * 0.2) * 0.02;if (estadoMovimento === 'andando') {noduloPernaEsq.rotation.x = Math.sin(tempo * 2.5) * 0.45;noduloPernaDir.rotation.x = -Math.sin(tempo * 2.5) * 0.45;noduloQuadril.rotation.z = Math.sin(tempo * 2.5) * 0.06;grupoPersonagem.position.y = -0.5 + Math.abs(Math.sin(tempo * 5)) * 0.03;}else if (estadoMovimento === 'agachado') {noduloPernaEsq.rotation.x = -0.85;noduloPernaDir.rotation.x = -0.85;grupoPersonagem.position.y = -0.92;}else {noduloPernaEsq.rotation.x *= 0.85;noduloPernaDir.rotation.x *= 0.85;noduloQuadril.rotation.z *= 0.85;grupoPersonagem.position.y = -0.5;}renderer.render(scene, camera);}window.addEventListener('resize', () => {camera.aspect = window.innerWidth / window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth, window.innerHeight);});renderizar();
-<FollowUp>
-O aplicativo já está rodando perfeitamente e totalmente limpo de erros. Para dar o próximo passo no desenvolvimento, o que prefere fazer?
-* Adicionar suporte para a personagem **piscar os olhos** e mudar de expressão facial via chat?
-* Criar as primeiras opções do **guarda-roupa virtual** (como biquíni ou vestido)?
-</FollowUp>
+        const bottomLight = new THREE.PointLight(0xffffff, 0.8);
+        bottomLight.position.set(0, -3, 2);
+        scene.add(bottomLight);
+
+        // Grid
+        const gridHelper = new THREE.GridHelper(12, 24, 0x00d4ff, 0x1a2b4c);
+        gridHelper.position.y = -1.8;
+        scene.add(gridHelper);
+
+        // ==========================================
+        // 2. MATERIAIS
+        // ==========================================
+        const colors = {
+            skin: 0xffd1b3, muscle: 0xc0392b, muscleLight: 0xe74c3c,
+            bone: 0xf5f5dc, organ: 0xe67e22, hair: 0x4a2c17,
+            eye: 0x2b1a0f, cloth: 0x1a1a1a, robot: 0x00ff88, robotDark: 0x007bff
+        };
+
+        const materials = {
+            skin: new THREE.MeshStandardMaterial({ color: colors.skin, roughness: 0.6, metalness: 0.1 }),
+            muscle: new THREE.MeshStandardMaterial({ color: colors.muscle, roughness: 0.7, metalness: 0.05 }),
+            muscleLight: new THREE.MeshStandardMaterial({ color: colors.muscleLight, roughness: 0.6, metalness: 0.05 }),
+            bone: new THREE.MeshStandardMaterial({ color: colors.bone, roughness: 0.4, metalness: 0.1 }),
+            organ: new THREE.MeshStandardMaterial({ color: colors.organ, roughness: 0.5, metalness: 0.1 }),
+            hair: new THREE.MeshStandardMaterial({ color: colors.hair, roughness: 0.9, metalness: 0.0 }),
+            eye: new THREE.MeshStandardMaterial({ color: colors.eye, roughness: 0.1, metalness: 0.3 }),
+            cloth: new THREE.MeshStandardMaterial({ color: colors.cloth, roughness: 0.8, metalness: 0.0 }),
+            robot: new THREE.MeshStandardMaterial({ color: colors.robot, roughness: 0.2, metalness: 0.9, emissive: 0x004422 }),
+            robotDark: new THREE.MeshStandardMaterial({ color: colors.robotDark, roughness: 0.3, metalness: 0.8 })
+        };
+
+        // ==========================================
+        // 3. GRUPO PRINCIPAL DO PERSONAGEM
+        // ==========================================
+        const characterGroup = new THREE.Group();
+        scene.add(characterGroup);
+
+        // Grupos separados para ajuste individual
+        const headGroup = new THREE.Group();
+        const torsoGroup = new THREE.Group();
+        const leftArmGroup = new THREE.Group();
+        const rightArmGroup = new THREE.Group();
+        const leftLegGroup = new THREE.Group();
+        const rightLegGroup = new THREE.Group();
+        const breastsGroup = new THREE.Group();
+        const hairGroup = new THREE.Group();
+        const hipGroup = new THREE.Group();
+
+        // ==========================================
+        // 4. CONSTRUÇÃO DAS PARTES
+        // ==========================================
+
+        // --- CABEÇA ---
+        const skullGeo = new THREE.SphereGeometry(0.24, 32, 32);
+        const skull = new THREE.Mesh(skullGeo, materials.skin);
+        skull.scale.set(1, 1.15, 0.95);
+        headGroup.add(skull);
+
+        const jawGeo = new THREE.BoxGeometry(0.18, 0.12, 0.15);
+        const jaw = new THREE.Mesh(jawGeo, materials.skin);
+        jaw.position.set(0, -0.15, 0.05);
+        headGroup.add(jaw);
+
+        const eyeGeo = new THREE.SphereGeometry(0.035, 16, 16);
+        const leftEye = new THREE.Mesh(eyeGeo, materials.eye);
+        leftEye.position.set(-0.08, 0.02, 0.2);
+        headGroup.add(leftEye);
+        const rightEye = new THREE.Mesh(eyeGeo, materials.eye);
+        rightEye.position.set(0.08, 0.02, 0.2);
+        headGroup.add(rightEye);
+
+        // Cabelo
+        const hairTopGeo = new THREE.SphereGeometry(0.26, 32, 16, 0, Math.PI * 2, 0, Math.PI / 1.8);
+        const hairTop = new THREE.Mesh(hairTopGeo, materials.hair);
+        hairTop.position.set(0, 0.03, -0.02);
+        hairTop.rotation.x = -0.1;
+        hairGroup.add(hairTop);
+
+        const hairBackGeo = new THREE.CylinderGeometry(0.2, 0.15, 0.5, 16);
+        const hairBack = new THREE.Mesh(hairBackGeo, materials.hair);
+        hairBack.position.set(0, -0.25, -0.08);
+        hairGroup.add(hairBack);
+
+        headGroup.add(hairGroup);
+        headGroup.position.y = 1.7;
+        characterGroup.add(headGroup);
+
+        // --- PESCOÇO ---
+        const neckGeo = new THREE.CylinderGeometry(0.07, 0.08, 0.15, 16);
+        const neck = new THREE.Mesh(neckGeo, materials.skin);
+        neck.position.y = 1.48;
+        characterGroup.add(neck);
+
+        // --- TRONCO ---
+        const chestGeo = new THREE.CylinderGeometry(0.28, 0.24, 0.5, 16);
+        const chest = new THREE.Mesh(chestGeo, materials.skin);
+        chest.position.y = 0.35;
+        torsoGroup.add(chest);
+
+        const abdomenGeo = new THREE.CylinderGeometry(0.22, 0.20, 0.35, 16);
+        const abdomen = new THREE.Mesh(abdomenGeo, materials.skin);
+        abdomen.position.y = -0.05;
+        torsoGroup.add(abdomen);
+
+        torsoGroup.position.y = 1.05;
+        characterGroup.add(torsoGroup);
+
+        // --- SEIOS ---
+        const breastGeo = new THREE.SphereGeometry(0.11, 16, 16);
+        const leftBreast = new THREE.Mesh(breastGeo, materials.skin);
+        leftBreast.position.set(-0.12, 0, 0.18);
+        leftBreast.scale.set(1, 0.9, 0.8);
+        breastsGroup.add(leftBreast);
+        const rightBreast = new THREE.Mesh(breastGeo, materials.skin);
+        rightBreast.position.set(0.12, 0, 0.18);
+        rightBreast.scale.set(1, 0.9, 0.8);
+        breastsGroup.add(rightBreast);
+        breastsGroup.position.y = 1.2;
+        characterGroup.add(breastsGroup);
+
+        // Biquíni Superior
+        const topGeo = new THREE.TorusGeometry(0.14, 0.04, 8, 20, Math.PI);
+        const top = new THREE.Mesh(topGeo, materials.cloth);
+        top.position.set(0, 1.2, 0.15);
+        top.rotation.x = Math.PI / 2;
+        top.rotation.z = Math.PI;
+        characterGroup.add(top);
+
+        // --- QUADRIL ---
+        const hipGeo = new THREE.CylinderGeometry(0.22, 0.26, 0.3, 16);
+        const hip = new THREE.Mesh(hipGeo, materials.skin);
+        hip.position.y = 0.65;
+        hipGroup.add(hip);
+
+        const bottomGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.08, 16);
+        const bottom = new THREE.Mesh(bottomGeo, materials.cloth);
+        bottom.position.y = 0.7;
+        hipGroup.add(bottom);
+        characterGroup.add(hipGroup);
+
+        // --- BRAÇOS ---
+        function createArm(side) {
+            const group = new THREE.Group();
+            
+            const upperArmGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.4, 12);
+            const upperArm = new THREE.Mesh(upperArmGeo, materials.muscle);
+            upperArm.position.y = -0.2;
+            group.add(upperArm);
+            
+            const foreArmGeo = new THREE.CylinderGeometry(0.05, 0.04, 0.4, 12);
+            const foreArm = new THREE.Mesh(foreArmGeo, materials.muscleLight);
+            foreArm.position.y = -0.6;
+            group.add(foreArm);
+            
+            const handGeo = new THREE.SphereGeometry(0.05, 12, 12);
+            const hand = new THREE.Mesh(handGeo, materials.skin);
+            hand.position.y = -0.82;
+            hand.scale.set(0.8, 1.2, 0.6);
+            group.add(hand);
+            
+            group.position.set(side * 0.38, 1.35, 0);
+            group.rotation.z = side * 0.15;
+            return group;
+        }
+
+        const leftArm = createArm(-1);
+        const rightArm = createArm(1);
+        characterGroup.add(leftArm);
+        characterGroup.add(rightArm);
+
+        // --- PERNAS ---
+        function createLeg(side) {
+            const group = new THREE.Group();
+            
+            const thighGeo = new THREE.CylinderGeometry(0.09, 0.08, 0.5, 12);
+            const thigh = new THREE.Mesh(thighGeo, materials.muscle);
+            thigh.position.y = -0.25;
+            group.add(thigh);
+            
+            const kneeGeo = new THREE.SphereGeometry(0.07, 12, 12);
+            const knee = new THREE.Mesh(kneeGeo, materials.bone);
+            knee.position.y = -0.5;
+            group.add(knee);
+            
+            const calfGeo = new THREE.CylinderGeometry(0.08, 0.05, 0.45, 12);
+            const calf = new THREE.Mesh(calfGeo, materials.muscle);
+            calf.position.y = -0.75;
+            group.add(calf);
+            
+            const footGeo = new THREE.BoxGeometry(0.08, 0.05, 0.15);
+            const foot = new THREE.Mesh(footGeo, materials.skin);
+            foot.position.set(0, -1.0, 0.05);
+            group.add(foot);
+            
+            group.position.set(side * 0.13, 0.6, 0);
+            return group;
+        }
+
+        const leftLeg = createLeg(-1);
+        const rightLeg = createLeg(1);
+        characterGroup.add(leftLeg);
+        characterGroup.add(rightLeg);
+
+        // --- ÓRGÃOS INTERNOS ---
+        const internalGroup = new THREE.Group();
+        
+        const spineGeo = new THREE.CylinderGeometry(0.02, 0.02, 1.2, 8);
+        const spine = new THREE.Mesh(spineGeo, materials.bone);
+        spine.position.y = 1.0;
+        internalGroup.add(spine);
+
+        for (let i = 0; i < 6; i++) {
+            const ribGeo = new THREE.TorusGeometry(0.15 - i * 0.01, 0.01, 8, 16, Math.PI);
+            const rib = new THREE.Mesh(ribGeo, materials.bone);
+            rib.position.y = 1.3 - i * 0.06;
+            rib.rotation.x = Math.PI / 2;
+            internalGroup.add(rib);
+        }
+
+        const heartGeo = new THREE.SphereGeometry(0.06, 16, 16);
+        const heart = new THREE.Mesh(heartGeo, materials.organ);
+        heart.position.set(-0.05, 1.2, 0.05);
+        heart.scale.set(1, 1.2, 0.8);
+        internalGroup.add(heart);
+
+        const lungGeo = new THREE.SphereGeometry(0.08, 16, 16);
+        const leftLung = new THREE.Mesh(lungGeo, materials.organ);
+        leftLung.position.set(-0.1, 1.25, 0);
+        leftLung.scale.set(0.8, 1.2, 0.6);
+        internalGroup.add(leftLung);
+        const rightLung = new THREE.Mesh(lungGeo, materials.organ);
+        rightLung.position.set(0.1, 1.25, 0);
+        rightLung.scale.set(0.8, 1.2, 0.6);
+        internalGroup.add(rightLung);
+
+        internalGroup.visible = false;
+        characterGroup.add(internalGroup);
+
+        // Salva materiais originais (CORRIGIDO)
+        characterGroup.traverse(child => {
+            if (child.isMesh) {
+                child.userData.originalMaterial = child.material;
+                child.userData.originalScale = child.scale.clone();
+            }
+        });
+
+        // ==========================================
+        // 5. AJUSTES CORPORAIS (SLIDERS)
+        // ==========================================
+        
+        const sliders = {
+            height: document.getElementById('slider-height'),
+            width: document.getElementById('slider-width'),
+            head: document.getElementById('slider-head'),
+            breast: document.getElementById('slider-breast'),
+            hip: document.getElementById('slider-hip'),
+            arm: document.getElementById('slider-arm'),
+            leg: document.getElementById('slider-leg'),
+            hair: document.getElementById('slider-hair')
+        };
+
+        const labels = {
+            height: document.getElementById('val-height'),
+            width: document.getElementById('val-width'),
+            head: document.getElementById('val-head'),
+            breast: document.getElementById('val-breast'),
+            hip: document.getElementById('val-hip'),
+            arm: document.getElementById('val-arm'),
+            leg: document.getElementById('val-leg'),
+            hair: document.getElementById('val-hair')
+        };
+
+        // Altura Total
+        sliders.height.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.height.textContent = v.toFixed(2);
+            characterGroup.scale.y = v;
+        });
+
+        // Largura Geral
+        sliders.width.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.width.textContent = v.toFixed(2);
+            characterGroup.scale.x = v;
+            characterGroup.scale.z = v;
+        });
+
+        // Cabeça
+        sliders.head.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.head.textContent = v.toFixed(2);
+            headGroup.scale.set(v, v, v);
+        });
+
+        // Seios
+        sliders.breast.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.breast.textContent = v.toFixed(2);
+            breastsGroup.scale.set(v, v, v);
+        });
+
+        // Quadril
+        sliders.hip.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.hip.textContent = v.toFixed(2);
+            hipGroup.scale.x = v;
+            hipGroup.scale.z = v;
+        });
+
+        // Braços
+        sliders.arm.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.arm.textContent = v.toFixed(2);
+            leftArm.scale.x = v;
+            leftArm.scale.z = v;
+            rightArm.scale.x = v;
+            rightArm.scale.z = v;
+        });
+
+        // Pernas
+        sliders.leg.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.leg.textContent = v.toFixed(2);
+            leftLeg.scale.x = v;
+            leftLeg.scale.z = v;
+            rightLeg.scale.x = v;
+            rightLeg.scale.z = v;
+        });
+
+        // Cabelo
+        sliders.hair.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.hair.textContent = v.toFixed(2);
+            hairGroup.scale.set(v, v, v);
+        });
+
+        // Reset
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            Object.keys(sliders).forEach(key => {
+                sliders[key].value = 1.00;
+                labels[key].textContent = '1.00';
+            });
+            characterGroup.scale.set(1, 1, 1);
+            headGroup.scale.set(1, 1, 1);
+            breastsGroup.scale.set(1, 1, 1);
+            hipGroup.scale.set(1, 1, 1);
+            leftArm.scale.set(1, 1, 1);
+            rightArm.scale.set(1, 1, 1);
+            leftLeg.scale.set(1, 1, 1);
+            rightLeg.scale.set(1, 1, 1);
+            hairGroup.scale.set(1, 1, 1);
+        });
+
+        // ==========================================
+        // 6. INTERFACE (MENU, MODOS, CHAT)
+        // ==========================================
+        
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidePanel = document.getElementById('side-panel');
+        const closeBtn = document.getElementById('close-btn');
+        const btnVida = document.getElementById('btn-dar-vida');
+        const hint = document.getElementById('hint');
+        
+        let isAlive = false;
+
+        menuToggle.addEventListener('click', () => {
+            sidePanel.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+            hint.style.opacity = '0';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidePanel.classList.remove('open');
+            menuToggle.classList.remove('active');
+        });
+
+        // Dar Vida
+        btnVida.addEventListener('click', () => {
+            isAlive = !isAlive;
+            if(isAlive) {
+                btnVida.classList.add('active');
+                btnVida.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
+                gsap.to(characterGroup.scale, { x: 1.02, y: 1.02, z: 1.02, duration: 0.8, yoyo: true, repeat: -1, ease: "power1.inOut" });
+                gsap.to(characterGroup.position, { y: 0.05, duration: 1.5, yoyo: true, repeat: -1, ease: "power1.inOut" });
+            } else {
+                btnVida.classList.remove('active');
+                btnVida.innerHTML = '<i class="fas fa-heart"></i> Dar Vida';
+                gsap.killTweensOf(characterGroup.scale);
+                gsap.killTweensOf(characterGroup.position);
+                characterGroup.scale.set(
+                    parseFloat(sliders.width.value),
+                    parseFloat(sliders.height.value),
+                    parseFloat(sliders.width.value)
+                );
+                characterGroup.position.y = 0;
+            }
+        });
+
+        // Modos Anatômicos (CORRIGIDO)
+        const modeBtns = document.querySelectorAll('[data-mode]');
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                modeBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const mode = this.getAttribute('data-mode');
+                
+                // Primeiro, restaura TODOS os materiais originais
+                characterGroup.traverse(child => {
+                    if (child.isMesh && child.userData.originalMaterial) {
+                        child.material = child.userData.originalMaterial;
+                        child.visible = true;
+                    }
+                });
+                internalGroup.visible = false;
+
+                // Aplica o modo selecionado
+                if(mode === 'skeleton') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            if (child.material === materials.skin || 
+                                child.material === materials.muscle || 
+                                child.material === materials.muscleLight ||
+                                child.material === materials.cloth ||
+                                child.material === materials.hair ||
+                                child.material === materials.eye) {
+                                child.visible = false;
+                            } else if (child.material === materials.bone) {
+                                child.visible = true;
+                            }
+                        }
+                    });
+                    internalGroup.visible = true;
+                    internalGroup.traverse(child => {
+                        if (child.isMesh) {
+                            child.material = materials.bone;
+                            child.visible = true;
+                        }
+                    });
+                } else if(mode === 'muscular') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            if (child.material === materials.skin) {
+                                child.material = materials.muscle;
+                            } else if (child.material === materials.cloth || child.material === materials.hair) {
+                                child.visible = false;
+                            }
+                        }
+                    });
+                } else if(mode === 'organs') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh && child.material === materials.skin) {
+                            child.material = new THREE.MeshStandardMaterial({ 
+                                color: colors.skin, 
+                                transparent: true, 
+                                opacity: 0.15,
+                                roughness: 0.5
+                            });
+                        }
+                    });
+                    internalGroup.visible = true;
+                } else if(mode === 'robot') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            if (child.material === materials.skin || 
+                                child.material === materials.muscle || 
+                                child.material === materials.muscleLight) {
+                                child.material = materials.robot;
+                            } else if (child.material === materials.cloth) {
+                                child.material = materials.robotDark;
+                            }
+                        }
+                    });
+                } else if(mode === 'xray') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0x00d4ff,
+                                transparent: true,
+                                opacity: 0.2,
+                                wireframe: true,
+                                emissive: 0x004466
+                            });
+                        }
+                    });
+                    internalGroup.visible = true;
+                    internalGroup.traverse(child => {
+                        if (child.isMesh) {
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0xffffff,
+                                transparent: true,
+                                opacity: 0.5,
+                                wireframe: true
+                            });
+                            child.visible = true;
+                        }
+                    });
+                }
+            });
+        });
+
+        // Chat
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if(!text) return;
+            chatInput.value = '';
+            chatInput.placeholder = "Livia está pensando...";
+            
+            setTimeout(() => {
+                const responses = [
+                    `Entendi! Você disse: "${text}"`,
+                    `Interessante! Vamos explorar isso.`,
+                    `Estou processando sua mensagem...`,
+                    `Legal! Me conta mais sobre isso.`
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                chatInput.placeholder = `Livia: ${randomResponse}`;
+            }, 1200);
+        }
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') sendMessage();
+        });
+
+        // ==========================================
+        // 7. ANIMAÇÃO
+        // ==========================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if(!isAlive) {
+                characterGroup.rotation.y += 0.006;
+            } else {
+                characterGroup.rotation.y = Math.sin(Date.now() * 0.0008) * 0.5;
+            }
+
+            gridHelper.rotation.y += 0.0005;
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        setTimeout(() => {
+            if(hint) hint.style.opacity = '0.3';
+        }, 5000);
+
+        animate();
+
+    </script>
+</body>
+</html>
