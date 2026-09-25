@@ -2,11 +2,14 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livia IA - Assistente 3D Imersiva</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Livia IA - Assistente 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP (F            color:altava no código anterior) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <style>
         :root {
@@ -27,76 +30,61 @@
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: #0d1117; /* Fundo escuro para destacar o modelo */
             color: var(--text-main);
             overflow: hidden;
             height: 100vh;
             width: 100vw;
+            position: fixed; /* Evita scroll no mobile */
         }
 
-        /* Fundo com efeito de grade */
-        .bg-grid {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 123, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 123, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* Visualização 3D em Tela Cheia */
+        /* Canvas 3D */
         #canvas-container {
             position: absolute;
             top: 0; left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2;
+            z-index: 1;
         }
 
-        /* Botão Flutuante do Menu */
+        /* Botão Flutuante do Menu (Estilo Hambúrguer) */
         .menu-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
             z-index: 100;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .menu-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+            transition: all 0.3s ease;
         }
 
         .menu-toggle.active {
-            background: linear-gradient(135deg, var(--danger), #ff6b81);
-            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+            background: rgba(255, 71, 87, 0.8);
         }
 
-        /* Painel do Menu Deslizante */
+        /* Painel Deslizante (Menu) */
         .side-panel {
             position: fixed;
             top: 0;
-            right: -400px; /* Escondido inicialmente */
-            width: 380px;
+            right: -100%; /* Escondido */
+            width: 100%;
+            max-width: 380px;
             height: 100%;
-            background: var(--panel-bg);
+            background: rgba(13, 20, 33, 0.95);
             backdrop-filter: blur(20px);
             border-left: 1px solid var(--panel-border);
             z-index: 90;
@@ -106,7 +94,6 @@
             padding: 20px;
             gap: 15px;
             overflow-y: auto;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
         }
 
         .side-panel.open {
@@ -125,13 +112,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .panel-header h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .panel-header h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
 
         .close-btn {
             background: rgba(255,255,255,0.1);
@@ -144,30 +125,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 0.2s;
         }
 
-        .close-btn:hover { background: var(--danger); }
-
-        /* Perfil */
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: url('https://i.pravatar.cc/150?img=32') center/cover;
-            border: 2px solid var(--accent-cyan);
-        }
-
-        .user-info h3 { font-size: 0.95rem; margin-bottom: 2px; }
-        .user-info p { font-size: 0.7rem; color: var(--accent-green); display: flex; align-items: center; gap: 5px; }
-
-        /* Cartões de Informação */
+        /* Cartões */
         .info-card {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 12px;
@@ -176,7 +136,7 @@
         }
 
         .info-card h4 {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -192,7 +152,7 @@
 
         .info-row span:last-child { color: var(--accent-cyan); font-weight: 600; }
 
-        /* Botões de Ação */
+        /* Botões */
         .action-btn {
             width: 100%;
             padding: 12px;
@@ -201,20 +161,14 @@
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
             color: white;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-            margin-bottom: 10px;
-        }
-
-        .action-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
         }
 
         .action-btn.active {
@@ -233,7 +187,7 @@
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             color: var(--text-muted);
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
             font-size: 0.7rem;
             cursor: pointer;
@@ -241,13 +195,6 @@
             flex-direction: column;
             align-items: center;
             gap: 5px;
-            transition: all 0.2s;
-        }
-
-        .grid-btn:hover {
-            background: rgba(0, 123, 255, 0.2);
-            color: white;
-            border-color: var(--accent-cyan);
         }
 
         .grid-btn.active {
@@ -255,8 +202,6 @@
             color: var(--accent-cyan);
             border-color: var(--accent-cyan);
         }
-
-        .grid-btn i { font-size: 1rem; }
 
         /* Chat */
         .chat-input-container {
@@ -276,8 +221,6 @@
             outline: none;
         }
 
-        .chat-input:focus { border-color: var(--accent-cyan); }
-
         .chat-send {
             position: absolute;
             right: 10px;
@@ -285,306 +228,258 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--accent-cyan);
+ var(--accent-cyan);
             cursor: pointer;
             font-size: 1rem;
             margin-top: 5px;
         }
 
-        /* Aviso de tela cheia */
-        .fullscreen-hint {
+        /* Aviso Flutuante */
+        .hint {
             position: absolute;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.5);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.7rem;
-            color: var(--text-muted);
+            color: rgba(255,255,255,0.7);
             z-index: 10;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
-
-    <!-- Canvas 3D em Tela Cheia -->
+    <!-- Canvas 3D -->
     <div id="canvas-container"></div>
 
-    <!-- Aviso Flutuante -->
-    <div class="fullscreen-hint">
-        <i class="fas fa-arrows-alt-h"></i> Arraste para girar o modelo
+    <!-- Aviso -->
+    <div class="hint" id="hint">
+        <i class="fas fa-hand-pointer"></i> Toque nas partes para trocar
     </div>
 
-    <!-- Botão Flutuante do Menu -->
+    <!-- Botão Hambúrguer -->
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Painel Deslizante (Menu) -->
+    <!-- Painel do Menu -->
     <div class="side-panel" id="side-panel">
-        
         <div class="panel-header">
-            <h2><i class="fas fa-robot" style="color: var(--accent-cyan);"></i> Painel de Controle</h2>
+            <h2><i class="fas fa-robot" style="color: var(--accent-cyan);"></i> Livia IA</h2>
             <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
         </div>
 
-        <div class="user-profile">
-            <div class="avatar"></div>
-            <div class="user-info">
-                <h3>Livia IA</h3>
-                <p><i class="fas fa-circle" style="font-size: 8px;"></i> Online</p>
-            </div>
+        <div class="info-card">
+            <h4>Status Vital</h4>
+            <div class="info-row"><span>🦴 Ossos</span><span>200</span></div>
+            <div class="info-row"><span>❤️ Vida</span><span>14</span></div>
+            <div class="info-row"><span>Energia</span><span>100%</span></div>
         </div>
 
-        <div class="info-card">
-            <h4>Livia Andrade</h4>
-            <div class="info-row"><span>Idade</span><span>28 anos</span></div>
-            <div class="info-row"><span>Altura</span><span>1.68 m</span></div>
-            <div class="info-row"><span>Peso</span><span>58.7 kg</span></div>
-            <div class="info-row"><span>Medidas</span><span>88 - 62 - 92 cm</span></div>
-        </div <>
-
         <button class="action-btn" id="btn-dar-vida">
-            <i class="fas fa-power-off"></i> Dar Vida
+            <i class="fas fa-heart"></i> Vida
         </button>
 
         <div class="info-card">
-            <h4>Estado Atual</h4>
-            <div class="info-row"><span>Saúde</span><span style="color: var(--accent-green);">Saudável</span></div>
-            <div class="info-row"><span>Humor</span><span>Feliz</span></div>
-            <div class="info-row"><span>Energia</span><span>100%</span></div>
-            <div class="info-row"><span>Autonomia</span><span>Ativa</span></div>
-        </div>
-
-       div class="info-card">
-            <h4>Modo Científico / Anatômico</h4>
+            <h4>Modos de Visualização</h4>
             <div class="btn-grid">
                 <div class="grid-btn active" data-mode="normal"><i class="fas fa-user"></i> Normal</div>
                 <div class="grid-btn" data-mode="skeleton"><i class="fas fa-bone"></i> Esqueleto</div>
-                <div class="grid-btn" data-mode="organs"><i class="fas fa-lungs"></i> Órgãos</div>
-                <div class="grid-btn" data-mode="robot"><i class="fas fa-robot"></i> Robô + IA</div>
+                <div class="grid-btn" data-mode="robot"><i class="fas fa-robot"></i> Robô</div>
             </div>
         </div>
 
         <div class="info-card">
-            <h4>Poses e Movimentos</h4>
+            <h4>Ações</h4>
             <div class="btn-grid">
                 <div class="grid-btn"><i class="fas fa-walking"></i> Andar</div>
                 <div class="grid-btn"><i class="fas fa-running"></i> Correr</div>
-                <div class="grid-btn"><i class="fas fa-chair"></i> Sentar</div>
-                <div class="grid-btn"><i class="fas fa-hand-peace"></i> Acenar</div>
-                <div class="grid-btn"><i class="fas fa-music"></i> Dançar</div>
-                <div class="grid-btn"><i class="fas fa-heart"></i> Pose Sexy</div>
+                <div class="grid-btn"><i class="fas fa-tshirt"></i> Guarda-Roupa</div>
+                <div class="grid-btn"><i class="fas fa-camera"></i> Foto</div>
             </div>
         </div>
 
         <div class="chat-input-container">
-            <input type="text" class="chat-input" placeholder="Digite sua mensagem..." id="chat-input">
+            <input type="text" class="chat-input" placeholder="Fale com a Livia..." id="chat-input">
             <button class="chat-send" id="chat-send"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // 1. CONFIGURAÇÃO DO AMBIENTE 3D (THREE.JS)
+        // 1. AMBIENTE 3D (THREE.JS)
         // ==========================================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         
-        // Câmera
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.2, 4.5); // Afastado para ver o corpo inteiro
+        // Câmera ajustada para mobile (mais afastada para caber o corpo inteiro)
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.0, 5.5); // Ajustado para ver o corpo todo no celular
         camera.lookAt(0, 1, 0);
 
-        // Renderizador
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.shadowMap.enabled = true;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limita o pixel ratio para performance mobile
         container.appendChild(renderer.domElement);
 
-        // Iluminação
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        // Iluminação Forte para o modelo aparecer bem
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Mais luz ambiente
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0x00d4ff, 1.5);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
         dirLight.position.set(2, 5, 3);
-        dirLight.castShadow = true;
         scene.add(dirLight);
 
-        const fillLight = new THREE.PointLight(0x007bff, 1);
-        fillLight.position.set(-2, 2, 2);
+        const fillLight = new THREE.PointLight(0x00d4ff, 2.0);
+        fillLight.position.set(-3, 2, 3);
         scene.add(fillLight);
 
-        const rimLight = new THREE.PointLight(0x00ff88, 0.5);
-        rimLight.position.set(0, 2, -3);
-        scene.add(rimLight);
-
-        // Chão (Grid)
-        const gridHelper = new THREE.GridHelper(10, 20, 0x00d4ff, 0x1a2b4c);
-        gridHelper.position.y = -1.8;
-        scene.add(gridHelper);
-
         // ==========================================
-        // 2. MODELO 3D PROCEDURAL (SIMULANDO A SILHUETA)
+        // 2. MODELO 3D (CORPO SÓLIDO E VISÍVEL)
         // ==========================================
-        // NOTA: Como não temos o .glb da imagem, criei um modelo humanoide
-        // usando geometrias para representar a personagem de frente e costas.
-        
         const characterGroup = new THREE.Group();
         
-        // Material base (Translúcido/Ciano)
-        const baseMat = new THREE.MeshStandardMaterial({ 
-            color: 0x00d4ff, 
-            transparent: true, 
-            opacity: 0.15,
-            wireframe: true 
-        });
+        // Cores dos Materiais
+        const skinColor = 0xffd1b3; // Cor de pele clara
+        const hairColor = 0x4a2c17; // Castanho
+        const eyeColor = 0x2b1a0f;  // Castanho escuro
+        const clothColor = 0x000000; // Preto (Biquíni)
 
-        const solidMat = new THREE.MeshStandardMaterial({ 
-            color: 0x00d4ff, 
-            transparent: true, 
-            opacity: 0.4,
-            roughness: 0.2,
-            metalness: 0.8
-        });
+        // Material da Pele
+        const skinMat = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.4, metalness: 0.1 });
+        // Material do Cabelo
+        const hairMat = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.8 });
+        // Material dos Olhos
+        const eyeMat = new THREE.MeshStandardMaterial({ color: eyeColor, roughness: 0.1 });
+        // Material da Roupa
+        const clothMat = new THREE.MeshStandardMaterial({ color: clothColor, roughness: 0.6 });
 
-        // Cabeça (Esfera)
+        // --- CABEÇA ---
         const headGeo = new THREE.SphereGeometry(0.22, 32, 32);
-        const head = new THREE.Mesh(headGeo, solidMat);
-        head.position.y = 1.6;
+        const head = new THREE.Mesh(headGeo, skinMat);
+        head.position.y = 1.65;
         characterGroup.add(head);
 
-        // Pescoço (Cilindro fino)
-        const neckGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.15, 16);
-        const neck = new THREE.Mesh(neckGeo, baseMat);
-        neck.position.y = 1.38;
-        characterGroup.add(neck);
-
-        // Tronco (Cilindro maior)
-        const torsoGeo = new THREE.CylinderGeometry(0.25, 0.2, 0.9, 16);
-        const torso = new THREE.Mesh(torsoGeo, solidMat);
-        torso.position.y = 0.95;
-        characterGroup.add(torso);
-
-        // Quadril (Cilindro)
-        const hipGeo = new THREE.CylinderGeometry(0.22, 0.25, 0.3, 16);
-        const hip = new THREE.Mesh(hipGeo, baseMat);
-        hip.position.y = 0.45;
-        characterGroup.add(hip);
-
-        // Braços (Cilindros finos)
-        const armGeo = new THREE.CylinderGeometry(0.05, 0.04, 0.8, 8);
-        const leftArm = new THREE.Mesh(armGeo, baseMat);
-        leftArm.position.set(-0.35, 1.0, 0);
-        leftArm.rotation.z = 0.2;
-        characterGroup.add(leftArm);
-
-        const rightArm = new THREE.Mesh(armGeo, baseMat);
-        rightArm.position.set(0.35, 1.0, 0);
-        rightArm.rotation.z = -0.2;
-        characterGroup.add(rightArm);
-
-        // Pernas (Cilindros)
-        const legGeo = new THREE.CylinderGeometry(0.08, 0.06, 0.9, 8);
-        
-        const leftLeg = new THREE.Mesh(legGeo, baseMat);
-        leftLeg.position.set(-0.12, -0.1, 0);
-        characterGroup.add(leftLeg);
-
-        const rightLeg = new THREE.Mesh(legGeo, baseMat);
-        rightLeg.position.set(0.12, -0.1, 0);
-        characterGroup.add(rightLeg);
-
-        // Cabelo (Meia Esfera)
-        const hairGeo = new THREE.SphereGeometry(0.24, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-        const hairMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.2, wireframe: true });
+        // Cabelo (Meia esfera em cima da cabeça)
+        const hairGeo = new THREE.SphereGeometry(0.24, 32, 16, 0, Math.PI * 2, 0, Math.PI / 1.8);
         const hair = new THREE.Mesh(hairGeo, hairMat);
-        hair.position.y = 1.65;
-        hair.rotation.x = -0.2;
+        hair.position.y = 1.68;
+        hair.rotation.x = -0.1;
         characterGroup.add(hair);
 
-        // Núcleo de Energia (Coração)
-        const coreGeo = new THREE.SphereGeometry(0.06, 16, 16);
-        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const core = new THREE.Mesh(coreGeo, coreMat);
-        core.position.set(0, 1.0, 0.2);
-        characterGroup.add(core);
+        // Olhos (Esferas pequenas)
+        const eyeGeo = new THREE.SphereGeometry(0.03, 16, 16);
+        const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+        leftEye.position.set(-0.07, 1.68, 0.2);
+        characterGroup.add(leftEye);
+        
+        const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+        rightEye.position.set(0.07, 1.68, 0.2);
+        characterGroup.add(rightEye);
 
+        // --- PESCOÇO ---
+        const neckGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.15, 16);
+        const neck = new THREE.Mesh(neckGeo, skinMat);
+        neck.position.y = 1.42;
+        characterGroup.add(neck);
+
+        // --- TRONCO ---
+        const torsoGeo = new THREE.CylinderGeometry(0.25, 0.22, 0.9, 16);
+        const torso = new THREE.Mesh(torsoGeo, skinMat);
+        torso.position.y = 1.0;
+        characterGroup.add(torso);
+
+        // Biquíni (Parte de cima)
+        const topGeo = new THREE.CylinderGeometry(0.26, 0.25, 0.15, 16);
+        const top = new THREE.Mesh(topGeo, clothMat);
+        top.position.y = 1.15;
+        characterGroup.add(top);
+
+        // --- QUADRIL ---
+        const hipGeo = new THREE.CylinderGeometry(0.22, 0.25, 0.3, 16);
+        const hip = new THREE.Mesh(hipGeo, skinMat);
+        hip.position.y = 0.5;
+        characterGroup.add(hip);
+
+        // Biquíni (Parte de baixo)
+        const bottomGeo = new THREE.CylinderGeometry(0.23, 0.23, 0.1, 16);
+        const bottom = new THREE.Mesh(bottomGeo, clothMat);
+        bottom.position.y = 0.55;
+        characterGroup.add(bottom);
+
+        // --- BRAÇOS ---
+        const armGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.8, 16);
+        
+        const leftArm = new THREE.Mesh(armGeo, skinMat);
+        leftArm.position.set(-0.38, 1.1, 0);
+        leftArm.rotation.z = 0.15;
+        characterGroup.add(leftArm);
+
+        const rightArm = new THREE.Mesh(armGeo, skinMat);
+        rightArm.position.set(0.38, 1.1, 0);
+        rightArm.rotation.z = -0.15;
+        characterGroup.add(rightArm);
+
+        // --- PERNAS ---
+        const legGeo = new THREE.CylinderGeometry(0.09, 0.07, 1.0, 16);
+        
+        const leftLeg = new THREE.Mesh(legGeo, skinMat);
+        leftLeg.position.set(-0.13, -0.1, 0);
+        characterGroup.add(leftLeg);
+
+        const rightLeg = new THREE.Mesh(legGeo, skinMat);
+        rightLeg.position.set(0.13, -0.1, 0);
+        characterGroup.add(rightLeg);
+
+        // Adiciona o grupo à cena
         scene.add(characterGroup);
 
         // ==========================================
-        // 3. LÓGICA DE INTERFACE (MENU FLUTUANTE)
+        // 3. LÓGICA DE INTERFACE
         // ==========================================
         
         const menuToggle = document.getElementById('menu-toggle');
         const sidePanel = document.getElementById('side-panel');
         const closeBtn = document.getElementById('close-btn');
         const btnVida = document.getElementById('btn-dar-vida');
+        const hint = document.getElementById('hint');
         
         let isAlive = false;
         let isRotating = true;
 
-        // Abrir Menu
+        // Abrir/Fechar Menu
         menuToggle.addEventListener('click', () => {
-            sidePanel.classList.add('open');
-            menuToggle.classList.add('active');
-            menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+            sidePanel.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+            hint.style.opacity = '0'; // Esconde a dica ao abrir o menu
         });
 
-        // Fechar Menu (Botão de Fechar Tela / Fechar Painel)
-        function closeMenu() {
+        closeBtn.addEventListener('click', () => {
             sidePanel.classList.remove('open');
             menuToggle.classList.remove('active');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-        }
-
-        closeBtn.addEventListener('click', closeMenu);
-        
-        // Fechar ao clicar fora do menu (opcional, mas melhora a UX)
-        document.addEventListener('click', (e) => {
-            if (sidePanel.classList.contains('open') && 
-                !sidePanel.contains(e.target) && 
-                !menuToggle.contains(e.target)) {
-                closeMenu();
-            }
         });
 
-        // Botão "Dar Vida"
+        // Botão "Vida"
         btnVida.addEventListener('click', () => {
             isAlive = !isAlive;
             if(isAlive) {
                 btnVida.classList.add('active');
                 btnVida.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
-                // Animação de pulsação
                 gsap.to(characterGroup.scale, { x: 1.05, y: 1.05, z: 1.05, duration: 0.5, yoyo: true, repeat: -1 });
-                coreMat.color.setHex(0x00ff88);
             } else {
                 btnVida.classList.remove('active');
-                btnVida.innerHTML = '<i class="fas fa-power-off"></i> Dar Vida';
+                btnVida.innerHTML = '<i class="fas fa-heart"></i> Vida';
                 gsap.killTweensOf(characterGroup.scale);
                 characterGroup.scale.set(1, 1, 1);
-                coreMat.color.setHex(0xffffff);
             }
         });
 
-        // Alternar Modos Anatômicos
+        // Modos de Visualização
         const modeBtns = document.querySelectorAll('[data-mode]');
         modeBtns.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -593,45 +488,37 @@
                 
                 const mode = this.getAttribute('data-mode');
                 
-                // Muda a cor e estilo do modelo
                 if(mode === 'skeleton') {
-                    solidMat.color.setHex(0xffffff);
-                    solidMat.wireframe = true;
-                    baseMat.color.setHex(0xffffff);
-                } else if(mode === 'organs') {
-                    solidMat.color.setHex(0xff4757);
-                    solidMat.wireframe = false;
-                    baseMat.color.setHex(0xff4757);
+                    skinMat.color.setHex(0xffffff);
+                    skinMat.wireframe = true;
+                    clothMat.color.setHex(0xffffff);
+                    clothMat.wireframe = true;
                 } else if(mode === 'robot') {
-                    solidMat.color.setHex(0x00ff88);
-                    solidMat.wireframe = false;
-                    baseMat.color.setHex(0x00ff88);
+                    skinMat.color.setHex(0x00ff88);
+                    skinMat.wireframe = false;
+                    clothMat.color.setHex(0x007bff);
+                    clothMat.wireframe = false;
                 } else {
-                    solidMat.color.setHex(0x00d4ff);
-                    solidMat.wireframe = false;
-                    baseMat.color.setHex(0x00d4ff);
+                    skinMat.color.setHex(skinColor);
+                    skinMat.wireframe = false;
+                    clothMat.color.setHex(clothColor);
+                    clothMat.wireframe = false;
                 }
             });
         });
 
-        // Chat Simulado
+        // Chat
         const chatInput = document.getElementById('chat-input');
         const chatSend = document.getElementById('chat-send');
         
         function sendMessage() {
             const text = chatInput.value.trim();
             if(!text) return;
-            
             chatInput.value = '';
             chatInput.placeholder = "Livia está pensando...";
             
             setTimeout(() => {
                 chatInput.placeholder = `Livia: "Entendi! Você disse: ${text}"`;
-                coreMat.color.setHex(0x00ff88);
-                setTimeout(() => {
-                    if(!isAlive) coreMat.color.setHex(0xffffff);
-                    else coreMat.color.setHex(0x00ff88);
-                }, 500);
             }, 1000);
         }
 
@@ -641,31 +528,23 @@
         });
 
         // ==========================================
-        // 4. CONTROLE DE ROTAÇÃO E ANIMAÇÃO
+        // 4. ANIMAÇÃO
         // ==========================================
-        
-        // Rotação automática suave (Frente e Costas)
         function animate() {
             requestAnimationFrame(animate);
 
+            // Rotação suave (Frente e Costas)
             if(!isAlive) {
-                // Se não estiver "vivo", gira lentamente para mostrar frente e costas
-                characterGroup.rotation.y += 0.005;
+                characterGroup.rotation.y += 0.008; // Gira devagar
             } else {
-                // Se estiver "vivo", balança levemente (respiração)
-                characterGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.3;
-                // Efeito de flutuação
-                characterGroup.position.y = Math.sin(Date.now() * 0.002) * 0.05;
+                // Balança levemente
+                characterGroup.rotation.y = Math.sin(Date.now() * 0.001) * 0.4;
             }
-
-            // Rotação do núcleo de energia
-            core.rotation.x += 0.02;
-            core.rotation.y += 0.03;
 
             renderer.render(scene, camera);
         }
 
-        // Redimensionamento da tela
+        // Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
