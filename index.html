@@ -3,258 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Corpo Feminino 3D — Pele + Órgãos + 206 Ossos • Praia Tropical</title>
+<title>Corpo Feminino 3D — Realista • Foto IA • 10 Corpos + 10 Pernas</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:'Segoe UI',Arial,sans-serif;color:#fff}
 #viewport{position:absolute;inset:0;touch-action:none}
-#bone-counter{position:fixed;top:18px;left:18px;z-index:100;background:rgba(8,20,32,.88);
-  border:1px solid #e8ddc5;border-radius:30px;padding:8px 16px;font-size:.82em;font-weight:700;
-  color:#e8ddc5;box-shadow:0 6px 22px rgba(232,221,197,.4);letter-spacing:.5px;backdrop-filter:blur(10px)}
-#bone-counter span{color:#00ffff;font-size:1.15em}
-#ai-badge{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:99;
-  background:linear-gradient(135deg,rgba(176,38,255,.85),rgba(85,0,170,.85));
-  border:1px solid #b026ff;border-radius:30px;padding:6px 14px;font-size:.7em;font-weight:700;
-  color:#fff;letter-spacing:1px;backdrop-filter:blur(10px);opacity:0;transition:opacity .3s}
-#ai-badge.show{opacity:1}
-#mode-badge{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:99;
+#top-badge{position:fixed;top:14px;left:14px;z-index:100;background:rgba(8,20,32,.9);
+  border:1px solid #e8ddc5;border-radius:30px;padding:7px 14px;font-size:.72em;font-weight:700;
+  color:#e8ddc5;letter-spacing:.5px;backdrop-filter:blur(10px)}
+#top-badge span{color:#00ffff}
+#hint-badge{position:fixed;top:52px;left:14px;z-index:99;
+  background:linear-gradient(135deg,rgba(0,255,255,.9),rgba(0,150,255,.9));
+  border-radius:30px;padding:5px 12px;font-size:.62em;font-weight:700;color:#000;letter-spacing:.5px;
+  backdrop-filter:blur(10px);animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.85}50%{opacity:1}}
+#mode-badge{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:99;
   background:linear-gradient(135deg,rgba(255,150,100,.9),rgba(200,80,50,.9));
-  border:1px solid #ffb088;border-radius:30px;padding:6px 16px;font-size:.72em;font-weight:700;
+  border:1px solid #ffb088;border-radius:30px;padding:6px 14px;font-size:.7em;font-weight:700;
   color:#fff;letter-spacing:1px;backdrop-filter:blur(10px);opacity:0;transition:opacity .3s}
 #mode-badge.show{opacity:1}
-#menu-btn{position:fixed;top:18px;right:18px;width:50px;height:50px;border:none;border-radius:50%;
-  background:linear-gradient(135deg,#e8ddc5,#8ea8b8);color:#1a1a1a;font-size:1.4em;cursor:pointer;z-index:100;
-  box-shadow:0 6px 22px rgba(232,221,197,.5);transition:all .25s ease;display:flex;align-items:center;justify-content:center}
+#menu-btn{position:fixed;top:14px;right:14px;width:46px;height:46px;border:none;border-radius:50%;
+  background:linear-gradient(135deg,#e8ddc5,#8ea8b8);color:#1a1a1a;font-size:1.3em;cursor:pointer;z-index:100;
+  box-shadow:0 6px 22px rgba(232,221,197,.5);display:flex;align-items:center;justify-content:center}
 #menu-btn:active{transform:scale(.92)}
-#panel{position:fixed;top:0;right:0;width:375px;max-width:94vw;height:100%;
+#panel{position:fixed;top:0;right:0;width:360px;max-width:94vw;height:100%;
   background:linear-gradient(180deg,rgba(10,25,38,.98),rgba(6,16,25,.98));
   border-left:2px solid #e8ddc5;z-index:200;display:flex;flex-direction:column;
   transform:translateX(100%);transition:transform .32s cubic-bezier(.1,.9,.2,1);backdrop-filter:blur(18px);
   box-shadow:-12px 0 40px rgba(0,0,0,.6)}
 #panel.open{transform:translateX(0)}
-.panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
   background:rgba(232,221,197,.1);border-bottom:1px solid rgba(232,221,197,.25)}
-.panel-title{font-size:.95em;font-weight:700;letter-spacing:1px;color:#e8ddc5;text-transform:uppercase;
-  display:flex;align-items:center;gap:8px}
-.close-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
-  color:#fff;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-.close-btn:hover{background:#e8ddc5;border-color:#e8ddc5;color:#000}
+.panel-title{font-size:.9em;font-weight:700;letter-spacing:1px;color:#e8ddc5;text-transform:uppercase}
+.close-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1em;cursor:pointer}
 .tabs{display:flex;background:#05121c;border-bottom:1px solid #1a3344;flex-shrink:0;overflow-x:auto}
-.tab{flex:1;min-width:65px;padding:11px 6px;background:none;border:none;color:#8fa7bf;font-weight:700;
-  font-size:.68em;text-transform:uppercase;cursor:pointer;letter-spacing:.4px;transition:.2s;white-space:nowrap}
+.tab{flex:1;min-width:60px;padding:10px 6px;background:none;border:none;color:#8fa7bf;font-weight:700;
+  font-size:.66em;text-transform:uppercase;cursor:pointer;letter-spacing:.4px;white-space:nowrap}
 .tab.active{color:#e8ddc5;border-bottom:2px solid #e8ddc5;background:rgba(232,221,197,.14)}
-.tab-body{flex:1;overflow-y:auto;padding:16px;display:none}
+.tab-body{flex:1;overflow-y:auto;padding:14px;display:none}
 .tab-body.active{display:block}
-.section-title{font-size:.76em;color:#e8ddc5;text-transform:uppercase;letter-spacing:1.5px;
-  margin:12px 0 8px;border-bottom:1px solid rgba(232,221,197,.3);padding-bottom:4px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;max-height:260px;overflow-y:auto}
-.card{background:#0d2030;border:1px solid #1c3d54;border-radius:6px;padding:8px 4px;text-align:center;
-  cursor:pointer;font-size:.68em;color:#b0cce3;transition:.2s}
-.card:hover,.card.sel{border-color:#e8ddc5;color:#fff;background:rgba(232,221,197,.22);box-shadow:0 0 10px rgba(232,221,197,.5)}
-.card .ic{font-size:1.3em;display:block;margin-bottom:2px}
-.row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.78em}
-.row label{flex:0 0 110px;color:#e8ddc5}
+.section-title{font-size:.74em;color:#e8ddc5;text-transform:uppercase;letter-spacing:1.2px;
+  margin:10px 0 8px;border-bottom:1px solid rgba(232,221,197,.3);padding-bottom:4px;font-weight:700}
+.preset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:12px}
+.preset{background:#0d2030;border:1px solid #1c3d54;border-radius:6px;padding:8px 6px;text-align:center;
+  cursor:pointer;font-size:.7em;color:#b0cce3;transition:.2s}
+.preset:hover,.preset.sel{border-color:#e8ddc5;color:#fff;background:rgba(232,221,197,.22);box-shadow:0 0 10px rgba(232,221,197,.5)}
+.preset .ic{font-size:1.4em;display:block;margin-bottom:2px}
+.row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.75em}
+.row label{flex:0 0 95px;color:#e8ddc5}
 .row input[type=range]{flex:1;accent-color:#e8ddc5}
-.row .val{flex:0 0 55px;text-align:right;color:#00ffff;font-weight:700}
-.color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.color-row input[type=color]{width:44px;height:38px;border:2px solid #1c3d54;border-radius:8px;cursor:pointer;background:none}
-.action{display:block;width:100%;padding:11px;margin-bottom:8px;background:linear-gradient(135deg,#e8ddc5,#a89070);
-  border:none;border-radius:8px;color:#000;font-weight:700;font-size:.78em;cursor:pointer;text-transform:uppercase;
-  letter-spacing:1px;transition:.2s;text-align:center}
+.row .val{flex:0 0 48px;text-align:right;color:#00ffff;font-weight:700;font-size:.9em}
+.action{display:block;width:100%;padding:10px;margin-bottom:6px;background:linear-gradient(135deg,#e8ddc5,#a89070);
+  border:none;border-radius:8px;color:#000;font-weight:700;font-size:.74em;cursor:pointer;text-transform:uppercase;
+  letter-spacing:.8px;text-align:center;transition:.2s}
 .action:active{transform:scale(.97)}
 .action.blue{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000}
 .action.green{background:linear-gradient(135deg,#44ff88,#00aa44);color:#000}
 .action.pink{background:linear-gradient(135deg,#ff44aa,#ff1493);color:#fff}
 .action.purple{background:linear-gradient(135deg,#b026ff,#5500aa);color:#fff}
 .action.orange{background:linear-gradient(135deg,#ff9944,#cc5500);color:#fff}
-.action.red{background:linear-gradient(135deg,#ff5566,#cc0022);color:#fff}
-#upload-area{border:2px dashed #e8ddc5;border-radius:10px;padding:16px;text-align:center;
-  cursor:pointer;margin-bottom:10px;font-size:.8em;background:rgba(232,221,197,.06);transition:.2s}
-#upload-area:hover{background:rgba(232,221,197,.15);border-color:#00ffff}
-#upload-status{font-size:.75em;color:#00ffff;margin-top:8px;min-height:18px;text-align:center;line-height:1.4}
-#photo-preview{max-width:100%;max-height:160px;border-radius:8px;margin:8px auto;display:none;border:1px solid #e8ddc5}
-#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-30px);
-  background:rgba(10,25,38,.92);border:1px solid #e8ddc5;color:#fff;padding:8px 18px;border-radius:30px;
-  font-size:.75em;pointer-events:none;opacity:0;transition:all .3s ease;z-index:90;box-shadow:0 4px 18px rgba(232,221,197,.35)}
+#upload-area{border:2px dashed #00ffff;border-radius:10px;padding:14px;text-align:center;
+  cursor:pointer;margin-bottom:10px;font-size:.8em;background:rgba(0,255,255,.06);transition:.2s}
+#upload-area:hover{background:rgba(0,255,255,.15)}
+#upload-status{font-size:.72em;color:#00ffff;margin-top:6px;min-height:16px;text-align:center}
+#photo-preview{max-width:100%;max-height:140px;border-radius:8px;margin:8px auto;display:none;border:1px solid #00ffff}
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-30px);
+  background:rgba(10,25,38,.95);border:1px solid #00ffff;color:#fff;padding:8px 18px;border-radius:30px;
+  font-size:.74em;pointer-events:none;opacity:0;transition:all .3s ease;z-index:90;box-shadow:0 4px 20px rgba(0,255,255,.4)}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-#bottom-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;
-  z-index:100;background:rgba(8,20,32,.85);padding:7px 12px;border-radius:40px;border:1px solid rgba(232,221,197,.35);
-  box-shadow:0 8px 30px rgba(0,0,0,.5);backdrop-filter:blur(14px);flex-wrap:wrap;justify-content:center;max-width:96vw}
-.clean-btn{padding:10px 14px;border:none;border-radius:30px;font-weight:700;font-size:.72em;cursor:pointer;
-  display:inline-flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.5px;transition:.2s;color:#fff}
+#bottom-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;
+  z-index:100;background:rgba(8,20,32,.88);padding:6px 10px;border-radius:40px;border:1px solid rgba(232,221,197,.35);
+  backdrop-filter:blur(14px);flex-wrap:wrap;justify-content:center;max-width:96vw}
+.clean-btn{padding:9px 12px;border:none;border-radius:30px;font-weight:700;font-size:.7em;cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;text-transform:uppercase;letter-spacing:.4px;color:#fff;transition:.2s}
 .clean-btn:active{transform:scale(.94)}
-#btn-main-photo{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000}
 #btn-main-twerk{background:linear-gradient(135deg,#ff0066,#ff6600)}
+#btn-main-photo{background:linear-gradient(135deg,#00ffff,#0088ff);color:#000}
+#btn-main-life{background:linear-gradient(135deg,#44ff88,#00aa44)}
 #btn-main-mode{background:linear-gradient(135deg,#ff9944,#cc5500)}
 #btn-main-menu{background:linear-gradient(135deg,#e8ddc5,#a89070);color:#000}
-.bone-list{display:flex;flex-direction:column;gap:3px;font-size:.7em}
-.bone-item{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:#0d2030;
-  border-left:3px solid #e8ddc5;border-radius:4px;color:#b0cce3}
-.bone-item .qty{color:#00ffff;font-weight:700;font-size:.9em}
-.bone-cat{color:#e8ddc5;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:.72em;
-  margin:10px 0 4px;padding-bottom:3px;border-bottom:1px dashed rgba(232,221,197,.3)}
-.organ-list{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:.68em}
-.organ-item{background:#1a0d20;border-left:3px solid #ff6b8a;border-radius:4px;padding:5px 8px;color:#ffcce0}
+#part-panel{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  width:340px;max-width:94vw;background:rgba(8,20,32,.96);border:2px solid #00ffff;
+  border-radius:14px;z-index:150;box-shadow:0 12px 40px rgba(0,255,255,.35);
+  opacity:0;pointer-events:none;transition:all .25s ease;backdrop-filter:blur(16px);overflow:hidden}
+#part-panel.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.part-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
+  background:linear-gradient(90deg,rgba(0,255,255,.15),rgba(0,150,255,.1));border-bottom:1px solid rgba(0,255,255,.3)}
+.part-header span{font-size:.85em;font-weight:700;color:#00ffff;letter-spacing:1px;text-transform:uppercase}
+.part-close{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;cursor:pointer;font-size:.9em}
+.part-body{padding:12px 14px;max-height:340px;overflow-y:auto}
+.part-hint{font-size:.68em;color:#8fa7bf;margin-bottom:10px;line-height:1.4;font-style:italic}
+#cycle-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.7);
+  background:linear-gradient(135deg,rgba(0,255,255,.95),rgba(0,150,255,.95));
+  color:#000;font-weight:800;font-size:1.1em;padding:14px 26px;border-radius:40px;pointer-events:none;
+  opacity:0;transition:all .25s ease;z-index:180;letter-spacing:.5px;box-shadow:0 12px 40px rgba(0,255,255,.6)}
+#cycle-toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 </style>
 </head>
 <body>
 <div id="viewport"></div>
-<div id="bone-counter">🦴 Ossos: <span id="bone-count">0</span>/206 · 🫀 Órgãos: <span id="organ-count">0</span></div>
-<div id="ai-badge">🧠 IA Óssea Ativa</div>
-<div id="mode-badge">👤 Modo: Corpo Completo</div>
+<div id="top-badge">🦴 <span id="bone-count">0</span> · 🫀 <span id="organ-count">0</span></div>
+<div id="hint-badge">👆 Toque no CORPO ou PERNAS para trocar</div>
+<div id="mode-badge">👤 Corpo Completo</div>
+<div id="cycle-toast"></div>
 <div id="toast"></div>
-<input type="file" id="direct-photo-input" accept="image/*" style="display:none">
+<input type="file" id="photo-input" accept="image/*" style="display:none">
 
 <div id="bottom-bar">
-  <button class="clean-btn" id="btn-main-photo" onclick="triggerDirectPhotoUpload()">📷 Foto IA</button>
+  <button class="clean-btn" id="btn-main-photo" onclick="document.getElementById('photo-input').click()">📸 Foto IA</button>
+  <button class="clean-btn" id="btn-main-life" onclick="toggleLife()">💓 Vida ON</button>
   <button class="clean-btn" id="btn-main-twerk" onclick="toggleTwerkAction()">🦴 Rebolar</button>
   <button class="clean-btn" id="btn-main-mode" onclick="cycleViewMode()">👤 Modo</button>
   <button class="clean-btn" id="btn-main-menu" onclick="togglePanel(event)">⚙️ Menu</button>
 </div>
 
-<button id="menu-btn" onclick="togglePanel(event)" title="Abrir Configurações">☰</button>
+<button id="menu-btn" onclick="togglePanel(event)">☰</button>
+
+<div id="part-panel">
+  <div class="part-header">
+    <span id="part-name">👤 Parte</span>
+    <button class="part-close" onclick="closePartPanel()">✕</button>
+  </div>
+  <div class="part-body">
+    <div class="part-hint">💡 Toque simples = troca preset · Toque longo = ajuste fino</div>
+    <div id="part-sliders"></div>
+  </div>
+</div>
 
 <div id="panel" onclick="event.stopPropagation()">
   <div class="panel-header">
-    <div class="panel-title"><span>🫀</span> Anatomia Completa</div>
-    <button class="close-btn" onclick="closePanel()" title="Fechar Menu">✕</button>
+    <div class="panel-title">🫀 Anatomia Completa</div>
+    <button class="close-btn" onclick="closePanel()">✕</button>
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('t-modo',event)">👤 Modo</button>
-    <button class="tab" onclick="switchTab('t-orgaos',event)">🫀 Órgãos</button>
-    <button class="tab" onclick="switchTab('t-lista',event)">🦴 Ossos</button>
-    <button class="tab" onclick="switchTab('t-foto',event)">📷 Foto IA</button>
-    <button class="tab" onclick="switchTab('t-poses',event)">💃 Poses</button>
-    <button class="tab" onclick="switchTab('t-corpo',event)">🩻 Corpo</button>
-    <button class="tab" onclick="switchTab('t-medidas',event)">📐 Medidas</button>
-    <button class="tab" onclick="switchTab('t-rosto',event)">💀 Rosto</button>
+    <button class="tab active" onclick="switchTab('t-corpos',event)">👤 Corpos</button>
     <button class="tab" onclick="switchTab('t-pernas',event)">🦵 Pernas</button>
-    <button class="tab" onclick="switchTab('t-cores',event)">🎨 Cores</button>
-    <button class="tab" onclick="switchTab('t-acao',event)">💃 Ação</button>
+    <button class="tab" onclick="switchTab('t-foto',event)">📸 Foto</button>
+    <button class="tab" onclick="switchTab('t-modo',event)">🩻 Modo</button>
+    <button class="tab" onclick="switchTab('t-orgaos',event)">🫀 Órgãos</button>
+    <button class="tab" onclick="switchTab('t-acoes',event)">💃 Ações</button>
   </div>
 
-  <div id="t-modo" class="tab-body active">
-    <div class="section-title">👤 Modos de Visualização</div>
-    <div style="font-size:.74em;color:#b0cce3;margin-bottom:12px;line-height:1.6">
-      Alterne entre as camadas anatômicas. O modelo feminino segue as proporções da figura de referência:
-      cabeça estreita, ombros médios, cintura fina, quadris largos e pernas longas.
-    </div>
-    <button class="action green" onclick="setViewMode('full')">👤 Corpo Completo (Pele)</button>
-    <button class="action orange" onclick="setViewMode('organs')">🫀 Ver Órgãos Internos</button>
-    <button class="action blue" onclick="setViewMode('skeleton')">🦴 Ver Esqueleto</button>
-    <button class="action purple" onclick="setViewMode('xray')">🩻 Raio-X (Tudo)</button>
-    <div class="section-title">Opacidade da Pele</div>
-    <div class="row"><label>Opacidade</label><input type="range" id="skin-opacity" min="0.05" max="1" step="0.05" value="1"><span class="val" id="v-skin-op">1.0</span></div>
-    <div class="section-title">Opacidade dos Órgãos</div>
-    <div class="row"><label>Opacidade</label><input type="range" id="organ-opacity" min="0.2" max="1" step="0.05" value="1"><span class="val" id="v-organ-op">1.0</span></div>
-  </div>
-
-  <div id="t-orgaos" class="tab-body">
-    <div class="section-title">🫀 Órgãos Internos (Femininos)</div>
-    <div class="organ-list" id="organ-list-container"></div>
-    <div class="section-title">Controles</div>
-    <button class="action orange" onclick="toggleOrgan('brain')">🧠 Cérebro</button>
-    <button class="action red" onclick="toggleOrgan('heart')">❤️ Coração</button>
-    <button class="action pink" onclick="toggleOrgan('lungs')">🫁 Pulmões</button>
-    <button class="action" onclick="toggleOrgan('digestive')">🍽️ Sistema Digestivo</button>
-    <button class="action blue" onclick="toggleOrgan('urinary')">💧 Sistema Urinário</button>
-    <button class="action purple" onclick="toggleOrgan('reproductive')">♀️ Sistema Reprodutor</button>
-    <button class="action green" onclick="showAllOrgans()">🫀 Mostrar Todos</button>
-  </div>
-
-  <div id="t-lista" class="tab-body">
-    <div class="section-title">🦴 Todos os 206 Ossos</div>
-    <button class="action purple" onclick="BoneAI.autoAdjust()">🧠 Forçar Reajuste IA</button>
-    <div id="bone-list-container"></div>
-  </div>
-
-  <div id="t-foto" class="tab-body">
-    <div class="section-title">📷 Materialização por Foto IA</div>
-    <div id="upload-area" onclick="triggerDirectPhotoUpload()">
-      <div style="font-size:2.2em">📸</div>
-      <div style="margin-top:6px;font-weight:700">Toque para Enviar Foto</div>
-    </div>
-    <button class="action pink" onclick="loadDemoPhoto(1)">🦴 Modelo 1: Esbelta</button>
-    <button class="action blue" onclick="loadDemoPhoto(2)">💀 Modelo 2: Atlética</button>
-    <button class="action purple" onclick="loadDemoPhoto(3)">🩻 Modelo 3: Curvilínea</button>
-    <div id="upload-status"></div>
-    <img id="photo-preview" alt="Preview da Foto">
-    <button class="action green" onclick="applyPhotoAnalysis()" id="btn-apply" style="display:none">✨ Aplicar Medidas</button>
-  </div>
-
-  <div id="t-poses" class="tab-body">
-    <div class="section-title">💃 90 Poses</div>
-    <div class="grid" id="grid-poses"></div>
-    <div class="row"><label>Arqueamento</label><input type="range" id="p-arch" min="0" max="1.5" step="0.05" value="0.8"><span class="val" id="vp-arch">0.8</span></div>
-    <div class="row"><label>Projeção pélvica</label><input type="range" id="p-pelvis" min="0" max="1.5" step="0.05" value="1.0"><span class="val" id="vp-pelvis">1.0</span></div>
-    <button class="action" onclick="startIsolatedTwerk()">🦴 Articulação Pélvica</button>
-  </div>
-
-  <div id="t-corpo" class="tab-body">
-    <div class="section-title">🩻 90 Biotipos</div>
-    <div class="grid" id="grid-corpo"></div>
-    <button class="action blue" onclick="randomizeAll()">🎲 Aleatório Total</button>
-  </div>
-
-  <div id="t-medidas" class="tab-body">
-    <div class="section-title">🦴 90 Quadris</div>
-    <div class="grid" id="grid-quadril"></div>
-    <div class="section-title">🩻 90 Bustos</div>
-    <div class="grid" id="grid-seios"></div>
-    <div class="section-title">🦴 90 Cinturas</div>
-    <div class="grid" id="grid-cintura"></div>
-  </div>
-
-  <div id="t-rosto" class="tab-body">
-    <div class="section-title">💀 90 Rostos</div>
-    <div class="grid" id="grid-rosto"></div>
-    <div class="row"><label>Dentes</label><input type="range" id="f-teeth" min="0" max="1.5" step="0.05" value="1.0"><span class="val" id="v-teeth">1.0</span></div>
-    <div class="row"><label>Lábios</label><input type="range" id="f-lip" min="0.7" max="1.8" step="0.05" value="1.1"><span class="val" id="v-lip">1.1</span></div>
-    <div class="row"><label>Nariz</label><input type="range" id="f-nose" min="0.6" max="1.5" step="0.05" value="1.0"><span class="val" id="v-nose">1.0</span></div>
-    <div class="row"><label>Crânio</label><input type="range" id="f-head" min="0.8" max="1.3" step="0.02" value="1"><span class="val" id="v-head">1.0</span></div>
-    <div class="row"><label>Maxilar</label><input type="range" id="f-jaw" min="0.7" max="1.3" step="0.02" value="1"><span class="val" id="v-jaw">1.0</span></div>
+  <div id="t-corpos" class="tab-body active">
+    <div class="section-title">👤 10 Tipos de Corpo</div>
+    <div class="preset-grid" id="grid-corpos"></div>
+    <div class="section-title">Ajuste Fino</div>
+    <div class="row"><label>Altura</label><input type="range" id="b-height" min="0.85" max="1.15" step="0.01" value="1"><span class="val" id="vb-height">1.00</span></div>
+    <div class="row"><label>Ombros</label><input type="range" id="b-shoulder" min="0.75" max="1.25" step="0.01" value="1"><span class="val" id="vb-shoulder">1.00</span></div>
+    <div class="row"><label>Cintura</label><input type="range" id="b-waist" min="0.60" max="1.30" step="0.01" value="1"><span class="val" id="vb-waist">1.00</span></div>
+    <div class="row"><label>Quadril</label><input type="range" id="b-hip" min="0.80" max="1.40" step="0.01" value="1"><span class="val" id="vb-hip">1.00</span></div>
+    <div class="row"><label>Busto</label><input type="range" id="b-bust" min="0.70" max="1.40" step="0.01" value="1"><span class="val" id="vb-bust">1.00</span></div>
+    <button class="action blue" onclick="randomizeBody()">🎲 Corpo Aleatório</button>
   </div>
 
   <div id="t-pernas" class="tab-body">
-    <div class="section-title">🦵 90 Pernas</div>
-    <div class="grid" id="grid-pernas"></div>
-    <div class="section-title">Medidas (cm)</div>
-    <div class="row"><label>Altura</label><input type="range" id="l-height" min="140" max="200" step="1" value="165"><span class="val" id="vl-height">165</span></div>
-    <div class="row"><label>Fêmur</label><input type="range" id="l-len" min="70" max="115" step="1" value="90"><span class="val" id="vl-len">90</span></div>
-    <div class="row"><label>Coxa</label><input type="range" id="l-thigh" min="40" max="75" step="1" value="55"><span class="val" id="vl-thigh">55</span></div>
-    <div class="row"><label>Panturrilha</label><input type="range" id="l-calf" min="28" max="48" step="1" value="35"><span class="val" id="vl-calf">35</span></div>
+    <div class="section-title">🦵 10 Tipos de Pernas</div>
+    <div class="preset-grid" id="grid-pernas"></div>
+    <div class="section-title">Ajuste Fino</div>
+    <div class="row"><label>Altura (cm)</label><input type="range" id="l-height" min="140" max="200" step="1" value="168"><span class="val" id="vl-height">168</span></div>
+    <div class="row"><label>Comprimento</label><input type="range" id="l-len" min="70" max="115" step="1" value="92"><span class="val" id="vl-len">92</span></div>
+    <div class="row"><label>Coxa</label><input type="range" id="l-thigh" min="40" max="75" step="1" value="56"><span class="val" id="vl-thigh">56</span></div>
+    <div class="row"><label>Panturrilha</label><input type="range" id="l-calf" min="25" max="50" step="1" value="35"><span class="val" id="vl-calf">35</span></div>
     <div class="row"><label>Tornozelo</label><input type="range" id="l-ankle" min="16" max="28" step="1" value="21"><span class="val" id="vl-ankle">21</span></div>
+    <div class="row"><label>Abertura</label><input type="range" id="l-spread" min="0" max="0.4" step="0.01" value="0.08"><span class="val" id="vl-spread">0.08</span></div>
+    <button class="action green" onclick="randomizeLegs()">🎲 Pernas Aleatórias</button>
   </div>
 
-  <div id="t-cores" class="tab-body">
-    <div class="section-title">🎨 Cores</div>
-    <div class="section-title">Pele</div>
-    <div class="color-row"><input type="color" id="c-skinbody" value="#f2c9a8"></div>
-    <div class="section-title">Osso</div>
-    <div class="color-row"><input type="color" id="c-skin" value="#e8ddc5"><input type="color" id="c-skin2" value="#c9bca0"></div>
-    <div class="section-title">Cartilagem</div>
-    <div class="color-row"><input type="color" id="c-hair" value="#8ea8b8"></div>
-    <div class="section-title">Roupa / Lingerie</div>
-    <div class="color-row"><input type="color" id="c-dress" value="#f0a500"><input type="color" id="c-dress2" value="#d48800"><input type="color" id="c-ling" value="#f0a500"></div>
-    <div class="section-title">Cavidades / Dentes</div>
-    <div class="color-row"><input type="color" id="c-lip" value="#1a0e08"><input type="color" id="c-eye" value="#ffffff"></div>
-    <div class="section-title">Cabelo</div>
-    <div class="color-row"><input type="color" id="c-hairtop" value="#5a3a1a"></div>
+  <div id="t-foto" class="tab-body">
+    <div class="section-title">📸 Foto Ultra-Realista com IA</div>
+    <div style="font-size:.72em;color:#b0cce3;margin-bottom:10px;line-height:1.5">
+      Envie uma foto de corpo inteiro. A IA detecta as proporções e a cor da pele, aplicando automaticamente ao modelo 3D.
+    </div>
+    <div id="upload-area" onclick="document.getElementById('photo-input').click()">
+      <div style="font-size:2em">📸</div>
+      <div style="margin-top:4px;font-weight:700">Toque para escolher foto</div>
+    </div>
+    <img id="photo-preview" alt="Preview">
+    <div id="upload-status"></div>
+    <button class="action pink" onclick="loadDemoPhoto(1)">✨ Exemplo: Esbelta</button>
+    <button class="action blue" onclick="loadDemoPhoto(2)">✨ Exemplo: Atlética</button>
+    <button class="action purple" onclick="loadDemoPhoto(3)">✨ Exemplo: Curvilínea</button>
   </div>
 
-  <div id="t-acao" class="tab-body">
-    <div class="section-title">💃 Ações</div>
-    <button class="action" onclick="startIsolatedTwerk()">🦴 Articulação Pélvica</button>
-    <button class="action blue" onclick="startIdle()">💀 Respiração Torácica</button>
-    <button class="action" onclick="stopAnimation()">⏸️ Pausar</button>
-    <div class="section-title">🧠 IA Óssea</div>
-    <button class="action purple" onclick="BoneAI.autoAdjust()">🧠 Reajuste IA</button>
+  <div id="t-modo" class="tab-body">
+    <div class="section-title">🩻 Modos de Visualização</div>
+    <button class="action green" onclick="setViewMode('full')">👤 Corpo Completo</button>
+    <button class="action orange" onclick="setViewMode('organs')">🫀 Órgãos Internos</button>
+    <button class="action blue" onclick="setViewMode('skeleton')">🦴 Esqueleto</button>
+    <button class="action purple" onclick="setViewMode('xray')">🩻 Raio-X</button>
+    <div class="section-title">Opacidade</div>
+    <div class="row"><label>Pele</label><input type="range" id="skin-op" min="0.05" max="1" step="0.05" value="1"><span class="val" id="v-skin-op">1.00</span></div>
+    <div class="row"><label>Órgãos</label><input type="range" id="organ-op" min="0.2" max="1" step="0.05" value="1"><span class="val" id="v-organ-op">1.00</span></div>
+  </div>
+
+  <div id="t-orgaos" class="tab-body">
+    <div class="section-title">🫀 Sistemas Individuais</div>
+    <button class="action orange" onclick="toggleOrgan('brain')">🧠 Cérebro</button>
+    <button class="action pink" onclick="toggleOrgan('heart')">❤️ Coração</button>
+    <button class="action pink" onclick="toggleOrgan('lungs')">🫁 Pulmões</button>
+    <button class="action" onclick="toggleOrgan('digestive')">🍽️ Digestivo</button>
+    <button class="action blue" onclick="toggleOrgan('urinary')">💧 Urinário</button>
+    <button class="action purple" onclick="toggleOrgan('reproductive')">♀️ Reprodutor</button>
+    <button class="action green" onclick="showAllOrgans()">🫀 Mostrar Todos</button>
+  </div>
+
+  <div id="t-acoes" class="tab-body">
+    <div class="section-title">💃 Animações</div>
+    <button class="action" onclick="startTwerk()">🦴 Articulação Pélvica</button>
+    <button class="action blue" onclick="startIdle()">💀 Respiração</button>
+    <button class="action green" onclick="toggleLife()">💓 Vida (ON/OFF)</button>
+    <button class="action" onclick="stopAnim()">⏸️ Pausar Tudo</button>
     <div class="section-title">Roupa</div>
-    <button class="action red" onclick="undress()">🩻 Esqueleto Puro</button>
-    <button class="action green" onclick="dressUp()">👗 Vestido</button>
+    <button class="action" onclick="toggleDress()">👗 Vestir / Tirar</button>
+    <div class="section-title">Reset</div>
+    <button class="action purple" onclick="resetAll()">🔄 Resetar Tudo</button>
   </div>
 </div>
 
@@ -264,391 +231,160 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:
 ============================================================ */
 let scene, camera, renderer, clock;
 let doll, rig, oceanMesh;
-let bodyParts = {};
-let outfitParts = [], underParts = [];
-let isDressed = false;
-let animMode = 'idle';
-let currentPose = 'empinada';
-let time = 0;
-let viewMode = 'full';
-let organGroups = {};
+let bodyParts = {}, organGroups = {};
+let outfitParts = [];
+let isDressed = false, animMode = 'idle', viewMode = 'full';
+let lifeEnabled = true;
+let selectedPart = null;
+let idleT = 0;
 
 const boneRegistry = [];
-let boneCount = 0;
-let organCount = 0;
+let boneCount = 0, organCount = 0;
 
 let state = {
-  bodyIdx: 1, faceIdx: 1, buttIdx: 1,
-  hipIdx: 1, breastIdx: 1, waistIdx: 1,
-  legIdx: 1, poseIdx: 1,
-  skinColor: 0xe8ddc5, skinColor2: 0xc9bca0,
-  skinBodyColor: 0xf2c9a8,
-  hairTopColor: 0x5a3a1a,
-  hairColor: 0x8ea8b8, hairColor2: 0x6d8a9c,
-  dressColor: 0xf0a500, dressColor2: 0xd48800,
-  lingColor: 0xf0a500, lipColor: 0x1a0e08, eyeColor: 0xffffff,
-  teethSmile: 1.0, lipScale: 1.15, noseScale: 1.0,
-  headScale: 1, jawScale: 0.95, eyeScale: 1.1,
-  poseArch: 0.85, posePelvis: 1.05,
-  skinOpacity: 1.0, organOpacity: 1.0,
-  leg: { height: 168, len: 92, thigh: 56, calf: 35, ankle: 21, spread: 0.08, knee: 0 }
+  bodyIdx: 0, legIdx: 0,
+  height:1, shoulder:1, waist:1, hip:1, bust:1,
+  headScale:1, jawScale:1, neckScale:1, bustY:0, buttSize:1,
+  armLScale:1, armRScale:1,
+  thighLScale:1, thighRScale:1,
+  kneeLScale:1, kneeRScale:1,
+  calfLScale:1, calfRScale:1,
+  footLScale:1, footRScale:1,
+  skinOpacity:1, organOpacity:1,
+  skinColor: 0xf2c9a8,
+  leg: { height:168, len:92, thigh:56, calf:35, ankle:21, spread:0.08 }
 };
 
 /* ============================================================
-   REGISTRO DE OSSOS
+   ⭐ 10 TIPOS DE CORPO
 ============================================================ */
-function registerBone(name, mesh, category){
+const BODY_PRESETS = [
+  { name:'Esbelta',    icon:'🌿', height:1.00, shoulder:0.88, waist:0.68, hip:1.00, bust:0.80 },
+  { name:'Atlética',   icon:'💪', height:1.02, shoulder:1.05, waist:0.82, hip:1.00, bust:0.95 },
+  { name:'Curvilínea', icon:'🍑', height:0.98, shoulder:0.95, waist:0.72, hip:1.20, bust:1.15 },
+  { name:'Plus Size',  icon:'🌸', height:0.96, shoulder:1.10, waist:1.20, hip:1.30, bust:1.25 },
+  { name:'Modelo',     icon:'👠', height:1.06, shoulder:0.92, waist:0.70, hip:1.05, bust:0.85 },
+  { name:'Fitness',    icon:'🏋️', height:1.00, shoulder:1.08, waist:0.78, hip:1.05, bust:0.95 },
+  { name:'Petite',     icon:'🐦', height:0.86, shoulder:0.90, waist:0.78, hip:0.95, bust:0.85 },
+  { name:'Alta',       icon:'📏', height:1.12, shoulder:0.98, waist:0.74, hip:1.05, bust:0.90 },
+  { name:'Violão',     icon:'🎸', height:1.00, shoulder:1.00, waist:0.65, hip:1.25, bust:1.10 },
+  { name:'Natural',    icon:'✨', height:1.00, shoulder:1.00, waist:1.00, hip:1.00, bust:1.00 }
+];
+
+/* ============================================================
+   ⭐ 10 TIPOS DE PERNA
+============================================================ */
+const LEG_PRESETS = [
+  { name:'Longa e Fina', icon:'🦢', height:180, len:100, thigh:48, calf:30, ankle:19, spread:0.06 },
+  { name:'Atlética',     icon:'🏃', height:172, len:94,  thigh:56, calf:38, ankle:22, spread:0.08 },
+  { name:'Grossa',       icon:'🦵', height:165, len:88,  thigh:68, calf:44, ankle:25, spread:0.10 },
+  { name:'Curta',        icon:'🎯', height:155, len:78,  thigh:52, calf:36, ankle:21, spread:0.09 },
+  { name:'Modelo',       icon:'👠', height:178, len:100, thigh:52, calf:32, ankle:19, spread:0.05 },
+  { name:'Musculosa',    icon:'💪', height:170, len:92,  thigh:62, calf:42, ankle:23, spread:0.10 },
+  { name:'Torneada',     icon:'🎨', height:170, len:92,  thigh:54, calf:36, ankle:21, spread:0.07 },
+  { name:'Cheia',        icon:'🌺', height:162, len:86,  thigh:66, calf:44, ankle:24, spread:0.11 },
+  { name:'Fina',         icon:'🪶', height:175, len:96,  thigh:45, calf:28, ankle:18, spread:0.06 },
+  { name:'Proporcional', icon:'⭐', height:168, len:92,  thigh:56, calf:35, ankle:21, spread:0.08 }
+];
+
+/* ============================================================
+   REGISTRO E HELPERS
+============================================================ */
+function registerBone(name, mesh, cat){
   mesh.userData.boneName = name;
-  mesh.userData.boneCat = category;
-  boneRegistry.push({ name, category, mesh });
+  mesh.userData.boneCat = cat;
+  boneRegistry.push({ name, cat, mesh });
   boneCount++;
   return mesh;
 }
-function makeBone(name, cat, geometry, mat, parent, pos, rot, scale){
-  const m = new THREE.Mesh(geometry, mat);
-  if(pos) m.position.set(pos[0], pos[1], pos[2]);
-  if(rot) m.rotation.set(rot[0], rot[1], rot[2]);
-  if(scale) m.scale.set(scale[0], scale[1], scale[2]);
+function makeBone(name, cat, geo, mat, parent, pos, rot, scale){
+  const m = new THREE.Mesh(geo, mat);
+  if(pos) m.position.set(pos[0],pos[1],pos[2]);
+  if(rot) m.rotation.set(rot[0],rot[1],rot[2]);
+  if(scale) m.scale.set(scale[0],scale[1],scale[2]);
   parent.add(m);
   registerBone(name, m, cat);
   return m;
 }
-function makePart(geometry, mat, parent, pos, rot, scale){
-  const m = new THREE.Mesh(geometry, mat);
-  if(pos) m.position.set(pos[0], pos[1], pos[2]);
-  if(rot) m.rotation.set(rot[0], rot[1], rot[2]);
-  if(scale) m.scale.set(scale[0], scale[1], scale[2]);
+function makePart(geo, mat, parent, pos, rot, scale){
+  const m = new THREE.Mesh(geo, mat);
+  if(pos) m.position.set(pos[0],pos[1],pos[2]);
+  if(rot) m.rotation.set(rot[0],rot[1],rot[2]);
+  if(scale) m.scale.set(scale[0],scale[1],scale[2]);
   parent.add(m);
   return m;
 }
-
-/* ============================================================
-   GEOMETRIA ÓSSEA
-============================================================ */
 function boneGeo(len, rMid, rEnd, segs){
-  const N = 12, pts = [];
-  for(let i = 0; i <= N; i++){
-    const t = i/N, y = (t - 0.5) * len;
-    const bulge = Math.pow(Math.abs(2*t - 1), 0.7);
-    const r = rMid + (rEnd - rMid) * bulge;
+  const N = 10, pts = [];
+  for(let i=0;i<=N;i++){
+    const t = i/N, y = (t-0.5)*len;
+    const bulge = Math.pow(Math.abs(2*t-1), 0.7);
+    const r = rMid + (rEnd-rMid)*bulge;
     pts.push(new THREE.Vector2(Math.max(0.0008, r), y));
   }
-  return new THREE.LatheGeometry(pts, segs || 8);
+  return new THREE.LatheGeometry(pts, segs||8);
 }
 
 /* ============================================================
-   TECIDO DE UNIÃO
-============================================================ */
-const JOINT_MAT = {
-  cartilage: new THREE.MeshStandardMaterial({ color: 0x9ec8dd, roughness: 0.25, metalness: 0.05, transparent: true, opacity: 0.72 }),
-  cartilageRing: new THREE.MeshStandardMaterial({ color: 0x7fa8bd, roughness: 0.35, metalness: 0.10, transparent: true, opacity: 0.85 }),
-  nerve: new THREE.MeshStandardMaterial({ color: 0xffcc33, roughness: 0.4, emissive: 0x553300, emissiveIntensity: 0.6 }),
-  nerveCore: new THREE.MeshBasicMaterial({ color: 0xffe07a })
-};
-function addJointTissue(parent, jointName, pos, size, opts){
-  opts = opts || {};
-  const depth = opts.depth || size * 1.1;
-  const cart = new THREE.Mesh(new THREE.SphereGeometry(size, 10, 8), JOINT_MAT.cartilage);
-  cart.position.set(pos[0], pos[1], pos[2]);
-  cart.scale.set(opts.wide || 1.15, 0.35, depth / size * 0.9);
-  parent.add(cart);
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(size * 0.95, size * 0.18, 6, 14), JOINT_MAT.cartilageRing);
-  ring.position.set(pos[0], pos[1], pos[2]);
-  ring.rotation.x = (opts.ringRotX !== undefined) ? opts.ringRotX : Math.PI*0.5;
-  ring.rotation.z = opts.ringRotZ || 0;
-  parent.add(ring);
-  const nerveLen = size * 2.4;
-  const nerveGeo = new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3([
-      new THREE.Vector3(pos[0] - size*0.9, pos[1] - nerveLen*0.3, pos[2]),
-      new THREE.Vector3(pos[0] - size*0.3, pos[1] + size*0.5, pos[2] + size*0.25),
-      new THREE.Vector3(pos[0] + size*0.3, pos[1] + size*0.7, pos[2] + size*0.30),
-      new THREE.Vector3(pos[0] + size*0.9, pos[1] + nerveLen*0.3, pos[2])
-    ]), 10, Math.max(0.0010, size * 0.09), 4, false);
-  parent.add(new THREE.Mesh(nerveGeo, JOINT_MAT.nerve));
-  const twigGeo = new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3([
-      new THREE.Vector3(pos[0], pos[1] + size*0.4, pos[2]),
-      new THREE.Vector3(pos[0] + size*0.6, pos[1] - size*0.2, pos[2] - size*0.5),
-      new THREE.Vector3(pos[0] + size*0.9, pos[1] - size*0.6, pos[2] - size*0.9)
-    ]), 8, Math.max(0.0008, size * 0.06), 4, false);
-  parent.add(new THREE.Mesh(twigGeo, JOINT_MAT.nerve));
-  const dot = new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.0018, size * 0.22), 8, 6), JOINT_MAT.nerveCore);
-  dot.position.set(pos[0], pos[1] + size*0.35, pos[2]);
-  parent.add(dot);
-}
-
-/* ============================================================
-   MATERIAIS
+   MATERIAIS — Pele Realista com MeshPhysicalMaterial
 ============================================================ */
 const MAT = {
-  skin:   new THREE.MeshStandardMaterial({ color:0xe8ddc5, roughness:0.55, metalness:0.06 }),
-  skin2:  new THREE.MeshStandardMaterial({ color:0xc9bca0, roughness:0.7,  metalness:0.05 }),
-  cart:   new THREE.MeshStandardMaterial({ color:0x8ea8b8, roughness:0.4,  metalness:0.15, transparent:true, opacity:0.85 }),
-  teeth:  new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.15, metalness:0.05 }),
-  cavity: new THREE.MeshBasicMaterial({ color:0x1a0e08 }),
-  dress:  new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, metalness:0.2, side:THREE.DoubleSide, transparent:true, opacity:0.35 }),
-  dress2: new THREE.MeshStandardMaterial({ color:0xd48800, roughness:0.5, metalness:0.2, side:THREE.DoubleSide, transparent:true, opacity:0.35 }),
-  ling:   new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, metalness:0.4, side:THREE.DoubleSide, transparent:true, opacity:0.55 }),
-  skinBody: new THREE.MeshStandardMaterial({
-    color: 0xf2c9a8, roughness: 0.72, metalness: 0.02,
-    transparent: true, opacity: 1.0, side: THREE.DoubleSide
+  skin:  new THREE.MeshStandardMaterial({ color:0xe8ddc5, roughness:0.55 }),
+  skin2: new THREE.MeshStandardMaterial({ color:0xc9bca0, roughness:0.7 }),
+  cart:  new THREE.MeshStandardMaterial({ color:0x8ea8b8, roughness:0.4, transparent:true, opacity:0.85 }),
+  teeth: new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.15 }),
+  cavity:new THREE.MeshBasicMaterial({ color:0x1a0e08 }),
+  // ⭐ PELE ULTRA-REALISTA (clearcoat + sheen para aspecto de pele)
+  skinBody: new THREE.MeshPhysicalMaterial({
+    color:0xf2c9a8, roughness:0.62, metalness:0.0,
+    clearcoat:0.35, clearcoatRoughness:0.5,
+    sheen:0.4, sheenColor:0xffd4ba,
+    transparent:true, opacity:1, side:THREE.DoubleSide
   }),
-  skinBody2: new THREE.MeshStandardMaterial({
-    color: 0xe0b090, roughness: 0.78, metalness: 0.02,
-    transparent: true, opacity: 1.0, side: THREE.DoubleSide
+  skinBody2: new THREE.MeshPhysicalMaterial({
+    color:0xe0b090, roughness:0.68, metalness:0.0,
+    clearcoat:0.3, clearcoatRoughness:0.55,
+    sheen:0.35, sheenColor:0xffc8a0,
+    transparent:true, opacity:1, side:THREE.DoubleSide
   }),
-  hairTop: new THREE.MeshStandardMaterial({ color: 0x5a3a1a, roughness: 0.85 }),
-  brain:      new THREE.MeshStandardMaterial({ color: 0xff9eb0, roughness: 0.55 }),
-  heart:      new THREE.MeshStandardMaterial({ color: 0xd41a2c, roughness: 0.5 }),
-  heartDark:  new THREE.MeshStandardMaterial({ color: 0x8a0a18, roughness: 0.55 }),
-  lung:       new THREE.MeshStandardMaterial({ color: 0xff9eb0, roughness: 0.72, transparent: true, opacity: 0.92 }),
-  liver:      new THREE.MeshStandardMaterial({ color: 0x8b2a1c, roughness: 0.55 }),
-  stomach:    new THREE.MeshStandardMaterial({ color: 0xe8a878, roughness: 0.55 }),
-  intestine:  new THREE.MeshStandardMaterial({ color: 0xe0b090, roughness: 0.65 }),
-  intestineL: new THREE.MeshStandardMaterial({ color: 0xc89870, roughness: 0.65 }),
-  kidney:     new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.55 }),
-  bladder:    new THREE.MeshStandardMaterial({ color: 0xf0d090, roughness: 0.5 }),
-  uterus:     new THREE.MeshStandardMaterial({ color: 0xe08a8a, roughness: 0.55 }),
-  ovary:      new THREE.MeshStandardMaterial({ color: 0xf0b0a0, roughness: 0.6 }),
-  spleen:     new THREE.MeshStandardMaterial({ color: 0x6b2a3a, roughness: 0.55 }),
-  pancreas:   new THREE.MeshStandardMaterial({ color: 0xd4b060, roughness: 0.55 }),
-  trachea:    new THREE.MeshStandardMaterial({ color: 0xb8d8e8, roughness: 0.4 }),
-  artery:     new THREE.MeshStandardMaterial({ color: 0xd42a3c, roughness: 0.45 }),
-  vein:       new THREE.MeshStandardMaterial({ color: 0x3a5a9a, roughness: 0.45 }),
-  eye:        new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15 }),
-  iris:       new THREE.MeshStandardMaterial({ color: 0x5a3a1a, roughness: 0.25 }),
-  pupil:      new THREE.MeshBasicMaterial({ color: 0x000000 }),
-  lipSkin:    new THREE.MeshStandardMaterial({ color: 0xc97070, roughness: 0.5 })
+  hairTop: new THREE.MeshPhysicalMaterial({
+    color:0x4a2a10, roughness:0.55, metalness:0.05,
+    clearcoat:0.6, clearcoatRoughness:0.4,
+    sheen:0.8, sheenColor:0x8a5a2a
+  }),
+  lip: new THREE.MeshPhysicalMaterial({
+    color:0xc97070, roughness:0.35, metalness:0.0,
+    clearcoat:0.8, clearcoatRoughness:0.25
+  }),
+  eye: new THREE.MeshPhysicalMaterial({ color:0xffffff, roughness:0.05, clearcoat:1.0 }),
+  iris: new THREE.MeshPhysicalMaterial({ color:0x5a3a1a, roughness:0.15, clearcoat:0.9 }),
+  pupil: new THREE.MeshBasicMaterial({ color:0x000000 }),
+  dress: new THREE.MeshStandardMaterial({ color:0xf0a500, roughness:0.5, transparent:true, opacity:0.6, side:THREE.DoubleSide }),
+  brain: new THREE.MeshStandardMaterial({ color:0xff9eb0, roughness:0.55 }),
+  heart: new THREE.MeshStandardMaterial({ color:0xd41a2c, roughness:0.5 }),
+  lung:  new THREE.MeshStandardMaterial({ color:0xff9eb0, roughness:0.72, transparent:true, opacity:0.92 }),
+  liver: new THREE.MeshStandardMaterial({ color:0x8b2a1c, roughness:0.55 }),
+  stomach:new THREE.MeshStandardMaterial({ color:0xe8a878, roughness:0.55 }),
+  intestine:new THREE.MeshStandardMaterial({ color:0xe0b090, roughness:0.65 }),
+  kidney:new THREE.MeshStandardMaterial({ color:0x8b4513, roughness:0.55 }),
+  bladder:new THREE.MeshStandardMaterial({ color:0xf0d090, roughness:0.5 }),
+  uterus:new THREE.MeshStandardMaterial({ color:0xe08a8a, roughness:0.55 }),
+  ovary: new THREE.MeshStandardMaterial({ color:0xf0b0a0, roughness:0.6 }),
+  trachea:new THREE.MeshStandardMaterial({ color:0xb8d8e8, roughness:0.4 })
 };
-
-/* ============================================================
-   PRESETS
-============================================================ */
-function bodyParams(i){
-  const t = (i-1)/89;
-  return { height: 0.88 + t*0.22, shoulderW: 0.88 + ((i*3)%7)*0.035, waistW: 0.70 + ((i*5)%9)*0.030,
-    hipW: 0.95 + ((i*7)%6)*0.055, bust: 0.78 + ((i*11)%8)*0.09,
-    thighW: 0.92 + ((i*2)%6)*0.05, calfW: 0.85 + ((i*4)%5)*0.06 };
-}
-function faceParams(i){
-  const t = (i-1)/89;
-  return { head: 0.85 + t*0.28, jaw: 0.78 + ((i*3)%8)*0.055, ear: 0.7 + ((i*5)%6)*0.18,
-    eye: 0.82 + ((i*7)%9)*0.075, lip: 0.90 + ((i*2)%8)*0.07, nose: 0.85 + ((i*11)%7)*0.075 };
-}
-function hipParams(i){
-  const t = (i-1)/89; const seed = i*5.7;
-  return { width: 0.95 + t*0.6 + Math.sin(seed)*0.12, depth: 0.85 + Math.cos(seed*1.3)*0.15 + t*0.25,
-    round: 0.9 + Math.abs(Math.sin(seed*0.7))*0.35, tilt: (Math.sin(seed*0.9))*0.15 };
-}
-function waistParams(i){
-  const t = (i-1)/89; const seed = i*3.9;
-  return { width: 0.65 + ((i*5)%9)*0.030 - t*0.15, depth: 0.85 + Math.cos(seed)*0.15 - t*0.18,
-    height: 0.85 + Math.sin(seed*0.7)*0.15 };
-}
-function legParams(i){
-  const t = (i-1)/89; const seed = i*4.7;
-  return { height: 148 + t*52, len: 78 + t*38, thigh: 44 + Math.abs(Math.sin(seed))*28,
-    calf: 30 + Math.abs(Math.cos(seed*1.2))*16, ankle: 18 + Math.abs(Math.sin(seed*0.9))*9 };
-}
-function poseParams(i){
-  const seed = i*7.31;
-  return { hipX: Math.sin(seed*0.7)*0.30, hipY: Math.cos(seed*0.9)*0.35, hipZ: Math.sin(seed*1.1)*0.28,
-    chestX: -0.10 - Math.abs(Math.sin(seed*1.3))*0.30, chestY: Math.cos(seed*0.8)*0.25, chestZ: Math.sin(seed*0.6)*0.22,
-    armLX: Math.sin(seed*1.7)*1.4 - 0.3, armLZ: 0.15 + Math.abs(Math.cos(seed*0.9))*2.3,
-    armRX: Math.cos(seed*1.5)*1.4 - 0.3, armRZ: -0.15 - Math.abs(Math.sin(seed*1.0))*2.3,
-    headY: Math.sin(seed*2.1)*0.9, headZ: Math.cos(seed*1.9)*0.22, headX: Math.sin(seed*0.4)*0.15,
-    rotY: (seed % (Math.PI*2)) - Math.PI, legSpread: 0.03 + Math.abs(Math.sin(seed*1.4))*0.28,
-    kneeBend: Math.abs(Math.cos(seed*1.6))*0.35, pelvis: 0.5 + Math.abs(Math.sin(seed*0.5))*0.9 };
-}
-
-/* ============================================================
-   🧠 IA ÓSSEA
-============================================================ */
-const BoneAI = (function(){
-  const REF = {
-    'Fêmur': { shape:'long', len:0.450, rMin:0.011, rMax:0.028 },
-    'Tíbia': { shape:'long', len:0.370, rMin:0.010, rMax:0.024 },
-    'Fíbula': { shape:'long', len:0.365, rMin:0.006, rMax:0.014 },
-    'Úmero': { shape:'long', len:0.330, rMin:0.010, rMax:0.022 },
-    'Rádio': { shape:'long', len:0.260, rMin:0.008, rMax:0.016 },
-    'Ulna': { shape:'long', len:0.280, rMin:0.009, rMax:0.017 },
-    'Clavícula': { shape:'long', len:0.150, rMin:0.005, rMax:0.009 },
-    'Metacarpo': { shape:'small-long', len:0.055, rMin:0.0030, rMax:0.0055 },
-    'Metatarso': { shape:'small-long', len:0.068, rMin:0.0038, rMax:0.0070 },
-    'Falange': { shape:'small-long', len:0.032, rMin:0.0022, rMax:0.0045 },
-    'Escápula': { shape:'flat-tri', w:0.150, h:0.100, d:0.014 },
-    'Esterno': { shape:'flat', w:0.050, h:0.160, d:0.012 },
-    'Costela': { shape:'curved', w:0.200, h:0.008, d:0.010 },
-    'Parietal': { shape:'flat-arc', w:0.130, h:0.130, d:0.006 },
-    'Occipital': { shape:'flat-arc', w:0.130, h:0.100, d:0.008 },
-    'Frontal': { shape:'flat-arc', w:0.135, h:0.120, d:0.008 },
-    'Vértebra': { shape:'irregular', w:0.030, h:0.020, d:0.030 },
-    'Sacro': { shape:'wedge', w:0.100, h:0.120, d:0.032 },
-    'Cóccix': { shape:'wedge', w:0.020, h:0.042, d:0.014 },
-    'Mandíbula': { shape:'u-shape', w:0.115, h:0.075, d:0.055 },
-    'Hioide': { shape:'u-shape', w:0.045, h:0.025, d:0.015 },
-    'Esfenoide': { shape:'irregular', w:0.085, h:0.040, d:0.055 },
-    'Etmoide': { shape:'irregular', w:0.045, h:0.028, d:0.070 },
-    'Temporal': { shape:'irregular', w:0.075, h:0.075, d:0.075 },
-    'Zigomático': { shape:'arch', w:0.055, h:0.055, d:0.012 },
-    'Maxila': { shape:'irregular', w:0.048, h:0.030, d:0.045 },
-    'Nasal': { shape:'flat', w:0.011, h:0.028, d:0.008 },
-    'Lacrimal': { shape:'flat', w:0.008, h:0.010, d:0.006 },
-    'Palatino': { shape:'flat', w:0.014, h:0.008, d:0.022 },
-    'Vômer': { shape:'flat', w:0.004, h:0.040, d:0.008 },
-    'Carpo': { shape:'short', r:0.0075 },
-    'Tarso': { shape:'short', r:0.0140 },
-    'Patela': { shape:'sesamoid', w:0.045, h:0.050, d:0.020 },
-    'Martelo': { shape:'sesamoid', w:0.008, h:0.008, d:0.008 },
-    'Bigorna': { shape:'sesamoid', w:0.007, h:0.007, d:0.007 },
-    'Estribo': { shape:'sesamoid', w:0.005, h:0.005, d:0.005 },
-    'Cintura Pélvica': { shape:'flat-arc', w:0.220, h:0.140, d:0.058 }
-  };
-  function classify(name){
-    const n = name.toLowerCase();
-    if(/osso do quadril/.test(n)) return REF['Cintura Pélvica'];
-    if(/f[êe]mur/.test(n)) return REF['Fêmur'];
-    if(/t[íi]bia/.test(n)) return REF['Tíbia'];
-    if(/f[íi]bula/.test(n)) return REF['Fíbula'];
-    if(/[úu]mero/.test(n)) return REF['Úmero'];
-    if(/r[áa]dio/.test(n)) return REF['Rádio'];
-    if(/ulna/.test(n)) return REF['Ulna'];
-    if(/clav[íi]cula/.test(n)) return REF['Clavícula'];
-    if(/metacarpo/.test(n)) return REF['Metacarpo'];
-    if(/metatarso/.test(n)) return REF['Metatarso'];
-    if(/falange/.test(n)) return REF['Falange'];
-    if(/esc[áa]pula/.test(n)) return REF['Escápula'];
-    if(/esterno/.test(n)) return REF['Esterno'];
-    if(/costela/.test(n)) return REF['Costela'];
-    if(/parietal/.test(n)) return REF['Parietal'];
-    if(/occipital/.test(n)) return REF['Occipital'];
-    if(/frontal/.test(n)) return REF['Frontal'];
-    if(/v[ée]rtebra/.test(n)) return REF['Vértebra'];
-    if(/sacro/.test(n)) return REF['Sacro'];
-    if(/c[óo]ccix/.test(n)) return REF['Cóccix'];
-    if(/mand[íi]bula/.test(n)) return REF['Mandíbula'];
-    if(/hioide/.test(n)) return REF['Hioide'];
-    if(/esfenoide/.test(n)) return REF['Esfenoide'];
-    if(/etmoide/.test(n)) return REF['Etmoide'];
-    if(/temporal/.test(n)) return REF['Temporal'];
-    if(/zigom[áa]tico/.test(n)) return REF['Zigomático'];
-    if(/maxila/.test(n)) return REF['Maxila'];
-    if(/nasal/.test(n)) return REF['Nasal'];
-    if(/lacrimal/.test(n)) return REF['Lacrimal'];
-    if(/palatino/.test(n)) return REF['Palatino'];
-    if(/v[ôo]mer/.test(n)) return REF['Vômer'];
-    if(/escafoide|semilunar|piramidal|pisiforme|trap[ée]zio|trapezoide|capitato|hamato/.test(n)) return REF['Carpo'];
-    if(/calc[âa]neo|t[áa]lus|navicular|cuboide|cuneiforme/.test(n)) return REF['Tarso'];
-    if(/patela/.test(n)) return REF['Patela'];
-    if(/martelo/.test(n)) return REF['Martelo'];
-    if(/bigorna/.test(n)) return REF['Bigorna'];
-    if(/estribo/.test(n)) return REF['Estribo'];
-    return null;
-  }
-  function heightFactor(){ return (state.leg.height / 100) / 1.65; }
-  function buildLongGeo(ref, scale){
-    const len = ref.len * scale, rMin = ref.rMin * scale, rMax = ref.rMax * scale;
-    const N = 14, pts = [];
-    for(let i = 0; i <= N; i++){
-      const t = i/N, y = (t - 0.5) * len;
-      const epi = Math.pow(Math.abs(2*t - 1), 1.4);
-      const r = rMin + (rMax - rMin) * epi;
-      pts.push(new THREE.Vector2(Math.max(0.0006, r), y));
-    }
-    return new THREE.LatheGeometry(pts, 10);
-  }
-  function buildFlatGeo(ref, s){ return new THREE.BoxGeometry(ref.w*s, ref.h*s, ref.d*s); }
-  function buildShortGeo(ref, s){ return new THREE.SphereGeometry(ref.r*s, 10, 8); }
-  function buildSesamoidGeo(ref, s){
-    const g = new THREE.SphereGeometry(Math.max(ref.w, ref.h)*s*0.5, 12, 10);
-    g.scale(1, ref.h/Math.max(ref.w, ref.h), ref.d/Math.max(ref.w, ref.h));
-    return g;
-  }
-  function buildWedgesGeo(ref, s){ return new THREE.CylinderGeometry(ref.w*s*0.5, ref.w*s*0.15, ref.h*s, 6); }
-  function buildArchGeo(ref, s){ return new THREE.TorusGeometry(ref.w*s*0.5, ref.d*s*0.35, 6, 12, Math.PI*0.75); }
-  function buildUShapeGeo(ref, s){ return new THREE.BoxGeometry(ref.w*s, ref.h*s*0.4, ref.d*s); }
-  function buildIrregularGeo(ref, s){ return new THREE.BoxGeometry(ref.w*s, ref.h*s, ref.d*s); }
-  function buildFlatArcGeo(ref, s){
-    const g = new THREE.SphereGeometry(ref.w*s*0.5, 16, 12, 0, Math.PI*2, 0, Math.PI*0.55);
-    g.scale(1, ref.h/ref.w, ref.d/ref.w*4);
-    return g;
-  }
-  function correctOne(entry){
-    const ref = classify(entry.name);
-    if(!ref) return false;
-    const mesh = entry.mesh;
-    if(!mesh || !mesh.geometry) return false;
-    const s = heightFactor();
-    let newGeo;
-    switch(ref.shape){
-      case 'long': case 'small-long': newGeo = buildLongGeo(ref, s); break;
-      case 'flat': case 'flat-tri': case 'curved': newGeo = buildFlatGeo(ref, s); break;
-      case 'flat-arc': newGeo = buildFlatArcGeo(ref, s); break;
-      case 'short': newGeo = buildShortGeo(ref, s); break;
-      case 'sesamoid': newGeo = buildSesamoidGeo(ref, s); break;
-      case 'wedge': newGeo = buildWedgesGeo(ref, s); break;
-      case 'arch': newGeo = buildArchGeo(ref, s); break;
-      case 'u-shape': newGeo = buildUShapeGeo(ref, s); break;
-      case 'irregular': newGeo = buildIrregularGeo(ref, s); break;
-      default: return false;
-    }
-    const old = mesh.geometry;
-    mesh.geometry = newGeo;
-    if(old && old.dispose) old.dispose();
-    return true;
-  }
-  function retargetChain(){
-    const s = heightFactor();
-    if(bodyParts.legL) bodyParts.legL.scale.y = 1 + (s - 1) * 0.65;
-    if(bodyParts.legR) bodyParts.legR.scale.y = 1 + (s - 1) * 0.65;
-  }
-  let runCount = 0;
-  function autoAdjust(silent){
-    let fixed = 0, skipped = 0;
-    boneRegistry.forEach(e => { if(correctOne(e)) fixed++; else skipped++; });
-    retargetChain();
-    runCount++;
-    if(!silent){
-      const b = document.getElementById('ai-badge');
-      if(b){ b.classList.add('show'); clearTimeout(b._t); b._t = setTimeout(()=>b.classList.remove('show'), 1500); }
-    }
-  }
-  return { autoAdjust, classify, heightFactor, REF };
-})();
-
-function scheduleAI(){
-  clearTimeout(window.__aiDebounce);
-  window.__aiDebounce = setTimeout(() => BoneAI.autoAdjust(true), 30);
-}
 
 /* ============================================================
    CENÁRIO
 ============================================================ */
-function buildBeachEnvironment(){
-  const envGroup = new THREE.Group();
+function buildEnv(){
   scene.background = new THREE.Color(0x8cd3ff);
-  scene.fog = new THREE.FogExp2(0xaaccff, 0.035);
-  const sand = new THREE.Mesh(new THREE.PlaneGeometry(60,60,32,32),
+  scene.fog = new THREE.FogExp2(0xaaccff, 0.028);
+  const sand = new THREE.Mesh(new THREE.PlaneGeometry(60,60),
     new THREE.MeshStandardMaterial({ color:0xedd6ad, roughness:0.95 }));
-  sand.rotation.x = -Math.PI/2; sand.position.set(0,-1.15,0); envGroup.add(sand);
-  oceanMesh = new THREE.Mesh(new THREE.PlaneGeometry(60,30,32,16),
+  sand.rotation.x = -Math.PI/2; sand.position.y = -1.15; scene.add(sand);
+  oceanMesh = new THREE.Mesh(new THREE.PlaneGeometry(60,30),
     new THREE.MeshStandardMaterial({ color:0x0099cc, roughness:0.1, metalness:0.4, transparent:true, opacity:0.85 }));
-  oceanMesh.rotation.x = -Math.PI/2; oceanMesh.position.set(0,-1.12,-18); envGroup.add(oceanMesh);
-  const sun = new THREE.Mesh(new THREE.SphereGeometry(2.5,24,24), new THREE.MeshBasicMaterial({ color:0xfff6cf }));
-  sun.position.set(6,12,-28); envGroup.add(sun);
-  function palm(x,z,s){
-    const t = new THREE.Group(); t.position.set(x,-1.15,z); t.scale.setScalar(s);
-    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.18,4,12),
-      new THREE.MeshStandardMaterial({ color:0x8b5a2b, roughness:0.9 }));
-    trunk.position.y = 2; t.add(trunk);
-    const leafMat = new THREE.MeshStandardMaterial({ color:0x2e8b57, roughness:0.6, side:THREE.DoubleSide });
-    for(let l=0;l<6;l++){ const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.8,2.5,5), leafMat);
-      leaf.position.set(0,3.9,0); leaf.rotation.z=1.1; leaf.rotation.y=(l/6)*Math.PI*2; t.add(leaf);}
-    return t;
-  }
-  envGroup.add(palm(-5,-6,1.1), palm(6,-8,1.3), palm(-9,-12,1.4), palm(10,-14,1.5));
-  scene.add(envGroup);
+  oceanMesh.rotation.x = -Math.PI/2; oceanMesh.position.set(0,-1.12,-18); scene.add(oceanMesh);
 }
 
 /* ============================================================
@@ -656,747 +392,790 @@ function buildBeachEnvironment(){
 ============================================================ */
 function buildSkeleton(){
   doll = new THREE.Group();
-  rig  = new THREE.Group();
+  rig = new THREE.Group();
   doll.add(rig);
+  const B = MAT.skin, B2 = MAT.skin2;
 
-  const BONE = MAT.skin, BONE2 = MAT.skin2, CART = MAT.cart;
-
+  // Quadril
   const hips = new THREE.Group();
   hips.position.y = -0.35;
   rig.add(hips);
   bodyParts.hips = hips;
-
-  function buildHipBone(side, name){
-    const g = new THREE.Group();
-    const ilium = makeBone(name, 'Cintura Pélvica',
-      new THREE.SphereGeometry(0.11,20,14,0,Math.PI*2,0,Math.PI*0.55), BONE, g, [0,0,0]);
-    ilium.scale.set(0.95,0.82,0.48); ilium.rotation.x = -Math.PI*0.10; ilium.rotation.z = side*0.15;
-    makePart(new THREE.TorusGeometry(0.075,0.011,8,20,Math.PI*0.9), BONE2, g, [0,0.02,0], [Math.PI*0.5, 0, side*-0.2]);
-    makePart(new THREE.TorusGeometry(0.045,0.012,8,16,Math.PI*0.7), BONE2, g, [0,-0.11,-0.02], [0.4, Math.PI*0.5, 0]);
-    makePart(new THREE.TorusGeometry(0.040,0.010,8,16,Math.PI*0.6), BONE2, g, [0.01*side,-0.10,0.03], [-0.5, Math.PI*0.5, 0]);
-    makePart(new THREE.TorusGeometry(0.045,0.014,8,20), BONE, g, [side*0.12,-0.10,0], [0, Math.PI/2, 0]);
-    g.position.set(0,0,-0.02);
-    hips.add(g);
-    return g;
-  }
   bodyParts.hipMesh = new THREE.Group();
-  bodyParts.hipMesh.add(buildHipBone(-1, 'Osso do Quadril Esquerdo'));
-  bodyParts.hipMesh.add(buildHipBone(1, 'Osso do Quadril Direito'));
+  [-1,1].forEach(side => {
+    const g = new THREE.Group();
+    const ilium = makeBone(side<0?'Osso do Quadril Esquerdo':'Osso do Quadril Direito',
+      'Cintura Pélvica', new THREE.SphereGeometry(0.11,20,14,0,Math.PI*2,0,Math.PI*0.55), B, g);
+    ilium.scale.set(0.95,0.82,0.48); ilium.rotation.z = side*0.15;
+    g.position.z = -0.02;
+    bodyParts.hipMesh.add(g);
+  });
   hips.add(bodyParts.hipMesh);
 
-  addJointTissue(hips, 'Sínfise Púbica', [0, -0.11, 0.03], 0.022, { wide: 1.6, ringRotX: 0 });
-
-  function buildLeg(side, sideName){
+  // Pernas
+  function buildLeg(side, name){
     const legG = new THREE.Group();
-    legG.position.set(0.09*side, -0.13, 0);
-
-    const femur = makeBone(`Fêmur ${sideName}`, 'Membros Inferiores',
-      boneGeo(0.36,0.022,0.038), BONE, legG, [0,-0.19,0], [0,0,side*0.045]);
-    makePart(new THREE.SphereGeometry(0.032,14,12), BONE, legG, [side*0.02,-0.02,0]);
-    addJointTissue(legG, `Coxofemoral ${sideName}`, [side*0.02, -0.02, 0], 0.028);
-
-    makeBone(`Patela ${sideName}`, 'Membros Inferiores',
-      new THREE.SphereGeometry(0.028,12,10), BONE2, legG, [0,-0.38,0.045], null, [1,1.15,0.5]);
-
-    const tibia = makeBone(`Tíbia ${sideName}`, 'Membros Inferiores',
-      boneGeo(0.32,0.020,0.032), BONE, legG, [-0.008*side,-0.56,0.008]);
-    makeBone(`Fíbula ${sideName}`, 'Membros Inferiores',
-      boneGeo(0.30,0.010,0.017), BONE, legG, [0.035*side,-0.56,-0.005]);
-
-    addJointTissue(legG, `Joelho ${sideName}`, [0, -0.38, 0], 0.030, { ringRotX: Math.PI*0.5 });
-
-    const tarNames = ['Calcâneo','Tálus','Navicular','Cuboide','Cuneiforme Medial','Cuneiforme Intermédio','Cuneiforme Lateral'];
-    tarNames.forEach((nm, i) => {
-      const sz = i === 0 ? 0.018 : 0.011;
-      makeBone(`${nm} ${sideName}`, 'Membros Inferiores',
-        new THREE.SphereGeometry(sz, 10, 8), BONE2, legG,
-        [(i-3)*0.010, -0.755 + (i%2)*0.006, 0.005 + (i%3)*0.012]);
-    });
-
-    addJointTissue(legG, `Tornozelo ${sideName}`, [0, -0.740, 0.010], 0.024);
-
+    legG.position.set(0.095*side, -0.13, 0);
+    const femur = makeBone(`Fêmur ${name}`, 'Membros Inferiores',
+      boneGeo(0.36,0.022,0.038), B, legG, [0,-0.19,0]);
+    makeBone(`Patela ${name}`, 'Membros Inferiores',
+      new THREE.SphereGeometry(0.028,12,10), B2, legG, [0,-0.38,0.045]);
+    const tibia = makeBone(`Tíbia ${name}`, 'Membros Inferiores',
+      boneGeo(0.32,0.020,0.032), B, legG, [0,-0.56,0.008]);
+    makeBone(`Fíbula ${name}`, 'Membros Inferiores',
+      boneGeo(0.30,0.010,0.017), B, legG, [0.035*side,-0.56,-0.005]);
+    ['Calcâneo','Tálus','Navicular','Cuboide'].forEach((nm,i) =>
+      makeBone(`${nm} ${name}`, 'Membros Inferiores',
+        new THREE.SphereGeometry(i===0?0.018:0.011,8,6), B2, legG, [(i-1.5)*0.018,-0.755,0.010]));
     for(let i=0;i<5;i++){
-      makeBone(`Metatarso ${i+1} ${sideName}`, 'Membros Inferiores',
-        boneGeo(0.062,0.0042,0.0072), BONE, legG,
-        [(i-2)*0.017, -0.785, 0.040], [Math.PI*0.5, 0, 0]);
+      makeBone(`Metatarso ${i+1} ${name}`, 'Membros Inferiores',
+        boneGeo(0.062,0.0042,0.0072), B, legG, [(i-2)*0.017,-0.785,0.040], [Math.PI*0.5,0,0]);
+      const nFal = i===0 ? 2 : 3;
+      for(let j=0;j<nFal;j++){
+        makeBone(`Falange ${j+1} Dedo ${i+1} ${name}`, 'Membros Inferiores',
+          boneGeo(0.025-j*0.005,0.0032,0.005), B, legG,
+          [(i-2)*0.017,-0.790,0.085+j*0.026], [Math.PI*0.5,0,0]);
+      }
     }
-    const phNames = ['Proximal','Média','Distal'];
-    for(let i=0;i<5;i++){
-      const isBig = i === 0;
-      const names = isBig ? ['Proximal','Distal'] : phNames;
-      names.forEach((pn, j) => {
-        const len = isBig ? (j === 0 ? 0.038 : 0.028) : (j === 0 ? 0.032 : j === 1 ? 0.024 : 0.018);
-        const zOff = 0.085 + j*(isBig ? 0.030 : 0.026);
-        makeBone(`Falange ${pn} ${i+1} ${sideName}`, 'Membros Inferiores',
-          boneGeo(len, 0.0032, 0.0050), BONE, legG,
-          [(i-2)*0.017, -0.790, zOff], [Math.PI*0.5, 0, 0]);
-      });
-      addJointTissue(legG, `Metatarsofalângica ${i+1} ${sideName}`,
-        [(i-2)*0.017, -0.785, 0.075], 0.010, { wide: 0.9 });
-    }
-    return { group: legG, femur, tibia };
+    return { group: legG };
   }
-  const LgL = buildLeg(-1, 'Esquerdo');
-  const LgR = buildLeg(1, 'Direito');
-  bodyParts.legL = LgL.group; bodyParts.legR = LgR.group;
-  bodyParts.thighL = LgL.femur; bodyParts.thighR = LgR.femur;
-  bodyParts.calfL = LgL.tibia;  bodyParts.calfR = LgR.tibia;
+  bodyParts.legL = buildLeg(-1,'Esquerdo').group;
+  bodyParts.legR = buildLeg(1,'Direito').group;
   hips.add(bodyParts.legL, bodyParts.legR);
 
+  // Coluna
   const spine = new THREE.Group();
   rig.add(spine);
   bodyParts.waist = spine;
+  makeBone('Sacro','Coluna Vertebral', new THREE.CylinderGeometry(0.052,0.02,0.20,6), B, hips, [0,-0.01,-0.10]);
+  makeBone('Cóccix','Coluna Vertebral', new THREE.ConeGeometry(0.02,0.045,4), B2, hips, [0,-0.13,-0.115], [Math.PI*0.85,0,0]);
+  for(let i=0;i<5;i++) makeBone(`Vértebra Lombar ${i+1}`,'Coluna Vertebral',
+    new THREE.CylinderGeometry(0.030,0.030,0.016,8), B, spine, [0,-0.045+i*0.032,-0.012]);
+  for(let i=0;i<12;i++) makeBone(`Vértebra Torácica ${i+1}`,'Coluna Vertebral',
+    new THREE.CylinderGeometry(0.024,0.024,0.016,8), B, spine, [0,0.115+i*0.030,-0.012]);
+  for(let i=0;i<7;i++) makeBone(`Vértebra Cervical ${i+1}`,'Coluna Vertebral',
+    new THREE.CylinderGeometry(0.017,0.017,0.016,8), B, spine, [0,0.475+i*0.020,-0.012]);
 
-  makeBone('Sacro', 'Coluna Vertebral',
-    new THREE.CylinderGeometry(0.052,0.02,0.20,6), BONE, hips, [0,-0.01,-0.10], null, [1.35,1,0.7]);
-  makeBone('Cóccix', 'Coluna Vertebral',
-    new THREE.ConeGeometry(0.02,0.045,4), BONE2, hips, [0,-0.13,-0.115], [Math.PI*0.85,0,0]);
-
-  function makeVertebra(name, y, size){
-    makeBone(name, 'Coluna Vertebral',
-      new THREE.CylinderGeometry(size,size,0.016,8), BONE, spine, [0,y,-0.012]);
-    makePart(new THREE.ConeGeometry(size*0.42, 0.032, 4), BONE2, spine, [0,y-0.004,-0.038], [Math.PI*0.5,0,0]);
-    makePart(new THREE.CylinderGeometry(size*0.9,size*0.9,0.006,8), CART, spine, [0,y+0.010,-0.012]);
-    const nerveGeo = new THREE.TubeGeometry(
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(0, y, -0.020),
-        new THREE.Vector3(size*1.3, y+0.005, -0.030),
-        new THREE.Vector3(size*2.0, y+0.010, -0.020)
-      ]), 8, 0.0012, 4, false);
-    spine.add(new THREE.Mesh(nerveGeo, JOINT_MAT.nerve));
-  }
-  for(let i=0;i<5;i++)  makeVertebra(`Vértebra Lombar ${i+1}`,  -0.045 + i*0.032, 0.030);
-  for(let i=0;i<12;i++) makeVertebra(`Vértebra Torácica ${i+1}`,  0.115 + i*0.030, 0.024);
-  for(let i=0;i<7;i++)  makeVertebra(`Vértebra Cervical ${i+1}`,  0.475 + i*0.020, 0.017);
-
+  // Tórax
   const chest = new THREE.Group();
   chest.position.y = 0.30;
   rig.add(chest);
   bodyParts.chest = chest;
-
-  makeBone('Esterno', 'Tórax', new THREE.BoxGeometry(0.042,0.150,0.014), BONE, chest, [0,0.040,0.101]);
-  makePart(new THREE.BoxGeometry(0.050,0.035,0.016), BONE,  chest, [0,0.115,0.100]);
-  makePart(new THREE.ConeGeometry(0.016,0.038,4), BONE2, chest, [0,-0.075,0.100], [Math.PI,0,0]);
-  addJointTissue(chest, 'Manúbrio-Esternal', [0, 0.085, 0.100], 0.018, { wide: 1.4, ringRotX: 0 });
-
+  makeBone('Esterno','Tórax', new THREE.BoxGeometry(0.042,0.150,0.014), B, chest, [0,0.040,0.101]);
   for(let i=0;i<12;i++){
-    const t = i/11;
-    const ribY = 0.130 - t*0.270;
-    const width = 0.125 + Math.sin(t*Math.PI)*0.065;
-    const depth = 0.100 + Math.sin(t*Math.PI)*0.040;
+    const t=i/11, y=0.130-t*0.270, w=0.125+Math.sin(t*Math.PI)*0.065, d=0.100+Math.sin(t*Math.PI)*0.040;
     [-1,1].forEach(side => {
-      const sideName = side < 0 ? 'Esquerda' : 'Direita';
+      const sn = side<0?'Esquerda':'Direita';
       const pts = [
-        new THREE.Vector3(0.022*side, ribY, -0.075),
-        new THREE.Vector3(width*side*0.85, ribY-0.020, -0.030),
-        new THREE.Vector3(width*side*1.0, ribY-0.048-t*0.030, depth*0.65),
-        new THREE.Vector3(0.028*side, ribY-0.075-t*0.048, depth)
+        new THREE.Vector3(0.022*side, y, -0.075),
+        new THREE.Vector3(w*side*0.85, y-0.020, -0.030),
+        new THREE.Vector3(w*side, y-0.048-t*0.030, d*0.65),
+        new THREE.Vector3(0.028*side, y-0.075-t*0.048, d)
       ];
-      const curve = new THREE.CatmullRomCurve3(pts);
-      const ribGeo = new THREE.TubeGeometry(curve, 14, 0.0060+(1-t)*0.0022, 6, false);
-      makeBone(`Costela ${i+1} ${sideName}`, 'Tórax', ribGeo, BONE, chest);
-      makePart(new THREE.SphereGeometry(0.008+(1-t)*0.003, 8, 6), CART, chest,
-        [pts[3].x, pts[3].y, pts[3].z]);
+      makeBone(`Costela ${i+1} ${sn}`, 'Tórax',
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),12,0.006+(1-t)*0.002,6,false), B, chest);
     });
   }
 
-  [-1,1].forEach(side => {
-    const sideName = side < 0 ? 'Esquerda' : 'Direita';
-    makeBone(`Clavícula ${sideName}`, 'Cintura Escapular',
-      boneGeo(0.17,0.0055,0.010), BONE, chest, [side*0.105,0.175,0.058], [0, side*0.22, -side*Math.PI/2*0.92]);
-    makeBone(`Escápula ${sideName}`, 'Cintura Escapular',
-      new THREE.SphereGeometry(0.052,14,10), BONE, chest, [side*0.115,0.115,-0.088],
-      [0, side*-0.15, 0], [1.0,1.45,0.32]);
-    makePart(new THREE.BoxGeometry(0.020,0.075,0.010), BONE2, chest, [side*0.135,0.120,-0.075], [-0.25,0,0]);
-    makePart(new THREE.SphereGeometry(0.016,10,8), BONE2, chest, [side*0.155,0.155,-0.040]);
-    addJointTissue(chest, `Esternoclavicular ${sideName}`, [side*0.028, 0.175, 0.075], 0.018);
-    addJointTissue(chest, `Acromioclavicular ${sideName}`,   [side*0.155, 0.155, -0.040], 0.016);
-  });
-
-  function buildArm(side, sideName){
+  // Braços
+  function buildArm(side, name){
     const armG = new THREE.Group();
     armG.position.set(0.195*side, 0.145, 0);
-
-    const humerus = makeBone(`Úmero ${sideName}`, 'Membros Superiores',
-      boneGeo(0.20,0.0145,0.024), BONE, armG, [0,-0.10,0]);
-    makePart(new THREE.SphereGeometry(0.028,14,12), BONE, armG, [0,0.02,0]);
-    addJointTissue(armG, `Ombro ${sideName}`, [0, 0.02, 0], 0.028);
-
-    makeBone(`Rádio ${sideName}`, 'Membros Superiores',
-      boneGeo(0.185,0.0105,0.0175), BONE, armG, [side*0.012,-0.315,0.006]);
-    makeBone(`Ulna ${sideName}`, 'Membros Superiores',
-      boneGeo(0.195,0.0115,0.0185), BONE, armG, [-side*0.010,-0.320,-0.008]);
-    makePart(new THREE.SphereGeometry(0.020,12,10), BONE2, armG, [0,-0.225,-0.012]);
-    addJointTissue(armG, `Cotovelo ${sideName}`, [0, -0.225, 0], 0.024, { ringRotX: Math.PI*0.5 });
-
-    const carpNames = ['Escafoide','Semilunar','Piramidal','Pisiforme','Trapézio','Trapezoide','Capitato','Hamato'];
-    carpNames.forEach((cn, i) => {
-      const ang = (i/8)*Math.PI*2;
-      makeBone(`${cn} ${sideName}`, 'Membros Superiores',
-        new THREE.SphereGeometry(0.0075,8,6), BONE2, armG,
-        [0.014*Math.cos(ang), -0.425+0.008*Math.sin(ang), 0.014*Math.sin(ang)]);
+    makeBone(`Clavícula ${name}`,'Cintura Escapular', boneGeo(0.17,0.0055,0.010), B, chest,
+      [side*0.105,0.175,0.058], [0,side*0.22,-side*Math.PI/2*0.92]);
+    makeBone(`Escápula ${name}`,'Cintura Escapular',
+      new THREE.SphereGeometry(0.052,14,10), B, chest, [side*0.115,0.115,-0.088], [0,side*-0.15,0], [1,1.45,0.32]);
+    makeBone(`Úmero ${name}`,'Membros Superiores', boneGeo(0.20,0.0145,0.024), B, armG, [0,-0.10,0]);
+    makeBone(`Rádio ${name}`,'Membros Superiores', boneGeo(0.185,0.0105,0.0175), B, armG, [side*0.012,-0.315,0.006]);
+    makeBone(`Ulna ${name}`,'Membros Superiores', boneGeo(0.195,0.0115,0.0185), B, armG, [-side*0.010,-0.320,-0.008]);
+    ['Escafoide','Semilunar','Piramidal','Pisiforme','Trapézio','Trapezoide','Capitato','Hamato'].forEach((cn,i)=>{
+      const a=(i/8)*Math.PI*2;
+      makeBone(`${cn} ${name}`,'Membros Superiores', new THREE.SphereGeometry(0.0075,8,6), B2, armG,
+        [0.014*Math.cos(a),-0.425+0.008*Math.sin(a),0.014*Math.sin(a)]);
     });
-    addJointTissue(armG, `Punho ${sideName}`, [0, -0.425, 0], 0.018);
-
     for(let i=0;i<5;i++){
-      makeBone(`Metacarpo ${i+1} ${sideName}`, 'Membros Superiores',
-        boneGeo(0.048,0.0032,0.0055), BONE, armG, [(i-2)*0.0105,-0.470,0]);
+      makeBone(`Metacarpo ${i+1} ${name}`,'Membros Superiores',
+        boneGeo(0.048,0.0032,0.0055), B, armG, [(i-2)*0.0105,-0.470,0]);
+      const nFal = i===0?2:3;
+      for(let j=0;j<nFal;j++){
+        makeBone(`Falange ${j+1} Dedo ${i+1} ${name}`,'Membros Superiores',
+          boneGeo(0.020-j*0.002,0.0026,0.004), B, armG,
+          [(i-2)*0.0105,-0.490-j*0.022,0]);
+      }
     }
-    for(let i=0;i<5;i++){
-      const base = -0.490;
-      const isThumb = i === 0;
-      const names = isThumb ? ['Proximal','Distal'] : ['Proximal','Média','Distal'];
-      const lens  = isThumb ? [0.020, 0.016] : [0.025, 0.020, 0.018];
-      let yOff = 0;
-      names.forEach((pn, j) => {
-        const len = lens[j];
-        yOff += len/2 + (j>0 ? lens[j-1]/2 : 0);
-        makeBone(`Falange ${pn} Dedo ${i+1} ${sideName}`, 'Membros Superiores',
-          boneGeo(len, 0.0026, 0.0040), BONE, armG,
-          [(i-2)*0.0105, base - yOff + 0.010, 0]);
-      });
-    }
-    return { group: armG, humerus };
+    return { group: armG };
   }
-  const armL = buildArm(-1, 'Esquerdo');
-  const armR = buildArm(1, 'Direito');
-  bodyParts.armL = armL.group; bodyParts.armR = armR.group;
+  bodyParts.armL = buildArm(-1,'Esquerdo').group;
+  bodyParts.armR = buildArm(1,'Direito').group;
   chest.add(bodyParts.armL, bodyParts.armR);
 
+  // Cabeça
   const headG = new THREE.Group();
   headG.position.y = 0.56;
   rig.add(headG);
   bodyParts.headG = headG;
-
-  makeBone('Hioide', 'Pescoço',
-    new THREE.TorusGeometry(0.022, 0.0055, 8, 16, Math.PI*1.5), BONE2,
-    headG, [0, 0.03, 0.020], [Math.PI*0.5, 0, Math.PI*0.25]);
-
-  bodyParts.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.036,0.042,0.09,12), BONE);
-  bodyParts.neck.position.y = 0.03;
-  headG.add(bodyParts.neck);
-
-  addJointTissue(headG, 'Atlanto-Occipital', [0, 0.075, 0], 0.024);
-
+  makeBone('Hioide','Pescoço', new THREE.TorusGeometry(0.022,0.0055,8,16,Math.PI*1.5), B2, headG, [0,0.03,0.020], [Math.PI*0.5,0,Math.PI*0.25]);
   const head = new THREE.Group();
   head.position.y = 0.16;
   headG.add(head);
   bodyParts.head = head;
-
-  makeBone('Osso Frontal', 'Crânio',
-    new THREE.SphereGeometry(0.135, 26, 20, 0, Math.PI*2, 0, Math.PI*0.55), BONE,
-    head, [0, 0.020, 0], null, [1, 1.10, 1.06]);
-  makeBone('Osso Occipital', 'Crânio',
-    new THREE.SphereGeometry(0.134, 24, 20, 0, Math.PI*2, Math.PI*0.45, Math.PI*0.55), BONE2,
-    head, [0, -0.005, 0], null, [1, 1.08, 1.05]);
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Parietal Esquerdo' : 'Parietal Direito', 'Crânio',
-      new THREE.SphereGeometry(0.100, 18, 14, 0, Math.PI, 0, Math.PI*0.6), BONE,
-      head, [side*0.055, 0.045, -0.010], [0, side*Math.PI*0.5, 0], [1, 0.95, 0.95]);
+  makeBone('Osso Frontal','Crânio', new THREE.SphereGeometry(0.135,26,20,0,Math.PI*2,0,Math.PI*0.55), B, head, [0,0.020,0], null, [1,1.10,1.06]);
+  makeBone('Osso Occipital','Crânio', new THREE.SphereGeometry(0.134,24,20,0,Math.PI*2,Math.PI*0.45,Math.PI*0.55), B2, head, [0,-0.005,0], null, [1,1.08,1.05]);
+  [-1,1].forEach(side=>{
+    makeBone(side<0?'Parietal Esquerdo':'Parietal Direito','Crânio',
+      new THREE.SphereGeometry(0.100,18,14,0,Math.PI,0,Math.PI*0.6), B, head, [side*0.055,0.045,-0.010], [0,side*Math.PI*0.5,0]);
+    makeBone(side<0?'Temporal Esquerdo':'Temporal Direito','Crânio',
+      new THREE.SphereGeometry(0.075,14,12), B2, head, [side*0.098,-0.010,-0.010], null, [0.75,0.75,0.9]);
+    makeBone(side<0?'Maxila Esquerda':'Maxila Direita','Face',
+      new THREE.BoxGeometry(0.048,0.030,0.045), B, head, [side*0.026,-0.058,0.100]);
+    makeBone(side<0?'Zigomático Esquerdo':'Zigomático Direito','Face',
+      new THREE.TorusGeometry(0.020,0.006,6,12,Math.PI*0.75), B2, head, [side*0.085,-0.015,0.075]);
+    makeBone(side<0?'Nasal Esquerdo':'Nasal Direito','Face',
+      new THREE.BoxGeometry(0.011,0.028,0.008), B, head, [side*0.010,0.010,0.122]);
+    makeBone(side<0?'Lacrimal Esquerdo':'Lacrimal Direito','Face',
+      new THREE.BoxGeometry(0.008,0.010,0.006), B2, head, [side*0.062,-0.008,0.108]);
+    makeBone(side<0?'Palatino Esquerdo':'Palatino Direito','Face',
+      new THREE.BoxGeometry(0.014,0.008,0.022), B2, head, [side*0.020,-0.075,0.078]);
+    makeBone(side<0?'Concha Esquerda':'Concha Direita','Face',
+      new THREE.TorusGeometry(0.010,0.0035,6,10,Math.PI), B2, head, [side*0.012,-0.030,0.118], [Math.PI*0.5,0,0]);
+    makeBone(side<0?'Martelo Esq.':'Martelo Dir.','Ouvido Médio',
+      new THREE.SphereGeometry(0.008,8,6), B2, head, [side*0.118,-0.005,-0.010]);
+    makeBone(side<0?'Bigorna Esq.':'Bigorna Dir.','Ouvido Médio',
+      new THREE.SphereGeometry(0.007,8,6), B2, head, [side*0.128,-0.008,-0.015]);
+    makeBone(side<0?'Estribo Esq.':'Estribo Dir.','Ouvido Médio',
+      new THREE.SphereGeometry(0.005,6,5), B2, head, [side*0.136,-0.010,-0.018]);
   });
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Temporal Esquerdo' : 'Temporal Direito', 'Crânio',
-      new THREE.SphereGeometry(0.075, 14, 12, 0, Math.PI*2, 0, Math.PI*0.7), BONE2,
-      head, [side*0.098, -0.010, -0.010], null, [0.75, 0.75, 0.9]);
-  });
-  makeBone('Esfenoide', 'Crânio', new THREE.BoxGeometry(0.085, 0.040, 0.055), BONE2, head, [0, 0.010, -0.005]);
-  makeBone('Etmoide', 'Crânio', new THREE.BoxGeometry(0.045, 0.028, 0.070), BONE2, head, [0, -0.010, 0.030]);
-
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Osso Nasal Esquerdo' : 'Osso Nasal Direito', 'Face',
-      new THREE.BoxGeometry(0.011, 0.028, 0.008), BONE, head, [side*0.010, 0.010, 0.122]);
-  });
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Maxila Esquerda' : 'Maxila Direita', 'Face',
-      new THREE.BoxGeometry(0.048, 0.030, 0.045), BONE, head, [side*0.026, -0.058, 0.100]);
-  });
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Zigomático Esquerdo' : 'Zigomático Direito', 'Face',
-      new THREE.TorusGeometry(0.020, 0.006, 6, 12, Math.PI*0.75), BONE2,
-      head, [side*0.085, -0.015, 0.075], [0, 0, -side*Math.PI*0.3]);
-  });
+  makeBone('Esfenoide','Crânio', new THREE.BoxGeometry(0.085,0.040,0.055), B2, head, [0,0.010,-0.005]);
+  makeBone('Etmoide','Crânio', new THREE.BoxGeometry(0.045,0.028,0.070), B2, head, [0,-0.010,0.030]);
+  makeBone('Vômer','Face', new THREE.BoxGeometry(0.004,0.040,0.008), B2, head, [0,-0.020,0.115]);
   const jaw = new THREE.Group();
-  jaw.position.set(0, -0.098, 0.058);
+  jaw.position.set(0,-0.098,0.058);
   head.add(jaw);
   bodyParts.jaw = jaw;
-  makeBone('Mandíbula', 'Face', new THREE.BoxGeometry(0.110, 0.020, 0.038), BONE, jaw, [0, 0, 0.010]);
-  makePart(new THREE.BoxGeometry(0.014, 0.055, 0.018), BONE, jaw, [-0.050, 0.030, -0.012], [-0.15,0,0]);
-  makePart(new THREE.BoxGeometry(0.014, 0.055, 0.018), BONE, jaw, [ 0.050, 0.030, -0.012], [-0.15,0,0]);
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Lacrimal Esquerdo' : 'Lacrimal Direito', 'Face',
-      new THREE.BoxGeometry(0.008, 0.010, 0.006), BONE2, head, [side*0.062, -0.008, 0.108]);
-  });
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Palatino Esquerdo' : 'Palatino Direito', 'Face',
-      new THREE.BoxGeometry(0.014, 0.008, 0.022), BONE2, head, [side*0.020, -0.075, 0.078]);
-  });
-  [-1,1].forEach(side => {
-    makeBone(side<0 ? 'Concha Nasal Inferior Esquerda' : 'Concha Nasal Inferior Direita', 'Face',
-      new THREE.TorusGeometry(0.010, 0.0035, 6, 10, Math.PI), BONE2,
-      head, [side*0.012, -0.030, 0.118], [Math.PI*0.5, 0, 0]);
-  });
-  makeBone('Vômer', 'Face', new THREE.BoxGeometry(0.004, 0.040, 0.008), BONE2, head, [0, -0.020, 0.115]);
-
-  makePart(new THREE.SphereGeometry(0.032,14,12), MAT.cavity, head, [-0.048,0.020,0.108], null, [1.05,0.92,0.55]);
-  makePart(new THREE.SphereGeometry(0.032,14,12), MAT.cavity, head, [ 0.048,0.020,0.108], null, [1.05,0.92,0.55]);
-
+  makeBone('Mandíbula','Face', new THREE.BoxGeometry(0.110,0.020,0.038), B, jaw);
   for(let i=0;i<8;i++){
-    const t1 = new THREE.Mesh(new THREE.BoxGeometry(0.0085,0.0090,0.0080), MAT.teeth);
-    t1.position.set((i-3.5)*0.0108, -0.078, 0.122); head.add(t1);
-    const t2 = new THREE.Mesh(new THREE.BoxGeometry(0.0085,0.0090,0.0080), MAT.teeth);
-    t2.position.set((i-3.5)*0.0108, -0.084, 0.090); jaw.add(t2);
+    makePart(new THREE.BoxGeometry(0.0085,0.009,0.008), MAT.teeth, head, [(i-3.5)*0.0108,-0.078,0.122]);
+    makePart(new THREE.BoxGeometry(0.0085,0.009,0.008), MAT.teeth, jaw, [(i-3.5)*0.0108,0.014,0.062]);
   }
-
-  [-1,1].forEach(side => {
-    const sn = side<0 ? 'Esquerdo' : 'Direito';
-    makeBone(`Martelo ${sn}`, 'Ouvido Médio',
-      new THREE.SphereGeometry(0.008, 8, 6), BONE2, head, [side*0.118, -0.005, -0.010]);
-    makeBone(`Bigorna ${sn}`, 'Ouvido Médio',
-      new THREE.SphereGeometry(0.007, 8, 6), BONE2, head, [side*0.128, -0.008, -0.015]);
-    makeBone(`Estribo ${sn}`, 'Ouvido Médio',
-      new THREE.SphereGeometry(0.005, 6, 5), BONE2, head, [side*0.136, -0.010, -0.018]);
+  [-1,1].forEach(side=>{
+    makePart(new THREE.SphereGeometry(0.032,14,12), MAT.cavity, head, [side*0.048,0.020,0.108], null, [1.05,0.92,0.55]);
   });
-
-  function ph(){ const g = new THREE.Group(); g.visible = false; return g; }
-  bodyParts.chestL = ph(); bodyParts.chestR = ph();
-  bodyParts.buttL = ph(); bodyParts.buttR = ph();
-  bodyParts.butt  = ph();
-  bodyParts.eyeL = ph(); bodyParts.eyeR = ph();
-  bodyParts.mouthGroup = ph();
-  bodyParts.earL = ph(); bodyParts.earR = ph();
-  chest.add(bodyParts.chestL, bodyParts.chestR);
-  hips.add(bodyParts.butt, bodyParts.buttL, bodyParts.buttR);
 
   buildSkinBody();
   buildOrgans();
 
-  const dressTop = new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.22,0.34,24,1,true), MAT.dress);
-  dressTop.position.y = 0.30; chest.add(dressTop); outfitParts.push(dressTop);
-  const dressSkirt = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.42,0.55,24,1,true), MAT.dress2);
-  dressSkirt.position.y = -0.20; hips.add(dressSkirt); outfitParts.push(dressSkirt);
-  const braL = new THREE.Mesh(new THREE.SphereGeometry(0.11,16,12,0,Math.PI*2,0,Math.PI*0.6), MAT.ling);
-  braL.position.set(-0.10,0.05,0.10); braL.rotation.x = Math.PI*0.5; chest.add(braL); underParts.push(braL);
-  const braR = braL.clone(); braR.position.x = 0.10; chest.add(braR); underParts.push(braR);
-  const panty = new THREE.Mesh(new THREE.SphereGeometry(0.28,20,14,0,Math.PI*2,0,Math.PI*0.42), MAT.ling);
-  panty.position.y = -0.04; panty.scale.set(1.08,0.62,0.95); panty.rotation.x = Math.PI;
-  hips.add(panty); underParts.push(panty);
-  outfitParts.forEach(p => p.visible = false);
-  underParts.forEach(p => p.visible = false);
-
-  doll.position.y = 0.45;
+  doll.position.y = 0.20;
   scene.add(doll);
 
   document.getElementById('bone-count').innerText = boneCount;
   document.getElementById('organ-count').innerText = organCount;
-  buildBoneList();
-  buildOrganList();
 
-  applyBody(1); applyFace(1); applyHip(1); applyWaist(1);
-  applyLegPreset(1); applyPosePreset(1);
-  setSensualPose('empinada');
-  BoneAI.autoAdjust();
-  setViewMode('full');
+  applyBodyPreset(0);
+  applyLegPreset(0);
 }
 
 /* ============================================================
-   👤 CORPO COM PELE
+   CORPO COM PELE — REALISTA
 ============================================================ */
 function buildSkinBody(){
-  const skin = new THREE.Group();
-  rig.add(skin);
-  bodyParts.skinGroup = skin;
-  const SK = MAT.skinBody;
-  const SK2 = MAT.skinBody2;
+  const SK = MAT.skinBody, SK2 = MAT.skinBody2;
 
-  const headSkin = new THREE.Mesh(new THREE.SphereGeometry(0.145, 28, 22), SK);
-  headSkin.scale.set(0.93, 1.10, 1.0);
-  headSkin.position.set(0, 0.015, 0);
+  // CABEÇA
+  const headSkin = new THREE.Mesh(new THREE.SphereGeometry(0.145,32,26), SK);
+  headSkin.scale.set(0.93,1.10,1.0); headSkin.position.set(0,0.015,0);
+  headSkin.userData.partId = 'head';
   bodyParts.head.add(headSkin);
   bodyParts.headSkin = headSkin;
 
-  [-1,1].forEach(side => {
-    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 10), SK);
-    ear.position.set(side*0.118, -0.012, -0.010);
-    ear.scale.set(0.35, 1.15, 0.85);
+  // Orelhas
+  [-1,1].forEach(side=>{
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.022,14,12), SK);
+    ear.position.set(side*0.118,-0.012,-0.010);
+    ear.scale.set(0.35,1.15,0.85);
+    ear.userData.partId = 'head';
     bodyParts.head.add(ear);
   });
 
-  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.032, 10), SK);
-  nose.position.set(0, -0.025, 0.132);
-  nose.rotation.x = -Math.PI*0.5;
-  bodyParts.head.add(nose);
-
-  const lips = new THREE.Mesh(new THREE.SphereGeometry(0.021, 14, 10), MAT.lipSkin);
-  lips.scale.set(1.3, 0.55, 0.7);
-  lips.position.set(0, -0.062, 0.128);
-  bodyParts.head.add(lips);
-
-  [-1,1].forEach(side => {
-    const eyeW = new THREE.Mesh(new THREE.SphereGeometry(0.017, 12, 10), MAT.eye);
-    eyeW.position.set(side*0.048, 0.020, 0.114);
-    eyeW.scale.set(1.05, 0.92, 0.55);
-    bodyParts.head.add(eyeW);
-    const iris = new THREE.Mesh(new THREE.CircleGeometry(0.008, 12), MAT.iris);
-    iris.position.set(side*0.048, 0.020, 0.130);
-    bodyParts.head.add(iris);
-    const pup = new THREE.Mesh(new THREE.CircleGeometry(0.004, 10), MAT.pupil);
-    pup.position.set(side*0.048, 0.020, 0.132);
-    bodyParts.head.add(pup);
-  });
-
-  [-1,1].forEach(side => {
-    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.005, 0.006), MAT.hairTop);
-    brow.position.set(side*0.050, 0.048, 0.120);
-    brow.rotation.z = side * 0.15;
-    bodyParts.head.add(brow);
-  });
-
-  const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.155, 24, 18, 0, Math.PI*2, 0, Math.PI*0.62), MAT.hairTop);
-  hairCap.position.set(0, 0.025, -0.010);
-  hairCap.scale.set(1.0, 1.10, 1.05);
+  // Cabelo
+  const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.158,28,22,0,Math.PI*2,0,Math.PI*0.62), MAT.hairTop);
+  hairCap.position.set(0,0.025,-0.010); hairCap.scale.set(1,1.10,1.05);
+  hairCap.userData.partId = 'head';
   bodyParts.head.add(hairCap);
 
-  // ✅ CORREÇÃO: verifica se CapsuleGeometry existe antes de usar (three r128 não tem)
-  [-1,1].forEach(side => {
-    const strandGeo = (typeof THREE.CapsuleGeometry !== 'undefined')
-      ? new THREE.CapsuleGeometry(0.035, 0.22, 4, 8)
-      : new THREE.CylinderGeometry(0.035, 0.025, 0.22, 10);
-    const strand = new THREE.Mesh(strandGeo, MAT.hairTop);
-    strand.position.set(side*0.120, -0.10, -0.020);
-    strand.scale.set(1, 1, 0.6);
+  // Mechas laterais
+  [-1,1].forEach(side=>{
+    const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.025,0.24,12), MAT.hairTop);
+    strand.position.set(side*0.118,-0.115,-0.020);
+    strand.scale.set(1,1,0.6);
+    strand.userData.partId = 'head';
     bodyParts.head.add(strand);
   });
 
-  const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.140, 20, 16, 0, Math.PI*2, 0, Math.PI*0.7), MAT.hairTop);
-  backHair.position.set(0, 0.005, -0.035);
-  backHair.scale.set(0.98, 1.15, 0.65);
+  // Cabelo traseiro
+  const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.142,24,18,0,Math.PI*2,0,Math.PI*0.72), MAT.hairTop);
+  backHair.position.set(0,0.005,-0.038); backHair.scale.set(0.98,1.18,0.68);
+  backHair.userData.partId = 'head';
   bodyParts.head.add(backHair);
 
-  const neckSkin = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.048, 0.10, 16), SK);
-  neckSkin.position.y = 0.030;
-  bodyParts.headG.add(neckSkin);
+  // Olhos + íris + pupila
+  bodyParts.eyeMeshes = [];
+  [-1,1].forEach(side=>{
+    const ew = new THREE.Mesh(new THREE.SphereGeometry(0.017,16,12), MAT.eye);
+    ew.position.set(side*0.048,0.020,0.114); ew.scale.set(1.05,0.92,0.55);
+    ew.userData.partId = 'head';
+    bodyParts.head.add(ew);
+    const ir = new THREE.Mesh(new THREE.CircleGeometry(0.009,16), MAT.iris);
+    ir.position.set(side*0.048,0.020,0.1295);
+    ir.userData.partId = 'head';
+    bodyParts.head.add(ir);
+    const pu = new THREE.Mesh(new THREE.CircleGeometry(0.0045,12), MAT.pupil);
+    pu.position.set(side*0.048,0.020,0.1312);
+    pu.userData.partId = 'head';
+    bodyParts.head.add(pu);
+    bodyParts.eyeMeshes.push({eye:ew, iris:ir, pupil:pu});
+  });
 
-  const torsoPts = [];
-  const N = 24;
-  for(let i = 0; i <= N; i++){
-    const t = i/N;
-    const y = (t - 0.5) * 0.42;
+  // Sobrancelhas
+  [-1,1].forEach(side=>{
+    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.032,0.005,0.006), MAT.hairTop);
+    brow.position.set(side*0.050,0.048,0.120);
+    brow.rotation.z = side*0.15;
+    brow.userData.partId = 'head';
+    bodyParts.head.add(brow);
+  });
+
+  // Nariz
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.016,0.032,12), SK);
+  nose.position.set(0,-0.025,0.132); nose.rotation.x = -Math.PI*0.5;
+  nose.userData.partId = 'head';
+  bodyParts.head.add(nose);
+
+  // Lábios
+  const lips = new THREE.Mesh(new THREE.SphereGeometry(0.021,16,12), MAT.lip);
+  lips.scale.set(1.3,0.55,0.7); lips.position.set(0,-0.062,0.128);
+  lips.userData.partId = 'head';
+  bodyParts.head.add(lips);
+
+  // PESCOÇO
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.038,0.048,0.10,20), SK);
+  neck.position.y = 0.030;
+  neck.userData.partId = 'neck';
+  bodyParts.headG.add(neck);
+  bodyParts.neckSkin = neck;
+
+  // TÓRAX
+  const pts = [];
+  for(let i=0;i<=28;i++){
+    const t=i/28, y=(t-0.5)*0.42;
     let r;
-    if(t < 0.12)      r = 0.135 + t*0.30;
-    else if(t < 0.35) r = 0.170 - (t-0.12)*0.10;
-    else if(t < 0.55) r = 0.145 - (t-0.35)*0.28;
-    else if(t < 0.75) r = 0.090 + (t-0.55)*0.75;
-    else              r = 0.240 - (t-0.75)*0.55;
-    torsoPts.push(new THREE.Vector2(Math.max(0.06, r), y));
+    if(t<0.12) r = 0.135 + t*0.30;
+    else if(t<0.35) r = 0.170 - (t-0.12)*0.10;
+    else if(t<0.55) r = 0.145 - (t-0.35)*0.28;
+    else if(t<0.75) r = 0.090 + (t-0.55)*0.75;
+    else r = 0.240 - (t-0.75)*0.55;
+    pts.push(new THREE.Vector2(Math.max(0.06, r), y));
   }
-  const torsoMesh = new THREE.Mesh(new THREE.LatheGeometry(torsoPts, 24), SK);
-  torsoMesh.scale.set(1, 1, 0.72);
-  torsoMesh.position.y = 0.02;
-  bodyParts.chest.add(torsoMesh);
-  bodyParts.torsoSkin = torsoMesh;
+  const torso = new THREE.Mesh(new THREE.LatheGeometry(pts,28), SK);
+  torso.scale.set(1,1,0.72); torso.position.y = 0.02;
+  torso.userData.partId = 'chest';
+  bodyParts.chest.add(torso);
+  bodyParts.torsoSkin = torso;
 
-  [-1,1].forEach(side => {
-    const br = new THREE.Mesh(new THREE.SphereGeometry(0.072, 20, 16), SK);
-    br.position.set(side*0.075, -0.050, 0.115);
-    br.scale.set(1, 0.95, 0.92);
-    bodyParts.chest.add(br);
+  // Seios
+  bodyParts.bustGroup = new THREE.Group();
+  bodyParts.bustGroup.userData.partId = 'bust';
+  bodyParts.chest.add(bodyParts.bustGroup);
+  [-1,1].forEach(side=>{
+    const br = new THREE.Mesh(new THREE.SphereGeometry(0.072,24,20), SK);
+    br.position.set(side*0.075,-0.050,0.115); br.scale.set(1,0.95,0.92);
+    br.userData.partId = 'bust';
+    bodyParts.bustGroup.add(br);
   });
 
-  const hipSkin = new THREE.Mesh(new THREE.SphereGeometry(0.215, 24, 18), SK);
-  hipSkin.scale.set(1.12, 0.85, 0.95);
-  hipSkin.position.y = -0.03;
+  // QUADRIL
+  const hipSkin = new THREE.Mesh(new THREE.SphereGeometry(0.215,28,22), SK);
+  hipSkin.scale.set(1.12,0.85,0.95); hipSkin.position.y = -0.03;
+  hipSkin.userData.partId = 'hip';
   bodyParts.hips.add(hipSkin);
+  bodyParts.hipSkin = hipSkin;
 
-  [-1,1].forEach(side => {
-    const bt = new THREE.Mesh(new THREE.SphereGeometry(0.118, 20, 16), SK);
-    bt.position.set(side*0.088, -0.095, -0.115);
-    bt.scale.set(1, 0.98, 0.98);
-    bodyParts.hips.add(bt);
+  // Glúteos
+  bodyParts.buttGroup = new THREE.Group();
+  bodyParts.buttGroup.userData.partId = 'butt';
+  bodyParts.hips.add(bodyParts.buttGroup);
+  [-1,1].forEach(side=>{
+    const bt = new THREE.Mesh(new THREE.SphereGeometry(0.118,24,20), SK);
+    bt.position.set(side*0.088,-0.095,-0.115);
+    bt.userData.partId = 'butt';
+    bodyParts.buttGroup.add(bt);
   });
 
-  [bodyParts.armL, bodyParts.armR].forEach((arm) => {
-    const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.040, 0.032, 0.22, 14), SK);
-    upper.position.y = -0.10;
-    arm.add(upper);
-    const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.033, 14, 12), SK);
-    elbow.position.y = -0.22;
-    arm.add(elbow);
-    const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.030, 0.022, 0.20, 14), SK);
-    fore.position.y = -0.33;
-    arm.add(fore);
-    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.032, 14, 12), SK);
-    hand.position.y = -0.455;
-    hand.scale.set(0.75, 1.30, 0.42);
-    arm.add(hand);
+  // BRAÇOS
+  [['L',bodyParts.armL],['R',bodyParts.armR]].forEach(([sn,arm])=>{
+    const armGrp = new THREE.Group();
+    armGrp.userData.partId = 'arm'+sn;
+    arm.add(armGrp);
+    const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.040,0.032,0.22,18), SK);
+    upper.position.y = -0.10; upper.userData.partId = 'arm'+sn;
+    armGrp.add(upper);
+    const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.033,16,14), SK);
+    elbow.position.y = -0.22; elbow.userData.partId = 'arm'+sn;
+    armGrp.add(elbow);
+    const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.030,0.022,0.20,18), SK);
+    fore.position.y = -0.33; fore.userData.partId = 'arm'+sn;
+    armGrp.add(fore);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.032,18,14), SK);
+    hand.position.y = -0.455; hand.scale.set(0.75,1.30,0.42);
+    hand.userData.partId = 'arm'+sn;
+    armGrp.add(hand);
+    if(sn==='L') bodyParts.armSkinL = armGrp; else bodyParts.armSkinR = armGrp;
   });
 
-  [bodyParts.legL, bodyParts.legR].forEach((leg) => {
-    const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.055, 0.36, 16), SK);
-    thigh.position.y = -0.19;
-    leg.add(thigh);
-    const knee = new THREE.Mesh(new THREE.SphereGeometry(0.053, 14, 12), SK);
-    knee.position.y = -0.38;
-    leg.add(knee);
-    const calf = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.030, 0.32, 16), SK);
-    calf.position.y = -0.55;
-    leg.add(calf);
-    const ankle = new THREE.Mesh(new THREE.SphereGeometry(0.028, 12, 10), SK);
-    ankle.position.y = -0.735;
-    leg.add(ankle);
-    const foot = new THREE.Mesh(new THREE.SphereGeometry(0.058, 14, 10), SK2);
-    foot.position.set(0, -0.755, 0.032);
-    foot.scale.set(0.68, 0.55, 1.35);
+  // PERNAS — anatômicas
+  [['L',bodyParts.legL],['R',bodyParts.legR]].forEach(([sn,leg])=>{
+    const legSkinGrp = new THREE.Group();
+    legSkinGrp.userData.partId = 'thigh'+sn;
+    leg.add(legSkinGrp);
+
+    // Coxa
+    const tPts = [];
+    for(let i=0;i<=26;i++){
+      const t=i/26, y=-t*0.37;
+      let r = 0.090*(1-t) + 0.050*t + Math.sin(t*Math.PI)*0.005;
+      tPts.push(new THREE.Vector2(Math.max(0.03, r), y));
+    }
+    const thigh = new THREE.Mesh(new THREE.LatheGeometry(tPts,26), SK);
+    thigh.position.y = -0.01;
+    thigh.userData.partId = 'thigh'+sn;
+    legSkinGrp.add(thigh);
+
+    // Joelho
+    const knee = new THREE.Mesh(new THREE.SphereGeometry(0.052,20,16), SK);
+    knee.position.y = -0.380; knee.scale.set(1,0.95,1.05);
+    knee.userData.partId = 'knee'+sn;
+    legSkinGrp.add(knee);
+    if(sn==='L') bodyParts.kneeMeshL = knee; else bodyParts.kneeMeshR = knee;
+
+    // Panturrilha
+    const cGrp = new THREE.Group();
+    cGrp.userData.partId = 'calf'+sn;
+    leg.add(cGrp);
+    const cPts = [];
+    for(let i=0;i<=26;i++){
+      const t=i/26, y=-t*0.335;
+      let r;
+      if(t<0.30) r = 0.046 + t*0.062;
+      else if(t<0.55) r = 0.065 - (t-0.30)*0.038;
+      else r = 0.055 - (t-0.55)*0.075;
+      cPts.push(new THREE.Vector2(Math.max(0.02, r), y));
+    }
+    const calf = new THREE.Mesh(new THREE.LatheGeometry(cPts,26), SK);
+    calf.position.y = -0.395;
+    calf.userData.partId = 'calf'+sn;
+    cGrp.add(calf);
+
+    // Tornozelo
+    const ank = new THREE.Mesh(new THREE.SphereGeometry(0.024,16,12), SK);
+    ank.position.y = -0.735;
+    ank.userData.partId = 'calf'+sn;
+    cGrp.add(ank);
+
+    // Pé
+    const foot = new THREE.Group();
+    foot.position.set(0,-0.765,0.030);
+    foot.userData.partId = 'foot'+sn;
     leg.add(foot);
+    const fb = new THREE.Mesh(new THREE.SphereGeometry(0.055,20,14), SK2);
+    fb.scale.set(0.72,0.40,1.38); fb.position.z = -0.005;
+    fb.userData.partId = 'foot'+sn;
+    foot.add(fb);
+    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.031,14,12), SK2);
+    hl.position.set(0,0,-0.045); hl.scale.set(0.88,0.75,0.92);
+    hl.userData.partId = 'foot'+sn;
+    foot.add(hl);
+    for(let i=0;i<5;i++){
+      const s = Math.max(0.005, 0.010-Math.abs(i-1)*0.0018);
+      const toe = new THREE.Mesh(new THREE.SphereGeometry(s,12,10), SK2);
+      toe.position.set((i-2)*0.013,-0.010,0.078);
+      toe.scale.set(1,0.75,1.55);
+      toe.userData.partId = 'foot'+sn;
+      foot.add(toe);
+    }
+    if(sn==='L'){ bodyParts.thighSkinL = legSkinGrp; bodyParts.calfSkinL = cGrp; bodyParts.footMeshL = foot; }
+    else{ bodyParts.thighSkinR = legSkinGrp; bodyParts.calfSkinR = cGrp; bodyParts.footMeshR = foot; }
   });
-
-  return skin;
 }
 
 /* ============================================================
-   🫀 ÓRGÃOS INTERNOS
+   ÓRGÃOS
 ============================================================ */
 function buildOrgans(){
-  const group = new THREE.Group();
-  rig.add(group);
-  bodyParts.organs = group;
   const M = MAT;
-
-  const brainGroup = new THREE.Group();
-  bodyParts.head.add(brainGroup);
-  organGroups.brain = brainGroup;
-
-  const brain = new THREE.Mesh(new THREE.SphereGeometry(0.105, 20, 16), M.brain);
-  brain.scale.set(0.95, 0.90, 1.0);
-  brain.position.set(0, 0.040, 0);
-  brainGroup.add(brain);
-  for(let i = 0; i < 8; i++){
-    const a = (i/8)*Math.PI*2;
-    const fold = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.007, 6, 14, Math.PI*1.3), M.brain);
-    fold.position.set(Math.sin(a)*0.035, 0.040+Math.cos(a)*0.020, 0.020);
-    fold.rotation.set(a, a*1.3, a*0.7);
-    brainGroup.add(fold);
+  const bg = new THREE.Group();
+  bodyParts.head.add(bg);
+  organGroups.brain = bg;
+  const br = new THREE.Mesh(new THREE.SphereGeometry(0.105,24,18), M.brain);
+  br.scale.set(0.95,0.90,1); br.position.y = 0.040; bg.add(br);
+  for(let i=0;i<8;i++){
+    const a=(i/8)*Math.PI*2;
+    const f = new THREE.Mesh(new THREE.TorusGeometry(0.055,0.007,6,14,Math.PI*1.3), M.brain);
+    f.position.set(Math.sin(a)*0.035,0.040+Math.cos(a)*0.020,0.020);
+    f.rotation.set(a,a*1.3,a*0.7); bg.add(f);
   }
-  const cerebellum = new THREE.Mesh(new THREE.SphereGeometry(0.045, 14, 10), M.brain);
-  cerebellum.position.set(0, -0.030, -0.058);
-  cerebellum.scale.set(1.2, 0.75, 1.0);
-  brainGroup.add(cerebellum);
-  const brainstem = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.018, 0.075, 10), M.brain);
-  brainstem.position.set(0, -0.045, -0.020);
-  brainGroup.add(brainstem);
+  const cb = new THREE.Mesh(new THREE.SphereGeometry(0.045,16,12), M.brain);
+  cb.position.set(0,-0.030,-0.058); cb.scale.set(1.2,0.75,1); bg.add(cb);
   organCount += 3;
 
-  const neckGrp = new THREE.Group();
-  bodyParts.headG.add(neckGrp);
-  organGroups.trachea = neckGrp;
+  const ng = new THREE.Group();
+  bodyParts.headG.add(ng);
+  organGroups.trachea = ng;
+  const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.011,0.013,0.13,12), M.trachea);
+  tr.position.set(0,0.030,0.022); ng.add(tr);
+  organCount += 2;
 
-  const trachea = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.013, 0.13, 10), M.trachea);
-  trachea.position.set(0, 0.030, 0.022);
-  neckGrp.add(trachea);
-  const esoph = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.010, 0.13, 10), M.intestineL);
-  esoph.position.set(0, 0.030, -0.008);
-  neckGrp.add(esoph);
+  const cg = new THREE.Group();
+  bodyParts.chest.add(cg);
+  organGroups.heart = new THREE.Group(); cg.add(organGroups.heart);
+  organGroups.lungs = new THREE.Group(); cg.add(organGroups.lungs);
+  const ht = new THREE.Mesh(new THREE.SphereGeometry(0.048,20,16), M.heart);
+  ht.position.set(-0.020,0.030,0.045); ht.scale.set(0.85,1.10,0.90); organGroups.heart.add(ht);
+  organCount++;
+  [-1,1].forEach(side=>{
+    const lg = new THREE.Mesh(new THREE.SphereGeometry(0.078,20,16), M.lung);
+    lg.scale.set(0.88,1.65,0.85); lg.position.set(side*0.078,0.045,0.020);
+    organGroups.lungs.add(lg);
+  });
+  organCount += 2;
+
+  const dg = new THREE.Group();
+  bodyParts.chest.add(dg);
+  organGroups.digestive = dg;
+  const lv = new THREE.Mesh(new THREE.SphereGeometry(0.088,22,16), M.liver);
+  lv.scale.set(1.35,0.62,0.90); lv.position.set(0.060,-0.075,0.045); dg.add(lv);
+  const st = new THREE.Mesh(new THREE.SphereGeometry(0.055,18,16), M.stomach);
+  st.scale.set(0.95,1.10,0.85); st.position.set(-0.060,-0.095,0.030); dg.add(st);
   for(let i=0;i<6;i++){
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.011, 0.0018, 4, 10), M.trachea);
-    ring.position.set(0, 0.090-i*0.020, 0.022);
-    ring.rotation.x = Math.PI*0.5;
-    neckGrp.add(ring);
+    const co = new THREE.Mesh(new THREE.TorusGeometry(0.038,0.008,8,16), M.intestine);
+    co.position.set(-0.028+(i%2)*0.055,-0.210-i*0.010,0.018);
+    co.rotation.x = Math.PI*0.5; dg.add(co);
   }
-  organCount += 2;
+  organCount += 4;
 
-  const chestGrp = new THREE.Group();
-  bodyParts.chest.add(chestGrp);
-  organGroups.heart = new THREE.Group(); chestGrp.add(organGroups.heart);
-  organGroups.lungs = new THREE.Group(); chestGrp.add(organGroups.lungs);
-
-  const heart = new THREE.Mesh(new THREE.SphereGeometry(0.048, 18, 14), M.heart);
-  heart.position.set(-0.020, 0.030, 0.045);
-  heart.scale.set(0.85, 1.10, 0.90);
-  organGroups.heart.add(heart);
-  const apex = new THREE.Mesh(new THREE.ConeGeometry(0.030, 0.055, 12), M.heartDark);
-  apex.position.set(-0.032, -0.025, 0.045);
-  apex.rotation.z = 0.4;
-  organGroups.heart.add(apex);
-  const atr = new THREE.Mesh(new THREE.SphereGeometry(0.032, 14, 12), M.heartDark);
-  atr.position.set(0.005, 0.055, 0.045);
-  atr.scale.set(1, 0.85, 0.9);
-  organGroups.heart.add(atr);
-  organCount++;
-
-  const aorta = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.007, 0.20, 10), M.artery);
-  aorta.position.set(-0.010, 0.100, -0.010);
-  aorta.rotation.x = 0.10;
-  chestGrp.add(aorta);
-
-  [-1,1].forEach(side => {
-    const lung = new THREE.Mesh(new THREE.SphereGeometry(0.078, 18, 14), M.lung);
-    lung.scale.set(0.88, 1.65, 0.85);
-    lung.position.set(side*0.078, 0.045, 0.020);
-    organGroups.lungs.add(lung);
-    const br = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.008, 0.10, 8), M.trachea);
-    br.position.set(side*0.035, 0.140, 0.015);
-    br.rotation.z = -side*0.35;
-    organGroups.lungs.add(br);
+  const kg = new THREE.Group();
+  bodyParts.chest.add(kg);
+  organGroups.kidney = kg;
+  [-1,1].forEach(side=>{
+    const k = new THREE.Mesh(new THREE.SphereGeometry(0.036,16,12), M.kidney);
+    k.scale.set(0.68,1.30,0.90); k.position.set(side*0.072,-0.150,-0.040); kg.add(k);
   });
   organCount += 2;
 
-  const digGrp = new THREE.Group();
-  bodyParts.chest.add(digGrp);
-  organGroups.digestive = digGrp;
-
-  const liver = new THREE.Mesh(new THREE.SphereGeometry(0.088, 20, 14), M.liver);
-  liver.scale.set(1.35, 0.62, 0.90);
-  liver.position.set(0.060, -0.075, 0.045);
-  digGrp.add(liver);
-
-  const gall = new THREE.Mesh(new THREE.SphereGeometry(0.018, 12, 10), M.pancreas);
-  gall.position.set(0.045, -0.100, 0.075);
-  gall.scale.set(0.7, 1.4, 0.7);
-  digGrp.add(gall);
-
-  const stomach = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 14), M.stomach);
-  stomach.scale.set(0.95, 1.10, 0.85);
-  stomach.position.set(-0.060, -0.095, 0.030);
-  digGrp.add(stomach);
-
-  const spleen = new THREE.Mesh(new THREE.SphereGeometry(0.042, 14, 10), M.spleen);
-  spleen.scale.set(0.70, 1.20, 0.85);
-  spleen.position.set(-0.100, -0.060, 0.005);
-  digGrp.add(spleen);
-
-  const pancreas = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.022, 0.13, 10), M.pancreas);
-  pancreas.rotation.z = Math.PI*0.5;
-  pancreas.rotation.y = 0.15;
-  pancreas.position.set(0, -0.145, 0.020);
-  digGrp.add(pancreas);
-  organCount += 5;
-
-  const intGrp = new THREE.Group();
-  bodyParts.chest.add(intGrp);
-  organGroups.intestine = intGrp;
-
-  for(let i = 0; i < 8; i++){
-    const coil = new THREE.Mesh(new THREE.TorusGeometry(0.038, 0.008, 8, 16), M.intestine);
-    coil.position.set(-0.028 + (i%2)*0.055, -0.210 - i*0.010, 0.018);
-    coil.rotation.x = Math.PI*0.5;
-    coil.rotation.z = (i%2)*0.1;
-    intGrp.add(coil);
-  }
-  const colon = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.012, 8, 22, Math.PI*1.35), M.intestineL);
-  colon.scale.set(1.15, 1.0, 0.75);
-  colon.position.set(0, -0.200, 0.010);
-  colon.rotation.x = Math.PI*0.5;
-  colon.rotation.z = -Math.PI*0.175;
-  intGrp.add(colon);
-  const colonDesc = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.13, 10), M.intestineL);
-  colonDesc.position.set(0.095, -0.265, 0.010);
-  intGrp.add(colonDesc);
-  const rectum = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.013, 0.09, 10), M.intestineL);
-  rectum.position.set(0, -0.290, -0.015);
-  intGrp.add(rectum);
-  organCount += 3;
-
-  const kidneyGrp = new THREE.Group();
-  bodyParts.chest.add(kidneyGrp);
-  organGroups.kidney = kidneyGrp;
-
-  [-1,1].forEach(side => {
-    const k = new THREE.Mesh(new THREE.SphereGeometry(0.036, 14, 12), M.kidney);
-    k.scale.set(0.68, 1.30, 0.90);
-    k.position.set(side*0.072, -0.150, -0.040);
-    kidneyGrp.add(k);
-    const ur = new THREE.Mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 0.16, 8), M.bladder);
-    ur.position.set(side*0.055, -0.230, -0.020);
-    ur.rotation.z = side*0.18;
-    kidneyGrp.add(ur);
-  });
-  organCount += 2;
-
-  const bladder = new THREE.Mesh(new THREE.SphereGeometry(0.036, 14, 12), M.bladder);
-  bladder.scale.set(1, 0.85, 0.85);
-  bladder.position.set(0, -0.040, 0.030);
-  bodyParts.hips.add(bladder);
   organGroups.urinary = new THREE.Group();
-  organGroups.urinary.add(bladder);
+  bodyParts.hips.add(organGroups.urinary);
+  const bl = new THREE.Mesh(new THREE.SphereGeometry(0.036,16,14), M.bladder);
+  bl.scale.set(1,0.85,0.85); bl.position.set(0,-0.040,0.030); organGroups.urinary.add(bl);
   organCount++;
 
-  const repGrp = new THREE.Group();
-  bodyParts.hips.add(repGrp);
-  organGroups.reproductive = repGrp;
-
-  const uterus = new THREE.Mesh(new THREE.SphereGeometry(0.034, 16, 12), M.uterus);
-  uterus.scale.set(0.90, 1.15, 0.72);
-  uterus.position.set(0, -0.035, 0.015);
-  repGrp.add(uterus);
-  const cervix = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.010, 0.022, 10), M.uterus);
-  cervix.position.set(0, -0.070, 0.010);
-  repGrp.add(cervix);
-  [-1,1].forEach(side => {
-    const tube = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.0035, 6, 14, Math.PI*0.9), M.uterus);
-    tube.position.set(side*0.032, -0.025, 0.020);
-    tube.rotation.z = -side*Math.PI*0.4;
-    tube.rotation.y = side*0.2;
-    repGrp.add(tube);
+  const rg = new THREE.Group();
+  bodyParts.hips.add(rg);
+  organGroups.reproductive = rg;
+  const ut = new THREE.Mesh(new THREE.SphereGeometry(0.034,18,14), M.uterus);
+  ut.scale.set(0.90,1.15,0.72); ut.position.set(0,-0.035,0.015); rg.add(ut);
+  [-1,1].forEach(side=>{
+    const ov = new THREE.Mesh(new THREE.SphereGeometry(0.015,14,12), M.ovary);
+    ov.position.set(side*0.058,-0.030,0.018); rg.add(ov);
   });
-  [-1,1].forEach(side => {
-    const ov = new THREE.Mesh(new THREE.SphereGeometry(0.015, 12, 10), M.ovary);
-    ov.position.set(side*0.058, -0.030, 0.018);
-    repGrp.add(ov);
-  });
-  organCount += 5;
-
-  organGroups.urinary.add(repGrp);
+  organCount += 3;
 
   document.getElementById('organ-count').innerText = organCount;
 }
 
 /* ============================================================
-   MODO DE VISUALIZAÇÃO
+   APLICAR CORPO / PERNAS
+============================================================ */
+function applyBodyPreset(idx){
+  state.bodyIdx = ((idx % BODY_PRESETS.length) + BODY_PRESETS.length) % BODY_PRESETS.length;
+  const p = BODY_PRESETS[state.bodyIdx];
+  state.height = p.height; state.shoulder = p.shoulder;
+  state.waist = p.waist; state.hip = p.hip; state.bust = p.bust;
+  applyBodyManual();
+  document.querySelectorAll('#grid-corpos .preset').forEach((el,i)=>el.classList.toggle('sel', i===state.bodyIdx));
+  updateBodySliders();
+}
+
+function applyBodyManual(){
+  rig.scale.y = state.height;
+  bodyParts.chest.scale.set(state.shoulder, 1, state.shoulder);
+  bodyParts.waist.scale.set(state.waist, 1, state.waist);
+  bodyParts.hipMesh.scale.set(state.hip*1.15, 0.85, state.hip*1.0);
+  if(bodyParts.hipSkin) bodyParts.hipSkin.scale.set(state.hip*1.12, 0.85, state.hip*0.95);
+  if(bodyParts.bustGroup) bodyParts.bustGroup.scale.set(state.bust, state.bust, state.bust);
+}
+
+function updateBodySliders(){
+  const map = { 'b-height':'height', 'b-shoulder':'shoulder', 'b-waist':'waist', 'b-hip':'hip', 'b-bust':'bust' };
+  Object.entries(map).forEach(([id,key])=>{
+    const inp = document.getElementById(id);
+    const val = document.getElementById('v'+id.slice(1));
+    if(inp) inp.value = state[key];
+    if(val) val.innerText = state[key].toFixed(2);
+  });
+}
+
+function randomizeBody(){
+  state.height = 0.86 + Math.random()*0.26;
+  state.shoulder = 0.85 + Math.random()*0.35;
+  state.waist = 0.65 + Math.random()*0.55;
+  state.hip = 0.90 + Math.random()*0.45;
+  state.bust = 0.75 + Math.random()*0.55;
+  applyBodyManual();
+  updateBodySliders();
+  document.querySelectorAll('#grid-corpos .preset').forEach(el=>el.classList.remove('sel'));
+  showToast('🎲 Corpo Aleatório');
+}
+
+function applyLegPreset(idx){
+  state.legIdx = ((idx % LEG_PRESETS.length) + LEG_PRESETS.length) % LEG_PRESETS.length;
+  const p = LEG_PRESETS[state.legIdx];
+  state.leg = { height:p.height, len:p.len, thigh:p.thigh, calf:p.calf, ankle:p.ankle, spread:p.spread };
+  applyLegManual();
+  document.querySelectorAll('#grid-pernas .preset').forEach((el,i)=>el.classList.toggle('sel', i===state.legIdx));
+  updateLegSliders();
+}
+
+function applyLegManual(){
+  const L = state.leg;
+  const thighScale = L.thigh / 56;
+  const calfScale = L.calf / 35;
+
+  [bodyParts.legL, bodyParts.legR].forEach((leg, idx)=>{
+    const isL = idx===0;
+    const thigh = isL ? bodyParts.thighSkinL : bodyParts.thighSkinR;
+    const calf = isL ? bodyParts.calfSkinL : bodyParts.calfSkinR;
+    if(thigh) thigh.scale.set(thighScale, 1, thighScale);
+    if(calf) calf.scale.set(calfScale, 1, calfScale);
+    if(leg){
+      leg.position.x = (isL?-1:1) * 0.095;
+      leg.rotation.z = (isL?-1:1) * L.spread;
+    }
+  });
+}
+
+function updateLegSliders(){
+  const map = { 'l-height':'height','l-len':'len','l-thigh':'thigh','l-calf':'calf','l-ankle':'ankle','l-spread':'spread' };
+  Object.entries(map).forEach(([id,key])=>{
+    const inp = document.getElementById(id);
+    const val = document.getElementById('vl-'+key);
+    if(inp) inp.value = state.leg[key];
+    if(val) val.innerText = key==='spread' ? state.leg[key].toFixed(2) : state.leg[key];
+  });
+}
+
+function randomizeLegs(){
+  state.leg.height = 150 + Math.floor(Math.random()*50);
+  state.leg.len = 75 + Math.floor(Math.random()*40);
+  state.leg.thigh = 42 + Math.floor(Math.random()*32);
+  state.leg.calf = 27 + Math.floor(Math.random()*22);
+  state.leg.ankle = 17 + Math.floor(Math.random()*10);
+  state.leg.spread = 0.03 + Math.random()*0.25;
+  applyLegManual();
+  updateLegSliders();
+  document.querySelectorAll('#grid-pernas .preset').forEach(el=>el.classList.remove('sel'));
+  showToast('🎲 Pernas Aleatórias');
+}
+
+/* ============================================================
+   ⭐ RAYCASTING — Toque nas partes
+============================================================ */
+const raycaster = new THREE.Raycaster();
+const mouseVec = new THREE.Vector2();
+let clickX = 0, clickY = 0, clickT = 0;
+
+function setupRaycaster(){
+  const canvasEl = renderer.domElement;
+  canvasEl.addEventListener('pointerdown', e => {
+    clickX = e.clientX; clickY = e.clientY; clickT = Date.now();
+  });
+  canvasEl.addEventListener('pointerup', e => {
+    const dx = Math.abs(e.clientX - clickX);
+    const dy = Math.abs(e.clientY - clickY);
+    if(dx > 6 || dy > 6) return;
+    if(viewMode !== 'full' && viewMode !== 'xray') return;
+    const rect = canvasEl.getBoundingClientRect();
+    mouseVec.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseVec.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouseVec, camera);
+
+    const clickable = [];
+    doll.traverse(o => { if(o.userData.partId && o.visible) clickable.push(o); });
+    const hits = raycaster.intersectObjects(clickable, false);
+    const longPress = (Date.now() - clickT) > 350;
+
+    if(hits.length > 0){
+      const partId = hits[0].object.userData.partId;
+      if(partId.startsWith('thigh') || partId.startsWith('calf') || partId.startsWith('knee') || partId.startsWith('foot')){
+        // ⭐ TOQUE NAS PERNAS → cicla preset de pernas
+        if(longPress){ openAdjustPanel('leg'); }
+        else { applyLegPreset(state.legIdx + 1); showCycleToast('🦵 ' + LEG_PRESETS[state.legIdx].name); }
+      } else if(partId === 'chest' || partId === 'hip' || partId === 'bust' || partId === 'butt'){
+        // ⭐ TOQUE NO CORPO → cicla preset de corpo
+        if(longPress){ openAdjustPanel('body'); }
+        else { applyBodyPreset(state.bodyIdx + 1); showCycleToast('👤 ' + BODY_PRESETS[state.bodyIdx].name); }
+      } else {
+        // Cabeça, braços, pescoço → painel de ajuste
+        selectPart(partId);
+      }
+    } else {
+      closePartPanel();
+    }
+  });
+}
+
+function showCycleToast(txt){
+  const t = document.getElementById('cycle-toast');
+  t.innerText = txt;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 1200);
+}
+
+function openAdjustPanel(which){
+  if(which === 'body'){
+    switchTab('t-corpos', null);
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelector('.tab').classList.add('active');
+  } else {
+    switchTab('t-pernas', null);
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab')[1].classList.add('active');
+  }
+  document.getElementById('panel').classList.add('open');
+  showToast('Ajuste fino aberto 👉');
+}
+
+/* ============================================================
+   PAINEL DE AJUSTE POR PARTE
+============================================================ */
+const PART_CONFIGS = {
+  head: { name:'👤 Cabeça', sliders:[
+    { label:'Tamanho', min:0.80, max:1.30, step:0.02, key:'headScale' },
+    { label:'Maxilar', min:0.70, max:1.30, step:0.02, key:'jawScale' }
+  ]},
+  neck: { name:'🦴 Pescoço', sliders:[
+    { label:'Largura', min:0.70, max:1.40, step:0.02, key:'neckScale' }
+  ]},
+  bust: { name:'💗 Busto', sliders:[
+    { label:'Volume', min:0.50, max:1.60, step:0.02, key:'bust' },
+    { label:'Altura', min:-0.10, max:0.10, step:0.01, key:'bustY' }
+  ]},
+  butt: { name:'💗 Glúteos', sliders:[
+    { label:'Tamanho', min:0.70, max:1.60, step:0.02, key:'buttSize' }
+  ]},
+  armL: { name:'💪 Braço Esquerdo', sliders:[
+    { label:'Espessura', min:0.70, max:1.50, step:0.02, key:'armLScale' }
+  ]},
+  armR: { name:'💪 Braço Direito', sliders:[
+    { label:'Espessura', min:0.70, max:1.50, step:0.02, key:'armRScale' }
+  ]},
+  kneeL: { name:'🦿 Joelho Esquerdo', sliders:[
+    { label:'Escala', min:0.80, max:1.30, step:0.02, key:'kneeLScale' }
+  ]},
+  kneeR: { name:'🦿 Joelho Direito', sliders:[
+    { label:'Escala', min:0.80, max:1.30, step:0.02, key:'kneeRScale' }
+  ]}
+};
+
+const PART_APPLY = {
+  headScale: v => applyFaceScale(),
+  jawScale: v => applyFaceScale(),
+  neckScale: v => { if(bodyParts.neckSkin) bodyParts.neckSkin.scale.set(v,1,v); },
+  bust: v => applyBodyManual(),
+  bustY: v => { if(bodyParts.bustGroup) bodyParts.bustGroup.position.y = v; },
+  buttSize: v => { if(bodyParts.buttGroup) bodyParts.buttGroup.scale.set(v,v,v); },
+  armLScale: v => { if(bodyParts.armSkinL) bodyParts.armSkinL.scale.set(v,1,v); },
+  armRScale: v => { if(bodyParts.armSkinR) bodyParts.armSkinR.scale.set(v,1,v); },
+  kneeLScale: v => { if(bodyParts.kneeMeshL) bodyParts.kneeMeshL.scale.set(v, 0.95*v, 1.05*v); },
+  kneeRScale: v => { if(bodyParts.kneeMeshR) bodyParts.kneeMeshR.scale.set(v, 0.95*v, 1.05*v); }
+};
+
+function applyFaceScale(){
+  const hs = state.headScale || 1;
+  const js = state.jawScale || 1;
+  bodyParts.head.scale.set(0.95*hs, 1.05*hs, hs);
+  bodyParts.jaw.scale.set(0.95*js, 0.85*js, 0.9*js);
+}
+
+function selectPart(partId){
+  const cfg = PART_CONFIGS[partId];
+  if(!cfg){ closePartPanel(); return; }
+  selectedPart = partId;
+  document.getElementById('part-name').innerText = cfg.name;
+  const el = document.getElementById('part-sliders');
+  el.innerHTML = '';
+  cfg.sliders.forEach((s, i)=>{
+    const row = document.createElement('div');
+    row.className = 'row';
+    const id = `ps-${i}`;
+    const v = state[s.key] !== undefined ? state[s.key] : 1;
+    row.innerHTML = `<label>${s.label}</label>
+      <input type="range" id="${id}" min="${s.min}" max="${s.max}" step="${s.step}" value="${v}">
+      <span class="val" id="${id}-val">${v.toFixed(2)}</span>`;
+    el.appendChild(row);
+    const inp = row.querySelector('input');
+    const val = row.querySelector('.val');
+    inp.addEventListener('input', ()=>{
+      const nv = parseFloat(inp.value);
+      val.innerText = nv.toFixed(2);
+      state[s.key] = nv;
+      if(PART_APPLY[s.key]) PART_APPLY[s.key](nv);
+    });
+  });
+  document.getElementById('part-panel').classList.add('show');
+}
+
+function closePartPanel(){
+  selectedPart = null;
+  document.getElementById('part-panel').classList.remove('show');
+}
+
+/* ============================================================
+   MODOS / ÓRGÃOS / AÇÕES
 ============================================================ */
 function setViewMode(mode){
   viewMode = mode;
-  const skins = [];
+  const txt = { full:'👤 Corpo Completo', organs:'🫀 Órgãos', skeleton:'🦴 Esqueleto', xray:'🩻 Raio-X' };
+  const b = document.getElementById('mode-badge');
+  b.innerText = 'Modo: ' + txt[mode];
+  b.classList.add('show');
+  clearTimeout(b._t);
+  b._t = setTimeout(()=>b.classList.remove('show'), 1400);
+
+  const showSkin = (mode==='full' || mode==='xray');
+  const showOrgans = (mode==='organs' || mode==='xray');
+  const showBones = (mode==='skeleton' || mode==='xray' || mode==='organs');
+
   doll.traverse(o => {
-    if(o.material === MAT.skinBody || o.material === MAT.skinBody2) skins.push(o);
+    if(o.material === MAT.skinBody || o.material === MAT.skinBody2 || o.material === MAT.hairTop || o.material === MAT.lip){
+      o.visible = showSkin;
+      if(o.material === MAT.skinBody || o.material === MAT.skinBody2){
+        o.material.opacity = (mode==='full') ? state.skinOpacity : 0.14;
+      }
+    }
   });
-
-  const badges = document.getElementById('mode-badge');
-  const txt = { full: '👤 Corpo Completo', organs: '🫀 Órgãos Internos', skeleton: '🦴 Esqueleto', xray: '🩻 Raio-X' };
-  badges.innerText = 'Modo: ' + txt[mode];
-  badges.classList.add('show');
-  clearTimeout(badges._t);
-  badges._t = setTimeout(() => badges.classList.remove('show'), 1400);
-
-  const showSkin   = (mode === 'full' || mode === 'xray');
-  const showOrgans = (mode === 'organs' || mode === 'xray');
-  const showBones  = (mode === 'skeleton' || mode === 'xray' || mode === 'organs');
-
-  skins.forEach(s => { s.visible = showSkin; s.material.opacity = (mode === 'full') ? state.skinOpacity : 0.14; s.material.transparent = true; });
-
   Object.values(organGroups).forEach(g => { if(g) g.visible = showOrgans; });
-
-  boneRegistry.forEach(b => {
-    if(!b.mesh) return;
-    b.mesh.visible = showBones;
-  });
-
-  JOINT_MAT.cartilage.opacity = (mode === 'skeleton') ? 0.72 : 0.35;
-  JOINT_MAT.cartilageRing.opacity = (mode === 'skeleton') ? 0.85 : 0.45;
-  JOINT_MAT.nerve.opacity = 1;
-
+  boneRegistry.forEach(b => { if(b.mesh) b.mesh.visible = showBones; });
   showToast(txt[mode]);
 }
 
 function cycleViewMode(){
-  const order = ['full', 'organs', 'skeleton', 'xray'];
-  const i = order.indexOf(viewMode);
-  setViewMode(order[(i + 1) % order.length]);
+  const order = ['full','organs','skeleton','xray'];
+  setViewMode(order[(order.indexOf(viewMode)+1) % order.length]);
 }
 
 function toggleOrgan(name){
   if(organGroups[name]){
-    const visible = !organGroups[name].visible;
-    organGroups[name].visible = visible;
-    showToast(visible ? `✅ ${name} visível` : `❌ ${name} oculto`);
+    organGroups[name].visible = !organGroups[name].visible;
+    showToast(organGroups[name].visible ? `✅ ${name} visível` : `❌ ${name} oculto`);
   }
 }
 function showAllOrgans(){
@@ -1404,202 +1183,90 @@ function showAllOrgans(){
   showToast('🫀 Todos os órgãos visíveis');
 }
 
-/* ============================================================
-   LISTA DE OSSOS / ÓRGÃOS
-============================================================ */
-function buildBoneList(){
-  const container = document.getElementById('bone-list-container');
-  if(!container) return;
-  const cats = {};
-  boneRegistry.forEach(b => {
-    if(!cats[b.category]) cats[b.category] = [];
-    cats[b.category].push(b.name);
-  });
-  let html = '';
-  const order = ['Crânio','Face','Ouvido Médio','Pescoço','Coluna Vertebral','Tórax',
-                 'Cintura Escapular','Membros Superiores','Cintura Pélvica','Membros Inferiores'];
-  order.forEach(cat => {
-    if(!cats[cat]) return;
-    html += `<div class="bone-cat">${cat} <span class="qty" style="color:#00ffff">(${cats[cat].length})</span></div>`;
-    html += '<div class="bone-list">';
-    cats[cat].forEach(n => { html += `<div class="bone-item">${n}<span class="qty">✓</span></div>`; });
-    html += '</div>';
-  });
-  html += `<div style="margin-top:14px;text-align:center;font-weight:700;color:#e8ddc5;font-size:.85em">
-    TOTAL: <span style="color:#00ffff">${boneRegistry.length}</span> / 206 ossos
-  </div>`;
-  container.innerHTML = html;
-}
-function buildOrganList(){
-  const c = document.getElementById('organ-list-container');
-  if(!c) return;
-  const list = [
-    '🧠 Cérebro','🧠 Cerebelo','🧠 Tronco Encefálico','🌬️ Traqueia','🍽️ Esôfago',
-    '❤️ Coração','❤️ Átrios','🫁 Pulmão E','🫁 Pulmão D','🩸 Aorta',
-    '🟤 Fígado','🟢 Vesícula','🟠 Estômago','🔴 Baço','🟡 Pâncreas',
-    '🌀 Intest. Delgado','🔵 Intest. Grosso','⚫ Reto','🫘 Rim E','🫘 Rim D',
-    '💧 Bexiga','♀️ Útero','♀️ Colo','♀️ Tubas','🥚 Ovários'
-  ];
-  c.innerHTML = list.map(n => `<div class="organ-item">${n}</div>`).join('');
+function startTwerk(){ animMode = 'twerk'; lifeEnabled = false; showToast('🦴 Articulando Pelve'); }
+function startIdle(){ animMode = 'idle'; showToast('💀 Respiração'); }
+function stopAnim(){ animMode = 'none'; showToast('⏸️ Pausado'); }
+function toggleTwerkAction(){ animMode = animMode==='twerk' ? 'idle' : 'twerk'; }
+function toggleLife(){
+  lifeEnabled = !lifeEnabled;
+  const btn = document.getElementById('btn-main-life');
+  btn.innerText = lifeEnabled ? '💓 Vida ON' : '💓 Vida OFF';
+  showToast(lifeEnabled ? '💓 Vida Ativada' : '💓 Vida Pausada');
 }
 
-/* ============================================================
-   APLICADORES
-============================================================ */
-function applyBody(i){
-  state.bodyIdx = i;
-  const p = bodyParams(i);
-  rig.scale.y = p.height;
-  bodyParts.chest.scale.set(p.shoulderW, 1, p.shoulderW);
-  bodyParts.waist.scale.set(p.waistW, 1, p.waistW);
-  bodyParts.hipMesh.scale.set(p.hipW*1.15, 0.85, p.hipW*1.0);
-  if(bodyParts.thighL) bodyParts.thighL.scale.set(p.thighW, 1, p.thighW);
-  if(bodyParts.thighR) bodyParts.thighR.scale.set(p.thighW, 1, p.thighW);
-  if(bodyParts.calfL)  bodyParts.calfL.scale.set(p.calfW, 1, p.calfW);
-  if(bodyParts.calfR)  bodyParts.calfR.scale.set(p.calfW, 1, p.calfW);
-}
-function applyFace(i){
-  state.faceIdx = i;
-  const f = faceParams(i);
-  bodyParts.head.scale.set(f.head*0.95*state.headScale, f.head*1.05*state.headScale, f.head*state.headScale);
-  bodyParts.jaw.scale.set(f.jaw*0.95*state.jawScale, f.jaw*0.85*state.jawScale, f.jaw*0.9*state.jawScale);
-}
-function applyButt(i){ state.buttIdx = i; }
-function applyHip(i){
-  state.hipIdx = i;
-  const h = hipParams(i);
-  bodyParts.hipMesh.scale.set(h.width*1.15, h.round*0.85, h.depth*1.0);
-  bodyParts.hips.rotation.z = h.tilt;
-  scheduleAI();
-}
-function applyBreast(i){ state.breastIdx = i; }
-function applyWaist(i){
-  state.waistIdx = i;
-  const w = waistParams(i);
-  bodyParts.waist.scale.set(w.width, w.height, w.depth);
-  scheduleAI();
-}
-function applyLegPreset(i){
-  state.legIdx = i;
-  const l = legParams(i);
-  state.leg.height = Math.round(l.height);
-  state.leg.len = Math.round(l.len);
-  state.leg.thigh = Math.round(l.thigh);
-  state.leg.calf = Math.round(l.calf);
-  state.leg.ankle = Math.round(l.ankle);
-  ['height','len','thigh','calf','ankle'].forEach(k => {
-    const inp = document.getElementById('l-'+k);
-    const val = document.getElementById('vl-'+k);
-    if(inp) inp.value = state.leg[k];
-    if(val) val.innerText = state.leg[k];
-  });
-  applyLegMeasures();
-}
-function applyLegMeasures(){
-  const L = state.leg;
-  const thighR = (L.thigh / 100) * 0.55;
-  const calfR  = (L.calf  / 100) * 0.42;
-  [bodyParts.legL, bodyParts.legR].forEach((leg, idx) => {
-    const isL = idx === 0;
-    const thigh = isL ? bodyParts.thighL : bodyParts.thighR;
-    const calf  = isL ? bodyParts.calfL  : bodyParts.calfR;
-    if(thigh) thigh.scale.set(thighR / 0.022, 1, thighR / 0.022);
-    if(calf)  calf.scale.set(calfR / 0.020, 1, calfR / 0.020);
-    if(leg){
-      leg.position.x = (isL ? -1 : 1) * 0.09;
-      leg.rotation.z = (isL ? -1 : 1) * state.leg.spread;
-      leg.rotation.x = -state.leg.knee;
-    }
-  });
-  scheduleAI();
-}
-function applyPosePreset(i){
-  state.poseIdx = i;
-  const p = poseParams(i);
-  bodyParts.hips.rotation.set(p.hipX, p.hipY, p.hipZ);
-  bodyParts.chest.rotation.set(p.chestX, p.chestY, p.chestZ);
-  bodyParts.armL.rotation.set(p.armLX, 0, p.armLZ);
-  bodyParts.armR.rotation.set(p.armRX, 0, p.armRZ);
-  bodyParts.head.rotation.set(p.headX, p.headY, p.headZ);
-  bodyParts.legL.rotation.set(0, 0, p.legSpread);
-  bodyParts.legR.rotation.set(0, 0, -p.legSpread);
-  doll.rotation.y = p.rotY;
-  document.querySelectorAll('#grid-poses .card').forEach(c => c.classList.remove('sel'));
-  const card = document.getElementById('card-poses-'+i);
-  if(card) card.classList.add('sel');
-  animMode = 'custom';
-}
-
-/* ============================================================
-   POSES
-============================================================ */
-function setSensualPose(poseName){
-  currentPose = poseName;
-  bodyParts.armL.rotation.set(0,0,0);
-  bodyParts.armR.rotation.set(0,0,0);
-  bodyParts.head.rotation.set(0,0,0);
-  bodyParts.hips.rotation.set(0,0,0);
-  bodyParts.chest.rotation.set(0,0,0);
-  bodyParts.legL.rotation.set(0, 0, 0.08);
-  bodyParts.legR.rotation.set(0, 0, -0.08);
-  const arch = state.poseArch, pelvis = state.posePelvis;
-  if(poseName === 'empinada'){
-    bodyParts.hips.rotation.x = 0.28 * pelvis;
-    bodyParts.chest.rotation.x = -0.22 * arch;
-    bodyParts.armL.rotation.x = 0.35; bodyParts.armL.rotation.z = 0.15;
-    bodyParts.armR.rotation.x = 0.35; bodyParts.armR.rotation.z = -0.15;
-    bodyParts.head.rotation.y = 0.45;
-    doll.rotation.y = -Math.PI * 0.35;
-  } else if(poseName === 'twerk_stance'){
-    bodyParts.hips.rotation.x = 0.35 * pelvis;
-    bodyParts.chest.rotation.x = -0.28 * arch;
-    bodyParts.armL.rotation.x = 0.45; bodyParts.armL.rotation.z = 0.25;
-    bodyParts.armR.rotation.x = 0.45; bodyParts.armR.rotation.z = -0.25;
-    doll.rotation.y = -Math.PI * 0.4;
+function toggleDress(){
+  isDressed = !isDressed;
+  if(isDressed){
+    const dressTop = new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.22,0.34,28,1,true), MAT.dress);
+    dressTop.position.y = 0.30; bodyParts.chest.add(dressTop); outfitParts.push(dressTop);
+    const dressSkirt = new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.42,0.55,28,1,true), MAT.dress);
+    dressSkirt.position.y = -0.20; bodyParts.hips.add(dressSkirt); outfitParts.push(dressSkirt);
+    showToast('👗 Vestido Ativado');
+  } else {
+    outfitParts.forEach(p => {
+      if(p.parent) p.parent.remove(p);
+      if(p.geometry) p.geometry.dispose();
+    });
+    outfitParts = [];
+    showToast('🩻 Roupa Removida');
   }
 }
 
-/* ============================================================
-   ROUPA
-============================================================ */
-function dressUp(){ isDressed = true; outfitParts.forEach(p=>p.visible=true); underParts.forEach(p=>p.visible=false); showToast('👗 Vestido Ativado'); }
-function undress(){ isDressed = false; outfitParts.forEach(p=>p.visible=false); underParts.forEach(p=>p.visible=false); showToast('🦴 Modo Esqueleto Puro'); }
-function toggleDressOutfit(){ if(isDressed) undress(); else dressUp(); }
-
-/* ============================================================
-   ANIMAÇÕES
-============================================================ */
-function startIsolatedTwerk(){ animMode = 'twerk'; setSensualPose('twerk_stance'); animMode = 'twerk'; showToast('🦴 Articulando Pelve'); }
-function startIdle(){ animMode = 'idle'; showToast('💀 Respiração Torácica'); }
-function stopAnimation(){ animMode = 'none'; showToast('⏸️ Pausado'); }
-function toggleTwerkAction(){ if(animMode === 'twerk') startIdle(); else startIsolatedTwerk(); }
-
-function animateIsolatedTwerk(t){
-  const beat = 13.6;
-  const b = Math.sin(t * beat);
-  const bHalf = Math.sin(t * beat * 0.5);
-  const bTwice = Math.sin(t * beat * 2);
-  bodyParts.hips.position.x = bHalf * 0.035;
-  bodyParts.hips.position.y = -0.35 + Math.abs(b) * 0.020;
-  bodyParts.hips.rotation.z = bHalf * 0.14;
-  bodyParts.hips.rotation.x = 0.28 + bTwice * 0.10;
-  bodyParts.waist.rotation.z = -bHalf * 0.09;
-  bodyParts.waist.rotation.y = Math.cos(t * beat * 0.5) * 0.06;
-  bodyParts.hipMesh.rotation.z = bHalf * 0.15;
-  bodyParts.head.rotation.y = 0.35 + Math.sin(t*2)*0.10;
-  bodyParts.armL.rotation.x = 0.45 + b * 0.10;
-  bodyParts.armR.rotation.x = 0.45 - b * 0.10;
+function resetAll(){
+  state.height=1; state.shoulder=1; state.waist=1; state.hip=1; state.bust=1;
+  state.headScale=1; state.jawScale=1; state.neckScale=1; state.bustY=0; state.buttSize=1;
+  state.armLScale=1; state.armRScale=1;
+  state.kneeLScale=1; state.kneeRScale=1;
+  applyBodyPreset(0);
+  applyLegPreset(0);
+  applyBodyManual();
+  applyFaceScale();
+  if(bodyParts.bustGroup) bodyParts.bustGroup.position.y = 0;
+  if(bodyParts.buttGroup) bodyParts.buttGroup.scale.set(1,1,1);
+  if(bodyParts.armSkinL) bodyParts.armSkinL.scale.set(1,1,1);
+  if(bodyParts.armSkinR) bodyParts.armSkinR.scale.set(1,1,1);
+  if(bodyParts.kneeMeshL) bodyParts.kneeMeshL.scale.set(1,0.95,1.05);
+  if(bodyParts.kneeMeshR) bodyParts.kneeMeshR.scale.set(1,0.95,1.05);
+  showToast('🔄 Resetado');
 }
-function animateIdle(t){
-  const breath = Math.sin(t*1.6);
-  bodyParts.chest.scale.set(1 + breath*0.006, 1, 1 + breath*0.006);
-  bodyParts.waist.rotation.z = Math.sin(t*0.7)*0.012;
-  bodyParts.head.rotation.z = Math.sin(t*0.8)*0.03;
-  bodyParts.head.rotation.y = Math.sin(t*0.6)*0.08;
-  bodyParts.hips.position.x = 0;
-  bodyParts.hips.position.y = -0.35;
-  bodyParts.hips.rotation.x = 0.10;
-  bodyParts.hips.rotation.z = 0;
+
+/* ============================================================
+   💓 VIDA — Respiração, balanço, piscar
+============================================================ */
+function animateLife(t){
+  // Respiração
+  const breath = Math.sin(t*1.6) * 0.5 + 0.5;
+  if(bodyParts.torsoSkin){
+    const s = 1 + Math.sin(t*1.6) * 0.008;
+    bodyParts.torsoSkin.scale.set(s, 1, 0.72*s);
+  }
+  // Balanço sutil do quadril
+  bodyParts.hips.rotation.z = Math.sin(t*0.9) * 0.015;
+  bodyParts.hips.position.x = Math.sin(t*0.7) * 0.006;
+  // Cabeça
+  bodyParts.head.rotation.y = Math.sin(t*0.5) * 0.12;
+  bodyParts.head.rotation.z = Math.sin(t*0.8) * 0.025;
+  bodyParts.head.rotation.x = Math.sin(t*0.4) * 0.04;
+  // Respiração torácica (corpo)
+  bodyParts.chest.rotation.x = Math.sin(t*1.6) * 0.008;
+  // Braços leves
+  bodyParts.armL.rotation.z = 0.02 + Math.sin(t*0.6)*0.015;
+  bodyParts.armR.rotation.z = -0.02 - Math.sin(t*0.6+1)*0.015;
+  // Piscar
+  if(bodyParts.eyeMeshes){
+    const blink = Math.sin(t*0.8) > 0.97 || Math.sin(t*1.3) > 0.98 ? 1 : 0;
+    bodyParts.eyeMeshes.forEach(o=>{
+      o.eye.scale.y = blink ? 0.15 : 0.92;
+      o.iris.scale.y = blink ? 0.15 : 1;
+      o.pupil.scale.y = blink ? 0.15 : 1;
+    });
+  }
+  // Cabelo sway
+  bodyParts.head.children.forEach(c=>{
+    if(c.material === MAT.hairTop && c.geometry && c.geometry.type === 'SphereGeometry'){
+      c.rotation.z = Math.sin(t*0.9)*0.008;
+    }
+  });
 }
 
 /* ============================================================
@@ -1608,41 +1275,51 @@ function animateIdle(t){
 function loop(){
   requestAnimationFrame(loop);
   const t = clock.getElapsedTime();
-  time = t;
   if(oceanMesh) oceanMesh.position.y = -1.12 + Math.sin(t*1.5)*0.03;
-  if(animMode === 'twerk') animateIsolatedTwerk(t);
-  else if(animMode === 'idle') animateIdle(t);
-  if(!isDragging && animMode !== 'twerk') doll.rotation.y += 0.003;
+
+  if(animMode === 'twerk'){
+    const b = Math.sin(t*13.6);
+    bodyParts.hips.rotation.z = b * 0.14;
+    bodyParts.hips.rotation.x = 0.28 + Math.sin(t*13.6*2)*0.10;
+    bodyParts.waist.rotation.z = -b * 0.09;
+  } else if(animMode === 'idle'){
+    // Ida para modo vida se ativado
+    if(lifeEnabled) {
+      if(bodyParts.hips.rotation.x > 0.01) bodyParts.hips.rotation.x *= 0.95;
+      animateLife(t);
+    } else {
+      const br = Math.sin(t*1.6);
+      bodyParts.chest.scale.set(state.shoulder + br*0.006, 1, state.shoulder + br*0.006);
+    }
+  }
+
+  if(!isDragging && animMode !== 'twerk' && !lifeEnabled) doll.rotation.y += 0.003;
   renderer.render(scene, camera);
 }
 
 /* ============================================================
-   INTERAÇÃO
+   INTERAÇÃO DRAG
 ============================================================ */
-let isDragging = false, prevX = 0, prevY = 0, dragMoved = false;
+let isDragging = false, prevX = 0;
 const el = document.getElementById('viewport');
-el.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; dragMoved = false; });
-el.addEventListener('touchstart', e => { isDragging = true; dragMoved = false; prevX = e.touches[0].clientX; }, { passive:true });
+el.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; });
+el.addEventListener('touchstart', e => { isDragging = true; prevX = e.touches[0].clientX; }, {passive:true});
 window.addEventListener('mousemove', e => {
   if(!isDragging) return;
-  const dx = e.clientX - prevX;
-  if(Math.abs(dx) > 3) dragMoved = true;
-  doll.rotation.y += dx * 0.01;
+  doll.rotation.y += (e.clientX - prevX) * 0.01;
   prevX = e.clientX;
 });
 window.addEventListener('touchmove', e => {
   if(!isDragging) return;
-  const dx = e.touches[0].clientX - prevX;
-  if(Math.abs(dx) > 3) dragMoved = true;
-  doll.rotation.y += dx * 0.01;
+  doll.rotation.y += (e.touches[0].clientX - prevX) * 0.01;
   prevX = e.touches[0].clientX;
-}, { passive:true });
-window.addEventListener('mouseup', () => { isDragging = false; });
-window.addEventListener('touchend', () => { isDragging = false; });
+}, {passive:true});
+window.addEventListener('mouseup', ()=>{ isDragging = false; });
+window.addEventListener('touchend', ()=>{ isDragging = false; });
 el.addEventListener('wheel', e => {
   e.preventDefault();
   camera.position.z = Math.max(1.0, Math.min(4.5, camera.position.z + e.deltaY * 0.002));
-}, { passive:false });
+}, {passive:false});
 
 /* ============================================================
    UI
@@ -1650,8 +1327,8 @@ el.addEventListener('wheel', e => {
 function showToast(msg){
   const t = document.getElementById('toast');
   t.innerText = msg; t.classList.add('show');
-  clearTimeout(t.timer);
-  t.timer = setTimeout(() => t.classList.remove('show'), 2200);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2000);
 }
 function togglePanel(e){ if(e) e.stopPropagation(); document.getElementById('panel').classList.toggle('open'); }
 function closePanel(){ document.getElementById('panel').classList.remove('open'); }
@@ -1661,142 +1338,91 @@ function switchTab(id, e){
   document.getElementById(id).classList.add('active');
   if(e && e.currentTarget) e.currentTarget.classList.add('active');
 }
-function triggerDirectPhotoUpload(){ document.getElementById('direct-photo-input').click(); }
 
 /* ============================================================
    GRIDS
 ============================================================ */
 function buildGrids(){
-  const mk = (gridId, cat, icon, count) => {
-    const g = document.getElementById(gridId);
-    if(!g) return;
-    for(let i=1;i<=count;i++){
-      const d = document.createElement('div');
-      d.className = 'card' + (i === 1 ? ' sel' : '');
-      d.id = `card-${cat}-${i}`;
-      d.innerHTML = `<span class="ic">${icon}</span>#${i}`;
-      d.onclick = () => {
-        document.querySelectorAll(`[id^="card-${cat}-"]`).forEach(x => x.classList.remove('sel'));
-        d.classList.add('sel');
-        if(cat === 'corpo')   applyBody(i);
-        if(cat === 'rosto')   applyFace(i);
-        if(cat === 'quadril') applyHip(i);
-        if(cat === 'seios')   applyBreast(i);
-        if(cat === 'cintura') applyWaist(i);
-        if(cat === 'pernas')  applyLegPreset(i);
-        if(cat === 'poses')   applyPosePreset(i);
-      };
-      g.appendChild(d);
-    }
-  };
-  mk('grid-corpo','corpo','🩻',90);
-  mk('grid-rosto','rosto','💀',90);
-  mk('grid-quadril','quadril','🦴',90);
-  mk('grid-seios','seios','🩻',90);
-  mk('grid-cintura','cintura','🦴',90);
-  mk('grid-pernas','pernas','🦵',90);
-  mk('grid-poses','poses','💃',90);
-}
-function randomizeAll(){
-  applyBody(1 + Math.floor(Math.random()*90));
-  applyFace(1 + Math.floor(Math.random()*90));
-  applyHip(1 + Math.floor(Math.random()*90));
-  applyWaist(1 + Math.floor(Math.random()*90));
-  applyLegPreset(1 + Math.floor(Math.random()*90));
-  applyPosePreset(1 + Math.floor(Math.random()*90));
-  document.querySelectorAll('.card').forEach(c => c.classList.remove('sel'));
-  showToast('🎲 Biotipo Aleatório!');
+  const gc = document.getElementById('grid-corpos');
+  BODY_PRESETS.forEach((p, i)=>{
+    const d = document.createElement('div');
+    d.className = 'preset' + (i===0 ? ' sel' : '');
+    d.innerHTML = `<span class="ic">${p.icon}</span>${p.name}`;
+    d.onclick = ()=>applyBodyPreset(i);
+    gc.appendChild(d);
+  });
+  const gp = document.getElementById('grid-pernas');
+  LEG_PRESETS.forEach((p, i)=>{
+    const d = document.createElement('div');
+    d.className = 'preset' + (i===0 ? ' sel' : '');
+    d.innerHTML = `<span class="ic">${p.icon}</span>${p.name}`;
+    d.onclick = ()=>applyLegPreset(i);
+    gp.appendChild(d);
+  });
 }
 
 /* ============================================================
-   CONTROLES
+   BIND CONTROLES
 ============================================================ */
-function bindRange(id, valId, target, path){
+function bindRange(id, valId, fn){
   const inp = document.getElementById(id);
-  const vv  = document.getElementById(valId);
   if(!inp) return;
-  inp.addEventListener('input', () => {
+  inp.addEventListener('input', ()=>{
     const v = parseFloat(inp.value);
-    if(vv) vv.innerText = v.toFixed(v < 10 ? 2 : 0);
-    if(path === 'leg'){ state.leg[target] = v; applyLegMeasures(); }
-    else if(path === 'face'){ state[target] = v; applyFace(state.faceIdx); }
-    else if(path === 'pose'){ state[target] = v; setSensualPose(currentPose); }
-    else if(path === 'skin'){ state[target] = v; refreshSkinOpacity(); }
-    else if(path === 'organ'){ state[target] = v; refreshOrganOpacity(); }
-  });
-}
-function bindColor(id, target, matRefs){
-  const e = document.getElementById(id);
-  if(!e) return;
-  e.addEventListener('input', ev => {
-    const v = parseInt(ev.target.value.slice(1), 16);
-    state[target] = v;
-    matRefs.forEach(m => m.color.setHex(v));
-  });
-}
-function refreshSkinOpacity(){
-  MAT.skinBody.opacity = (viewMode === 'full') ? state.skinOpacity : 0.14;
-  MAT.skinBody2.opacity = (viewMode === 'full') ? state.skinOpacity : 0.14;
-}
-function refreshOrganOpacity(){
-  [MAT.brain, MAT.heart, MAT.heartDark, MAT.liver, MAT.stomach, MAT.intestine,
-   MAT.intestineL, MAT.kidney, MAT.bladder, MAT.uterus, MAT.ovary, MAT.spleen,
-   MAT.pancreas, MAT.lung, MAT.trachea].forEach(m => {
-    m.transparent = (state.organOpacity < 1);
-    m.opacity = state.organOpacity;
+    const val = document.getElementById(valId);
+    if(val) val.innerText = v.toFixed(v<10?2:0);
+    fn(v);
   });
 }
 function initUI(){
   buildGrids();
-  bindRange('f-teeth','v-teeth','teethSmile','face');
-  bindRange('f-lip','v-lip','lipScale','face');
-  bindRange('f-nose','v-nose','noseScale','face');
-  bindRange('f-head','v-head','headScale','face');
-  bindRange('f-jaw','v-jaw','jawScale','face');
-  bindRange('p-arch','vp-arch','poseArch','pose');
-  bindRange('p-pelvis','vp-pelvis','posePelvis','pose');
-  bindRange('l-height','vl-height','height','leg');
-  bindRange('l-len','vl-len','len','leg');
-  bindRange('l-thigh','vl-thigh','thigh','leg');
-  bindRange('l-calf','vl-calf','calf','leg');
-  bindRange('l-ankle','vl-ankle','ankle','leg');
-  bindRange('skin-opacity','v-skin-op','skinOpacity','skin');
-  bindRange('organ-opacity','v-organ-op','organOpacity','organ');
-  bindColor('c-skinbody','skinBodyColor',[MAT.skinBody]);
-  bindColor('c-skin','skinColor',[MAT.skin]);
-  bindColor('c-skin2','skinColor2',[MAT.skin2]);
-  bindColor('c-hair','hairColor',[MAT.cart]);
-  bindColor('c-dress','dressColor',[MAT.dress]);
-  bindColor('c-dress2','dressColor2',[MAT.dress2]);
-  bindColor('c-ling','lingColor',[MAT.ling]);
-  bindColor('c-lip','lipColor',[MAT.cavity]);
-  bindColor('c-eye','eyeColor',[MAT.teeth]);
-  bindColor('c-hairtop','hairTopColor',[MAT.hairTop]);
+  bindRange('b-height','vb-height', v=>{ state.height=v; applyBodyManual(); });
+  bindRange('b-shoulder','vb-shoulder', v=>{ state.shoulder=v; applyBodyManual(); });
+  bindRange('b-waist','vb-waist', v=>{ state.waist=v; applyBodyManual(); });
+  bindRange('b-hip','vb-hip', v=>{ state.hip=v; applyBodyManual(); });
+  bindRange('b-bust','vb-bust', v=>{ state.bust=v; applyBodyManual(); });
+  bindRange('l-height','vl-height', v=>{ state.leg.height=v; });
+  bindRange('l-len','vl-len', v=>{ state.leg.len=v; });
+  bindRange('l-thigh','vl-thigh', v=>{ state.leg.thigh=v; applyLegManual(); });
+  bindRange('l-calf','vl-calf', v=>{ state.leg.calf=v; applyLegManual(); });
+  bindRange('l-ankle','vl-ankle', v=>{ state.leg.ankle=v; });
+  bindRange('l-spread','vl-spread', v=>{ state.leg.spread=v; applyLegManual(); });
+  bindRange('skin-op','v-skin-op', v=>{
+    state.skinOpacity=v;
+    if(viewMode==='full'){ MAT.skinBody.opacity=v; MAT.skinBody2.opacity=v; }
+  });
+  bindRange('organ-op','v-organ-op', v=>{
+    state.organOpacity = v;
+    [MAT.brain,MAT.heart,MAT.liver,MAT.stomach,MAT.intestine,MAT.kidney,MAT.bladder,MAT.uterus,MAT.ovary,MAT.lung,MAT.trachea].forEach(m=>{
+      m.transparent = v<1; m.opacity = v;
+    });
+  });
 }
 
 /* ============================================================
-   IA DE FOTO
+   📸 IA DE FOTO — MediaPipe Pose
 ============================================================ */
 let poseAI = null, lastDetected = null, photoImg = null;
 
 function initPoseAI(){
-  if(typeof Pose === 'undefined') return;
-  poseAI = new Pose({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${f}` });
-  poseAI.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+  if(typeof Pose === 'undefined'){ console.warn('MediaPipe não carregado'); return; }
+  poseAI = new Pose({ locateFile: (f)=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${f}` });
+  poseAI.setOptions({ modelComplexity:1, smoothLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
   poseAI.onResults(onPoseResults);
 }
+
 function onPoseResults(results){
   if(!results.poseLandmarks){
-    document.getElementById('upload-status').innerText = '⚠️ Usando silhueta';
+    document.getElementById('upload-status').innerText = '⚠️ Não detectado — usando silhueta';
+    applyFallbackSilhouette();
     return;
   }
   lastDetected = results.poseLandmarks;
-  document.getElementById('upload-status').innerText = '✅ Anatomia detectada!';
+  document.getElementById('upload-status').innerText = '✅ Anatomia detectada! Aplicando...';
   applyPhotoAnalysis();
 }
 
-/* ✅ CORREÇÃO: 'changeícula' → 'change' e files[**,0] → files[0] */
-document.getElementById('direct-photo-input').addEventListener('change', e => {
+document.getElementById('photo-input').addEventListener('change', e => {
   const file = e.target.files[0];
   if(!file) return;
   processImageURL(URL.createObjectURL(file));
@@ -1809,15 +1435,43 @@ function processImageURL(url){
     photoImg = img;
     const prev = document.getElementById('photo-preview');
     prev.src = url; prev.style.display = 'block';
-    document.getElementById('upload-status').innerText = '⏳ Analisando...';
-    showToast('📸 Processando...');
+    document.getElementById('upload-status').innerText = '⏳ Analisando foto...';
+    showToast('📸 Processando foto IA...');
+    extractSkinTone(img);
     if(poseAI){
       try { await poseAI.send({ image: img }); }
-      catch(err){ applyFallbackSilhouette(img); }
-    } else applyFallbackSilhouette(img);
+      catch(err){ console.warn(err); applyFallbackSilhouette(); }
+    } else {
+      applyFallbackSilhouette();
+    }
   };
   img.src = url;
 }
+
+function extractSkinTone(img){
+  // Extrai cor média da região do rosto/ombros
+  const c = document.createElement('canvas');
+  c.width = 60; c.height = 90;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0, 60, 90);
+  try {
+    // Amostra região do pescoço (x 25-35, y 15-25)
+    const px = ctx.getImageData(22, 14, 16, 14).data;
+    let r=0,g=0,b=0,n=0;
+    for(let i=0;i<px.length;i+=4){ r+=px[i]; g+=px[i+1]; b+=px[i+2]; n++; }
+    if(n>0){
+      r=Math.floor(r/n); g=Math.floor(g/n); b=Math.floor(b/n);
+      // Clareia um pouco (não deixa escuro)
+      r = Math.min(255, r+20); g = Math.min(255, g+20); b = Math.min(255, b+20);
+      const color = (r<<16) | (g<<8) | b;
+      MAT.skinBody.color.setHex(color);
+      MAT.skinBody2.color.setHex(color);
+      state.skinColor = color;
+      showToast('🎨 Tom de pele extraído da foto');
+    }
+  } catch(e){ console.warn('Erro cor:', e); }
+}
+
 function loadDemoPhoto(type){
   const c = document.createElement('canvas');
   c.width = 400; c.height = 600;
@@ -1825,32 +1479,70 @@ function loadDemoPhoto(type){
   const grad = ctx.createLinearGradient(0,0,0,600);
   grad.addColorStop(0, '#87ceeb'); grad.addColorStop(1, '#e0f7fa');
   ctx.fillStyle = grad; ctx.fillRect(0,0,400,600);
-  ctx.fillStyle = '#f5c9a8'; ctx.beginPath(); ctx.arc(200, 120, 40, 0, Math.PI*2); ctx.fill();
-  ctx.fillRect(155,100,20,120); ctx.fillRect(225,100,20,120);
-  ctx.fillStyle = '#3a1a00'; ctx.beginPath(); ctx.arc(200,115,45,Math.PI,Math.PI*2); ctx.fill();
+  let skin;
+  if(type===1) skin = '#f0d4b8';
+  else if(type===2) skin = '#e8c09a';
+  else skin = '#d4a878';
+  ctx.fillStyle = skin;
+  ctx.beginPath(); ctx.arc(200, 120, 40, 0, Math.PI*2); ctx.fill();
+  ctx.fillRect(160, 160, 80, 200);
+  ctx.fillRect(120, 360, 60, 220);
+  ctx.fillRect(220, 360, 60, 220);
+  ctx.fillStyle = '#3a1a00';
+  ctx.beginPath(); ctx.arc(200, 115, 45, Math.PI, Math.PI*2); ctx.fill();
   processImageURL(c.toDataURL());
 }
-function applyFallbackSilhouette(img){
-  const aspect = img.height / img.width;
-  const idx = Math.max(1, Math.min(90, Math.round(aspect * 30)));
-  applyBody(idx); applyHip(idx); applyWaist(idx);
-  applyLegPreset(idx); applyPosePreset(idx);
-  applyPhotoAnalysis();
-}
-function applyPhotoAnalysis(){
-  if(!photoImg) return;
-  if(lastDetected){
-    const lm = lastDetected;
-    const shoulderW = Math.abs(lm[11].x - lm[12].x);
-    const hipW = Math.abs(lm[23].x - lm[24].x);
-    const ratio = shoulderW / Math.max(hipW, 0.01);
-    const bodyIdx = Math.max(1, Math.min(90, Math.round(ratio * 45)));
-    const hipIdx  = Math.max(1, Math.min(90, Math.round((hipW/Math.max(shoulderW,0.01)) * 45)));
-    applyBody(bodyIdx); applyHip(hipIdx); applyWaist(bodyIdx);
-    applyLegPreset(bodyIdx); applyPosePreset(bodyIdx);
+
+function applyFallbackSilhouette(){
+  // Aplica preset baseado no aspect ratio
+  if(photoImg){
+    const aspect = photoImg.height / photoImg.width;
+    const idx = Math.max(0, Math.min(9, Math.floor((aspect - 1.2) * 5)));
+    applyBodyPreset(idx);
+    applyLegPreset(idx);
+    document.getElementById('upload-status').innerText = '✨ Silhueta aplicada';
+    showToast('✨ Proporções aplicadas');
   }
-  showToast('🦴 Silhueta aplicada!');
-  document.getElementById('upload-status').innerText = '✨ Proporções ajustadas!';
+}
+
+function applyPhotoAnalysis(){
+  if(!photoImg || !lastDetected){
+    applyFallbackSilhouette();
+    return;
+  }
+  const lm = lastDetected;
+
+  // Largura dos ombros
+  const shoulderW = Math.abs(lm[11].x - lm[12].x);
+  // Largura do quadril
+  const hipW = Math.abs(lm[23].x - lm[24].x);
+  // Comprimento das pernas
+  const legLen = Math.abs(lm[28].y - lm[24].y);
+  // Comprimento do tronco
+  const torsoLen = Math.abs(lm[24].y - lm[12].y);
+
+  const ratio = shoulderW / Math.max(hipW, 0.01);
+  const totalLen = torsoLen + legLen;
+
+  // Mapeia para índices de preset
+  let bodyIdx = 0, legIdx = 0;
+  if(ratio > 1.15) bodyIdx = 1; // Atlética
+  else if(ratio < 0.85) bodyIdx = 2; // Curvilínea
+  else bodyIdx = 9; // Natural
+
+  if(legLen / totalLen > 0.55) legIdx = 0; // Longa
+  else if(legLen / totalLen < 0.45) legIdx = 3; // Curta
+  else legIdx = 9; // Proporcional
+
+  applyBodyPreset(bodyIdx);
+  applyLegPreset(legIdx);
+
+  // Ajusta altura geral
+  state.height = 0.92 + (lm[27].y - lm[11].y) * 0.15;
+  applyBodyManual();
+
+  document.getElementById('upload-status').innerText = '✨ Proporções extraídas com sucesso!';
+  showToast('🦴 Corpo adaptado à foto');
 }
 
 /* ============================================================
@@ -1858,42 +1550,46 @@ function applyPhotoAnalysis(){
 ============================================================ */
 function init(){
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
   camera.position.set(0, 0.45, 3.2);
   camera.lookAt(0, 0.2, 0);
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer = new THREE.WebGLRenderer({ antialias:true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.15;
+  renderer.outputEncoding = THREE.sRGBEncoding;
   document.getElementById('viewport').appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.70));
-  const sunLight = new THREE.DirectionalLight(0xfffaed, 1.30);
-  sunLight.position.set(5, 8, 4); scene.add(sunLight);
-  const coolLight = new THREE.DirectionalLight(0x70d6ff, 0.45);
-  coolLight.position.set(-4,-2,-3); scene.add(coolLight);
-  const beachWarm = new THREE.PointLight(0xffaa55, 0.6, 12);
-  beachWarm.position.set(0,1.5,3); scene.add(beachWarm);
-  const rim = new THREE.PointLight(0x88ccff, 0.8, 6);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  const sun = new THREE.DirectionalLight(0xfffaed, 1.3);
+  sun.position.set(5,8,4); scene.add(sun);
+  const cool = new THREE.DirectionalLight(0x70d6ff, 0.5);
+  cool.position.set(-4,-2,-3); scene.add(cool);
+  const warm = new THREE.PointLight(0xffaa55, 0.6, 12);
+  warm.position.set(0,1.5,3); scene.add(warm);
+  const rim = new THREE.PointLight(0x88ccff, 0.7, 6);
   rim.position.set(0,1.6,-2); scene.add(rim);
 
   clock = new THREE.Clock();
-  buildBeachEnvironment();
+  buildEnv();
   buildSkeleton();
   initUI();
+  setupRaycaster();
   initPoseAI();
+  setViewMode('full');
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth/window.innerHeight;
+  addEventListener('resize', ()=>{
+    camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(innerWidth, innerHeight);
   });
 
   loop();
 }
-window.addEventListener('load', init);
+
+addEventListener('load', init);
 </script>
 </body>
 </html>
