@@ -258,12 +258,13 @@ async function generateVideo(){
     const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
     if (!videoId) throw new Error("ID da tarefa não retornado.");
 
-    // 4. Polling: verificar a cada 3 segundos se o vídeo ficou pronto
+    // 4. Polling: verificar a cada 60 segundos se o vídeo ficou pronto
+    // ALTERAÇÃO FEITA AQUI: 3000 -> 60000
     let urlDoVideo = null;
     let tentativas = 0;
 
     while (!urlDoVideo && tentativas < 60) {
-      await new Promise(r => setTimeout(r, 3000));
+      await new Promise(r => setTimeout(r, 60000)); // 60 segundos
       tentativas++;
 
       const statusRes = await fetch(`https://apihub.agnes-ai.com/v1/videos/${videoId}`, {
