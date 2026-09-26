@@ -3,257 +3,439 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Livia IA - Anatomia 2D Ajustável</title>
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#05070a">
+    <title>Livia IA - Personagem</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * {
-            margin: 0; padding: 0; box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            user-select: none; -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            width: 100%; height: 100%;
-            overflow: hidden;
+        html {
+            background-color: #05070a !important;
+            color-scheme: dark;
+        }
+
+        body {
             background-color: #05070a !important;
             color: #ffffff;
-            position: fixed; top: 0; left: 0;
-        }
-
-        /* Container do Boneco SVG */
-        #character-container {
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90vw;
-            max-width: 500px;
-            height: 85vh;
-            z-index: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            top: 0;
+            left: 0;
         }
 
-        #character-container svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.4));
-        }
-
-        /* Grid de fundo */
+        /* GRID DE FUNDO */
         .bg-grid {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 123, 255, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 123, 255, 0.08) 1px, transparent 1px);
+                linear-gradient(rgba(0, 123, 255, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 123, 255, 0.06) 1px, transparent 1px);
             background-size: 40px 40px;
             z-index: 0;
             pointer-events: none;
         }
 
-        /* Chão */
+        /* CHÃO */
         .floor {
             position: fixed;
-            bottom: 15%;
+            bottom: 18%;
             left: 50%;
             transform: translateX(-50%);
-            width: 80%;
+            width: 70%;
             height: 2px;
             background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-            box-shadow: 0 0 20px #00d4ff;
+            box-shadow: 0 0 30px #00d4ff;
             z-index: 1;
+            animation: pulse-floor 3s ease-in-out infinite;
         }
 
-        /* Botão Menu */
+        @keyframes pulse-floor {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* CONTAINER DO PERSONAGEM */
+        #character-container {
+            position: fixed;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85vw;
+            max-width: 420px;
+            height: 80vh;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 0 25px rgba(0, 212, 255, 0.35));
+        }
+
+        #character-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* BOTÃO MENU */
         .menu-toggle {
-            position: fixed; top: 20px; right: 20px;
-            width: 58px; height: 58px; border-radius: 50%;
-            background: rgba(0, 150, 255, 0.3);
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: rgba(0, 150, 255, 0.25);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 212, 255, 0.5);
-            color: white; font-size: 1.4rem; cursor: pointer;
-            z-index: 100; display: flex; justify-content: center; align-items: center;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
         }
-        .menu-toggle.active { background: rgba(255, 71, 87, 0.9); }
 
-        /* Painel Lateral */
+        .menu-toggle.active {
+            background: rgba(255, 71, 87, 0.9);
+            border-color: rgba(255, 71, 87, 0.7);
+        }
+
+        /* PAINEL LATERAL */
         .side-panel {
-            position: fixed; top: 0; right: -100%;
-            width: 100%; max-width: 380px; height: 100%;
-            background: rgba(13, 20, 33, 0.98);
-            backdrop-filter: blur(25px);
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 380px;
+            height: 100%;
+            background: #0d1421;
             border-left: 1px solid rgba(0, 150, 255, 0.3);
             z-index: 90;
             transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column;
-            padding: 20px; gap: 15px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
             overflow-y: auto;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.8);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.9);
         }
-        .side-panel.open { right: 0; }
-        .side-panel::-webkit-scrollbar { width: 4px; }
-        .side-panel::-webkit-scrollbar-thumb { background: #007bff; border-radius: 4px; }
+
+        .side-panel.open {
+            right: 0;
+        }
+
+        .side-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .side-panel::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 4px;
+        }
 
         .panel-header {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
+
         .panel-header h2 {
-            font-size: 1.1rem; font-weight: 700;
-            display: flex; align-items: center; gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             color: #00d4ff;
         }
+
         .close-btn {
-            background: rgba(255,255,255,0.08); border: none; color: white;
-            width: 35px; height: 35px; border-radius: 50%;
-            cursor: pointer; display: flex; justify-content: center; align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
         }
-        .close-btn:hover { background: #ff4757; }
+
+        .close-btn:hover {
+            background: #ff4757;
+        }
 
         .info-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px; padding: 14px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .info-card h4 {
-            font-size: 0.7rem; color: #8ba0b8;
-            margin-bottom: 10px; text-transform: uppercase;
-            letter-spacing: 1.5px; font-weight: 600;
-            display: flex; align-items: center; gap: 6px;
+            font-size: 0.7rem;
+            color: #8ba0b8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .info-row {
-            display: flex; justify-content: space-between;
-            font-size: 0.85rem; margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
             color: #ccd6e0;
         }
-        .info-row span:last-child { color: #00d4ff; font-weight: 700; }
+
+        .info-row span:last-child {
+            color: #00d4ff;
+            font-weight: 700;
+        }
 
         .slider-group {
-            display: flex; flex-direction: column;
-            gap: 4px; margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 12px;
         }
+
         .slider-label {
-            display: flex; justify-content: space-between;
-            font-size: 0.75rem; color: #ccd6e0; font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #ccd6e0;
+            font-weight: 500;
         }
+
         .slider-label span:last-child {
-            color: #00d4ff; font-weight: 700; font-size: 0.7rem;
+            color: #00d4ff;
+            font-weight: 700;
+            font-size: 0.7rem;
         }
 
         input[type="range"] {
-            -webkit-appearance: none; appearance: none;
-            width: 100%; height: 5px; border-radius: 5px;
-            background: rgba(255,255,255,0.1); outline: none; cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            cursor: pointer;
         }
+
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none;
-            width: 16px; height: 16px; border-radius: 50%;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
             background: linear-gradient(135deg, #007bff, #00d4ff);
             cursor: pointer;
-            box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
         }
 
         .action-btn {
-            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
             background: linear-gradient(135deg, #007bff, #00d4ff);
-            color: white; font-weight: 700; font-size: 0.9rem;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            gap: 10px; transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.25);
         }
-        .action-btn.active { background: linear-gradient(135deg, #ff4757, #ff6b81); }
+
+        .action-btn.active {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+        }
+
         .action-btn.reset {
             background: linear-gradient(135deg, #6c757d, #495057);
-            font-size: 0.8rem; padding: 10px;
+            font-size: 0.8rem;
+            padding: 10px;
+            box-shadow: none;
         }
 
         .btn-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
+
         .grid-btn {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #8ba0b8; padding: 10px 5px;
-            border-radius: 10px; font-size: 0.7rem; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center;
-            gap: 6px; transition: all 0.2s; font-weight: 500;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #8ba0b8;
+            padding: 10px 5px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
         }
+
         .grid-btn.active {
             background: rgba(0, 212, 255, 0.15);
             color: #00d4ff;
             border-color: #00d4ff;
             font-weight: 700;
         }
-        .grid-btn i { font-size: 1.1rem; }
+
+        .grid-btn i {
+            font-size: 1.1rem;
+        }
 
         .chat-input-container {
-            margin-top: auto; position: relative; padding-top: 10px;
+            margin-top: auto;
+            position: relative;
+            padding-top: 10px;
         }
+
         .chat-input {
-            width: 100%; background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; padding: 14px 45px 14px 14px;
-            color: white; font-size: 0.85rem; outline: none;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 45px 14px 14px;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
         }
-        .chat-input::placeholder { color: rgba(255,255,255,0.3); }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
 
         .chat-send {
-            position: absolute; right: 12px; top: 50%;
+            position: absolute;
+            right: 12px;
+            top: 50%;
             transform: translateY(-50%);
-            background: none; border: none;
-            color: #00d4ff; cursor: pointer;
-            font-size: 1.1rem; margin-top: 5px;
+            background: none;
+            border: none;
+            color: #00d4ff;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 5px;
         }
 
         .hint {
-            position: fixed; bottom: 25px; left: 50%;
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            padding: 10px 20px; border-radius: 25px;
-            font-size: 0.75rem; color: rgba(255,255,255,0.9);
-            z-index: 10; backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.75);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 212, 255, 0.3);
-            display: flex; align-items: center; gap: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             white-space: nowrap;
         }
 
         .quick-stats {
-            position: fixed; top: 20px; left: 20px;
-            display: flex; gap: 10px; z-index: 50;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 50;
         }
+
         .stat-badge {
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
-            padding: 8px 14px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 700;
-            display: flex; align-items: center; gap: 6px;
+            -webkit-backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             border: 1px solid rgba(0, 212, 255, 0.3);
             color: #00d4ff;
         }
-        .stat-badge.red { color: #ff4757; border-color: rgba(255, 71, 87, 0.3); }
 
-        /* Animação de giro do boneco */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .stat-badge.red {
+            color: #ff4757;
+            border-color: rgba(255, 71, 87, 0.3);
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .alive {
-            animation: float 2s ease-in-out infinite;
+            animation: breathe 2s ease-in-out infinite;
         }
 
-        /* Animações de roupas */
-        .clothes {
-            transition: opacity 0.3s;
+        .rotate-active {
+            animation: rotate360 8s linear infinite;
+            transform-origin: 150px 300px;
+        }
+
+        @keyframes rotate360 {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
         }
 
     </style>
@@ -263,114 +445,146 @@
     <div class="bg-grid"></div>
     <div class="floor"></div>
 
-    <!-- Boneco SVG -->
+    <!-- PERSONAGEM SVG -->
     <div id="character-container">
         <svg id="character-svg" viewBox="0 0 300 600" xmlns="http://www.w3.org/2000/svg">
-            <!-- GRUPO PRINCIPAL (rotaciona para girar) -->
-            <g id="character-group" transform-origin="150 300">
+            <defs>
+                <radialGradient id="skinGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ffd9b8"/>
+                    <stop offset="100%" stop-color="#f0a888"/>
+                </radialGradient>
+                <radialGradient id="muscleGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#e74c3c"/>
+                    <stop offset="100%" stop-color="#a93226"/>
+                </radialGradient>
+                <radialGradient id="hairGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#5d3a1a"/>
+                    <stop offset="100%" stop-color="#3a2210"/>
+                </radialGradient>
+            </defs>
+
+            <g id="character-group">
                 
-                <!-- PERNAS -->
-                <g id="legs-group">
-                    <!-- Perna Esquerda -->
-                    <g id="left-leg">
-                        <!-- Coxa -->
-                        <ellipse cx="130" cy="410" rx="18" ry="55" fill="#c0392b" opacity="0.9"/>
-                        <!-- Joelho -->
-                        <circle cx="130" cy="465" r="12" fill="#f5f5dc"/>
-                        <!-- Panturrilha -->
-                        <ellipse cx="130" cy="510" rx="14" ry="45" fill="#c0392b" opacity="0.9"/>
-                        <!-- Pé -->
-                        <ellipse cx="130" cy="565" rx="12" ry="8" fill="#ffd1b3"/>
-                    </g>
-                    
-                    <!-- Perna Direita -->
-                    <g id="right-leg">
-                        <ellipse cx="170" cy="410" rx="18" ry="55" fill="#c0392b" opacity="0.9"/>
-                        <circle cx="170" cy="465" r="12" fill="#f5f5dc"/>
-                        <ellipse cx="170" cy="510" rx="14" ry="45" fill="#c0392b" opacity="0.9"/>
-                        <ellipse cx="170" cy="565" rx="12" ry="8" fill="#ffd1b3"/>
-                    </g>
+                <!-- PERNA ESQUERDA -->
+                <g id="left-leg">
+                    <ellipse cx="125" cy="410" rx="19" ry="55" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1"/>
+                    <circle cx="125" cy="468" r="12" fill="#f5f5dc" stroke="#c9c9a8" stroke-width="1"/>
+                    <ellipse cx="125" cy="515" rx="15" ry="45" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1"/>
+                    <ellipse cx="125" cy="568" rx="13" ry="8" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                </g>
+                
+                <!-- PERNA DIREITA -->
+                <g id="right-leg">
+                    <ellipse cx="175" cy="410" rx="19" ry="55" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1"/>
+                    <circle cx="175" cy="468" r="12" fill="#f5f5dc" stroke="#c9c9a8" stroke-width="1"/>
+                    <ellipse cx="175" cy="515" rx="15" ry="45" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1"/>
+                    <ellipse cx="175" cy="568" rx="13" ry="8" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
                 </g>
 
                 <!-- QUADRIL -->
                 <g id="hip-group">
-                    <ellipse cx="150" cy="365" rx="35" ry="28" fill="#ffd1b3"/>
-                    <!-- Biquíni inferior -->
-                    <path d="M 115 365 Q 150 385 185 365 L 185 375 Q 150 395 115 375 Z" fill="#1a1a1a"/>
+                    <ellipse cx="150" cy="365" rx="38" ry="30" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                    <path d="M 112 362 Q 150 388 188 362 L 188 378 Q 150 402 112 378 Z" fill="#1a1a1a" opacity="0.95"/>
                 </g>
 
                 <!-- TRONCO -->
                 <g id="torso-group">
-                    <!-- Abdômen -->
-                    <ellipse cx="150" cy="320" rx="28" ry="35" fill="#ffd1b3"/>
-                    <!-- Peito -->
-                    <ellipse cx="150" cy="270" rx="35" ry="40" fill="#ffd1b3"/>
+                    <ellipse cx="150" cy="325" rx="30" ry="40" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                    <ellipse cx="150" cy="268" rx="38" ry="42" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                    <!-- Linhas musculares (abdômen) -->
+                    <line x1="150" y1="290" x2="150" y2="355" stroke="#d4a088" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="135" y1="305" x2="165" y2="305" stroke="#d4a088" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="135" y1="325" x2="165" y2="325" stroke="#d4a088" stroke-width="0.8" opacity="0.5"/>
+                    <line x1="135" y1="345" x2="165" y2="345" stroke="#d4a088" stroke-width="0.8" opacity="0.5"/>
                 </g>
 
                 <!-- SEIOS -->
                 <g id="breasts-group">
-                    <circle cx="135" cy="255" r="15" fill="#ffd1b3"/>
-                    <circle cx="165" cy="255" r="15" fill="#ffd1b3"/>
-                    <!-- Biquíni superior -->
-                    <path d="M 118 245 Q 135 260 150 250 Q 165 260 182 245 L 178 255 Q 165 265 150 258 Q 135 265 122 255 Z" fill="#1a1a1a"/>
+                    <circle cx="133" cy="252" r="17" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                    <circle cx="167" cy="252" r="17" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                    <circle cx="133" cy="252" r="4" fill="#e8a890" opacity="0.7"/>
+                    <circle cx="167" cy="252" r="4" fill="#e8a890" opacity="0.7"/>
+                    <!-- Biquíni -->
+                    <path d="M 116 240 Q 133 258 150 248 Q 167 258 184 240 L 180 252 Q 167 264 150 256 Q 133 264 120 252 Z" fill="#1a1a1a"/>
                 </g>
 
-                <!-- BRAÇOS -->
-                <g id="arms-group">
-                    <!-- Braço Esquerdo -->
-                    <g id="left-arm">
-                        <ellipse cx="100" cy="270" rx="12" ry="40" fill="#c0392b" transform="rotate(15 100 270)"/>
-                        <ellipse cx="88" cy="340" rx="10" ry="38" fill="#e74c3c" transform="rotate(20 88 340)"/>
-                        <circle cx="82" cy="385" r="10" fill="#ffd1b3"/>
-                    </g>
-                    <!-- Braço Direito -->
-                    <g id="right-arm">
-                        <ellipse cx="200" cy="270" rx="12" ry="40" fill="#c0392b" transform="rotate(-15 200 270)"/>
-                        <ellipse cx="212" cy="340" rx="10" ry="38" fill="#e74c3c" transform="rotate(-20 212 340)"/>
-                        <circle cx="218" cy="385" r="10" fill="#ffd1b3"/>
-                    </g>
+                <!-- BRAÇO ESQUERDO -->
+                <g id="left-arm">
+                    <ellipse cx="103" cy="270" rx="13" ry="42" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1" transform="rotate(12 103 270)"/>
+                    <ellipse cx="88" cy="342" rx="11" ry="40" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1" transform="rotate(20 88 342)"/>
+                    <circle cx="80" cy="390" r="11" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
+                </g>
+
+                <!-- BRAÇO DIREITO -->
+                <g id="right-arm">
+                    <ellipse cx="197" cy="270" rx="13" ry="42" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1" transform="rotate(-12 197 270)"/>
+                    <ellipse cx="212" cy="342" rx="11" ry="40" fill="url(#muscleGrad)" stroke="#8b2a1e" stroke-width="1" transform="rotate(-20 212 342)"/>
+                    <circle cx="220" cy="390" r="11" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
                 </g>
 
                 <!-- PESCOÇO -->
-                <rect x="143" y="220" width="14" height="20" fill="#ffd1b3"/>
+                <rect x="142" y="218" width="16" height="22" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
 
                 <!-- CABEÇA -->
                 <g id="head-group">
-                    <ellipse cx="150" cy="195" rx="28" ry="32" fill="#ffd1b3"/>
+                    <ellipse cx="150" cy="192" rx="30" ry="34" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
                     <!-- Olhos -->
-                    <circle cx="140" cy="192" r="3" fill="#2b1a0f"/>
-                    <circle cx="160" cy="192" r="3" fill="#2b1a0f"/>
+                    <ellipse cx="139" cy="190" rx="3.5" ry="4" fill="#ffffff"/>
+                    <circle cx="139" cy="191" r="2" fill="#2b1a0f"/>
+                    <ellipse cx="161" cy="190" rx="3.5" ry="4" fill="#ffffff"/>
+                    <circle cx="161" cy="191" r="2" fill="#2b1a0f"/>
+                    <!-- Sobrancelhas -->
+                    <path d="M 134 182 Q 139 179 144 182" stroke="#4a2c17" stroke-width="1.5" fill="none"/>
+                    <path d="M 156 182 Q 161 179 166 182" stroke="#4a2c17" stroke-width="1.5" fill="none"/>
+                    <!-- Nariz -->
+                    <path d="M 150 195 L 148 202 L 152 202 Z" fill="#d4a088"/>
                     <!-- Boca -->
-                    <ellipse cx="150" cy="208" rx="5" ry="2" fill="#c0392b" opacity="0.6"/>
+                    <ellipse cx="150" cy="212" rx="6" ry="2.5" fill="#c0392b" opacity="0.7"/>
                     
-                    <!-- Cabelo -->
+                    <!-- CABELO -->
                     <g id="hair-group">
-                        <path d="M 122 185 Q 120 155 150 155 Q 180 155 178 185 Q 175 175 150 170 Q 125 175 122 185 Z" fill="#4a2c17"/>
-                        <path d="M 122 185 Q 118 215 125 240 L 130 240 Q 125 215 128 190 Z" fill="#4a2c17"/>
-                        <path d="M 178 185 Q 182 215 175 240 L 170 240 Q 175 215 172 190 Z" fill="#4a2c17"/>
+                        <path d="M 120 185 Q 115 145 150 142 Q 185 145 180 185 Q 178 170 150 165 Q 122 170 120 185 Z" fill="url(#hairGrad)"/>
+                        <path d="M 120 185 Q 115 220 122 250 L 130 250 Q 124 220 128 192 Z" fill="url(#hairGrad)"/>
+                        <path d="M 180 185 Q 185 220 178 250 L 170 250 Q 176 220 172 192 Z" fill="url(#hairGrad)"/>
+                        <path d="M 122 195 Q 118 230 125 265 L 132 262 Q 126 230 128 200 Z" fill="url(#hairGrad)"/>
+                        <path d="M 178 195 Q 182 230 175 265 L 168 262 Q 174 230 172 200 Z" fill="url(#hairGrad)"/>
                     </g>
                 </g>
+
+                <!-- PONTOS DE REFERÊNCIA (para os modos) -->
+                <g id="skeleton-details" opacity="0">
+                    <circle cx="150" cy="192" r="28" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="3 3"/>
+                    <line x1="150" y1="220" x2="150" y2="360" stroke="#fff" stroke-width="2"/>
+                    <line x1="150" y1="240" x2="120" y2="255" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="150" y1="240" x2="180" y2="255" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="150" y1="260" x2="115" y2="275" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="150" y1="260" x2="185" y2="275" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="150" y1="280" x2="120" y2="295" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="150" y1="280" x2="180" y2="295" stroke="#fff" stroke-width="1.5"/>
+                    <circle cx="150" cy="340" r="15" fill="none" stroke="#fff" stroke-width="1.5"/>
+                </g>
+
             </g>
         </svg>
     </div>
 
-    <!-- Stats -->
+    <!-- STATS -->
     <div class="quick-stats">
         <div class="stat-badge"><i class="fas fa-bone"></i> 200</div>
         <div class="stat-badge red"><i class="fas fa-heart"></i> 14</div>
     </div>
 
-    <!-- Hint -->
+    <!-- HINT -->
     <div class="hint" id="hint">
-        <i class="fas fa-hand-pointer"></i> Ajuste pelo menu
+        <i class="fas fa-hand-pointer"></i> Abra o menu para ajustar
     </div>
 
-    <!-- Menu Toggle -->
+    <!-- BOTÃO MENU -->
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Painel Lateral -->
+    <!-- PAINEL LATERAL -->
     <div class="side-panel" id="side-panel">
         <div class="panel-header">
             <h2><i class="fas fa-robot"></i> Livia IA</h2>
@@ -426,6 +640,11 @@
                 <input type="range" id="slider-leg" min="0.6" max="1.8" step="0.01" value="1.00">
             </div>
 
+            <div class="slider-group">
+                <div class="slider-label"><span>Cabelo</span><span id="val-hair">1.00</span></div>
+                <input type="range" id="slider-hair" min="0.5" max="1.8" step="0.05" value="1.00">
+            </div>
+
             <button class="action-btn reset" id="btn-reset">
                 <i class="fas fa-undo"></i> Resetar Ajustes
             </button>
@@ -457,7 +676,7 @@
 
     <script>
         // ==========================================
-        // LÓGICA DE AJUSTES
+        // REFERÊNCIAS
         // ==========================================
         const characterGroup = document.getElementById('character-group');
         const headGroup = document.getElementById('head-group');
@@ -468,8 +687,14 @@
         const leftLeg = document.getElementById('left-leg');
         const rightLeg = document.getElementById('right-leg');
         const hairGroup = document.getElementById('hair-group');
+        const skeletonDetails = document.getElementById('skeleton-details');
+        const characterContainer = document.getElementById('character-container');
 
-        // Ajustes via Sliders
+        // ==========================================
+        // AJUSTES VIA SLIDERS
+        // ==========================================
+        
+        // Altura
         document.getElementById('slider-height').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-height').textContent = v.toFixed(2);
@@ -477,30 +702,31 @@
                 `translate(150 300) scale(1 ${v}) translate(-150 -300)`);
         });
 
+        // Largura geral
         document.getElementById('slider-width').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-width').textContent = v.toFixed(2);
-            // Aplica escala horizontal em todo o grupo
-            document.querySelectorAll('#character-group > *').forEach(el => {
-                el.style.transform = `scaleX(${v})`;
-                el.style.transformOrigin = '150px center';
-            });
+            characterGroup.setAttribute('transform', 
+                `translate(150 300) scale(${v} 1) translate(-150 -300)`);
         });
 
+        // Cabeça
         document.getElementById('slider-head').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-head').textContent = v.toFixed(2);
             headGroup.style.transform = `scale(${v})`;
-            headGroup.style.transformOrigin = '150px 195px';
+            headGroup.style.transformOrigin = '150px 192px';
         });
 
+        // Seios
         document.getElementById('slider-breast').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-breast').textContent = v.toFixed(2);
             breastsGroup.style.transform = `scale(${v})`;
-            breastsGroup.style.transformOrigin = '150px 255px';
+            breastsGroup.style.transformOrigin = '150px 252px';
         });
 
+        // Quadril
         document.getElementById('slider-hip').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-hip').textContent = v.toFixed(2);
@@ -508,22 +734,32 @@
             hipGroup.style.transformOrigin = '150px 365px';
         });
 
+        // Braços
         document.getElementById('slider-arm').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-arm').textContent = v.toFixed(2);
             leftArm.style.transform = `scaleX(${v})`;
-            leftArm.style.transformOrigin = '100px center';
+            leftArm.style.transformOrigin = '103px center';
             rightArm.style.transform = `scaleX(${v})`;
-            rightArm.style.transformOrigin = '200px center';
+            rightArm.style.transformOrigin = '197px center';
         });
 
+        // Pernas
         document.getElementById('slider-leg').addEventListener('input', (e) => {
             const v = parseFloat(e.target.value);
             document.getElementById('val-leg').textContent = v.toFixed(2);
             leftLeg.style.transform = `scaleX(${v})`;
-            leftLeg.style.transformOrigin = '130px center';
+            leftLeg.style.transformOrigin = '125px center';
             rightLeg.style.transform = `scaleX(${v})`;
-            rightLeg.style.transformOrigin = '170px center';
+            rightLeg.style.transformOrigin = '175px center';
+        });
+
+        // Cabelo
+        document.getElementById('slider-hair').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-hair').textContent = v.toFixed(2);
+            hairGroup.style.transform = `scale(${v})`;
+            hairGroup.style.transformOrigin = '150px 180px';
         });
 
         // ==========================================
@@ -537,9 +773,6 @@
                 l.textContent = '1.00';
             });
             characterGroup.setAttribute('transform', '');
-            document.querySelectorAll('#character-group > *').forEach(el => {
-                el.style.transform = '';
-            });
             headGroup.style.transform = '';
             breastsGroup.style.transform = '';
             hipGroup.style.transform = '';
@@ -547,6 +780,7 @@
             rightArm.style.transform = '';
             leftLeg.style.transform = '';
             rightLeg.style.transform = '';
+            hairGroup.style.transform = '';
         });
 
         // ==========================================
@@ -567,32 +801,22 @@
         });
 
         // ==========================================
-        // DAR VIDA (Girar)
+        // DAR VIDA
         // ==========================================
         let isAlive = false;
-        let rotation = 0;
-        let animationId;
 
         document.getElementById('btn-dar-vida').addEventListener('click', function() {
             isAlive = !isAlive;
             if(isAlive) {
                 this.classList.add('active');
                 this.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
-                document.getElementById('character-container').classList.add('alive');
-                
-                // Animação de rotação
-                function rotate() {
-                    rotation += 0.5;
-                    characterGroup.setAttribute('transform', 
-                        `translate(150 300) rotate(${rotation}) translate(-150 -300)`);
-                    animationId = requestAnimationFrame(rotate);
-                }
-                rotate();
+                characterGroup.classList.add('alive');
+                characterGroup.style.transformOrigin = '150px 400px';
             } else {
                 this.classList.remove('active');
                 this.innerHTML = '<i class="fas fa-heart"></i> Dar Vida';
-                document.getElementById('character-container').classList.remove('alive');
-                cancelAnimationFrame(animationId);
+                characterGroup.classList.remove('alive');
+                characterGroup.style.transform = '';
             }
         });
 
@@ -605,35 +829,51 @@
                 this.classList.add('active');
                 
                 const mode = this.getAttribute('data-mode');
-                const allParts = document.querySelectorAll('#character-group > *');
+                
+                // Reseta tudo
+                document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect, #character-group path').forEach(el => {
+                    el.removeAttribute('style');
+                });
+                skeletonDetails.setAttribute('opacity', '0');
                 
                 if(mode === 'skeleton') {
                     document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
-                        el.setAttribute('fill', '#f5f5dc');
-                        el.setAttribute('stroke', '#8ba0b8');
-                        el.setAttribute('stroke-width', '1');
+                        const cx = parseFloat(el.getAttribute('cx') || el.getAttribute('x') || 150);
+                        if (cx > 80 && cx < 220) {
+                            el.setAttribute('fill', 'rgba(255,255,255,0.05)');
+                            el.setAttribute('stroke', 'rgba(255,255,255,0.2)');
+                        }
                     });
+                    skeletonDetails.setAttribute('opacity', '1');
                 } else if(mode === 'muscular') {
-                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
-                        el.setAttribute('fill', '#c0392b');
-                        el.setAttribute('stroke', 'none');
+                    document.querySelectorAll('#character-group ellipse, #character-group circle').forEach(el => {
+                        const cx = parseFloat(el.getAttribute('cx') || 150);
+                        if (cx > 80 && cx < 130) {
+                            el.setAttribute('fill', '#a93226');
+                        } else if (cx > 170 && cx < 220) {
+                            el.setAttribute('fill', '#a93226');
+                        } else if (cx > 130 && cx < 170) {
+                            el.setAttribute('fill', '#c0392b');
+                        }
                     });
                 } else if(mode === 'xray') {
-                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
-                        el.setAttribute('fill', 'rgba(0, 212, 255, 0.15)');
+                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect, #character-group path').forEach(el => {
+                        el.setAttribute('fill', 'rgba(0, 212, 255, 0.1)');
                         el.setAttribute('stroke', '#00d4ff');
                         el.setAttribute('stroke-width', '1');
                     });
+                    skeletonDetails.setAttribute('opacity', '1');
                 } else {
-                    // Restaura cores originais
-                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
-                        const cx = el.getAttribute('cx') || el.getAttribute('x') || 150;
-                        if (el.tagName === 'ellipse' || el.tagName === 'circle') {
-                            if (cx < 130) el.setAttribute('fill', '#c0392b');
-                            else if (cx > 170) el.setAttribute('fill', '#e74c3c');
-                            else el.setAttribute('fill', '#ffd1b3');
+                    // Normal: restaura cores originais
+                    document.querySelectorAll('#character-group ellipse, #character-group circle').forEach(el => {
+                        const cx = parseFloat(el.getAttribute('cx') || 150);
+                        if (cx > 80 && cx < 130) {
+                            el.setAttribute('fill', 'url(#muscleGrad)');
+                        } else if (cx > 170 && cx < 220) {
+                            el.setAttribute('fill', 'url(#muscleGrad)');
+                        } else {
+                            el.setAttribute('fill', 'url(#skinGrad)');
                         }
-                        el.setAttribute('stroke', 'none');
                     });
                 }
             });
@@ -655,17 +895,20 @@
                 const responses = [
                     `Entendi! Você disse: "${text}"`,
                     `Interessante! Vamos explorar isso.`,
-                    `Legal! Me conta mais.`
+                    `Legal! Me conta mais sobre isso.`,
+                    `Estou processando...`
                 ];
                 chatInput.placeholder = `Livia: ${responses[Math.floor(Math.random() * responses.length)]}`;
-            }, 1000);
+            }, 1200);
         });
 
         chatInput.addEventListener('keypress', (e) => {
             if(e.key === 'Enter') chatSend.click();
         });
 
-        // Esconde hint
+        // ==========================================
+        // HINT
+        // ==========================================
         setTimeout(() => {
             const hint = document.getElementById('hint');
             if(hint) hint.style.opacity = '0.3';
