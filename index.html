@@ -532,10 +532,9 @@
         // --- QUADRIL ---
         const hip = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.24, 0.25, 16), materials.skin);
         hip.position.y = 0.6;
-       '),
- hipGroup.add(hip);
+        hipGroup.add(hip);
 
-        const bottom            = new THREE.Mesh(new THREE.Cylinder breastGeometry(0.22, 0.22, 0:.07, 16), materials document.cloth);
+        const bottom = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.07, 16), materials.cloth);
         bottom.position.y = 0.65;
         hipGroup.add(bottom);
         characterGroup.add(hipGroup);
@@ -645,7 +644,8 @@
         const sliders = {
             height: document.getElementById('slider-height'),
             width: document.getElementById('slider-width'),
-            head: document.getElementById('slider-head.getElementById('slider-breast'),
+            head: document.getElementById('slider-head'),
+            breast: document.getElementById('slider-breast'),
             hip: document.getElementById('slider-hip'),
             arm: document.getElementById('slider-arm'),
             leg: document.getElementById('slider-leg'),
@@ -670,4 +670,256 @@
         });
 
         sliders.width.addEventListener('input', (e) => {
-            const v = parseFloat
+            const v = parseFloat(e.target.value);
+            labels.width.textContent = v.toFixed(2);
+            characterGroup.scale.x = v;
+            characterGroup.scale.z = v;
+        });
+
+        sliders.head.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.head.textContent = v.toFixed(2);
+            headGroup.scale.set(v, v, v);
+        });
+
+        sliders.breast.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.breast.textContent = v.toFixed(2);
+            breastsGroup.scale.set(v, v, v);
+        });
+
+        sliders.hip.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.hip.textContent = v.toFixed(2);
+            hipGroup.scale.x = v;
+            hipGroup.scale.z = v;
+        });
+
+        sliders.arm.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.arm.textContent = v.toFixed(2);
+            leftArm.scale.x = v; leftArm.scale.z = v;
+            rightArm.scale.x = v; rightArm.scale.z = v;
+        });
+
+        sliders.leg.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.leg.textContent = v.toFixed(2);
+            leftLeg.scale.x = v; leftLeg.scale.z = v;
+            rightLeg.scale.x = v; rightLeg.scale.z = v;
+        });
+
+        sliders.hair.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            labels.hair.textContent = v.toFixed(2);
+            hairGroup.scale.set(v, v, v);
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            Object.keys(sliders).forEach(key => {
+                sliders[key].value = 1.00;
+                labels[key].textContent = '1.00';
+            });
+            characterGroup.scale.set(1, 1, 1);
+            headGroup.scale.set(1, 1, 1);
+            breastsGroup.scale.set(1, 1, 1);
+            hipGroup.scale.set(1, 1, 1);
+            leftArm.scale.set(1, 1, 1);
+            rightArm.scale.set(1, 1, 1);
+            leftLeg.scale.set(1, 1, 1);
+            rightLeg.scale.set(1, 1, 1);
+            hairGroup.scale.set(1, 1, 1);
+        });
+
+        // ==========================================
+        // 6. INTERFACE
+        // ==========================================
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidePanel = document.getElementById('side-panel');
+        const closeBtn = document.getElementById('close-btn');
+        const btnVida = document.getElementById('btn-dar-vida');
+        const hint = document.getElementById('hint');
+        
+        let isAlive = false;
+
+        menuToggle.addEventListener('click', () => {
+            sidePanel.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+            hint.style.opacity = '0';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidePanel.classList.remove('open');
+            menuToggle.classList.remove('active');
+        });
+
+        btnVida.addEventListener('click', () => {
+            isAlive = !isAlive;
+            if(isAlive) {
+                btnVida.classList.add('active');
+                btnVida.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
+                gsap.to(characterGroup.scale, { 
+                    x: characterGroup.scale.x * 1.02, 
+                    y: characterGroup.scale.y * 1.02, 
+                    z: characterGroup.scale.z * 1.02, 
+                    duration: 0.8, yoyo: true, repeat: -1, ease: "power1.inOut" 
+                });
+            } else {
+                btnVida.classList.remove('active');
+                btnVida.innerHTML = '<i class="fas fa-heart"></i> Dar Vida';
+                gsap.killTweensOf(characterGroup.scale);
+            }
+        });
+
+        // Modos Anatômicos
+        const modeBtns = document.querySelectorAll('[data-mode]');
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                modeBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const mode = this.getAttribute('data-mode');
+                
+                // Restaura tudo
+                characterGroup.traverse(child => {
+                    if (child.isMesh && child.userData.originalMaterial) {
+                        child.material = child.userData.originalMaterial;
+                        child.visible = true;
+                    }
+                });
+                internalGroup.visible = false;
+
+                if(mode === 'skeleton') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            if (child.material === materials.skin || 
+                                child.material === materials.muscle || 
+                                child.material === materials.muscleLight ||
+                                child.material === materials.cloth ||
+                                child.material === materials.hair ||
+                                child.material === materials.eye) {
+                                child.visible = false;
+                            }
+                        }
+                    });
+                    internalGroup.visible = true;
+                    internalGroup.traverse(child => {
+                        if (child.isMesh) {
+                            child.material = materials.bone;
+                            child.visible = true;
+                        }
+                    });
+                } else if(mode === 'muscular') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            if (child.material === materials.skin) {
+                                child.material = materials.muscle;
+                            } else if (child.material === materials.cloth || child.material === materials.hair) {
+                                child.visible = false;
+                            }
+                        }
+                    });
+                } else if(mode === 'organs') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh && child.material === materials.skin) {
+                            child.material = new THREE.MeshStandardMaterial({ 
+                                color: colors.skin, transparent: true, opacity: 0.15
+                            });
+                        }
+                    });
+                    internalGroup.visible = true;
+                } else if(mode === 'robot') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            if (child.material === materials.skin || 
+                                child.material === materials.muscle || 
+                                child.material === materials.muscleLight) {
+                                child.material = materials.robot;
+                            } else if (child.material === materials.cloth) {
+                                child.material = materials.robotDark;
+                            }
+                        }
+                    });
+                } else if(mode === 'xray') {
+                    characterGroup.traverse(child => {
+                        if (child.isMesh) {
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0x00d4ff, transparent: true, opacity: 0.2, wireframe: true
+                            });
+                        }
+                    });
+                    internalGroup.visible = true;
+                    internalGroup.traverse(child => {
+                        if (child.isMesh) {
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0xffffff, transparent: true, opacity: 0.5, wireframe: true
+                            });
+                            child.visible = true;
+                        }
+                    });
+                }
+            });
+        });
+
+        // Chat
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if(!text) return;
+            chatInput.value = '';
+            chatInput.placeholder = "Livia está pensando...";
+            
+            setTimeout(() => {
+                const responses = [
+                    `Entendi! Você disse: "${text}"`,
+                    `Interessante! Vamos explorar isso.`,
+                    `Estou processando sua mensagem...`,
+                    `Legal! Me conta mais sobre isso.`
+                ];
+                chatInput.placeholder = `Livia: ${responses[Math.floor(Math.random() * responses.length)]}`;
+            }, 1200);
+        }
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') sendMessage();
+        });
+
+        // ==========================================
+        // 7. ANIMAÇÃO
+        // ==========================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if(!isAlive) {
+                characterGroup.rotation.y += 0.006;
+            } else {
+                characterGroup.rotation.y = Math.sin(Date.now() * 0.0008) * 0.5;
+            }
+
+            gridHelper.rotation.y += 0.0005;
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        setTimeout(() => {
+            if(hint) hint.style.opacity = '0.3';
+        }, 5000);
+
+        animate();
+
+        // Debug: mostra status
+        debugEl.style.display = 'block';
+        debugEl.textContent = '✅ Modelo carregado | Objetos: ' + scene.children.length;
+        setTimeout(() => { debugEl.style.display = 'none'; }, 3000);
+
+    </script>
+</body>
+</html>
