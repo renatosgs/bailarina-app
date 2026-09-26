@@ -556,46 +556,23 @@
                     <stop offset="100%" stop-color="#0a0a1a"/>
                 </linearGradient>
                 
-                <!-- CLIP PATH PARA O ROSTO -->
                 <clipPath id="face-clip">
                     <ellipse cx="150" cy="190" rx="30" ry="34"/>
                 </clipPath>
                 
                 <!-- CLIP PATH PARA O CORPO INTEIRO -->
                 <clipPath id="body-clip">
-                    <!-- Cabeça -->
-                    <ellipse cx="150" cy="190" rx="32" ry="36"/>
-                    <!-- Pescoço -->
-                    <rect x="140" y="215" width="20" height="25"/>
-                    <!-- Tronco -->
-                    <ellipse cx="150" cy="290" rx="42" ry="70"/>
-                    <!-- Quadril -->
-                    <ellipse cx="150" cy="362" rx="42" ry="34"/>
-                    <!-- Braço esquerdo -->
-                    <ellipse cx="103" cy="270" rx="14" ry="45" transform="rotate(12 103 270)"/>
-                    <ellipse cx="87" cy="345" rx="12" ry="42" transform="rotate(20 87 345)"/>
-                    <circle cx="79" cy="394" r="12"/>
-                    <!-- Braço direito -->
-                    <ellipse cx="197" cy="270" rx="14" ry="45" transform="rotate(-12 197 270)"/>
-                    <ellipse cx="213" cy="345" rx="12" ry="42" transform="rotate(-20 213 345)"/>
-                    <circle cx="221" cy="394" r="12"/>
-                    <!-- Perna esquerda -->
-                    <ellipse cx="125" cy="410" rx="20" ry="58"/>
-                    <ellipse cx="125" cy="518" rx="16" ry="48"/>
-                    <ellipse cx="125" cy="572" rx="14" ry="9"/>
-                    <!-- Perna direita -->
-                    <ellipse cx="175" cy="410" rx="20" ry="58"/>
-                    <ellipse cx="175" cy="518" rx="16" ry="48"/>
-                    <ellipse cx="175" cy="572" rx="14" ry="9"/>
+                    <!-- Tronco completo -->
+                    <rect x="40" y="130" width="220" height="460" rx="20"/>
                 </clipPath>
             </defs>
 
             <g id="character-group">
                 
-                <!-- FOTO DO CORPO (por trás de tudo) -->
+                <!-- FOTO DO CORPO (por trás das partes) -->
                 <image id="body-photo" 
-                       x="50" y="140" 
-                       width="200" height="450" 
+                       x="40" y="130" 
+                       width="220" height="460" 
                        preserveAspectRatio="xMidYMid slice"
                        clip-path="url(#body-clip)"
                        style="display: none;"/>
@@ -678,7 +655,6 @@
                            clip-path="url(#face-clip)"
                            style="display: none;"/>
                     
-                    <!-- Traços do rosto -->
                     <g id="face-features">
                         <ellipse cx="139" cy="188" rx="4" ry="5" fill="#ffffff"/>
                         <circle cx="139" cy="189" r="2.5" fill="#3d2415"/>
@@ -697,7 +673,6 @@
                         <ellipse cx="150" cy="209" rx="6" ry="2" fill="#c0392b" opacity="0.5"/>
                     </g>
                     
-                    <!-- CABELO -->
                     <g id="hair-group">
                         <path d="M 118 185 Q 112 140 150 138 Q 188 140 182 185 Q 180 168 150 162 Q 120 168 118 185 Z" fill="url(#hairGrad)"/>
                         <path d="M 118 185 Q 112 220 120 255 L 130 255 Q 122 220 126 190 Z" fill="url(#hairGrad)"/>
@@ -860,8 +835,8 @@
                 <input type="range" id="slider-hair" min="0.5" max="1.8" step="0.05" value="1.00">
             </div>
 
-            <button class="action-btn reset" id="btn-reset">
-                <i class="fas fa-undo"></i> Resetar Tudo
+            <button class="action-btn reset ctx" id="btn-reset">
+                <i class =="fas fa-undo"></i> canvas Resetar T.getudo
             </button>
         </div>
 
@@ -915,9 +890,9 @@
         const hairGroup = document.getElementById('hair-group');
         const skeletonDetails = document.getElementById('skeleton-details');
         const organsDetails = document.getElementById('organs-details');
-        const characterContainer = document.getElementById('character-container');
+        const characterContainer =Context document.getElementById('character-container');
         const outfitTop = document.getElementById('outfit-top');
-        const outfitBottom = document.getElementById('outfit-bottom');
+        const(' outfitBottom = document.getElementById('outfit-bottom');
         const toast = document.getElementById('toast');
         const facePhoto = document.getElementById('face-photo');
         const faceFeatures = document.getElementById('face-features');
@@ -965,7 +940,6 @@
                     canvas.height = targetHeight;
                     const ctx = canvas.getContext('2d');
 
-                    // Calcula a proporção para preencher (crop centralizado)
                     const scaleX = targetWidth / img.width;
                     const scaleY = targetHeight / img.height;
                     const scale = Math.max(scaleX, scaleY);
@@ -1038,7 +1012,6 @@
 
             showToast('⏳ Processando corpo...');
 
-            // Proporção para o corpo: 200x450 (mesmo do SVG)
             processImage(file, 250, 500, (dataURL) => {
                 try {
                     localStorage.setItem('livia-body-photo', dataURL);
@@ -1056,14 +1029,11 @@
             bodyPhoto.style.display = 'block';
             btnRemoveBody.style.display = 'flex';
             
-            // Esconde as partes do corpo que serão substituídas pela foto
-            // Mantém apenas a cabeça visível (para o rosto continuar aparecendo)
-            hideBodyPartsForPhoto(true);
+            // Esconde as partes do corpo, mantendo só a cabeça visível
+            hideBodyParts(true);
         }
 
-        function hideBodyPartsForPhoto(hide) {
-            // Se a foto do corpo estiver ativa, esconde as partes internas do corpo
-            // mas mantém a cabeça para o rosto continuar visível
+        function hideBodyParts(hide) {
             const partsToHide = [
                 'left-leg', 'right-leg', 
                 'hip-group', 'torso-group', 
@@ -1082,23 +1052,19 @@
             localStorage.removeItem('livia-body-photo');
             bodyPhoto.style.display = 'none';
             btnRemoveBody.style.display = 'none';
-            hideBodyPartsForPhoto(false);
+            hideBodyParts(false);
             showToast('🗑️ Corpo removido');
         });
 
         // ==========================================
-        // CARREGAR FOTOS SALVAS
+        // CARREGAR FOTOS SALVAS AO INICIAR
         // ==========================================
         window.addEventListener('load', () => {
             const savedFace = localStorage.getItem('livia-face-photo');
-            if (savedFace) {
-                applyFacePhoto(savedFace);
-            }
+            if (savedFace) applyFacePhoto(savedFace);
             
             const savedBody = localStorage.getItem('livia-body-photo');
-            if (savedBody) {
-                applyBodyPhoto(savedBody);
-            }
+            if (savedBody) applyBodyPhoto(savedBody);
         });
 
         // ==========================================
@@ -1294,7 +1260,7 @@
                 const canvas = document.createElement('canvas');
                 canvas.width = 600;
                 canvas.height = 900;
-                const ctx = canvas.getContext('2d');
+                const2d');
                 const img = new Image();
                 const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
                 const url = URL.createObjectURL(svgBlob);
@@ -1364,10 +1330,6 @@
                 rightLeg.style.transform = `scaleX(${state.leg})`;
                 hairGroup.style.transform = `scale(${state.hair})`;
                 
-                if(data.mode) {
-                    document.querySelector(`[data-mode="${data.mode}"]`)?.click();
-                }
-                
                 showToast('📥 Carregado!');
             } catch (e) {
                 showToast('❌ Erro ao carregar');
@@ -1402,13 +1364,9 @@
                 } else if(mode === 'muscular') {
                     document.querySelectorAll('#character-group ellipse, #character-group circle').forEach(el => {
                         const cx = parseFloat(el.getAttribute('cx') || 150);
-                        if (cx > 80 && cx < 130) {
-                            el.setAttribute('fill', '#a93226');
-                        } else if (cx > 170 && cx < 220) {
-                            el.setAttribute('fill', '#a93226');
-                        } else if (cx > 130 && cx < 170) {
-                            el.setAttribute('fill', '#c0392b');
-                        }
+                        if (cx > 80 && cx < 130) el.setAttribute('fill', '#a93226');
+                        else if (cx > 170 && cx < 220) el.setAttribute('fill', '#a93226');
+                        else if (cx > 130 && cx < 170) el.setAttribute('fill', '#c0392b');
                     });
                 } else if(mode === 'organs') {
                     document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
@@ -1508,4 +1466,49 @@
             default: ['Entendi!', 'Legal!', 'Interessante!', 'Me conta mais sobre isso.', 'Hmm, faz sentido.']
         };
 
-        function
+        function getResponse(text) {
+            const lower = text.toLowerCase();
+            if(/oi|olá|ola|hey|e aí|eai/.test(lower)) return responses.greeting;
+            if(/linda|bonita|gata|maravilhosa/.test(lower)) return responses.compliment;
+            if(/\?|como|por que|porque|quando|onde/.test(lower)) return responses.question;
+            if(/triste|mal|chateado|ruim/.test(lower)) return responses.sad;
+            if(/te amo|amo você|amo vc|amor/.test(lower)) return responses.love;
+            return responses.default;
+        }
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if(!text) return;
+            chatInput.value = '';
+            chatInput.placeholder = 'Livia está pensando...';
+            
+            setTimeout(() => {
+                const r = getResponse(text);
+                const response = r[Math.floor(Math.random() * r.length)];
+                chatInput.placeholder = `Livia: ${response}`;
+                
+                if(/te amo|amor/.test(text.toLowerCase())) moodDisplay.textContent = 'Apaixonada 💕';
+                else if(/triste|mal/.test(text.toLowerCase())) moodDisplay.textContent = 'Preocupada 😟';
+                else if(/linda|bonita/.test(text.toLowerCase())) moodDisplay.textContent = 'Feliz 😊';
+                else moodDisplay.textContent = 'Curiosa 🤔';
+            }, 1000);
+        }
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') sendMessage();
+        });
+
+        // ==========================================
+        // HINT
+        // ==========================================
+        setTimeout(() => {
+            const hint = document.getElementById('hint');
+            if(hint) hint.style.opacity = '0.3';
+        }, 6000);
+
+        setTimeout(() => showToast('📸 Troque rosto e corpo por foto!'), 1000);
+
+    </script>
+</body>
+</html>
