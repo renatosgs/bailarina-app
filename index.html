@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Livia IA - Anatomia 3D</title>
+    <title>Livia IA - Anatomia 2D Ajustável</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <style>
         * {
@@ -18,35 +15,61 @@
             user-select: none; -webkit-tap-highlight-color: transparent;
         }
 
-        /* FUNDO FORÇADO ESCURO */
         html, body {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             overflow: hidden;
             background-color: #05070a !important;
             color: #ffffff;
-            position: fixed;
-            top: 0; left: 0;
+            position: fixed; top: 0; left: 0;
         }
 
-        /* CANVAS 3D - POSIÇÃO ABSOLUTA E Z-INDEX */
-        #canvas-container {
+        /* Container do Boneco SVG */
+        #character-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            max-width: 500px;
+            height: 85vh;
             z-index: 1;
-            background-color: #05070a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        #canvas-container canvas {
-            display: block !important;
-            width: 100% !important;
-            height: 100% !important;
+        #character-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.4));
         }
 
-        /* MENU TOGGLE */
+        /* Grid de fundo */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 123, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 123, 255, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Chão */
+        .floor {
+            position: fixed;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            box-shadow: 0 0 20px #00d4ff;
+            z-index: 1;
+        }
+
+        /* Botão Menu */
         .menu-toggle {
             position: fixed; top: 20px; right: 20px;
             width: 58px; height: 58px; border-radius: 50%;
@@ -55,12 +78,12 @@
             border: 1px solid rgba(0, 212, 255, 0.5);
             color: white; font-size: 1.4rem; cursor: pointer;
             z-index: 100; display: flex; justify-content: center; align-items: center;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
         }
         .menu-toggle.active { background: rgba(255, 71, 87, 0.9); }
 
-        /* PAINEL LATERAL */
+        /* Painel Lateral */
         .side-panel {
             position: fixed; top: 0; right: -100%;
             width: 100%; max-width: 380px; height: 100%;
@@ -218,43 +241,136 @@
         }
         .stat-badge.red { color: #ff4757; border-color: rgba(255, 71, 87, 0.3); }
 
-        /* ERRO */
-        #error-box {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 71, 87, 0.95);
-            color: white; padding: 20px;
-            border-radius: 12px; z-index: 9999;
-            font-size: 0.85rem; max-width: 90%;
-            text-align: center; display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        /* Animação de giro do boneco */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
-        #error-box i { font-size: 2rem; margin-bottom: 10px; display: block; }
+
+        .alive {
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Animações de roupas */
+        .clothes {
+            transition: opacity 0.3s;
+        }
 
     </style>
 </head>
 <body>
 
-    <!-- CANVAS 3D -->
-    <div id="canvas-container"></div>
+    <div class="bg-grid"></div>
+    <div class="floor"></div>
 
-    <!-- ESTATÍSTICAS -->
+    <!-- Boneco SVG -->
+    <div id="character-container">
+        <svg id="character-svg" viewBox="0 0 300 600" xmlns="http://www.w3.org/2000/svg">
+            <!-- GRUPO PRINCIPAL (rotaciona para girar) -->
+            <g id="character-group" transform-origin="150 300">
+                
+                <!-- PERNAS -->
+                <g id="legs-group">
+                    <!-- Perna Esquerda -->
+                    <g id="left-leg">
+                        <!-- Coxa -->
+                        <ellipse cx="130" cy="410" rx="18" ry="55" fill="#c0392b" opacity="0.9"/>
+                        <!-- Joelho -->
+                        <circle cx="130" cy="465" r="12" fill="#f5f5dc"/>
+                        <!-- Panturrilha -->
+                        <ellipse cx="130" cy="510" rx="14" ry="45" fill="#c0392b" opacity="0.9"/>
+                        <!-- Pé -->
+                        <ellipse cx="130" cy="565" rx="12" ry="8" fill="#ffd1b3"/>
+                    </g>
+                    
+                    <!-- Perna Direita -->
+                    <g id="right-leg">
+                        <ellipse cx="170" cy="410" rx="18" ry="55" fill="#c0392b" opacity="0.9"/>
+                        <circle cx="170" cy="465" r="12" fill="#f5f5dc"/>
+                        <ellipse cx="170" cy="510" rx="14" ry="45" fill="#c0392b" opacity="0.9"/>
+                        <ellipse cx="170" cy="565" rx="12" ry="8" fill="#ffd1b3"/>
+                    </g>
+                </g>
+
+                <!-- QUADRIL -->
+                <g id="hip-group">
+                    <ellipse cx="150" cy="365" rx="35" ry="28" fill="#ffd1b3"/>
+                    <!-- Biquíni inferior -->
+                    <path d="M 115 365 Q 150 385 185 365 L 185 375 Q 150 395 115 375 Z" fill="#1a1a1a"/>
+                </g>
+
+                <!-- TRONCO -->
+                <g id="torso-group">
+                    <!-- Abdômen -->
+                    <ellipse cx="150" cy="320" rx="28" ry="35" fill="#ffd1b3"/>
+                    <!-- Peito -->
+                    <ellipse cx="150" cy="270" rx="35" ry="40" fill="#ffd1b3"/>
+                </g>
+
+                <!-- SEIOS -->
+                <g id="breasts-group">
+                    <circle cx="135" cy="255" r="15" fill="#ffd1b3"/>
+                    <circle cx="165" cy="255" r="15" fill="#ffd1b3"/>
+                    <!-- Biquíni superior -->
+                    <path d="M 118 245 Q 135 260 150 250 Q 165 260 182 245 L 178 255 Q 165 265 150 258 Q 135 265 122 255 Z" fill="#1a1a1a"/>
+                </g>
+
+                <!-- BRAÇOS -->
+                <g id="arms-group">
+                    <!-- Braço Esquerdo -->
+                    <g id="left-arm">
+                        <ellipse cx="100" cy="270" rx="12" ry="40" fill="#c0392b" transform="rotate(15 100 270)"/>
+                        <ellipse cx="88" cy="340" rx="10" ry="38" fill="#e74c3c" transform="rotate(20 88 340)"/>
+                        <circle cx="82" cy="385" r="10" fill="#ffd1b3"/>
+                    </g>
+                    <!-- Braço Direito -->
+                    <g id="right-arm">
+                        <ellipse cx="200" cy="270" rx="12" ry="40" fill="#c0392b" transform="rotate(-15 200 270)"/>
+                        <ellipse cx="212" cy="340" rx="10" ry="38" fill="#e74c3c" transform="rotate(-20 212 340)"/>
+                        <circle cx="218" cy="385" r="10" fill="#ffd1b3"/>
+                    </g>
+                </g>
+
+                <!-- PESCOÇO -->
+                <rect x="143" y="220" width="14" height="20" fill="#ffd1b3"/>
+
+                <!-- CABEÇA -->
+                <g id="head-group">
+                    <ellipse cx="150" cy="195" rx="28" ry="32" fill="#ffd1b3"/>
+                    <!-- Olhos -->
+                    <circle cx="140" cy="192" r="3" fill="#2b1a0f"/>
+                    <circle cx="160" cy="192" r="3" fill="#2b1a0f"/>
+                    <!-- Boca -->
+                    <ellipse cx="150" cy="208" rx="5" ry="2" fill="#c0392b" opacity="0.6"/>
+                    
+                    <!-- Cabelo -->
+                    <g id="hair-group">
+                        <path d="M 122 185 Q 120 155 150 155 Q 180 155 178 185 Q 175 175 150 170 Q 125 175 122 185 Z" fill="#4a2c17"/>
+                        <path d="M 122 185 Q 118 215 125 240 L 130 240 Q 125 215 128 190 Z" fill="#4a2c17"/>
+                        <path d="M 178 185 Q 182 215 175 240 L 170 240 Q 175 215 172 190 Z" fill="#4a2c17"/>
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Stats -->
     <div class="quick-stats">
         <div class="stat-badge"><i class="fas fa-bone"></i> 200</div>
         <div class="stat-badge red"><i class="fas fa-heart"></i> 14</div>
     </div>
 
-    <!-- DICA -->
+    <!-- Hint -->
     <div class="hint" id="hint">
-        <i class="fas fa-hand-pointer"></i> Toque nas partes para trocar
+        <i class="fas fa-hand-pointer"></i> Ajuste pelo menu
     </div>
 
-    <!-- BOTÃO MENU -->
+    <!-- Menu Toggle -->
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- PAINEL LATERAL -->
+    <!-- Painel Lateral -->
     <div class="side-panel" id="side-panel">
         <div class="panel-header">
             <h2><i class="fas fa-robot"></i> Livia IA</h2>
@@ -310,11 +426,6 @@
                 <input type="range" id="slider-leg" min="0.6" max="1.8" step="0.01" value="1.00">
             </div>
 
-            <div class="slider-group">
-                <div class="slider-label"><span>Comprimento do Cabelo</span><span id="val-hair">1.00</span></div>
-                <input type="range" id="slider-hair" min="0.5" max="2.0" step="0.05" value="1.00">
-            </div>
-
             <button class="action-btn reset" id="btn-reset">
                 <i class="fas fa-undo"></i> Resetar Ajustes
             </button>
@@ -326,8 +437,6 @@
                 <div class="grid-btn active" data-mode="normal"><i class="fas fa-user"></i> Normal</div>
                 <div class="grid-btn" data-mode="skeleton"><i class="fas fa-bone"></i> Esqueleto</div>
                 <div class="grid-btn" data-mode="muscular"><i class="fas fa-dumbbell"></i> Muscular</div>
-                <div class="grid-btn" data-mode="organs"><i class="fas fa-lungs"></i> Órgãos</div>
-                <div class="grid-btn" data-mode="robot"><i class="fas fa-robot"></i> Robô</div>
                 <div class="grid-btn" data-mode="xray"><i class="fas fa-x-ray"></i> Raio-X</div>
             </div>
         </div>
@@ -346,338 +455,222 @@
         </div>
     </div>
 
-    <!-- CAIXA DE ERRO -->
-    <div id="error-box">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span id="error-msg">Erro ao carregar o 3D</span>
-    </div>
-
     <script>
         // ==========================================
-        // VERIFICAÇÃO DE WEBGL
+        // LÓGICA DE AJUSTES
         // ==========================================
-        function checkWebGL() {
-            try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                return !!gl;
-            } catch (e) {
-                return false;
-            }
-        }
+        const characterGroup = document.getElementById('character-group');
+        const headGroup = document.getElementById('head-group');
+        const breastsGroup = document.getElementById('breasts-group');
+        const hipGroup = document.getElementById('hip-group');
+        const leftArm = document.getElementById('left-arm');
+        const rightArm = document.getElementById('right-arm');
+        const leftLeg = document.getElementById('left-leg');
+        const rightLeg = document.getElementById('right-leg');
+        const hairGroup = document.getElementById('hair-group');
 
-        if (!checkWebGL()) {
-            document.getElementById('error-box').style.display = 'block';
-            document.getElementById('error-msg').innerHTML = 
-                'Seu navegador não suporta WebGL.<br>Tente usar Chrome, Safari ou Firefox atualizado.';
-            throw new Error('WebGL não suportado');
-        }
+        // Ajustes via Sliders
+        document.getElementById('slider-height').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-height').textContent = v.toFixed(2);
+            characterGroup.setAttribute('transform', 
+                `translate(150 300) scale(1 ${v}) translate(-150 -300)`);
+        });
 
-        // ==========================================
-        // 1. AMBIENTE 3D
-        // ==========================================
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x05070a);
-
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.0, 5.0);
-        camera.lookAt(0, 0.8, 0);
-
-        let renderer;
-        try {
-            renderer = new THREE.WebGLRenderer({ 
-                antialias: true,
-                alpha: false,
-                powerPreference: "high-performance"
+        document.getElementById('slider-width').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-width').textContent = v.toFixed(2);
+            // Aplica escala horizontal em todo o grupo
+            document.querySelectorAll('#character-group > *').forEach(el => {
+                el.style.transform = `scaleX(${v})`;
+                el.style.transformOrigin = '150px center';
             });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.setClearColor(0x05070a, 1);
-            container.appendChild(renderer.domElement);
-        } catch (e) {
-            document.getElementById('error-box').style.display = 'block';
-            document.getElementById('error-msg').innerHTML = 
-                'Erro ao criar o renderizador 3D:<br>' + e.message;
-            throw e;
-        }
+        });
+
+        document.getElementById('slider-head').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-head').textContent = v.toFixed(2);
+            headGroup.style.transform = `scale(${v})`;
+            headGroup.style.transformOrigin = '150px 195px';
+        });
+
+        document.getElementById('slider-breast').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-breast').textContent = v.toFixed(2);
+            breastsGroup.style.transform = `scale(${v})`;
+            breastsGroup.style.transformOrigin = '150px 255px';
+        });
+
+        document.getElementById('slider-hip').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-hip').textContent = v.toFixed(2);
+            hipGroup.style.transform = `scaleX(${v})`;
+            hipGroup.style.transformOrigin = '150px 365px';
+        });
+
+        document.getElementById('slider-arm').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-arm').textContent = v.toFixed(2);
+            leftArm.style.transform = `scaleX(${v})`;
+            leftArm.style.transformOrigin = '100px center';
+            rightArm.style.transform = `scaleX(${v})`;
+            rightArm.style.transformOrigin = '200px center';
+        });
+
+        document.getElementById('slider-leg').addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById('val-leg').textContent = v.toFixed(2);
+            leftLeg.style.transform = `scaleX(${v})`;
+            leftLeg.style.transformOrigin = '130px center';
+            rightLeg.style.transform = `scaleX(${v})`;
+            rightLeg.style.transformOrigin = '170px center';
+        });
 
         // ==========================================
-        // 2. ILUMINAÇÃO
+        // RESET
         // ==========================================
-        scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-        
-        const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        keyLight.position.set(3, 5, 4);
-        scene.add(keyLight);
-
-        const fillLight = new THREE.DirectionalLight(0x00d4ff, 0.8);
-        fillLight.position.set(-4, 2, 3);
-        scene.add(fillLight);
-
-        const rimLight = new THREE.PointLight(0x007bff, 1.5);
-        rimLight.position.set(0, 3, -5);
-        scene.add(rimLight);
-
-        const bottomLight = new THREE.PointLight(0xffffff, 0.6);
-        bottomLight.position.set(0, -2, 3);
-        scene.add(bottomLight);
-
-        // Grid
-        const gridHelper = new THREE.GridHelper(10, 20, 0x00d4ff, 0x1a2b4c);
-        gridHelper.position.y = -1.0;
-        scene.add(gridHelper);
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            document.querySelectorAll('input[type="range"]').forEach(s => {
+                s.value = 1.00;
+            });
+            document.querySelectorAll('[id^="val-"]').forEach(l => {
+                l.textContent = '1.00';
+            });
+            characterGroup.setAttribute('transform', '');
+            document.querySelectorAll('#character-group > *').forEach(el => {
+                el.style.transform = '';
+            });
+            headGroup.style.transform = '';
+            breastsGroup.style.transform = '';
+            hipGroup.style.transform = '';
+            leftArm.style.transform = '';
+            rightArm.style.transform = '';
+            leftLeg.style.transform = '';
+            rightLeg.style.transform = '';
+        });
 
         // ==========================================
-        // 3. MATERIAIS
+        // MENU
         // ==========================================
-        const materials = {
-            skin: new THREE.MeshStandardMaterial({ color: 0xffd1b3, roughness: 0.6, metalness: 0.1 }),
-            muscle: new THREE.MeshStandardMaterial({ color: 0xc0392b, roughness: 0.7, metalness: 0.05 }),
-            muscleLight: new THREE.MeshStandardMaterial({ color: 0xe74c3c, roughness: 0.6, metalness: 0.05 }),
-            bone: new THREE.MeshStandardMaterial({ color: 0xf5f5dc, roughness: 0.4, metalness: 0.1 }),
-            organ: new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.5, metalness: 0.1 }),
-            hair: new THREE.MeshStandardMaterial({ color: 0x4a2c17, roughness: 0.9, metalness: 0.0 }),
-            eye: new THREE.MeshStandardMaterial({ color: 0x2b1a0f, roughness: 0.1, metalness: 0.3 }),
-            cloth: new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8, metalness: 0.0 }),
-            robot: new THREE.MeshStandardMaterial({ color: 0x00ff88, roughness: 0.2, metalness: 0.9, emissive: 0x004422 }),
-            robotDark: new THREE.MeshStandardMaterial({ color: 0x007bff, roughness: 0.3, metalness: 0.8 })
-        };
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidePanel = document.getElementById('side-panel');
+        const closeBtn = document.getElementById('close-btn');
+
+        menuToggle.addEventListener('click', () => {
+            sidePanel.classList.toggle('open');
+            menuToggle.classList.toggle('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidePanel.classList.remove('open');
+            menuToggle.classList.remove('active');
+        });
 
         // ==========================================
-        // 4. PERSONAGEM
+        // DAR VIDA (Girar)
         // ==========================================
-        const characterGroup = new THREE.Group();
-        scene.add(characterGroup);
+        let isAlive = false;
+        let rotation = 0;
+        let animationId;
 
-        const headGroup = new THREE.Group();
-        const torsoGroup = new THREE.Group();
-        const breastsGroup = new THREE.Group();
-        const hairGroup = new THREE.Group();
-        const hipGroup = new THREE.Group();
-
-        // CABEÇA
-        const skull = new THREE.Mesh(new THREE.SphereGeometry(0.22, 32, 32), materials.skin);
-        skull.scale.set(1, 1.15, 0.95);
-        headGroup.add(skull);
-
-        const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.1, 0.13), materials.skin);
-        jaw.position.set(0, -0.14, 0.05);
-        headGroup.add(jaw);
-
-        const eyeGeo = new THREE.SphereGeometry(0.03, 16, 16);
-        const leftEye = new THREE.Mesh(eyeGeo, materials.eye);
-        leftEye.position.set(-0.07, 0.02, 0.19);
-        headGroup.add(leftEye);
-        const rightEye = new THREE.Mesh(eyeGeo, materials.eye);
-        rightEye.position.set(0.07, 0.02, 0.19);
-        headGroup.add(rightEye);
-
-        // CABELO
-        const hairTop = new THREE.Mesh(
-            new THREE.SphereGeometry(0.24, 32, 16, 0, Math.PI * 2, 0, Math.PI / 1.8),
-            materials.hair
-        );
-        hairTop.position.set(0, 0.02, -0.02);
-        hairTop.rotation.x = -0.1;
-        hairGroup.add(hairTop);
-
-        const hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.13, 0.45, 16), materials.hair);
-        hairBack.position.set(0, -0.22, -0.07);
-        hairGroup.add(hairBack);
-
-        headGroup.add(hairGroup);
-        headGroup.position.y = 1.55;
-        characterGroup.add(headGroup);
-
-        // PESCOÇO
-        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.12, 16), materials.skin);
-        neck.position.y = 1.38;
-        characterGroup.add(neck);
-
-        // TRONCO
-        const chest = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.22, 0.45, 16), materials.skin);
-        chest.position.y = 0.3;
-        torsoGroup.add(chest);
-
-        const abdomen = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.18, 0.3, 16), materials.skin);
-        abdomen.position.y = -0.05;
-        torsoGroup.add(abdomen);
-
-        torsoGroup.position.y = 0.95;
-        characterGroup.add(torsoGroup);
-
-        // SEIOS
-        const breastGeo = new THREE.SphereGeometry(0.1, 16, 16);
-        const leftBreast = new THREE.Mesh(breastGeo, materials.skin);
-        leftBreast.position.set(-0.11, 0, 0.16);
-        leftBreast.scale.set(1, 0.9, 0.8);
-        breastsGroup.add(leftBreast);
-        
-        const rightBreast = new THREE.Mesh(breastGeo, materials.skin);
-        rightBreast.position.set(0.11, 0, 0.16);
-        rightBreast.scale.set(1, 0.9, 0.8);
-        breastsGroup.add(rightBreast);
-        
-        breastsGroup.position.y = 1.1;
-        characterGroup.add(breastsGroup);
-
-        // BIQUÍNI SUPERIOR
-        const top = new THREE.Mesh(
-            new THREE.TorusGeometry(0.13, 0.03, 8, 20, Math.PI),
-            materials.cloth
-        );
-        top.position.set(0, 1.1, 0.14);
-        top.rotation.x = Math.PI / 2;
-        top.rotation.z = Math.PI;
-        characterGroup.add(top);
-
-        // QUADRIL
-        const hip = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.24, 0.25, 16), materials.skin);
-        hip.position.y = 0.6;
-        hipGroup.add(hip);
-
-        const bottom = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.07, 16), materials.cloth);
-        bottom.position.y = 0.65;
-        hipGroup.add(bottom);
-        characterGroup.add(hipGroup);
-
-        // BRAÇOS
-        function createArm(side) {
-            const group = new THREE.Group();
-            
-            const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.045, 0.35, 12), materials.muscle);
-            upperArm.position.y = -0.18;
-            group.add(upperArm);
-            
-            const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.035, 0.35, 12), materials.muscleLight);
-            foreArm.position.y = -0.53;
-            group.add(foreArm);
-            
-            const hand = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 12), materials.skin);
-            hand.position.y = -0.72;
-            hand.scale.set(0.8, 1.2, 0.6);
-            group.add(hand);
-            
-            group.position.set(side * 0.34, 1.2, 0);
-            group.rotation.z = side * 0.15;
-            return group;
-        }
-
-        const leftArm = createArm(-1);
-        const rightArm = createArm(1);
-        characterGroup.add(leftArm);
-        characterGroup.add(rightArm);
-
-        // PERNAS
-        function createLeg(side) {
-            const group = new THREE.Group();
-            
-            const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.45, 12), materials.muscle);
-            thigh.position.y = -0.22;
-            group.add(thigh);
-            
-            const knee = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), materials.bone);
-            knee.position.y = -0.45;
-            group.add(knee);
-            
-            const calf = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.045, 0.4, 12), materials.muscle);
-            calf.position.y = -0.67;
-            group.add(calf);
-            
-            const foot = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.05, 0.13), materials.skin);
-            foot.position.set(0, -0.9, 0.04);
-            group.add(foot);
-            
-            group.position.set(side * 0.12, 0.5, 0);
-            return group;
-        }
-
-        const leftLeg = createLeg(-1);
-        const rightLeg = createLeg(1);
-        characterGroup.add(leftLeg);
-        characterGroup.add(rightLeg);
-
-        // ÓRGÃOS INTERNOS
-        const internalGroup = new THREE.Group();
-        
-        const spine = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.1, 8), materials.bone);
-        spine.position.y = 0.9;
-        internalGroup.add(spine);
-
-        for (let i = 0; i < 6; i++) {
-            const rib = new THREE.Mesh(
-                new THREE.TorusGeometry(0.14 - i * 0.01, 0.01, 8, 16, Math.PI),
-                materials.bone
-            );
-            rib.position.y = 1.2 - i * 0.055;
-            rib.rotation.x = Math.PI / 2;
-            internalGroup.add(rib);
-        }
-
-        const heart = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), materials.organ);
-        heart.position.set(-0.05, 1.1, 0.05);
-        heart.scale.set(1, 1.2, 0.8);
-        internalGroup.add(heart);
-
-        const lungGeo = new THREE.SphereGeometry(0.07, 16, 16);
-        const leftLung = new THREE.Mesh(lungGeo, materials.organ);
-        leftLung.position.set(-0.09, 1.15, 0);
-        leftLung.scale.set(0.8, 1.2, 0.6);
-        internalGroup.add(leftLung);
-        
-        const rightLung = new THREE.Mesh(lungGeo, materials.organ);
-        rightLung.position.set(0.09, 1.15, 0);
-        rightLung.scale.set(0.8, 1.2, 0.6);
-        internalGroup.add(rightLung);
-
-        internalGroup.visible = false;
-        characterGroup.add(internalGroup);
-
-        // Salva materiais originais
-        characterGroup.traverse(child => {
-            if (child.isMesh) {
-                child.userData.originalMaterial = child.material;
+        document.getElementById('btn-dar-vida').addEventListener('click', function() {
+            isAlive = !isAlive;
+            if(isAlive) {
+                this.classList.add('active');
+                this.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
+                document.getElementById('character-container').classList.add('alive');
+                
+                // Animação de rotação
+                function rotate() {
+                    rotation += 0.5;
+                    characterGroup.setAttribute('transform', 
+                        `translate(150 300) rotate(${rotation}) translate(-150 -300)`);
+                    animationId = requestAnimationFrame(rotate);
+                }
+                rotate();
+            } else {
+                this.classList.remove('active');
+                this.innerHTML = '<i class="fas fa-heart"></i> Dar Vida';
+                document.getElementById('character-container').classList.remove('alive');
+                cancelAnimationFrame(animationId);
             }
         });
 
         // ==========================================
-        // 5. SLIDERS
+        // MODOS ANATÔMICOS
         // ==========================================
-        const sliders = {
-            height: document.getElementById('slider-height'),
-            width: document.getElementById('slider-width'),
-            head: document.getElementById('slider-head'),
-            breast: document.getElementById('slider-breast'),
-            hip: document.getElementById('slider-hip'),
-            arm: document.getElementById('slider-arm'),
-            leg: document.getElementById('slider-leg'),
-            hair: document.getElementById('slider-hair')
-        };
-
-        const labels = {
-            height: document.getElementById('val-height'),
-            width: document.getElementById('val-width'),
-            head: document.getElementById('val-head'),
-            breast: document.getElementById('val-breast'),
-            hip: document.getElementById('val-hip'),
-            arm: document.getElementById('val-arm'),
-            leg: document.getElementById('val-leg'),
-            hair: document.getElementById('val-hair')
-        };
-
-        sliders.height.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.height.textContent = v.toFixed(2);
-            characterGroup.scale.y = v;
+        document.querySelectorAll('[data-mode]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const mode = this.getAttribute('data-mode');
+                const allParts = document.querySelectorAll('#character-group > *');
+                
+                if(mode === 'skeleton') {
+                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
+                        el.setAttribute('fill', '#f5f5dc');
+                        el.setAttribute('stroke', '#8ba0b8');
+                        el.setAttribute('stroke-width', '1');
+                    });
+                } else if(mode === 'muscular') {
+                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
+                        el.setAttribute('fill', '#c0392b');
+                        el.setAttribute('stroke', 'none');
+                    });
+                } else if(mode === 'xray') {
+                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
+                        el.setAttribute('fill', 'rgba(0, 212, 255, 0.15)');
+                        el.setAttribute('stroke', '#00d4ff');
+                        el.setAttribute('stroke-width', '1');
+                    });
+                } else {
+                    // Restaura cores originais
+                    document.querySelectorAll('#character-group ellipse, #character-group circle, #character-group rect').forEach(el => {
+                        const cx = el.getAttribute('cx') || el.getAttribute('x') || 150;
+                        if (el.tagName === 'ellipse' || el.tagName === 'circle') {
+                            if (cx < 130) el.setAttribute('fill', '#c0392b');
+                            else if (cx > 170) el.setAttribute('fill', '#e74c3c');
+                            else el.setAttribute('fill', '#ffd1b3');
+                        }
+                        el.setAttribute('stroke', 'none');
+                    });
+                }
+            });
         });
 
-        sliders.width.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.width.textContent = v.toFixed(2);
-            characterGroup.scale.x = v;
-            characterGroup.scale.z = v;
+        // ==========================================
+        // CHAT
+        // ==========================================
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+
+        chatSend.addEventListener('click', () => {
+            const text = chatInput.value.trim();
+            if(!text) return;
+            chatInput.value = '';
+            chatInput.placeholder = 'Livia está pensando...';
+            
+            setTimeout(() => {
+                const responses = [
+                    `Entendi! Você disse: "${text}"`,
+                    `Interessante! Vamos explorar isso.`,
+                    `Legal! Me conta mais.`
+                ];
+                chatInput.placeholder = `Livia: ${responses[Math.floor(Math.random() * responses.length)]}`;
+            }, 1000);
         });
 
-        sliders.head.addEventListener('input', (e) => {
-            const v = parse
+        chatInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') chatSend.click();
+        });
+
+        // Esconde hint
+        setTimeout(() => {
+            const hint = document.getElementById('hint');
+            if(hint) hint.style.opacity = '0.3';
+        }, 5000);
+
+    </script>
+</body>
+</html>
