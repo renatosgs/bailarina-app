@@ -29,6 +29,14 @@
             box-shadow: 0 0 40px #00d4ff; z-index: 1;
         }
 
+        .aura {
+            position: fixed; top: 48%; left: 50%; transform: translate(-50%, -50%);
+            width: 90vw; max-width: 450px; height: 80vh;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 70%);
+            z-index: 1; pointer-events: none;
+        }
+
         #character-container {
             position: fixed; top: 48%; left: 50%; transform: translate(-50%, -50%);
             width: 85vw; max-width: 420px; height: 80vh;
@@ -121,7 +129,6 @@
         .action-btn.active { background: linear-gradient(135deg, #ff4757, #ff6b81); }
         .action-btn.reset { background: linear-gradient(135deg, #6c757d, #495057); font-size: 0.8rem; padding: 10px; }
         .action-btn.success { background: linear-gradient(135deg, #00ff88, #00cc6a); color: #000; }
-        .action-btn.face-btn { background: linear-gradient(135deg, #e91e63, #f06292); }
         .action-btn.body-btn { background: linear-gradient(135deg, #9c27b0, #ba68c8); }
         .action-btn.remove-photo { background: linear-gradient(135deg, #ff4757, #c0392b); font-size: 0.8rem; padding: 10px; }
 
@@ -182,7 +189,7 @@
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        #photo-input, #body-photo-input { display: none; }
+        #body-photo-input { display: none; }
 
         #error-box {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
@@ -197,8 +204,8 @@
 
     <div class="bg-grid"></div>
     <div class="floor"></div>
+    <div class="aura"></div>
 
-    <input type="file" id="photo-input" accept="image/*">
     <input type="file" id="body-photo-input" accept="image/*">
 
     <div id="character-container">
@@ -227,9 +234,6 @@
                     <stop offset="0%" stop-color="#1a1a2e"/>
                     <stop offset="100%" stop-color="#0a0a1a"/>
                 </linearGradient>
-                <clipPath id="face-clip">
-                    <ellipse cx="150" cy="190" rx="30" ry="34"/>
-                </clipPath>
                 <clipPath id="body-clip">
                     <rect x="40" y="130" width="220" height="460" rx="20"/>
                 </clipPath>
@@ -284,7 +288,6 @@
 
                 <g id="head-group" class="body-part">
                     <ellipse cx="150" cy="190" rx="32" ry="36" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
-                    <image id="face-photo" x="118" y="154" width="64" height="72" preserveAspectRatio="xMidYMid slice" clip-path="url(#face-clip)" style="display: none;"/>
                     
                     <g id="face-features">
                         <ellipse cx="139" cy="188" rx="4" ry="5" fill="#ffffff"/>
@@ -339,16 +342,7 @@
             <i class="fas fa-heart"></i> Dar Vida
         </button>
 
-        <div class="info-card" style="background: rgba(233, 30, 99, 0.08); border-color: rgba(233, 30, 99, 0.3);">
-            <h4><i class="fas fa-camera" style="color: #f06292;"></i> Rosto Personalizado</h4>
-            <button class="action-btn face-btn" id="btn-change-face" type="button">
-                <i class="fas fa-camera-retro"></i> Mudar Rosto por Foto
-            </button>
-            <button class="action-btn remove-photo" id="btn-remove-face" style="margin-top: 8px; display: none;" type="button">
-                <i class="fas fa-trash"></i> Remover Rosto
-            </button>
-        </div>
-
+        <!-- CORPO PERSONALIZADO -->
         <div class="info-card" style="background: rgba(156, 39, 176, 0.08); border-color: rgba(156, 39, 176, 0.3);">
             <h4><i class="fas fa-user" style="color: #ba68c8;"></i> Corpo Personalizado</h4>
             <button class="action-btn body-btn" id="btn-change-body" type="button">
@@ -357,6 +351,9 @@
             <button class="action-btn remove-photo" id="btn-remove-body" style="margin-top: 8px; display: none;" type="button">
                 <i class="fas fa-trash"></i> Remover Corpo
             </button>
+            <div style="font-size: 0.7rem; color: #8ba0b8; margin-top: 8px; text-align: center;">
+                💡 Use uma foto de corpo inteiro
+            </div>
         </div>
 
         <div class="info-card">
@@ -406,7 +403,7 @@
 
     <script>
         // ==========================================
-        // TRATAMENTO DE ERRO GLOBAL
+        // TRATAMENTO DE ERRO
         // ==========================================
         window.addEventListener('error', function(e) {
             const box = document.getElementById('error-box');
@@ -418,15 +415,12 @@
         });
 
         // ==========================================
-        // ESPERA O DOM CARREGAR
+        // INICIALIZAÇÃO
         // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             
-            console.log('✅ DOM carregado - iniciando app');
+            console.log('✅ App iniciado');
 
-            // ==========================================
-            // FUNÇÕES AUXILIARES
-            // ==========================================
             function showToast(msg) {
                 const toast = document.getElementById('toast');
                 if (!toast) return;
@@ -436,7 +430,7 @@
             }
 
             // ==========================================
-            // MENU - ABRIR/FECHAR
+            // MENU
             // ==========================================
             const menuToggle = document.getElementById('menu-toggle');
             const sidePanel = document.getElementById('side-panel');
@@ -445,7 +439,6 @@
             menuToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Menu clicado');
                 sidePanel.classList.toggle('open');
                 menuToggle.classList.toggle('active');
             });
@@ -456,41 +449,6 @@
                 sidePanel.classList.remove('open');
                 menuToggle.classList.remove('active');
             });
-
-            // ==========================================
-            // PARTÍCULAS
-            // ==========================================
-            const particlesContainer = document.querySelector('.particles') || document.body;
-            for (let i = 0; i < 15; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.style.cssText = `
-                    position: fixed;
-                    left: ${Math.random() * 100}%;
-                    bottom: -10px;
-                    width: 3px; height: 3px;
-                    background: #00d4ff;
-                    border-radius: 50%;
-                    box-shadow: 0 0 10px #00d4ff;
-                    z-index: 1;
-                    pointer-events: none;
-                    animation: float-particle ${6 + Math.random() * 6}s linear infinite;
-                    animation-delay: ${Math.random() * 8}s;
-                `;
-                particlesContainer.appendChild(p);
-            }
-
-            // Adiciona keyframe ao documento
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes float-particle {
-                    0% { transform: translateY(0); opacity: 0; }
-                    10% { opacity: 1; }
-                    90% { opacity: 1; }
-                    100% { transform: translateY(-100vh); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
 
             // ==========================================
             // PROCESSAR IMAGEM
@@ -523,56 +481,11 @@
                             showToast('❌ Erro ao processar imagem');
                         }
                     };
-                    img.onerror = function() {
-                        showToast('❌ Erro ao carregar imagem');
-                    };
+                    img.onerror = function() { showToast('❌ Erro ao carregar imagem'); };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }
-
-            // ==========================================
-            // MUDAR ROSTO
-            // ==========================================
-            const photoInput = document.getElementById('photo-input');
-            const facePhoto = document.getElementById('face-photo');
-            const faceFeatures = document.getElementById('face-features');
-            const btnRemoveFace = document.getElementById('btn-remove-face');
-
-            document.getElementById('btn-change-face').addEventListener('click', function() {
-                photoInput.click();
-            });
-
-            photoInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                showToast('⏳ Processando rosto...');
-                processImage(file, 300, 300, function(dataURL) {
-                    try {
-                        localStorage.setItem('livia-face-photo', dataURL);
-                        applyFacePhoto(dataURL);
-                        showToast('✅ Rosto atualizado!');
-                    } catch (err) {
-                        showToast('❌ Foto muito grande');
-                    }
-                });
-            });
-
-            function applyFacePhoto(dataURL) {
-                facePhoto.setAttributeNS('http://www.w3.org/1999/xlink', 'href', dataURL);
-                facePhoto.setAttribute('href', dataURL);
-                facePhoto.style.display = 'block';
-                faceFeatures.style.display = 'none';
-                btnRemoveFace.style.display = 'flex';
-            }
-
-            btnRemoveFace.addEventListener('click', function() {
-                localStorage.removeItem('livia-face-photo');
-                facePhoto.style.display = 'none';
-                faceFeatures.style.display = 'block';
-                btnRemoveFace.style.display = 'none';
-                showToast('🗑️ Rosto removido');
-            });
 
             // ==========================================
             // MUDAR CORPO
@@ -623,12 +536,8 @@
                 showToast('🗑️ Corpo removido');
             });
 
-            // ==========================================
-            // CARREGAR FOTOS SALVAS
-            // ==========================================
+            // Carrega corpo salvo
             try {
-                const savedFace = localStorage.getItem('livia-face-photo');
-                if (savedFace) applyFacePhoto(savedFace);
                 const savedBody = localStorage.getItem('livia-body-photo');
                 if (savedBody) applyBodyPhoto(savedBody);
             } catch (e) { console.error(e); }
@@ -637,7 +546,7 @@
             // SLIDERS
             // ==========================================
             const characterGroup = document.getElementById('character-group');
-            const state = { height: 1, width: 1, head: 1, breast: 1, hip: 1, arm: 1, leg: 1 };
+            const state = { height: 1, width: 1 };
 
             function applyTransforms() {
                 characterGroup.setAttribute('transform', 
@@ -700,7 +609,8 @@
             document.getElementById('btn-reset').addEventListener('click', function() {
                 document.querySelectorAll('input[type="range"]').forEach(function(s) { s.value = 1; });
                 document.querySelectorAll('[id^="val-"]').forEach(function(l) { l.textContent = '1.00'; });
-                Object.keys(state).forEach(function(k) { state[k] = 1; });
+                state.height = 1;
+                state.width = 1;
                 characterGroup.setAttribute('transform', '');
                 ['head-group', 'breasts-group', 'hip-group', 'left-arm', 'right-arm', 'left-leg', 'right-leg'].forEach(function(id) {
                     const el = document.getElementById(id);
