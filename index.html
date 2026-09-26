@@ -1,83 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DanceAI Premium</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+body { background: #07070c; color: white; min-height: 100vh; }
+.app { max-width: 480px; margin: auto; min-height: 100vh; padding: 22px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+.logo { font-size: 25px; font-weight: bold; }
+.logo span { color: #a855f7; }
+.premium { background: linear-gradient(135deg,#a855f7,#ec4899); padding: 8px 13px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+h1 { font-size: 30px; margin-bottom: 8px; }
+.subtitle { color: #999; margin-bottom: 25px; }
+/* Upload */
+.upload { border: 2px dashed #444; border-radius: 20px; padding: 35px 20px; text-align: center; background: #101017; cursor: pointer; transition: .3s; }
+.upload:hover { border-color: #a855f7; background: #15101c; }
+.upload-icon { font-size: 45px; margin-bottom: 12px; }
+.upload p { color: #aaa; }
+#preview { display: none; width: 100%; max-height: 350px; object-fit: cover; border-radius: 18px; margin-bottom: 12px; }
+/* Sections */
+.section { margin-top: 25px; }
+.section-title { font-size: 17px; font-weight: bold; margin-bottom: 13px; }
+/* Dance styles */
+.styles { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+.style { background: #111119; border: 1px solid #292936; padding: 15px; border-radius: 15px; cursor: pointer; transition: .25s; }
+.style:hover { border-color: #a855f7; }
+.style.active { border-color: #a855f7; background: linear-gradient(135deg,#241331,#17101d); }
+.style-icon { font-size: 25px; margin-bottom: 7px; }
+.style-name { font-weight: bold; }
+.style-description { color: #777; font-size: 11px; margin-top: 4px; }
+/* Controls */
+.control { background: #111119; padding: 17px; border-radius: 15px; margin-bottom: 10px; }
+.control-top { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.value { color: #c084fc; font-weight: bold; }
+input[type=range] { width: 100%; accent-color: #a855f7; }
+/* Generate */
+.generate { width: 100%; border: none; margin-top: 25px; padding: 18px; border-radius: 17px; color: white; font-size: 17px; font-weight: bold; cursor: pointer; background: linear-gradient(135deg,#8b5cf6,#ec4899); box-shadow: 0 10px 30px rgba(168,85,247,.25); }
+.generate:hover { transform: translateY(-2px); }
+.status { display: none; text-align: center; margin-top: 20px; color: #bbb; }
+.spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: #a855f7; border-radius: 50%; margin: auto auto 10px; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* Bottom */
+.bottom { margin-top: 35px; text-align: center; color: #666; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="logo">Dance<span>AI</span></div>
+<div class="premium">✦ PREMIUM</div>
+</header>
+<h1>Transforme sua foto</h1>
+<div class="subtitle">
+Crie vídeos de dança usando inteligência artificial.
+</div>
+<!-- Upload -->
+<label class="upload">
+<img id="preview">
+<div id="uploadContent">
+<div class="upload-icon">📸</div>
+<strong>Adicionar uma foto</strong>
+<p>JPG, PNG ou WEBP</p>
+</div>
+<input type="file" id="photo" accept="image/*" hidden >
+</label>
+<!-- Dance styles -->
+<div class="section">
+<div class="section-title">
+Escolha o estilo de dança
+</div>
+<div class="styles">
+<div class="style active" data-style="TikTok">
+<div class="style-icon">🔥</div>
+<div class="style-name">TikTok</div>
+<div class="style-description">Movimentos modernos</div>
+</div>
+<div class="style" data-style="Hip Hop">
+<div class="style-icon">🎤</div>
+<div class="style-name">Hip Hop</div>
+<div class="style-description">Energia urbana</div>
+</div>
+<div class="style" data-style="Samba">
+<div class="style-icon">🥁</div>
+<div class="style-name">Samba</div>
+<div class="style-description">Ritmo brasileiro</div>
+</div>
+<div class="style" data-style="Ballet">
+<div class="style-icon">🩰</div>
+<div class="style-name">Ballet</div>
+<div class="style-description">Movimentos elegantes</div>
+</div>
+<div class="style" data-style="Funk">
+<div class="style-icon">🎶</div>
+<div class="style-name">Funk</div>
+<div class="style-description">Estilo brasileiro</div>
+</div>
+<div class="style" data-style="K-Pop">
+<div class="style-icon">✨</div>
+<div class="style-name">K-Pop</div>
+<div class="style-description">Coreografia pop</div>
+</div>
+<div class="style" data-style="Salsa">
+<div class="style-icon">💃</div>
+<div class="style-name">Salsa</div>
+<div class="style-description">Dança latina</div>
+</div>
+<div class="style" data-style="Livre">
+<div class="style-icon">⚡</div>
+<div class="style-name">Livre</div>
+<div class="style-description">Movimento criativo</div>
+</div>
+</div>
+</div>
+<!-- Duration -->
+<div class="section">
+<div class="section-title">
+Duração
+</div>
+<div class="control">
+<div class="control-top">
+<span>Duração do vídeo</span>
+<span class="value" id="durationValue">5s</span>
+</div>
+<input type="range" id="duration" min="3" max="15" value="5" >
+</div>
+</div>
+<!-- Intensity -->
+<div class="section">
+<div class="section-title">
+Intensidade da dança
+</div>
+<div class="control">
+<div class="control-top">
+<span>Movimento</span>
+<span class="value" id="intensityValue">Médio</span>
+</div>
+<input type="range" id="intensity" min="1" max="3" value="2" >
+</div>
+</div>
+<!-- Generate -->
+<button class="generate" onclick="generateVideo()">
+✨ GERAR VÍDEO
+</button>
+<div class="status" id="status">
+<div class="spinner"></div>
+<div>Preparando sua animação...</div>
+<small>Isso pode levar alguns segundos.</small>
+</div>
+<div class="bottom">
+DanceAI Premium • Powered by AI
+</div>
+</div>
 <script>
 let selectedStyle = "TikTok";
-const AGNES_API_KEY = "sk-1rHcI3yVp5FdL63gjo9BX3aBLw65FBDIxIUzKvZPffOlew8t";
 
 /* Foto */
 document.getElementById("photo").addEventListener("change", function(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const preview = document.getElementById("preview");
-  const content = document.getElementById("uploadContent");
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = "block";
-  content.style.display = "none";
+const file = e.target.files[0];
+if(!file) return;
+const preview = document.getElementById("preview");
+const content = document.getElementById("uploadContent");
+preview.src = URL.createObjectURL(file);
+preview.style.display = "block";
+content.style.display = "none";
 });
 
 /* Estilos */
 document.querySelectorAll(".style").forEach(style => {
-  style.addEventListener("click", () => {
-    document.querySelectorAll(".style")
-      .forEach(s => s.classList.remove("active"));
-    style.classList.add("active");
-    selectedStyle = style.dataset.style;
-  });
+style.addEventListener("click", () => {
+document.querySelectorAll(".style")
+.forEach(s => s.classList.remove("active"));
+style.classList.add("active");
+selectedStyle = style.dataset.style;
+});
 });
 
 /* Duração */
 document.getElementById("duration")
-  .addEventListener("input", function(){
-    document.getElementById("durationValue")
-      .innerText = this.value + "s";
-  });
+.addEventListener("input", function(){
+document.getElementById("durationValue")
+.innerText = this.value + "s";
+});
 
 /* Intensidade */
 document.getElementById("intensity")
-  .addEventListener("input", function(){
-    const values = ["Leve", "Médio", "Intenso"];
-    document.getElementById("intensityValue")
-      .innerText = values[this.value - 1];
-  });
+.addEventListener("input", function(){
+const values = [
+"Leve",
+"Médio",
+"Intenso"
+];
+document.getElementById("intensityValue")
+.innerText = values[this.value - 1];
+});
 
-/* ---- Upload da foto para o Imgur ---- */
-async function uploadParaImgur(file) {
-  const formData = new FormData();
-  formData.append("image", file);
-  const CLIENT_ID = "546c25a59c58ad7"; // Client ID público do Imgur
-
-  const resposta = await fetch("https://api.imgur.com/3/image", {
-    method: "POST",
-    headers: { "Authorization": "Client-ID " + CLIENT_ID },
-    body: formData
-  });
-  const dados = await resposta.json();
-  if (!dados.success) throw new Error("Falha no upload da imagem.");
-  return dados.data.link;
-}
-
-/* ---- Gerar Vídeo ---- */
+/* Gerar vídeo */
 async function generateVideo(){
   const photo = document.getElementById("photo").files[0];
   if(!photo){ alert("Adicione uma foto primeiro."); return; }
-
+  
   const duration = parseInt(document.getElementById("duration").value);
-  const intensity = document.getElementById("intensity").value;
+  const intensity = parseInt(document.getElementById("intensity").value);
   const status = document.getElementById("status");
   status.style.display = "block";
 
+  // Sua chave da API
+  const AGNES_API_KEY = "sk-1rHcI3yVp5FdL63gjo9BX3aBLw65FBDIxIUzKvZPffOlew8t";
+
   try {
-    /* 1. Upload da imagem */
+    // 1. Upload da foto para obter uma URL pública (Imgur)
     status.innerHTML = `<div class="spinner"></div><div>Enviando sua foto...</div>`;
-    const urlDaFoto = await uploadParaImgur(photo);
+    
+    const formData = new FormData();
+    formData.append("image", photo);
+    
+    const imgurRes = await fetch("https://api.imgur.com/3/image", {
+      method: "POST",
+      headers: { "Authorization": "Client-ID 546c25a59c58ad7" },
+      body: formData
+    });
+    const imgurData = await imgurRes.json();
+    if (!imgurData.success) throw new Error("Falha no upload da imagem.");
+    const urlDaFoto = imgurData.data.link;
     console.log("URL da foto:", urlDaFoto);
 
-    /* 2. Montar prompt */
+    // 2. Montar o prompt de acordo com as escolhas
     const intensidades = ["subtle", "moderate", "energetic"];
     const prompt = `A person dancing ${selectedStyle} style, ${intensidades[intensity - 1]} movement, natural motion, cinematic lighting`;
 
-    /* 3. Chamar a API da Agnes */
+    // 3. Chamar a API da Agnes
     status.innerHTML = `<div class="spinner"></div><div>Gerando sua dança...</div><small>Isso pode levar alguns minutos.</small>`;
     
-    const respostaAgnes = await fetch("https://apihub.agnes-ai.com/v1/videos", {
+    const agnesRes = await fetch("https://apihub.agnes-ai.com/v1/videos", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${AGNES_API_KEY}`,
@@ -92,41 +248,40 @@ async function generateVideo(){
       })
     });
 
-    const dadosAgnes = await respostaAgnes.json();
-    console.log("Resposta da Agnes:", dadosAgnes);
+    const agnesData = await agnesRes.json();
+    console.log("Resposta da Agnes:", agnesData);
 
-    if (!respostaAgnes.ok) {
-      throw new Error(dadosAgnes.error?.message || JSON.stringify(dadosAgnes));
+    if (!agnesRes.ok) {
+      throw new Error(agnesData.error?.message || "Erro na API da Agnes.");
     }
 
-    const videoId = dadosAgnes.id || dadosAgnes.video_id || dadosAgnes.task_id;
-    if (!videoId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(dadosAgnes));
+    const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
+    if (!videoId) throw new Error("ID da tarefa não retornado.");
 
-    /* 4. Polling */
+    // 4. Polling: verificar a cada 3 segundos se o vídeo ficou pronto
     let urlDoVideo = null;
     let tentativas = 0;
-    const maxTentativas = 60;
 
-    while (!urlDoVideo && tentativas < maxTentativas) {
+    while (!urlDoVideo && tentativas < 60) {
       await new Promise(r => setTimeout(r, 3000));
       tentativas++;
 
-      const statusResposta = await fetch(`https://apihub.agnes-ai.com/v1/videos/${videoId}`, {
+      const statusRes = await fetch(`https://apihub.agnes-ai.com/v1/videos/${videoId}`, {
         headers: { "Authorization": `Bearer ${AGNES_API_KEY}` }
       });
-      const statusDados = await statusResposta.json();
-      console.log("Status tentativa " + tentativas + ":", statusDados);
+      const statusData = await statusRes.json();
+      console.log("Status " + tentativas + ":", statusData);
 
-      if (statusDados.status === "completed" || statusDados.status === "succeeded") {
-        urlDoVideo = statusDados.metadata?.url || statusDados.url || statusDados.output?.url || statusDados.video_url;
-      } else if (statusDados.status === "failed") {
+      if (statusData.status === "completed" || statusData.status === "succeeded") {
+        urlDoVideo = statusData.metadata?.url || statusData.url || statusData.output?.url || statusData.video_url;
+      } else if (statusData.status === "failed") {
         throw new Error("A geração do vídeo falhou.");
       }
     }
 
     if (!urlDoVideo) throw new Error("Tempo limite excedido. Tente novamente.");
 
-    /* 5. Exibir o vídeo */
+    // 5. Exibir o vídeo na tela
     status.innerHTML = `
       <div style="font-size:35px">🎬</div>
       <div>Vídeo gerado com sucesso!</div>
@@ -148,3 +303,5 @@ async function generateVideo(){
   }
 }
 </script>
+</body>
+</html>
