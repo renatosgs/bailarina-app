@@ -35,13 +35,10 @@
             left: 0;
         }
 
-        /* GRID DE FUNDO ANIMADO */
         .bg-grid {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image: 
                 linear-gradient(rgba(0, 123, 255, 0.08) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 123, 255, 0.08) 1px, transparent 1px);
@@ -56,13 +53,10 @@
             100% { background-position: 50px 50px; }
         }
 
-        /* PARTÍCULAS */
         .particles {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 1;
             pointer-events: none;
             overflow: hidden;
@@ -70,8 +64,7 @@
 
         .particle {
             position: absolute;
-            width: 3px;
-            height: 3px;
+            width: 3px; height: 3px;
             background: #00d4ff;
             border-radius: 50%;
             box-shadow: 0 0 10px #00d4ff;
@@ -79,19 +72,12 @@
         }
 
         @keyframes float-particle {
-            0% {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% {
-                transform: translateY(-100vh) translateX(50px);
-                opacity: 0;
-            }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
         }
 
-        /* CHÃO */
         .floor {
             position: fixed;
             bottom: 18%;
@@ -110,11 +96,9 @@
             50% { opacity: 1; box-shadow: 0 0 60px #00d4ff; }
         }
 
-        /* AURA */
         .aura {
             position: fixed;
-            top: 48%;
-            left: 50%;
+            top: 48%; left: 50%;
             transform: translate(-50%, -50%);
             width: 90vw;
             max-width: 450px;
@@ -131,11 +115,9 @@
             50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
         }
 
-        /* CONTAINER DA PERSONAGEM */
         #character-container {
             position: fixed;
-            top: 48%;
-            left: 50%;
+            top: 48%; left: 50%;
             transform: translate(-50%, -50%);
             width: 85vw;
             max-width: 420px;
@@ -154,13 +136,10 @@
             overflow: visible;
         }
 
-        /* BOTÃO MENU */
         .menu-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 58px;
-            height: 58px;
+            top: 20px; right: 20px;
+            width: 58px; height: 58px;
             border-radius: 50%;
             background: rgba(0, 150, 255, 0.25);
             backdrop-filter: blur(12px);
@@ -183,13 +162,10 @@
             transform: rotate(90deg);
         }
 
-        /* PAINEL LATERAL */
         .side-panel {
             position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            max-width: 380px;
+            top: 0; right: -100%;
+            width: 100%; max-width: 380px;
             height: 100%;
             background: #0d1421;
             border-left: 1px solid rgba(0, 150, 255, 0.3);
@@ -228,8 +204,7 @@
             background: rgba(255, 255, 255, 0.08);
             border: none;
             color: white;
-            width: 35px;
-            height: 35px;
+            width: 35px; height: 35px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -307,8 +282,7 @@
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             border-radius: 50%;
             background: linear-gradient(135deg, #007bff, #00d4ff);
             cursor: pointer;
@@ -316,8 +290,7 @@
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             border-radius: 50%;
             background: linear-gradient(135deg, #007bff, #00d4ff);
             cursor: pointer;
@@ -343,9 +316,7 @@
         }
 
         .action-btn:hover { transform: translateY(-2px); }
-        .action-btn.active {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-        }
+        .action-btn.active { background: linear-gradient(135deg, #ff4757, #ff6b81); }
 
         .action-btn.reset {
             background: linear-gradient(135deg, #6c757d, #495057);
@@ -359,9 +330,14 @@
             color: #000;
         }
 
-        .action-btn.photo-btn {
+        .action-btn.face-btn {
             background: linear-gradient(135deg, #e91e63, #f06292);
             box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .action-btn.body-btn {
+            background: linear-gradient(135deg, #9c27b0, #ba68c8);
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
         }
 
         .action-btn.remove-photo {
@@ -430,11 +406,9 @@
 
         .chat-send {
             position: absolute;
-            right: 12px;
-            top: 50%;
+            right: 12px; top: 50%;
             transform: translateY(-50%);
-            background: none;
-            border: none;
+            background: none; border: none;
             color: #00d4ff;
             cursor: pointer;
             font-size: 1.1rem;
@@ -443,8 +417,7 @@
 
         .hint {
             position: fixed;
-            bottom: 25px;
-            left: 50%;
+            bottom: 25px; left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.75);
             padding: 10px 20px;
@@ -463,8 +436,7 @@
 
         .quick-stats {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 20px; left: 20px;
             display: flex;
             gap: 10px;
             z-index: 50;
@@ -489,11 +461,9 @@
             border-color: rgba(255, 71, 87, 0.3);
         }
 
-        /* TOAST */
         .toast {
             position: fixed;
-            top: 90px;
-            left: 50%;
+            top: 90px; left: 50%;
             transform: translateX(-50%) translateY(-20px);
             background: rgba(0, 212, 255, 0.95);
             color: #000;
@@ -515,7 +485,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ANIMAÇÕES */
         @keyframes breathe {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
@@ -542,20 +511,8 @@
             filter: brightness(1.3) drop-shadow(0 0 10px #00d4ff);
         }
 
-        /* INPUT DE ARQUIVO OCULTO */
-        #photo-input {
+        #photo-input, #body-photo-input {
             display: none;
-        }
-
-        /* INDICADOR DE FOTO CARREGADA */
-        .photo-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #00ff88;
-            border-radius: 50%;
-            margin-left: 6px;
-            box-shadow: 0 0 8px #00ff88;
         }
 
     </style>
@@ -567,8 +524,9 @@
     <div class="aura"></div>
     <div class="floor"></div>
 
-    <!-- INPUT DE FOTO OCULTO -->
+    <!-- INPUTS DE FOTO -->
     <input type="file" id="photo-input" accept="image/*">
+    <input type="file" id="body-photo-input" accept="image/*">
 
     <!-- PERSONAGEM -->
     <div id="character-container">
@@ -598,13 +556,49 @@
                     <stop offset="100%" stop-color="#0a0a1a"/>
                 </linearGradient>
                 
-                <!-- CLIP PATH PARA O ROSTO (CÍRCULO) -->
+                <!-- CLIP PATH PARA O ROSTO -->
                 <clipPath id="face-clip">
                     <ellipse cx="150" cy="190" rx="30" ry="34"/>
+                </clipPath>
+                
+                <!-- CLIP PATH PARA O CORPO INTEIRO -->
+                <clipPath id="body-clip">
+                    <!-- Cabeça -->
+                    <ellipse cx="150" cy="190" rx="32" ry="36"/>
+                    <!-- Pescoço -->
+                    <rect x="140" y="215" width="20" height="25"/>
+                    <!-- Tronco -->
+                    <ellipse cx="150" cy="290" rx="42" ry="70"/>
+                    <!-- Quadril -->
+                    <ellipse cx="150" cy="362" rx="42" ry="34"/>
+                    <!-- Braço esquerdo -->
+                    <ellipse cx="103" cy="270" rx="14" ry="45" transform="rotate(12 103 270)"/>
+                    <ellipse cx="87" cy="345" rx="12" ry="42" transform="rotate(20 87 345)"/>
+                    <circle cx="79" cy="394" r="12"/>
+                    <!-- Braço direito -->
+                    <ellipse cx="197" cy="270" rx="14" ry="45" transform="rotate(-12 197 270)"/>
+                    <ellipse cx="213" cy="345" rx="12" ry="42" transform="rotate(-20 213 345)"/>
+                    <circle cx="221" cy="394" r="12"/>
+                    <!-- Perna esquerda -->
+                    <ellipse cx="125" cy="410" rx="20" ry="58"/>
+                    <ellipse cx="125" cy="518" rx="16" ry="48"/>
+                    <ellipse cx="125" cy="572" rx="14" ry="9"/>
+                    <!-- Perna direita -->
+                    <ellipse cx="175" cy="410" rx="20" ry="58"/>
+                    <ellipse cx="175" cy="518" rx="16" ry="48"/>
+                    <ellipse cx="175" cy="572" rx="14" ry="9"/>
                 </clipPath>
             </defs>
 
             <g id="character-group">
+                
+                <!-- FOTO DO CORPO (por trás de tudo) -->
+                <image id="body-photo" 
+                       x="50" y="140" 
+                       width="200" height="450" 
+                       preserveAspectRatio="xMidYMid slice"
+                       clip-path="url(#body-clip)"
+                       style="display: none;"/>
                 
                 <!-- PERNA ESQUERDA -->
                 <g id="left-leg" class="body-part">
@@ -674,10 +668,9 @@
 
                 <!-- CABEÇA -->
                 <g id="head-group" class="body-part">
-                    <!-- Rosto base (sempre visível como fundo) -->
                     <ellipse cx="150" cy="190" rx="32" ry="36" fill="url(#skinGrad)" stroke="#c88a68" stroke-width="1"/>
                     
-                    <!-- FOTO DO ROSTO (invisível por padrão) -->
+                    <!-- FOTO DO ROSTO -->
                     <image id="face-photo" 
                            x="118" y="154" 
                            width="64" height="72" 
@@ -685,7 +678,7 @@
                            clip-path="url(#face-clip)"
                            style="display: none;"/>
                     
-                    <!-- Traços do rosto (ocultos quando foto é carregada) -->
+                    <!-- Traços do rosto -->
                     <g id="face-features">
                         <ellipse cx="139" cy="188" rx="4" ry="5" fill="#ffffff"/>
                         <circle cx="139" cy="189" r="2.5" fill="#3d2415"/>
@@ -745,26 +738,21 @@
         </svg>
     </div>
 
-    <!-- STATS -->
     <div class="quick-stats">
         <div class="stat-badge"><i class="fas fa-bone"></i> 200</div>
         <div class="stat-badge red"><i class="fas fa-heart"></i> 14</div>
     </div>
 
-    <!-- HINT -->
     <div class="hint" id="hint">
-        <i class="fas fa-camera"></i> Troque o rosto pela sua foto!
+        <i class="fas fa-camera"></i> Troque rosto e corpo por foto!
     </div>
 
-    <!-- TOAST -->
     <div class="toast" id="toast">Feito!</div>
 
-    <!-- MENU -->
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- PAINEL -->
     <div class="side-panel" id="side-panel">
         <div class="panel-header">
             <h2><i class="fas fa-robot"></i> Livia IA</h2>
@@ -775,29 +763,39 @@
             <h4><i class="fas fa-heartbeat"></i> Status Vital</h4>
             <div class="info-row"><span>🦴 Ossos</span><span>200</span></div>
             <div class="info-row"><span>❤️ Vida</span><span>14</span></div>
-            <div class="info-row"><span>⚡ Energia</span><span>100%ada</span></div>
-            <div class="info |
-
----
-
-### 📱-row"><span>😊 Humor</span><span id="mood-display">Feliz</span></div>
+            <div class="info-row"><span>⚡ Energia</span><span>100%</span></div>
+            <div class="info-row"><span>😊 Humor</span><span id="mood-display">Feliz</span></div>
         </div>
 
         <button class="action-btn" id="btn-dar-vida">
             <i class="fas fa-heart"></i> Dar Vida
         </button>
 
-        <!-- NOVO: BOTÃO MUDAR ROSTO -->
+        <!-- ROSTO PERSONALIZADO -->
         <div class="info-card" style="background: rgba(233, 30, 99, 0.08); border-color: rgba(233, 30, 99, 0.3);">
             <h4><i class="fas fa-camera" style="color: #f06292;"></i> Rosto Personalizado</h4>
-            <button class="action-btn photo-btn" id="btn-change-face">
+            <button class="action-btn face-btn" id="btn-change-face">
                 <i class="fas fa-camera-retro"></i> Mudar Rosto por Foto
             </button>
             <button class="action-btn remove-photo" id="btn-remove-face" style="margin-top: 8px; display: none;">
-                <i class="fas fa-trash"></i> Remover Foto
+                <i class="fas fa-trash"></i> Remover Rosto
             </button>
             <div style="font-size: 0.7rem; color: #8ba0b8; margin-top: 8px; text-align: center;">
                 💡 Escolha uma foto de rosto (frente)
+            </div>
+        </div>
+
+        <!-- CORPO PERSONALIZADO (NOVO) -->
+        <div class="info-card" style="background: rgba(156, 39, 176, 0.08); border-color: rgba(156, 39, 176, 0.3);">
+            <h4><i class="fas fa-user" style="color: #ba68c8;"></i> Corpo Personalizado</h4>
+            <button class="action-btn body-btn" id="btn-change-body">
+                <i class="fas fa-camera"></i> Mudar Corpo por Foto
+            </button>
+            <button class="action-btn remove-photo" id="btn-remove-body" style="margin-top: 8px; display: none;">
+                <i class="fas fa-trash"></i> Remover Corpo
+            </button>
+            <div style="font-size: 0.7rem; color: #8ba0b8; margin-top: 8px; text-align: center;">
+                💡 Use uma foto de corpo inteiro
             </div>
         </div>
 
@@ -924,7 +922,10 @@
         const facePhoto = document.getElementById('face-photo');
         const faceFeatures = document.getElementById('face-features');
         const photoInput = document.getElementById('photo-input');
+        const bodyPhotoInput = document.getElementById('body-photo-input');
+        const bodyPhoto = document.getElementById('body-photo');
         const btnRemoveFace = document.getElementById('btn-remove-face');
+        const btnRemoveBody = document.getElementById('btn-remove-body');
 
         // ==========================================
         // TOAST
@@ -952,56 +953,62 @@
         createParticles();
 
         // ==========================================
-        // MUDAR ROSTO POR FOTO
+        // FUNÇÃO GENÉRICA PARA PROCESSAR IMAGEM
         // ==========================================
-        
-        // Abrir seletor de arquivo
-        document.getElementById('btn-change-face').addEventListener('click', () => {
-            photoInput.click();
-        });
-
-        // Processar a foto escolhida
-        photoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            showToast('⏳ Processando foto...');
-
+        function processImage(file, targetWidth, targetHeight, callback) {
             const reader = new FileReader();
             reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
-                    // Redimensionar para 300x300 (economiza espaço)
                     const canvas = document.createElement('canvas');
-                    const size = 300;
-                    canvas.width = size;
-                    canvas.height = size;
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
                     const ctx = canvas.getContext('2d');
 
-                    // Calcular recorte centralizado
-                    const minSide = Math.min(img.width, img.height);
-                    const sx = (img.width - minSide) / 2;
-                    const sy = (img.height - minSide) / 2;
+                    // Calcula a proporção para preencher (crop centralizado)
+                    const scaleX = targetWidth / img.width;
+                    const scaleY = targetHeight / img.height;
+                    const scale = Math.max(scaleX, scaleY);
 
-                    ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+                    const newWidth = img.width * scale;
+                    const newHeight = img.height * scale;
+                    const dx = (targetWidth - newWidth) / 2;
+                    const dy = (targetHeight - newHeight) / 2;
 
-                    // Converter para base64
+                    ctx.drawImage(img, dx, dy, newWidth, newHeight);
+                    
                     const dataURL = canvas.toDataURL('image/jpeg', 0.85);
-
-                    try {
-                        localStorage.setItem('livia-face-photo', dataURL);
-                        applyFacePhoto(dataURL);
-                        showToast('✅ Rosto atualizado!');
-                    } catch (err) {
-                        showToast('❌ Foto muito grande');
-                    }
+                    callback(dataURL);
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
+        }
+
+        // ==========================================
+        // MUDAR ROSTO
+        // ==========================================
+        document.getElementById('btn-change-face').addEventListener('click', () => {
+            photoInput.click();
         });
 
-        // Aplicar a foto no rosto
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast('⏳ Processando rosto...');
+
+            processImage(file, 300, 300, (dataURL) => {
+                try {
+                    localStorage.setItem('livia-face-photo', dataURL);
+                    applyFacePhoto(dataURL);
+                    showToast('✅ Rosto atualizado!');
+                } catch (err) {
+                    showToast('❌ Foto muito grande');
+                }
+            });
+        });
+
         function applyFacePhoto(dataURL) {
             facePhoto.setAttributeNS('http://www.w3.org/1999/xlink', 'href', dataURL);
             facePhoto.setAttribute('href', dataURL);
@@ -1010,21 +1017,87 @@
             btnRemoveFace.style.display = 'flex';
         }
 
-        // Remover a foto do rosto
         btnRemoveFace.addEventListener('click', () => {
             localStorage.removeItem('livia-face-photo');
             facePhoto.style.display = 'none';
             faceFeatures.style.display = 'block';
             btnRemoveFace.style.display = 'none';
-            showToast('🗑️ Foto removida');
+            showToast('🗑️ Rosto removido');
         });
 
-        // Carregar foto salva ao iniciar
+        // ==========================================
+        // MUDAR CORPO (NOVO)
+        // ==========================================
+        document.getElementById('btn-change-body').addEventListener('click', () => {
+            bodyPhotoInput.click();
+        });
+
+        bodyPhotoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast('⏳ Processando corpo...');
+
+            // Proporção para o corpo: 200x450 (mesmo do SVG)
+            processImage(file, 250, 500, (dataURL) => {
+                try {
+                    localStorage.setItem('livia-body-photo', dataURL);
+                    applyBodyPhoto(dataURL);
+                    showToast('✅ Corpo atualizado!');
+                } catch (err) {
+                    showToast('❌ Foto muito grande');
+                }
+            });
+        });
+
+        function applyBodyPhoto(dataURL) {
+            bodyPhoto.setAttributeNS('http://www.w3.org/1999/xlink', 'href', dataURL);
+            bodyPhoto.setAttribute('href', dataURL);
+            bodyPhoto.style.display = 'block';
+            btnRemoveBody.style.display = 'flex';
+            
+            // Esconde as partes do corpo que serão substituídas pela foto
+            // Mantém apenas a cabeça visível (para o rosto continuar aparecendo)
+            hideBodyPartsForPhoto(true);
+        }
+
+        function hideBodyPartsForPhoto(hide) {
+            // Se a foto do corpo estiver ativa, esconde as partes internas do corpo
+            // mas mantém a cabeça para o rosto continuar visível
+            const partsToHide = [
+                'left-leg', 'right-leg', 
+                'hip-group', 'torso-group', 
+                'breasts-group', 'left-arm', 'right-arm'
+            ];
+            
+            partsToHide.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.opacity = hide ? '0' : '1';
+                }
+            });
+        }
+
+        btnRemoveBody.addEventListener('click', () => {
+            localStorage.removeItem('livia-body-photo');
+            bodyPhoto.style.display = 'none';
+            btnRemoveBody.style.display = 'none';
+            hideBodyPartsForPhoto(false);
+            showToast('🗑️ Corpo removido');
+        });
+
+        // ==========================================
+        // CARREGAR FOTOS SALVAS
+        // ==========================================
         window.addEventListener('load', () => {
             const savedFace = localStorage.getItem('livia-face-photo');
             if (savedFace) {
                 applyFacePhoto(savedFace);
-                showToast('📸 Foto carregada');
+            }
+            
+            const savedBody = localStorage.getItem('livia-body-photo');
+            if (savedBody) {
+                applyBodyPhoto(savedBody);
             }
         });
 
@@ -1212,7 +1285,7 @@
         });
 
         // ==========================================
-        // SALVAR FOTO (captura da personagem)
+        // SALVAR FOTO DA PERSONAGEM
         // ==========================================
         document.getElementById('btn-photo').addEventListener('click', () => {
             try {
@@ -1245,7 +1318,7 @@
         });
 
         // ==========================================
-        // SALVAR / CARREGAR
+        // SALVAR / CARREGAR CONFIGURAÇÕES
         // ==========================================
         document.getElementById('btn-save').addEventListener('click', () => {
             try {
@@ -1435,54 +1508,4 @@
             default: ['Entendi!', 'Legal!', 'Interessante!', 'Me conta mais sobre isso.', 'Hmm, faz sentido.']
         };
 
-        function getResponse(text) {
-            const lower = text.toLowerCase();
-            if(/oi|olá|ola|hey|e aí|eai/.test(lower)) return responses.greeting;
-            if(/linda|bonita|gata|maravilhosa/.test(lower)) return responses.compliment;
-            if(/\?|como|por que|porque|quando|onde/.test(lower)) return responses.question;
-            if(/triste|mal|chateado|ruim/.test(lower)) return responses.sad;
-            if(/te amo|amo você|amo vc|amor/.test(lower)) return responses.love;
-            return responses.default;
-        }
-
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if(!text) return;
-            chatInput.value = '';
-            chatInput.placeholder = 'Livia está pensando...';
-            
-            setTimeout(() => {
-                const r = getResponse(text);
-                const response = r[Math.floor(Math.random() * r.length)];
-                chatInput.placeholder = `Livia: ${response}`;
-                
-                if(/te amo|amor/.test(text.toLowerCase())) {
-                    moodDisplay.textContent = 'Apaixonada 💕';
-                } else if(/triste|mal/.test(text.toLowerCase())) {
-                    moodDisplay.textContent = 'Preocupada 😟';
-                } else if(/linda|bonita/.test(text.toLowerCase())) {
-                    moodDisplay.textContent = 'Feliz 😊';
-                } else {
-                    moodDisplay.textContent = 'Curiosa 🤔';
-                }
-            }, 1000);
-        }
-
-        chatSend.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') sendMessage();
-        });
-
-        // ==========================================
-        // HINT
-        // ==========================================
-        setTimeout(() => {
-            const hint = document.getElementById('hint');
-            if(hint) hint.style.opacity = '0.3';
-        }, 6000);
-
-        setTimeout(() => showToast('📸 Agora você pode trocar o rosto!'), 1000);
-
-    </script>
-</body>
-</html>
+        function
