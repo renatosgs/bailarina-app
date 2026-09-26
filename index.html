@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Livia IA - Anatomia 3D Ajustável</title>
+    <title>Livia IA - Anatomia 3D</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,44 +12,47 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <style>
-        :root {
-            --bg-gradient: radial-gradient(circle at center, #0a1428 0%, #05070a 100%);
-            --panel-bg: rgba(13, 20, 33, 0.95);
-            --panel-border: rgba(0, 150, 255, 0.3);
-            --accent-blue: #007bff;
-            --accent-cyan: #00d4ff;
-            --accent-green: #00ff88;
-            --accent-red: #ff4757;
-            --text-main: #ffffff;
-            --text-muted: #8ba0b8;
-        }
-
         * {
             margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Inter', sans-serif;
             user-select: none; -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background: var(--bg-gradient);
-            color: var(--text-main);
+        /* FUNDO FORÇADO ESCURO */
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-            height: 100vh; width: 100vw;
+            background-color: #05070a !important;
+            color: #ffffff;
             position: fixed;
+            top: 0; left: 0;
         }
 
+        /* CANVAS 3D - POSIÇÃO ABSOLUTA E Z-INDEX */
         #canvas-container {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 1;
+            background-color: #05070a;
         }
 
+        #canvas-container canvas {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* MENU TOGGLE */
         .menu-toggle {
             position: fixed; top: 20px; right: 20px;
             width: 58px; height: 58px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 150, 255, 0.3);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.5);
             color: white; font-size: 1.4rem; cursor: pointer;
             z-index: 100; display: flex; justify-content: center; align-items: center;
             transition: all 0.3s ease;
@@ -57,12 +60,13 @@
         }
         .menu-toggle.active { background: rgba(255, 71, 87, 0.9); }
 
+        /* PAINEL LATERAL */
         .side-panel {
             position: fixed; top: 0; right: -100%;
             width: 100%; max-width: 380px; height: 100%;
-            background: var(--panel-bg);
+            background: rgba(13, 20, 33, 0.98);
             backdrop-filter: blur(25px);
-            border-left: 1px solid var(--panel-border);
+            border-left: 1px solid rgba(0, 150, 255, 0.3);
             z-index: 90;
             transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex; flex-direction: column;
@@ -72,7 +76,7 @@
         }
         .side-panel.open { right: 0; }
         .side-panel::-webkit-scrollbar { width: 4px; }
-        .side-panel::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 4px; }
+        .side-panel::-webkit-scrollbar-thumb { background: #007bff; border-radius: 4px; }
 
         .panel-header {
             display: flex; justify-content: space-between; align-items: center;
@@ -82,14 +86,14 @@
         .panel-header h2 {
             font-size: 1.1rem; font-weight: 700;
             display: flex; align-items: center; gap: 8px;
-            color: var(--accent-cyan);
+            color: #00d4ff;
         }
         .close-btn {
             background: rgba(255,255,255,0.08); border: none; color: white;
             width: 35px; height: 35px; border-radius: 50%;
             cursor: pointer; display: flex; justify-content: center; align-items: center;
         }
-        .close-btn:hover { background: var(--accent-red); }
+        .close-btn:hover { background: #ff4757; }
 
         .info-card {
             background: rgba(0, 0, 0, 0.3);
@@ -97,7 +101,7 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
         .info-card h4 {
-            font-size: 0.7rem; color: var(--text-muted);
+            font-size: 0.7rem; color: #8ba0b8;
             margin-bottom: 10px; text-transform: uppercase;
             letter-spacing: 1.5px; font-weight: 600;
             display: flex; align-items: center; gap: 6px;
@@ -108,7 +112,7 @@
             font-size: 0.85rem; margin-bottom: 6px;
             color: #ccd6e0;
         }
-        .info-row span:last-child { color: var(--accent-cyan); font-weight: 700; }
+        .info-row span:last-child { color: #00d4ff; font-weight: 700; }
 
         .slider-group {
             display: flex; flex-direction: column;
@@ -119,7 +123,7 @@
             font-size: 0.75rem; color: #ccd6e0; font-weight: 500;
         }
         .slider-label span:last-child {
-            color: var(--accent-cyan); font-weight: 700; font-size: 0.7rem;
+            color: #00d4ff; font-weight: 700; font-size: 0.7rem;
         }
 
         input[type="range"] {
@@ -130,14 +134,9 @@
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none; appearance: none;
             width: 16px; height: 16px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            background: linear-gradient(135deg, #007bff, #00d4ff);
             cursor: pointer;
             box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 16px; height: 16px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            cursor: pointer; border: none;
         }
 
         .action-btn {
@@ -148,10 +147,7 @@
             gap: 10px; transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
         }
-        .action-btn:hover { transform: translateY(-2px); }
-        .action-btn.active {
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-        }
+        .action-btn.active { background: linear-gradient(135deg, #ff4757, #ff6b81); }
         .action-btn.reset {
             background: linear-gradient(135deg, #6c757d, #495057);
             font-size: 0.8rem; padding: 10px;
@@ -163,16 +159,15 @@
         .grid-btn {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.08);
-            color: var(--text-muted); padding: 10px 5px;
+            color: #8ba0b8; padding: 10px 5px;
             border-radius: 10px; font-size: 0.7rem; cursor: pointer;
             display: flex; flex-direction: column; align-items: center;
             gap: 6px; transition: all 0.2s; font-weight: 500;
         }
-        .grid-btn:hover { background: rgba(0, 123, 255, 0.15); color: white; }
         .grid-btn.active {
             background: rgba(0, 212, 255, 0.15);
-            color: var(--accent-cyan);
-            border-color: var(--accent-cyan);
+            color: #00d4ff;
+            border-color: #00d4ff;
             font-weight: 700;
         }
         .grid-btn i { font-size: 1.1rem; }
@@ -186,31 +181,26 @@
             border-radius: 12px; padding: 14px 45px 14px 14px;
             color: white; font-size: 0.85rem; outline: none;
         }
-        .chat-input:focus { border-color: var(--accent-cyan); }
         .chat-input::placeholder { color: rgba(255,255,255,0.3); }
 
         .chat-send {
             position: absolute; right: 12px; top: 50%;
             transform: translateY(-50%);
             background: none; border: none;
-            color: var(--accent-cyan); cursor: pointer;
+            color: #00d4ff; cursor: pointer;
             font-size: 1.1rem; margin-top: 5px;
         }
 
         .hint {
-            position: absolute; bottom: 25px; left: 50%;
+            position: fixed; bottom: 25px; left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             padding: 10px 20px; border-radius: 25px;
-            font-size: 0.75rem; color: rgba(255,255,255,0.8);
+            font-size: 0.75rem; color: rgba(255,255,255,0.9);
             z-index: 10; backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             display: flex; align-items: center; gap: 8px;
-            animation: pulse 2.5s infinite; white-space: nowrap;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
+            white-space: nowrap;
         }
 
         .quick-stats {
@@ -218,44 +208,53 @@
             display: flex; gap: 10px; z-index: 50;
         }
         .stat-badge {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(10px);
             padding: 8px 14px; border-radius: 20px;
             font-size: 0.75rem; font-weight: 700;
             display: flex; align-items: center; gap: 6px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
         }
-        .stat-badge.red { color: var(--accent-red); }
+        .stat-badge.red { color: #ff4757; border-color: rgba(255, 71, 87, 0.3); }
 
-        /* Debug */
-        #debug-info {
-            position: fixed; bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.7); color: #00ff88;
-            font-family: monospace; font-size: 0.7rem;
-            padding: 8px; border-radius: 6px; z-index: 200;
-            display: none;
+        /* ERRO */
+        #error-box {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 71, 87, 0.95);
+            color: white; padding: 20px;
+            border-radius: 12px; z-index: 9999;
+            font-size: 0.85rem; max-width: 90%;
+            text-align: center; display: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
+        #error-box i { font-size: 2rem; margin-bottom: 10px; display: block; }
 
     </style>
 </head>
 <body>
 
+    <!-- CANVAS 3D -->
     <div id="canvas-container"></div>
 
+    <!-- ESTATÍSTICAS -->
     <div class="quick-stats">
         <div class="stat-badge"><i class="fas fa-bone"></i> 200</div>
         <div class="stat-badge red"><i class="fas fa-heart"></i> 14</div>
     </div>
 
+    <!-- DICA -->
     <div class="hint" id="hint">
         <i class="fas fa-hand-pointer"></i> Toque nas partes para trocar
     </div>
 
+    <!-- BOTÃO MENU -->
     <button class="menu-toggle" id="menu-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
+    <!-- PAINEL LATERAL -->
     <div class="side-panel" id="side-panel">
         <div class="panel-header">
             <h2><i class="fas fa-robot"></i> Livia IA</h2>
@@ -334,18 +333,6 @@
         </div>
 
         <div class="info-card">
-            <h4><i class="fas fa-running"></i> Ações</h4>
-            <div class="btn-grid">
-                <div class="grid-btn"><i class="fas fa-walking"></i> Andar</div>
-                <div class="grid-btn"><i class="fas fa-running"></i> Correr</div>
-                <div class="grid-btn"><i class="fas fa-chair"></i> Agachar</div>
-                <div class="grid-btn"><i class="fas fa-tshirt"></i> Roupa</div>
-                <div class="grid-btn"><i class="fas fa-camera"></i> Foto</div>
-                <div class="grid-btn"><i class="fas fa-music"></i> Dançar</div>
-            </div>
-        </div>
-
-        <div class="info-card">
             <h4><i class="fas fa-id-card"></i> Ficha Técnica</h4>
             <div class="info-row"><span>Nome</span><span>Livia Andrade</span></div>
             <div class="info-row"><span>Idade</span><span>28 anos</span></div>
@@ -359,40 +346,66 @@
         </div>
     </div>
 
-    <div id="debug-info"></div>
+    <!-- CAIXA DE ERRO -->
+    <div id="error-box">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="error-msg">Erro ao carregar o 3D</span>
+    </div>
 
     <script>
         // ==========================================
-        // DEBUG
+        // VERIFICAÇÃO DE WEBGL
         // ==========================================
-        const debugEl = document.getElementById('debug-info');
-        window.onerror = function(msg, url, line) {
-            debugEl.style.display = 'block';
-            debugEl.textContent = 'ERRO: ' + msg + ' | Linha: ' + line;
-        };
+        function checkWebGL() {
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                return !!gl;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        if (!checkWebGL()) {
+            document.getElementById('error-box').style.display = 'block';
+            document.getElementById('error-msg').innerHTML = 
+                'Seu navegador não suporta WebGL.<br>Tente usar Chrome, Safari ou Firefox atualizado.';
+            throw new Error('WebGL não suportado');
+        }
 
         // ==========================================
         // 1. AMBIENTE 3D
         // ==========================================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a1428);
+        scene.background = new THREE.Color(0x05070a);
 
-        // CÂMERA - POSIÇÃO CORRIGIDA PARA ENQUADRAR O CORPO INTEIRO
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0.8, 5.5);
+        camera.position.set(0, 1.0, 5.0);
         camera.lookAt(0, 0.8, 0);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        container.appendChild(renderer.domElement);
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                alpha: false,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(0x05070a, 1);
+            container.appendChild(renderer.domElement);
+        } catch (e) {
+            document.getElementById('error-box').style.display = 'block';
+            document.getElementById('error-msg').innerHTML = 
+                'Erro ao criar o renderizador 3D:<br>' + e.message;
+            throw e;
+        }
 
         // ==========================================
         // 2. ILUMINAÇÃO
         // ==========================================
-        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+        scene.add(new THREE.AmbientLight(0xffffff, 0.9));
         
         const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
         keyLight.position.set(3, 5, 4);
@@ -418,23 +431,17 @@
         // ==========================================
         // 3. MATERIAIS
         // ==========================================
-        const colors = {
-            skin: 0xffd1b3, muscle: 0xc0392b, muscleLight: 0xe74c3c,
-            bone: 0xf5f5dc, organ: 0xe67e22, hair: 0x4a2c17,
-            eye: 0x2b1a0f, cloth: 0x1a1a1a, robot: 0x00ff88, robotDark: 0x007bff
-        };
-
         const materials = {
-            skin: new THREE.MeshStandardMaterial({ color: colors.skin, roughness: 0.6, metalness: 0.1 }),
-            muscle: new THREE.MeshStandardMaterial({ color: colors.muscle, roughness: 0.7, metalness: 0.05 }),
-            muscleLight: new THREE.MeshStandardMaterial({ color: colors.muscleLight, roughness: 0.6, metalness: 0.05 }),
-            bone: new THREE.MeshStandardMaterial({ color: colors.bone, roughness: 0.4, metalness: 0.1 }),
-            organ: new THREE.MeshStandardMaterial({ color: colors.organ, roughness: 0.5, metalness: 0.1 }),
-            hair: new THREE.MeshStandardMaterial({ color: colors.hair, roughness: 0.9, metalness: 0.0 }),
-            eye: new THREE.MeshStandardMaterial({ color: colors.eye, roughness: 0.1, metalness: 0.3 }),
-            cloth: new THREE.MeshStandardMaterial({ color: colors.cloth, roughness: 0.8, metalness: 0.0 }),
-            robot: new THREE.MeshStandardMaterial({ color: colors.robot, roughness: 0.2, metalness: 0.9, emissive: 0x004422 }),
-            robotDark: new THREE.MeshStandardMaterial({ color: colors.robotDark, roughness: 0.3, metalness: 0.8 })
+            skin: new THREE.MeshStandardMaterial({ color: 0xffd1b3, roughness: 0.6, metalness: 0.1 }),
+            muscle: new THREE.MeshStandardMaterial({ color: 0xc0392b, roughness: 0.7, metalness: 0.05 }),
+            muscleLight: new THREE.MeshStandardMaterial({ color: 0xe74c3c, roughness: 0.6, metalness: 0.05 }),
+            bone: new THREE.MeshStandardMaterial({ color: 0xf5f5dc, roughness: 0.4, metalness: 0.1 }),
+            organ: new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.5, metalness: 0.1 }),
+            hair: new THREE.MeshStandardMaterial({ color: 0x4a2c17, roughness: 0.9, metalness: 0.0 }),
+            eye: new THREE.MeshStandardMaterial({ color: 0x2b1a0f, roughness: 0.1, metalness: 0.3 }),
+            cloth: new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8, metalness: 0.0 }),
+            robot: new THREE.MeshStandardMaterial({ color: 0x00ff88, roughness: 0.2, metalness: 0.9, emissive: 0x004422 }),
+            robotDark: new THREE.MeshStandardMaterial({ color: 0x007bff, roughness: 0.3, metalness: 0.8 })
         };
 
         // ==========================================
@@ -445,15 +452,11 @@
 
         const headGroup = new THREE.Group();
         const torsoGroup = new THREE.Group();
-        const leftArmGroup = new THREE.Group();
-        const rightArmGroup = new THREE.Group();
-        const leftLegGroup = new THREE.Group();
-        const rightLegGroup = new THREE.Group();
         const breastsGroup = new THREE.Group();
         const hairGroup = new THREE.Group();
         const hipGroup = new THREE.Group();
 
-        // --- CABEÇA ---
+        // CABEÇA
         const skull = new THREE.Mesh(new THREE.SphereGeometry(0.22, 32, 32), materials.skin);
         skull.scale.set(1, 1.15, 0.95);
         headGroup.add(skull);
@@ -470,7 +473,7 @@
         rightEye.position.set(0.07, 0.02, 0.19);
         headGroup.add(rightEye);
 
-        // Cabelo
+        // CABELO
         const hairTop = new THREE.Mesh(
             new THREE.SphereGeometry(0.24, 32, 16, 0, Math.PI * 2, 0, Math.PI / 1.8),
             materials.hair
@@ -487,12 +490,12 @@
         headGroup.position.y = 1.55;
         characterGroup.add(headGroup);
 
-        // --- PESCOÇO ---
+        // PESCOÇO
         const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.12, 16), materials.skin);
         neck.position.y = 1.38;
         characterGroup.add(neck);
 
-        // --- TRONCO ---
+        // TRONCO
         const chest = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.22, 0.45, 16), materials.skin);
         chest.position.y = 0.3;
         torsoGroup.add(chest);
@@ -504,7 +507,7 @@
         torsoGroup.position.y = 0.95;
         characterGroup.add(torsoGroup);
 
-        // --- SEIOS ---
+        // SEIOS
         const breastGeo = new THREE.SphereGeometry(0.1, 16, 16);
         const leftBreast = new THREE.Mesh(breastGeo, materials.skin);
         leftBreast.position.set(-0.11, 0, 0.16);
@@ -519,7 +522,7 @@
         breastsGroup.position.y = 1.1;
         characterGroup.add(breastsGroup);
 
-        // Biquíni superior
+        // BIQUÍNI SUPERIOR
         const top = new THREE.Mesh(
             new THREE.TorusGeometry(0.13, 0.03, 8, 20, Math.PI),
             materials.cloth
@@ -529,7 +532,7 @@
         top.rotation.z = Math.PI;
         characterGroup.add(top);
 
-        // --- QUADRIL ---
+        // QUADRIL
         const hip = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.24, 0.25, 16), materials.skin);
         hip.position.y = 0.6;
         hipGroup.add(hip);
@@ -539,7 +542,7 @@
         hipGroup.add(bottom);
         characterGroup.add(hipGroup);
 
-        // --- BRAÇOS ---
+        // BRAÇOS
         function createArm(side) {
             const group = new THREE.Group();
             
@@ -566,7 +569,7 @@
         characterGroup.add(leftArm);
         characterGroup.add(rightArm);
 
-        // --- PERNAS ---
+        // PERNAS
         function createLeg(side) {
             const group = new THREE.Group();
             
@@ -595,7 +598,7 @@
         characterGroup.add(leftLeg);
         characterGroup.add(rightLeg);
 
-        // --- ÓRGÃOS INTERNOS ---
+        // ÓRGÃOS INTERNOS
         const internalGroup = new THREE.Group();
         
         const spine = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.1, 8), materials.bone);
@@ -639,7 +642,7 @@
         });
 
         // ==========================================
-        // 5. SLIDERS (AJUSTES CORPORAIS)
+        // 5. SLIDERS
         // ==========================================
         const sliders = {
             height: document.getElementById('slider-height'),
@@ -677,249 +680,4 @@
         });
 
         sliders.head.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.head.textContent = v.toFixed(2);
-            headGroup.scale.set(v, v, v);
-        });
-
-        sliders.breast.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.breast.textContent = v.toFixed(2);
-            breastsGroup.scale.set(v, v, v);
-        });
-
-        sliders.hip.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.hip.textContent = v.toFixed(2);
-            hipGroup.scale.x = v;
-            hipGroup.scale.z = v;
-        });
-
-        sliders.arm.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.arm.textContent = v.toFixed(2);
-            leftArm.scale.x = v; leftArm.scale.z = v;
-            rightArm.scale.x = v; rightArm.scale.z = v;
-        });
-
-        sliders.leg.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.leg.textContent = v.toFixed(2);
-            leftLeg.scale.x = v; leftLeg.scale.z = v;
-            rightLeg.scale.x = v; rightLeg.scale.z = v;
-        });
-
-        sliders.hair.addEventListener('input', (e) => {
-            const v = parseFloat(e.target.value);
-            labels.hair.textContent = v.toFixed(2);
-            hairGroup.scale.set(v, v, v);
-        });
-
-        document.getElementById('btn-reset').addEventListener('click', () => {
-            Object.keys(sliders).forEach(key => {
-                sliders[key].value = 1.00;
-                labels[key].textContent = '1.00';
-            });
-            characterGroup.scale.set(1, 1, 1);
-            headGroup.scale.set(1, 1, 1);
-            breastsGroup.scale.set(1, 1, 1);
-            hipGroup.scale.set(1, 1, 1);
-            leftArm.scale.set(1, 1, 1);
-            rightArm.scale.set(1, 1, 1);
-            leftLeg.scale.set(1, 1, 1);
-            rightLeg.scale.set(1, 1, 1);
-            hairGroup.scale.set(1, 1, 1);
-        });
-
-        // ==========================================
-        // 6. INTERFACE
-        // ==========================================
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidePanel = document.getElementById('side-panel');
-        const closeBtn = document.getElementById('close-btn');
-        const btnVida = document.getElementById('btn-dar-vida');
-        const hint = document.getElementById('hint');
-        
-        let isAlive = false;
-
-        menuToggle.addEventListener('click', () => {
-            sidePanel.classList.toggle('open');
-            menuToggle.classList.toggle('active');
-            hint.style.opacity = '0';
-        });
-
-        closeBtn.addEventListener('click', () => {
-            sidePanel.classList.remove('open');
-            menuToggle.classList.remove('active');
-        });
-
-        btnVida.addEventListener('click', () => {
-            isAlive = !isAlive;
-            if(isAlive) {
-                btnVida.classList.add('active');
-                btnVida.innerHTML = '<i class="fas fa-heartbeat"></i> Vida Ativa';
-                gsap.to(characterGroup.scale, { 
-                    x: characterGroup.scale.x * 1.02, 
-                    y: characterGroup.scale.y * 1.02, 
-                    z: characterGroup.scale.z * 1.02, 
-                    duration: 0.8, yoyo: true, repeat: -1, ease: "power1.inOut" 
-                });
-            } else {
-                btnVida.classList.remove('active');
-                btnVida.innerHTML = '<i class="fas fa-heart"></i> Dar Vida';
-                gsap.killTweensOf(characterGroup.scale);
-            }
-        });
-
-        // Modos Anatômicos
-        const modeBtns = document.querySelectorAll('[data-mode]');
-        modeBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                modeBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                const mode = this.getAttribute('data-mode');
-                
-                // Restaura tudo
-                characterGroup.traverse(child => {
-                    if (child.isMesh && child.userData.originalMaterial) {
-                        child.material = child.userData.originalMaterial;
-                        child.visible = true;
-                    }
-                });
-                internalGroup.visible = false;
-
-                if(mode === 'skeleton') {
-                    characterGroup.traverse(child => {
-                        if (child.isMesh) {
-                            if (child.material === materials.skin || 
-                                child.material === materials.muscle || 
-                                child.material === materials.muscleLight ||
-                                child.material === materials.cloth ||
-                                child.material === materials.hair ||
-                                child.material === materials.eye) {
-                                child.visible = false;
-                            }
-                        }
-                    });
-                    internalGroup.visible = true;
-                    internalGroup.traverse(child => {
-                        if (child.isMesh) {
-                            child.material = materials.bone;
-                            child.visible = true;
-                        }
-                    });
-                } else if(mode === 'muscular') {
-                    characterGroup.traverse(child => {
-                        if (child.isMesh) {
-                            if (child.material === materials.skin) {
-                                child.material = materials.muscle;
-                            } else if (child.material === materials.cloth || child.material === materials.hair) {
-                                child.visible = false;
-                            }
-                        }
-                    });
-                } else if(mode === 'organs') {
-                    characterGroup.traverse(child => {
-                        if (child.isMesh && child.material === materials.skin) {
-                            child.material = new THREE.MeshStandardMaterial({ 
-                                color: colors.skin, transparent: true, opacity: 0.15
-                            });
-                        }
-                    });
-                    internalGroup.visible = true;
-                } else if(mode === 'robot') {
-                    characterGroup.traverse(child => {
-                        if (child.isMesh) {
-                            if (child.material === materials.skin || 
-                                child.material === materials.muscle || 
-                                child.material === materials.muscleLight) {
-                                child.material = materials.robot;
-                            } else if (child.material === materials.cloth) {
-                                child.material = materials.robotDark;
-                            }
-                        }
-                    });
-                } else if(mode === 'xray') {
-                    characterGroup.traverse(child => {
-                        if (child.isMesh) {
-                            child.material = new THREE.MeshStandardMaterial({
-                                color: 0x00d4ff, transparent: true, opacity: 0.2, wireframe: true
-                            });
-                        }
-                    });
-                    internalGroup.visible = true;
-                    internalGroup.traverse(child => {
-                        if (child.isMesh) {
-                            child.material = new THREE.MeshStandardMaterial({
-                                color: 0xffffff, transparent: true, opacity: 0.5, wireframe: true
-                            });
-                            child.visible = true;
-                        }
-                    });
-                }
-            });
-        });
-
-        // Chat
-        const chatInput = document.getElementById('chat-input');
-        const chatSend = document.getElementById('chat-send');
-        
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if(!text) return;
-            chatInput.value = '';
-            chatInput.placeholder = "Livia está pensando...";
-            
-            setTimeout(() => {
-                const responses = [
-                    `Entendi! Você disse: "${text}"`,
-                    `Interessante! Vamos explorar isso.`,
-                    `Estou processando sua mensagem...`,
-                    `Legal! Me conta mais sobre isso.`
-                ];
-                chatInput.placeholder = `Livia: ${responses[Math.floor(Math.random() * responses.length)]}`;
-            }, 1200);
-        }
-
-        chatSend.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') sendMessage();
-        });
-
-        // ==========================================
-        // 7. ANIMAÇÃO
-        // ==========================================
-        function animate() {
-            requestAnimationFrame(animate);
-
-            if(!isAlive) {
-                characterGroup.rotation.y += 0.006;
-            } else {
-                characterGroup.rotation.y = Math.sin(Date.now() * 0.0008) * 0.5;
-            }
-
-            gridHelper.rotation.y += 0.0005;
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        setTimeout(() => {
-            if(hint) hint.style.opacity = '0.3';
-        }, 5000);
-
-        animate();
-
-        // Debug: mostra status
-        debugEl.style.display = 'block';
-        debugEl.textContent = '✅ Modelo carregado | Objetos: ' + scene.children.length;
-        setTimeout(() => { debugEl.style.display = 'none'; }, 3000);
-
-    </script>
-</body>
-</html>
+            const v = parse
