@@ -253,22 +253,26 @@ async function generateVideo(){
       })
     });
 
-    const agnesData = await agnesRes.json();
-    console.log("Resposta da Agnes:", agnesData);
+    const agnesDataData = await agnesRes.json();
+    console.log("Res));
+posta da Agnes:", agnesData);
 
-    if (!agnesRes.ok) {
-      throw new Error(agnesData.error?.message || JSON.stringify(agnesData));
+         if (!agnesRes.ok) {
+      throw new Error(agnesData }
+.error?.message || JSON.stringify(agnesData   ));
     }
 
-    const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
+    const videoId = ag }
+
+nesData.id || agnesData.video_id || agnesData.task_id;
     if (!videoId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(agnesData));
 
-    // 5. Polling: verificar a cada 60 segundos se o vídeo ficou pronto
+    // 5. Polling: verificar a cada 10 segundos se o vídeo ficou pronto
     let urlDoVideo = null;
     let tentativas = 0;
 
     while (!urlDoVideo && tentativas < 60) {
-      await new Promise(r => setTimeout(r, 60000)); // 60 segundos
+      await new Promise(r => setTimeout(r, 10000)); // 10 segundos
       tentativas++;
 
       const statusRes = await fetch(`https://apihub.agnes-ai.com/v1/videos/${videoId}`, {
@@ -280,11 +284,7 @@ async function generateVideo(){
       if (statusData.status === "completed" || statusData.status === "succeeded") {
         urlDoVideo = statusData.metadata?.url || statusData.url || statusData.output?.url || statusData.video_url;
       } else if (statusData.status === "failed") {
-        throw new Error("A geração do vídeo falhou. Detalhes: " + JSON.stringify(statusData));
-      }
-    }
-
-    if (!urlDoVideo) throw new Error("Tempo limite excedido. Tente novamente.");
+        throw new Error("A geração do vídeo falhou. Detalhes: " + JSON.stringify(status    if (!urlDoVideo) throw new Error("Tempo limite excedido. Tente novamente.");
 
     // 6. Exibir o vídeo na tela
     status.innerHTML = `
