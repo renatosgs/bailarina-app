@@ -208,22 +208,23 @@ async function generateVideo(){
 
   // Sua chave da API
   const AGNES_API_KEY = "sk-1rHcI3yVp5FdL63gjo9BX3aBLw65FBDIxIUzKvZPffOlew8t";
+  // Sua chave do ImgBB
+  const IMGBB_API_KEY = "170d007d78e306611843f1af8bdcc071";
 
   try {
-    // 1. Upload da foto para obter uma URL pública (Imgur)
+    // 1. Upload da foto para o ImgBB
     status.innerHTML = `<div class="spinner"></div><div>Enviando sua foto...</div>`;
     
     const formData = new FormData();
     formData.append("image", photo);
     
-    const imgurRes = await fetch("https://api.imgur.com/3/image", {
+    const imgbbRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
       method: "POST",
-      headers: { "Authorization": "Client-ID 546c25a59c58ad7" },
       body: formData
     });
-    const imgurData = await imgurRes.json();
-    if (!imgurData.success) throw new Error("Falha no upload da imagem.");
-    const urlDaFoto = imgurData.data.link;
+    const imgbbData = await imgbbRes.json();
+    if (!imgbbData.success) throw new Error("Falha no upload da imagem.");
+    const urlDaFoto = imgbbData.data.url;
     console.log("URL da foto:", urlDaFoto);
 
     // 2. Montar o prompt de acordo com as escolhas
