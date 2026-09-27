@@ -230,7 +230,11 @@ async function generateVideo(){
     const intensidades = ["subtle", "moderate", "energetic"];
     const prompt = `A person dancing ${selectedStyle} style, ${intensidades[intensity - 1]} movement, natural motion, cinematic lighting`;
 
-    // 3. Chamar a API da Agnes
+    // 3. Calcular num_frames válido (deve ser 8*n + 1)
+    const numFramesValido = Math.floor((duration * 24 - 1) / 8) * 8 + 1;
+    console.log("num_frames calculado:", numFramesValido, "para duração de", duration, "segundos");
+
+    // 4. Chamar a API da Agnes
     status.innerHTML = `<div class="spinner"></div><div>Gerando sua dança...</div><small>Isso pode levar alguns minutos.</small>`;
     
     const agnesRes = await fetch("https://apihub.agnes-ai.com/v1/videos", {
@@ -243,7 +247,7 @@ async function generateVideo(){
         model: "agnes-video-v2.0",
         prompt: prompt,
         image: urlDaFoto,
-        num_frames: duration * 24,
+        num_frames: numFramesValido,
         frame_rate: 24
       })
     });
@@ -258,7 +262,7 @@ async function generateVideo(){
     const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
     if (!videoId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(agnesData));
 
-    // 4. Polling: verificar a cada 60 segundos se o vídeo ficou pronto
+    // 5. Polling: verificar a cada 60 segundos se o vídeo ficou pronto
     let urlDoVideo = null;
     let tentativas = 0;
 
@@ -281,7 +285,7 @@ async function generateVideo(){
 
     if (!urlDoVideo) throw new Error("Tempo limite excedido. Tente novamente.");
 
-    // 5. Exibir o vídeo na tela
+    // 6. Exibir o vídeo na tela
     status.innerHTML = `
       <div style="font-size:35px">🎬</div>
       <div>Vídeo gerado com sucesso!</div>
@@ -295,7 +299,6 @@ async function generateVideo(){
 
   } catch (erro) {
     console.error(erro);
-    // Mostra o erro detalhado na tela
     status.innerHTML = `
       <div style="font-size:35px">⚠️</div>
       <div>Erro ao gerar o vídeo</div>
