@@ -252,14 +252,13 @@ async function generateVideo(){
     console.log("Resposta da Agnes:", agnesData);
 
     if (!agnesRes.ok) {
-      throw new Error(agnesData.error?.message || "Erro na API da Agnes.");
+      throw new Error(agnesData.error?.message || JSON.stringify(agnesData));
     }
 
     const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
-    if (!videoId) throw new Error("ID da tarefa não retornado.");
+    if (!videoId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(agnesData));
 
     // 4. Polling: verificar a cada 60 segundos se o vídeo ficou pronto
-    // ALTERAÇÃO FEITA AQUI: 3000 -> 60000
     let urlDoVideo = null;
     let tentativas = 0;
 
@@ -276,7 +275,7 @@ async function generateVideo(){
       if (statusData.status === "completed" || statusData.status === "succeeded") {
         urlDoVideo = statusData.metadata?.url || statusData.url || statusData.output?.url || statusData.video_url;
       } else if (statusData.status === "failed") {
-        throw new Error("A geração do vídeo falhou.");
+        throw new Error("A geração do vídeo falhou. Detalhes: " + JSON.stringify(statusData));
       }
     }
 
@@ -296,10 +295,11 @@ async function generateVideo(){
 
   } catch (erro) {
     console.error(erro);
+    // Mostra o erro detalhado na tela
     status.innerHTML = `
       <div style="font-size:35px">⚠️</div>
       <div>Erro ao gerar o vídeo</div>
-      <small>${erro.message}</small>
+      <small style="word-break: break-all; color: #ff8888; font-size: 10px; display: block; margin-top: 8px;">${erro.message}</small>
     `;
   }
 }
