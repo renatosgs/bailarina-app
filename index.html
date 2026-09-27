@@ -231,7 +231,7 @@ async function generateVideo(){
     const prompt = `A person dancing ${selectedStyle} style, ${intensidades[intensity - 1]} movement, natural motion, cinematic lighting`;
 
     // 3. Calcular num_frames válido (deve ser 8*n + 1)
-    const numFramesValido = Math.floor((duration * 24 - 1) / 8) * 8 + 1;
+    const numFramesValido = Math.round(duration * 24 / 8) * 8 + 1;
     console.log("num_frames calculado:", numFramesValido, "para duração de", duration, "segundos");
 
     // 4. Chamar a API da Agnes
