@@ -253,25 +253,22 @@ async function generateVideo(){
       })
     });
 
-    const agnesDataData = await agnesRes.json();
-    console.log("Res));
-posta da Agnes:", agnesData);
+    const agnesData = await agnesRes.json();
+    console.log("Resposta da Agnes:", agnesData);
 
-         if (!agnesRes.ok) {
-      throw new Error(agnesData }
-.error?.message || JSON.stringify(agnesData   ));
+    if (!agnesRes.ok) {
+      throw new Error(agnesData.error?.message || JSON.stringify(agnesData));
     }
 
-    const videoId = ag }
-
-nesData.id || agnesData.video_id || agnesData.task_id;
+    const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
     if (!videoId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(agnesData));
 
-    // 5. Polling: verificar a cada 10 segundos se o vídeo ficou pronto
+    // 5. Polling: verificar por até 5 minutos (30 tentativas de 10s)
     let urlDoVideo = null;
     let tentativas = 0;
+    const MAX_TENTATIVAS = 30;
 
-    while (!urlDoVideo && tentativas < 60) {
+    while (!urlDoVideo && tentativas < MAX_TENTATIVAS) {
       await new Promise(r => setTimeout(r, 10000)); // 10 segundos
       tentativas++;
 
@@ -281,10 +278,19 @@ nesData.id || agnesData.video_id || agnesData.task_id;
       const statusData = await statusRes.json();
       console.log("Status " + tentativas + ":", statusData);
 
+      // Atualiza a tela com o progresso
+      status.innerHTML = `<div class="spinner"></div><div>Gerando sua dança...</div><small>Tentativa ${tentativas} de ${MAX_TENTATIVAS}</small>`;
+
       if (statusData.status === "completed" || statusData.status === "succeeded") {
         urlDoVideo = statusData.metadata?.url || statusData.url || statusData.output?.url || statusData.video_url;
       } else if (statusData.status === "failed") {
-        throw new Error("A geração do vídeo falhou. Detalhes: " + JSON.stringify(status    if (!urlDoVideo) throw new Error("Tempo limite excedido. Tente novamente.");
+        throw new Error("A geração do vídeo falhou. Detalhes: " + JSON.stringify(statusData));
+      }
+    }
+
+    if (!urlDoVideo) {
+      throw new Error("O vídeo não ficou pronto em 5 minutos. Isso pode ser devido ao limite do plano gratuito. Tente novamente mais tarde.");
+    }
 
     // 6. Exibir o vídeo na tela
     status.innerHTML = `
