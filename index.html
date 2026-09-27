@@ -124,7 +124,7 @@ Duração
 <span>Duração do vídeo</span>
 <span class="value" id="durationValue">5s</span>
 </div>
-<input type="range" id="duration" min="3" max="15" value="5" >
+<input type="range" id="duration" min="3" max="15" value="5" disabled>
 </div>
 </div>
 <!-- Intensity -->
@@ -177,13 +177,6 @@ selectedStyle = style.dataset.style;
 });
 });
 
-/* Duração */
-document.getElementById("duration")
-.addEventListener("input", function(){
-document.getElementById("durationValue")
-.innerText = this.value + "s";
-});
-
 /* Intensidade */
 document.getElementById("intensity")
 .addEventListener("input", function(){
@@ -201,13 +194,12 @@ async function generateVideo(){
   const photo = document.getElementById("photo").files[0];
   if(!photo){ alert("Adicione uma foto primeiro."); return; }
   
-  const duration = parseInt(document.getElementById("duration").value);
   const intensity = parseInt(document.getElementById("intensity").value);
   const status = document.getElementById("status");
   status.style.display = "block";
 
-  // Sua chave da API
-  const AGNES_API_KEY = "sk-1rHcI3yVp5FdL63gjo9BX3aBLw65FBDIxIUzKvZPffOlew8t";
+  // Sua chave da API do Pixazo
+  const PIXAZO_API_KEY = "f83782cafc7d4556a8bd80e81ee03bf6";
   // Sua chave do ImgBB
   const IMGBB_API_KEY = "170d007d78e306611843f1af8bdcc071";
 
@@ -227,72 +219,67 @@ async function generateVideo(){
     const urlDaFoto = imgbbData.data.url;
     console.log("URL da foto:", urlDaFoto);
 
-    // 2. Montar o prompt de acordo com as escolhas
+    // 2. Montar o prompt
     const intensidades = ["subtle", "moderate", "energetic"];
     const prompt = `A person dancing ${selectedStyle} style, ${intensidades[intensity - 1]} movement, natural motion, cinematic lighting`;
 
-    // 3. Calcular num_frames válido (deve ser 8*n + 1)
-    const numFramesValido = Math.round(duration * 24 / 8) * 8 + 1;
-    console.log("num_frames calculado:", numFramesValido, "para duração de", duration, "segundos");
-
-    // 4. Chamar a API da Agnes
+    // 3. Chamar a API do Pixazo
     status.innerHTML = `<div class="spinner"></div><div>Gerando sua dança...</div><small>Isso pode levar alguns minutos.</small>`;
     
-    const agnesRes = await fetch("https://apihub.agnes-ai.com/v1/videos", {
+    const pixazoRes = await fetch("https://gateway.pixazo.ai/media-tools/v1/image-to-video", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${AGNES_API_KEY}`,
-        "Content-Type": "application/json"
+        "Ocp-Apim-Subscription-Key": PIXAZO_API_KEY,
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache"
       },
       body: JSON.stringify({
-        model: "agnes-video-v2.0",
-        prompt: prompt,
-        image: urlDaFoto,
-        num_frames: numFramesValido,
-        frame_rate: 24
+        image_url: urlDaFoto,
+        duration_seconds: 5,
+        prompt: prompt
       })
     });
 
-    const agnesData = await agnesRes.json();
-    console.log("Resposta da Agnes:", agnesData);
+    const pixazoData = await pixazoRes.json();
+    console.log("Resposta do Pixazo:", pixazoData);
 
-    if (!agnesRes.ok) {
-      throw new Error(agnesData.error?.message || JSON.stringify(agnesData));
+    if (!pixazoRes.ok) {
+      throw new Error(pixazoData.error || pixazoData.message || JSON.stringify(pixazoData));
     }
 
-    const videoId = agnesData.id || agnesData.video_id || agnesData.task_id;
-    if (!videoId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(agnesData));
+    const requestId = pixazoData.request_id;
+    if (!requestId) throw new Error("ID da tarefa não retornado: " + JSON.stringify(pixazoData));
 
-    // 5. Polling: verificar por até 5 minutos (30 tentativas de 10s)
+    // 4. Polling no Pixazo
     let urlDoVideo = null;
     let tentativas = 0;
-    const MAX_TENTATIVAS = 30;
+    const MAX_TENTATIVAS = 60;
 
     while (!urlDoVideo && tentativas < MAX_TENTATIVAS) {
-      await new Promise(r => setTimeout(r, 10000)); // 10 segundos
+      await new Promise(r => setTimeout(r, 5000)); // Pixazo costuma ser mais rápido
       tentativas++;
 
-      const statusRes = await fetch(`https://apihub.agnes-ai.com/v1/videos/${videoId}`, {
-        headers: { "Authorization": `Bearer ${AGNES_API_KEY}` }
+      const statusRes = await fetch(`https://gateway.pixazo.ai/v2/requests/status/${requestId}`, {
+        headers: { "Ocp-Apim-Subscription-Key": PIXAZO_API_KEY }
       });
       const statusData = await statusRes.json();
       console.log("Status " + tentativas + ":", statusData);
 
-      // Atualiza a tela com o progresso
       status.innerHTML = `<div class="spinner"></div><div>Gerando sua dança...</div><small>Tentativa ${tentativas} de ${MAX_TENTATIVAS}</small>`;
 
-      if (statusData.status === "completed" || statusData.status === "succeeded") {
-        urlDoVideo = statusData.metadata?.url || statusData.url || statusData.output?.url || statusData.video_url;
-      } else if (statusData.status === "failed") {
+      if (statusData.status === "COMPLETED") {
+        // A Pixazo pode devolver o link em campos diferentes dependendo do modelo
+        urlDoVideo = statusData.output?.media_url?.[0] || statusData.output?.video_url || statusData.media_url?.[0];
+      } else if (statusData.status === "FAILED" || statusData.status === "ERROR") {
         throw new Error("A geração do vídeo falhou. Detalhes: " + JSON.stringify(statusData));
       }
     }
 
     if (!urlDoVideo) {
-      throw new Error("O vídeo não ficou pronto em 5 minutos. Isso pode ser devido ao limite do plano gratuito. Tente novamente mais tarde.");
+      throw new Error("O vídeo não ficou pronto no tempo esperado. Tente novamente.");
     }
 
-    // 6. Exibir o vídeo na tela
+    // 5. Exibir o vídeo na tela
     status.innerHTML = `
       <div style="font-size:35px">🎬</div>
       <div>Vídeo gerado com sucesso!</div>
